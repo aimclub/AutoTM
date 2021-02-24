@@ -1,0 +1,27 @@
+version: 1
+console_log:
+  level: DEBUG
+formatters:
+  simple:
+    class: logging.Formatter
+    format: "%(asctime)s %(name)s %(levelname)s %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+handlers:
+  file_handler:
+    class: logging.FileHandler
+    filename: example.log
+    level: DEBUG
+    formatter: simple
+  stream_handler:
+    class: logging.StreamHandler
+    stream: ext://sys.stderr
+    level: cfg://console_log.level
+    formatter: simple
+loggers:
+  logging_example:
+    level: DEBUG
+    handlers: [file_handler]
+    propagate: yes
+root:
+  level: DEBUG
+  handlers: [stream_handler]
