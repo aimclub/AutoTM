@@ -1,0 +1,3302 @@
+!=========================================== Starting experiment 1615196756 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.0, 0.0, 0.09914580861677998, 0.0, 0.0, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 24
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [5105.40203624533, 4.5, 28.718641579140854, -22.9359551153972, 5.5, -21.018872570147515, -6.303125411510798, 6.5, -86.64161037437154, -87.95276427690465, -2.0, 7.0, 0.4398396677882159, 0.3544028581019202, 0.5132549506503161, -0.2927794762641393], with fitness: 1.0370636141530614
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 42
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.4298176647619052, 0.4337539676892522, 1.0291782591836731, 0.6957784723078204, 0.5380041722857145, 0.2608993163265309, 0.0, 1.0195606767346934, 0.11175092091836727]
+Predicted values:  [0.29892218235433554, 0.29892218235433554, 0.29892218235433554, 0.29892218235433554, 0.29892218235433554, 0.29892218235433554, 0.29892218235433554, 0.29892218235433554, 0.29892218235433554]
+R^2: -0.3514595298823593, MSE: 0.15871060203527187, RMSE: 0.39838499223147433
+
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.0427812187448977, 0.6179076755918365, 0.42931580612244946, 0.40212274948979637, 0.7212098612244896, 0.0, 1.0563573502040813, 1.4322498102857146, 0.5380041722857144, 0.2608993163265309]
+Predicted values:  [1.0439799648846053, 0.6469951645532954, 0.4111742086884791, 0.410659157241684, 0.29892218235433554, 0.29892218235433554, 0.29892218235433554, 0.29892218235433554, 0.29892218235433554, 0.29892218235433554]
+R^2: -0.33761840009142374, MSE: 0.21856763436288293, RMSE: 0.46751217563062775
+
+Population len 10
+
+Best params so far: [5105.40203624533, 4.5, 28.718641579140854, -22.9359551153972, 5.5, -21.018872570147515, -6.303125411510798, 6.5, -86.64161037437154, -87.95276427690465, -2.0, 7.0, 0.4398396677882159, 0.3544028581019202, 0.5132549506503161, -0.2927794762641393], with fitness: 1.0439799648846053
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 65
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+/home/jovyan/.local/lib/python3.7/site-packages/sklearn/gaussian_process/_gpr.py:509: ConvergenceWarning:
+
+lbfgs failed to converge (status=2):
+ABNORMAL_TERMINATION_IN_LNSRCH.
+
+Increase the number of iterations (max_iter) or scale the data as shown in:
+    https://scikit-learn.org/stable/modules/preprocessing.html
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [-3903.483068097381, 3.0, 18.87496085924098, -23.4379317492967, 6.5, -14.088639922010888, -6.645942812652269, 6.25, -84.13062620993541, -85.43843546874088, -2.25, 7.5, 0.4398396677882159, 0.3544028581019202, 0.5132549506503161, 7658.175367943323], with fitness: 1.2697399494854573
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 81
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.9963183034392169, 1.0087864296881635, 1.1787335956371834, 0.5631146446748081, 0.7206847807727892, 0.9504419074647878, 0.9367768220766002]
+Predicted values:  [0.5464140048763444, 0.5464140048763444, 0.5464140048763444, 0.5464140048763476, 0.5464140048763444, 0.5464140048763444, 0.5464140048763444]
+R^2: -3.688270018307615, MSE: 0.16604301311077577, RMSE: 0.4074837580944494
+
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.2757441300903554, 1.1381858681379184, 1.1362637485460818, 1.0427812187448977, 0.5631146446748081, 0.9960305262963598, 1.214030779546485, 1.175703456861673, 0.7173171073034015, 0.9514715780770329]
+Predicted values:  [1.2697398772642297, 1.1400341635540658, 1.1352573366726304, 1.0426021377621575, 0.5464140048763476, 0.5464140048763444, 0.5464140048763444, 0.5464140048763444, 0.5464140048763444, 0.5464140048763444]
+R^2: -1.6847783268816605, MSE: 0.1237471320113697, RMSE: 0.3517771055816022
+
+Population len 10
+
+Best params so far: [-3903.483068097381, 3.0, 18.87496085924098, -23.4379317492967, 6.5, -14.088639922010888, -6.645942812652269, 6.25, -84.13062620993541, -85.43843546874088, -2.25, 7.5, 0.4398396677882159, 0.3544028581019202, 0.5132549506503161, 7658.175367943323], with fitness: 1.2697398772642297
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 97
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [-3903.483068097381, 3.0, 18.87496085924098, -23.4379317492967, 6.5, -14.088639922010888, -6.645942812652269, 6.25, -84.13062620993541, -85.43843546874088, -2.25, 7.5, 0.4398396677882159, 0.3544028581019202, 0.5132549506503161, 7658.175367943323], with fitness: 1.2776549707058655
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 117
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.7206847807727892, 1.1522258601269795, 0.7790176411787387, 1.198317906766917, 1.4176792954785715, 1.2207029963480125, 1.165115878494326, 0.7780218696685347, 1.140401172367849, 1.2024007871106335, 0.7798849542345919]
+Predicted values:  [0.7172360381820506, 0.6681213601232326, 0.6681213601232155, 0.6681213601232326, 0.6681214783027692, 0.6681213601232326, 0.6681213601232326, 0.6681213601232155, 0.6681213601232326, 0.6681213601232326, 0.668121360963241]
+R^2: -2.814254818021889, MSE: 0.19773039192566658, RMSE: 0.44466885648273885
+
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.2690178601850493, 0.0, 1.1426371203828165, 1.1392407832399594, 0.7498187600925171, 1.4246931137642855, 0.7798849542345919, 1.203854368984122, 1.2050081525241674, 0.28305378993197305]
+Predicted values:  [1.2736974298268278, 0.6683764163951885, 1.139707565893649, 1.1366200457283175, 0.7172360381820506, 0.6681214783027692, 0.668121360963241, 0.6681213601232326, 0.6681213601232326, 0.6681213601232326]
+R^2: 0.09315365806052345, MSE: 0.17562520753035554, RMSE: 0.4190766129603936
+
+Population len 10
+
+Best params so far: [-3903.483068097381, 3.0, 18.87496085924098, -23.4379317492967, 6.5, -14.088639922010888, -6.645942812652269, 6.25, -84.13062620993541, -85.43843546874088, -2.25, 7.5, 0.4398396677882159, 0.3544028581019202, 0.5132549506503161, 7658.175367943323], with fitness: 1.2736974298268278
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 135
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [-525.151153968865, 3.5625, 22.566341129203433, -23.24969051158439, 6.125, -16.687477165062127, -6.517386287224218, 6.34375, -85.07224527159897, -86.38130877180231, -2.15625, 7.3125, 0.4398396677882159, 0.3544028581019202, 0.5132549506503161, 4786.249812660977], with fitness: 1.3376583354524578
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 153
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.8951751454285714, 1.0866236748352616, 1.145662478582473, 0.962568701684122, 0.5901087706122448, 1.2354096457485022, 1.1869553776684654, 1.1539789678597838, 1.1371894140639456]
+Predicted values:  [0.7394411115207276, 0.7395251463178512, 0.7394443631273553, 0.739441124026732, 0.5905191585814993, 0.7394479554329075, 0.7394680651854454, 0.7394443631273553, 0.7394329440425778]
+R^2: -2.4969038891328106, MSE: 0.12620019561423512, RMSE: 0.35524666868844124
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1615196850 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.6989026057725958, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 29
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [45990.48374779618, 2.0, 138.34485124151297, 79.51376780158591, -0.5, 23.182651517796014, -39.292299764257585, 1.5, -25.108308482818344, -107.07800694133074, -1.5, 0.5, 0.6935812600469601, 0.7768704456735538, 0.18305174479031727, -0.011870344700208812], with fitness: 1.2738623264117919
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 52
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.0, 0.48329571156462664, 0.5223041353211798, 0.3811728457304815, 0.3862768624117061, 0.3862768624117061, 0.8832264191923169, 0.3839676383310816, 0.0, 0.5675176736749633, 0.0, 0.4440945024489797, 0.3811728457304815, 0.5410481836734694]
+Predicted values:  [0.06589520815699623, 0.4613678558709827, 0.4371776218577719, 0.4444166630082803, 0.4370342120506201, 0.4370342120506201, 0.43703421206777415, 0.4370342120506201, 0.15949764769084346, 0.4370342120506201, 0.15949731769778236, 0.4713897172538783, 0.4444166630082803, 0.4419404730537234]
+R^2: 0.6094829701110936, MSE: 0.02182838944785615, RMSE: 0.1477443381245324
+
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.2738623264117919, 1.1032778345864662, 0.700641292653062, 0.5494527396145263, 0.4440945024489797, 0.476586997551021, 0.3811728457304815, 0.565522819183506, 0.0, 0.5223041353211798]
+Predicted values:  [1.2734766554479906, 1.0977737056315224, 0.7078190071026897, 0.5494527292630429, 0.4713897172538783, 0.46136775542236774, 0.4370342120506201, 0.4370342120506201, 0.4370342120506201, 0.4371776219028224]
+R^2: 0.8136228772007085, MSE: 0.021893385804415556, RMSE: 0.14796413688598856
+
+Population len 10
+
+Best params so far: [45990.48374779618, 2.0, 138.34485124151297, 79.51376780158591, -0.5, 23.182651517796014, -39.292299764257585, 1.5, -25.108308482818344, -107.07800694133074, -1.5, 0.5, 0.6935812600469601, 0.7768704456735538, 0.18305174479031727, -0.011870344700208812], with fitness: 1.2734766554479906
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 74
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [55036.01584543958, 4.0, 137.2256067009952, 66.41693685932565, 1.5, 5.613651192405243, -15.525755342291319, 2.0, -28.613867249828388, -58.026737886007005, -2.0, 1.5, 0.9754310128882343, 0.17266697480659976, 0.8577546820156534, 0.15033590028435895], with fitness: 1.4255709780979595
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 92
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.0, 0.0, 0.5509817211441466, 1.3251744520408169, 0.9716484251072655, 0.0, 0.0, 0.347645484073298, 1.1294626515306123]
+Predicted values:  [0.4714948284138033, 6.279758933569468e-05, 0.4714948284138033, 0.4714948284138033, 0.4716511256153385, 0.4714948284138033, 0.4714948284138033, 0.4714948284138033, 0.4714948284138033]
+R^2: 0.09548968495812071, MSE: 0.2333629783742414, RMSE: 0.4830765760976632
+
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.4462995001387757, 1.2738623264117919, 0.8832264191923169, 0.5421532559183674, 0.989985380440735, 0.0, 0.5509817211441466, 1.3251744520408169, 0.0, 0.0]
+Predicted values:  [1.4255706734550444, 1.2734958634263625, 0.8831998332923225, 0.5467635350523917, 0.4714923627295902, 0.4714948284138033, 0.4714948284138033, 0.4714948284138033, 0.4714948284138033, 0.4714948284138033]
+R^2: 0.42604565586789644, MSE: 0.1671295268921287, RMSE: 0.40881478311348857
+
+Population len 10
+
+Best params so far: [55036.01584543958, 4.0, 137.2256067009952, 66.41693685932565, 1.5, 5.613651192405243, -15.525755342291319, 2.0, -28.613867249828388, -58.026737886007005, -2.0, 1.5, 0.9754310128882343, 0.17266697480659976, 0.8577546820156534, 0.15033590028435895], with fitness: 1.4255706734550444
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 113
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [55036.01584543958, 4.0, 137.2256067009952, 66.41693685932565, 1.5, 5.613651192405243, -15.525755342291319, 2.0, -28.613867249828388, -58.026737886007005, -2.0, 1.5, 0.9754310128882343, 0.17266697480659976, 0.8577546820156534, 0.15033590028435895], with fitness: 1.363489327077551
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 140
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.329266664302041, 1.0925245963265307, 1.277696818, 1.8785051790775513, 1.128493309559613, 1.2335434557306124, 1.0310623755102042, 1.042457444897959, 1.1354554543501614, 1.86995198642449, 1.0568665095596135, 0.37752372368952225, 1.0480970345864662, 0.46434409256670206, 1.0372555613319012, 1.0707534930182598, 1.2626436884489796, 1.0576518169709987]
+Predicted values:  [1.3015145111919788, 0.6164550921065315, 0.5434854752240444, 0.5434854753126995, 0.5434854753110326, 1.2349544499654415, 0.5434854183537325, 0.5434854752240444, 0.5434854753110326, 0.5434854753126995, 0.5434854752240444, 0.5434854752240444, 0.5434854752240444, 0.5434854752240444, 0.5434854183537325, 0.5434854752240444, 0.5434854752545876, 0.5434854183537325]
+R^2: -2.256219932547974, MSE: 0.4079452391933283, RMSE: 0.6387059097842515
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.4047640107510206, 1.428406379812245, 1.3498873826693878, 1.2738623264117919, 1.357134568302041, 0.09055103265306122, 1.248579990612245, 1.8216656154857143, 1.8803862481387754, 0.10061225850340134]
+Predicted values:  [1.3945301100117664, 1.3015145111919788, 1.3015145111919788, 1.2744224747229749, 1.4623525335670942, 0.5434962688341314, 0.5434854752240444, 0.5434854752969526, 0.5434854753126995, 0.5434854752567719]
+R^2: -0.2650880883089872, MSE: 0.43491198436049483, RMSE: 0.6594785700540199
+
+Population len 10
+
+Best params so far: [59558.78189426128, 7.0, 136.66598443073633, 59.86852138819552, 2.5, -3.170848970290143, -3.642483131308186, 2.25, -30.36664663333341, -33.50110335834514, -2.25, 2.0, 0.9754310128882343, 0.17266697480659976, 0.8577546820156534, 0.23143902277664283], with fitness: 1.4623525335670942
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 157
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1615196922 ===========================================!
+/opt/conda/lib/python3.7/site-packages/ipykernel_launcher.py:53: RuntimeWarning:
+
+invalid value encountered in double_scalars
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+!=========================================== Starting experiment 1615196932 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.2871071014965993, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 42
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [-0.17931215001835776, 7.5, 42.01221899387716, 100.67117164281348, 5.5, -19.307832540438113, -54.96527687255296, -1.0, 24.715628092408306, -47.135637599517885, 7.5, 4.5, 0.28842508306348646, 0.8839749019152262, 0.4277558482069762, 119222.74607175874], with fitness: 1.3703955579591838
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 59
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.5786805306122449, 1.2801440489795919, 0.0, 0.7547285224489794, 0.5539122604081632, 0.5648383135102041, 1.4089834867306124, 1.411292532179592]
+Predicted values:  [0.8258995970960873, 0.8258995970960873, 0.677770259210105, 0.8258995970960873, 0.8258995970960873, 0.8258995970960873, 0.8258995970960873, 0.8258995970960873]
+R^2: 0.1249900399018028, MSE: 0.19458686886741894, RMSE: 0.44112001639850684
+
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.3441554897959187, 1.3110091995703548, 1.3416288106122451, 1.293582082491944, 0.0, 1.2302186263038548, 0.7619389040816323, 0.5539122604081631, 0.5631715224897959, 0.9849903151020408]
+Predicted values:  [1.3584639053164829, 1.322871963278019, 1.3584639053164829, 1.3023615800185508, 0.8258995970960873, 0.8258995970960873, 0.8258995970960873, 0.8258995970960873, 0.8258995970960873, 0.8258995970960873]
+R^2: 0.458116135995819, MSE: 0.10186939570824627, RMSE: 0.31916985400918785
+
+Population len 10
+
+Best params so far: [-0.17931215001835776, 7.5, 42.01221899387716, 100.67117164281348, 5.5, -19.307832540438113, -54.96527687255296, -1.0, 24.715628092408306, -47.135637599517885, 7.5, 4.5, 0.28842508306348646, 0.8839749019152262, 0.4277558482069762, 119222.74607175874], with fitness: 1.3584639053164829
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 79
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [-0.17931215001835776, 7.5, 42.01221899387717, 100.67117164281348, 5.5, -19.307832540438113, -54.965276872552955, -1.0, 24.715628092408302, -47.13563759951789, 7.5, 4.5, 0.28842508306348646, 0.8839749019152262, 0.4277558482069762, 119222.74607175874], with fitness: 1.358394495510204
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 95
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.2645318744897963, 1.1721193757503001, 1.3502135910204085, 1.2494209628117914, 1.2609417124716553, 1.3319811432653064, 1.2905341582766439]
+Predicted values:  [0.8190144207030928, 0.8190144207030928, 1.3539984905027636, 0.8190144207030928, 0.8190144207030928, 1.3539984905027636, 0.8190144207030928]
+R^2: -0.15407857087712995, MSE: 0.14793049685697582, RMSE: 0.38461733821679933
+
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.3455739065306125, 1.339779525714286, 1.332619196326531, 1.3494880150375943, 1.324540144081633, 1.3265496889366275, 0.0, 1.2024094589569163, 1.256624638548753, 1.2822693165532881]
+Predicted values:  [1.3539984905027636, 1.3539984905027636, 1.3539984905027636, 1.3219520427119953, 1.3384492326527058, 1.3106679278611426, 0.819014420203355, 0.8190144207030928, 0.8190144207030928, 0.8190144207030928]
+R^2: 0.2124030283773637, MSE: 0.12258183267966767, RMSE: 0.35011688431103644
+
+Population len 10
+
+Best params so far: [-0.17931215001835776, 7.5, 42.01221899387717, 100.67117164281348, 5.5, -19.307832540438113, -54.965276872552955, -1.0, 24.715628092408302, -47.13563759951789, 7.5, 4.5, 0.28842508306348646, 0.8839749019152262, 0.4277558482069762, 119222.74607175874], with fitness: 1.3539984905027636
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 117
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [-0.17931215001835776, 7.5, 42.01221899387717, 100.67117164281348, 5.5, -19.307832540438113, -54.965276872552955, -1.0, 24.715628092408295, -47.13563759951789, 7.5, 4.5, 0.28842508306348646, 0.8839749019152262, 0.4277558482069762, 119222.74607175874], with fitness: 1.3572495473469388
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 135
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.3428559053061226, 0.5899700808163263, 1.3480902489795923, 1.2687545289569164, 1.3365054869387756, 1.3497328048979595, 1.337713277959184, 1.3312684265306125, 1.3472606938775513]
+Predicted values:  [1.3450651021930566, 0.59102739439187, 1.3450651021930566, 0.8877368137314251, 1.3450651021930566, 1.3450651021930566, 1.3450651021930566, 1.3450651021930566, 1.3450651021930566]
+R^2: 0.7062426778831634, MSE: 0.016170435772800456, RMSE: 0.12716302832506174
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.3747580881632655, 1.3428632518367352, 1.3486112518367348, 1.3523283914285715, 1.3570443379591839, 1.337513122857143, 1.331777408979592, 1.3389857363265307, 1.3530870632653063, 1.3525576208163268]
+Predicted values:  [1.3450651021930566, 1.3450651021930566, 1.3450651021930566, 1.3450651021930566, 1.3450651021930566, 1.3417045648771047, 1.3450651021930566, 1.3450651021930566, 1.341714978966094, 1.3450651021406501]
+R^2: -0.13228549642616905, MSE: 0.00015119060020679092, RMSE: 0.012295958694090954
+
+Population len 10
+
+Best params so far: [-0.17931215001835776, 7.5, 42.01221899387717, 100.67117164281348, 5.5, -19.307832540438113, -54.965276872552955, -1.0, 24.715628092408295, -47.13563759951789, 7.5, 4.5, 0.28842508306348646, 0.8839749019152262, 0.4277558482069762, 119222.74607175874], with fitness: 1.3450651021930566
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 161
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1615197086 ===========================================!
+/opt/conda/lib/python3.7/site-packages/ipykernel_launcher.py:53: RuntimeWarning:
+
+invalid value encountered in double_scalars
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+!=========================================== Starting experiment 1615197092 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.19129189206349195, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 46
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [129097.30123270408, 2.5, 13.051662892400124, 21.442866483820037, 4.5, -62.089485006304265, 36.66838630014895, 2.5, -72.30256995667824, -3.7772835114039864, -1.0, 2.0, 0.08157282361568197, 0.49236292673212567, 0.7737799259334769, 0.6607744194647549], with fitness: 1.118096959088435
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 62
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.1000667042131518, 0.0, 1.100046178589569, 0.4680230731046978, 0.2778507114285715, 1.137931645618247, 0.38167800499578763]
+Predicted values:  [1.1133009430773941, 0.28782036055044447, 1.1133009430773941, 0.28782036055044447, 0.28782036055044447, 0.28782036055044447, 0.28782036055044447]
+R^2: 0.3523789530963085, MSE: 0.12103746567761633, RMSE: 0.3479043915756401
+
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.1169364021723354, 1.1175762198594104, 1.1024064457097502, 1.114353886526077, 1.1476067670249435, 0.4136885315061224, 0.0, 0.4680230731046978, 0.2778507114285715, 1.146222183433373]
+Predicted values:  [1.1133009430773941, 1.1133009430773941, 1.1133009430773941, 1.1133009430773941, 0.28782036055044447, 0.41367590332987203, 0.28782036055044447, 0.28782036055044447, 0.28782036055044447, 0.28782036055044447]
+R^2: 0.1174401732302277, MSE: 0.15916506192266433, RMSE: 0.3989549622735182
+
+Population len 10
+
+Best params so far: [129097.30123270408, 2.5, 13.051662892400124, 21.442866483820037, 4.5, -62.089485006304265, 36.66838630014895, 2.5, -72.30256995667824, -3.7772835114039864, -1.0, 2.0, 0.08157282361568197, 0.49236292673212567, 0.7737799259334769, 0.6607744194647549], with fitness: 1.1133009430773941
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 119
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [104408.9527139999, 2.5, 26.28154997960869, 17.245030118251382, 3.625, -62.089485006304265, 36.66838630014895, 3.125, -63.4978405626782, -3.7772835114039864, -0.25, 2.0, 0.5082658458140652, 0.5706274996069265, 0.2447656654106254, 0.6607744194647549], with fitness: 1.1535148819002263
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 136
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.1680302397732423, 0.5105695295183673, 1.1435456111519275, 1.1643790020816323, 1.1363897172743762, 1.1533856012244896, 1.1279293163673467, 1.1303817131927438]
+Predicted values:  [0.5822667279320852, 0.6113791669252375, 1.1402237415119352, 1.1605635613123009, 1.1605635613123009, 0.5822667279320852, 1.1605635613123009, 1.1402237415119352]
+R^2: -0.9180358496399261, MSE: 0.08515375860445973, RMSE: 0.29181116943060925
+
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.153188486435374, 1.1491293308798185, 1.1463588959591835, 1.1575750873424036, 1.1604485794689345, 1.1688581572467123, 1.1651349177909298, 1.142999740403628, 1.1562545163673468, 0.5105695295183673]
+Predicted values:  [1.1605635613123009, 1.1467294254885694, 1.1605635613123009, 1.1605635613123009, 1.1498850653141577, 1.1498850653141577, 1.149752169729942, 1.1402237415119352, 1.140223741483684, 0.6113791669252375]
+R^2: 0.9695819896742908, MSE: 0.0011406324663799194, RMSE: 0.033773250752332375
+
+Population len 10
+
+Best params so far: [104408.9527139999, 2.5, 26.281549979608695, 17.245030118251385, 3.625, -62.08948500630426, 36.66838630014895, 3.125, -63.497840562678206, -3.7772835114039864, -0.25, 2.0, 0.5082658458140652, 0.5706274996069265, 0.2447656654106254, 0.6607744194647549], with fitness: 1.1605635613123009
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 166
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1615197144 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.10002214421768706, 0.10496491572629048, 0.0, 0.09389738474758318, 0.0, 0.0, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 17
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [-36428.58498269289, 7.5, 36.179236119817176, 93.40177507539914, 7.0, -47.87329001027761, -78.14711574182704, 4.0, -74.60328146790724, 18.805403652578754, 2.5, -2.0, 0.5029689602497981, 0.0908378812677676, 0.7742687113930187, 1.0862025037009002], with fitness: 0.6059386463895509
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 42
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.244964259263727, 0.43714576220408174, 0.0, 1.1558907519984214, 0.8361501410083392, 0.8728605545505023, 0.44376141035102046, 0.44376141035102046, 1.3134641486352785, 0.0, 0.5506565600000001, 0.832148686722625, 0.5347274689795918, 0.6088367600000003, 0.0, 0.49899261669387757]
+Predicted values:  [0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375]
+R^2: -0.739570008532346, MSE: 0.28143821332618274, RMSE: 0.5305075054381255
+
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.6059386463895509, 0.5344073057142859, 0.5401674499183674, 0.3608137624854816, 1.244964259263727, 0.4282522556734695, 0.0, 1.1558907519984214, 0.8333263548858902, 0.5649962677573999]
+Predicted values:  [0.6059386293397842, 0.52728302832971, 0.530363004811552, 0.3608137528972878, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375, 0.26492733899779375]
+R^2: -0.8438936915147361, MSE: 0.226441537748723, RMSE: 0.4758587371780863
+
+Population len 10
+
+Best params so far: [-36428.58498269289, 7.5, 36.179236119817176, 93.40177507539914, 7.0, -47.87329001027761, -78.14711574182704, 4.0, -74.60328146790724, 18.805403652578754, 2.5, -2.0, 0.5029689602497981, 0.0908378812677676, 0.7742687113930187, 1.0862025037009002], with fitness: 0.6059386293397842
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 70
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [-111382.56664854713, 7.5, 51.920922090856045, 118.72503876694142, 7.5, -70.19303824828036, -119.57938879788671, 6.0, -63.98927245770227, 84.60137340807303, 4.5, -7.25, 0.08368042815422039, 0.1301761514420482, 0.021025399714122983, 1.5277579451115049], with fitness: 1.244964259263727
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 88
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.0, 0.0, 0.1757610600392366, 0.0, 0.34861839520658366, 0.34861839520658366, 0.4574322818644898, 1.244964259263727, 1.244964259263727]
+Predicted values:  [0.4787316353819706, 0.47809462019278426, 0.17576109033465936, 0.4787316353819706, 0.4787316353819706, 0.4787316353819706, 0.4787316353819706, 1.2449642400853707, 1.2449642496744517]
+R^2: 0.6322745888536895, MSE: 0.08013944403182385, RMSE: 0.28308910970191675
+
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.244964259263727, 1.244964259263727, 1.244964259263727, 1.244964259263727, 1.244964259263727, 0.7982521147282042, 0.0, 0.0, 0.34861839520658366, 0.34861839520658366]
+Predicted values:  [1.2449642496744517, 1.2449642400853707, 1.2449642496744517, 1.2449642496744517, 1.2449642400853707, 0.7982520987530415, 0.4787316353819706, 0.4787316353819706, 0.4787316353819706, 0.4787316353819706]
+R^2: 0.8156203061933072, MSE: 0.04922268679688692, RMSE: 0.22186186422386098
+
+Population len 10
+
+Best params so far: [-111382.56664854713, 7.5, 51.920922090856045, 118.72503876694142, 7.5, -70.19303824828036, -119.57938879788671, 6.0, -63.98927245770227, 84.60137340807303, 4.5, -7.25, 0.08368042815422039, 0.1301761514420482, 0.021025399714122983, 1.5277579451115049], with fitness: 1.2449642496744517
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 106
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+/home/jovyan/.local/lib/python3.7/site-packages/sklearn/gaussian_process/kernels.py:409: ConvergenceWarning:
+
+The optimal value found for dimension 0 of parameter k1__k1__constant_value is close to the specified lower bound 1e-05. Decreasing the bound and calling fit again may find a better value.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [-111382.56664854713, 7.5, 51.92092209085605, 118.72503876694141, 7.5, -70.19303824828037, -119.5793887978867, 6.0, -63.98927245770227, 84.60137340807304, 4.5, -7.25, 0.5029689602497981, 0.0908378812677676, 0.7742687113930187, 1.5277579451115049], with fitness: 1.244964259263727
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 127
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.244964259263727, 1.244964259263727, 0.9522830441127066, 1.244964259263727, 1.244964259263727, 1.244964259263727, 1.244964259263727, 1.244964259263727, 1.244964259263727, 1.244964259263727, 1.244964259263727, 1.244964259263727]
+Predicted values:  [1.2449642555984717, 1.2449642555984717, 0.651214692099607, 1.2449642721352303, 1.2449642555984717, 1.2449642555984717, 1.2449642555984717, 1.2449642721352303, 1.2449642555984717, 1.2449642721352303, 1.2449642555984717, 1.2449642555984717]
+R^2: -0.15432758101244892, MSE: 0.007553512715323687, RMSE: 0.08691094703962031
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.244964259263727, 1.244964259263727, 1.244964259263727, 1.2370160823657679, 0.5625818581891143, 1.244964259263727, 1.244964259263727, 1.244964259263727, 1.244964259263727, 1.244964259263727]
+Predicted values:  [1.2449642721352303, 1.2449642721352303, 1.2449642721352303, 1.2428381511547517, 0.699302248708576, 1.2449642555984717, 1.244964188128287, 1.2449642555984717, 1.2449642555984715, 1.2449642555984715]
+R^2: 0.9552058017962354, MSE: 0.0018726361668783386, RMSE: 0.04327396638717485
+
+Population len 10
+
+Best params so far: [-111382.56664854713, 7.5, 51.92092209085607, 118.72503876694141, 7.5, -70.19303824828037, -119.5793887978867, 6.0, -63.98927245770227, 84.60137340807304, 4.5, -7.25, 0.08368042815422039, 0.1301761514420482, 0.021025399714122983, 1.5277579451115049], with fitness: 1.2449642721352303
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 142
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Here
+!=========================================== Starting experiment 1615197262 ===========================================!
+/opt/conda/lib/python3.7/site-packages/ipykernel_launcher.py:53: RuntimeWarning:
+
+invalid value encountered in double_scalars
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+!=========================================== Starting experiment 1615197268 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.11350419132653056, 0.0, 0.0, 0.0, 0.0, 0.0, 0.10514198271308514, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 33
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [83910.51077096525, 8.0, 45.513949062390125, 59.2176110886733, 0.0, 3.815677458461188, 3.381657816589591, 2.0, 24.00004358480239, -42.95580586495191, 3.0, 9.5, 0.27088679488777134, 0.9359969279749301, 0.9268752419947307, 1.134783712798548], with fitness: 1.2334836326077099
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 55
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.2288834657142857, 1.7093268810612243, 1.718246687591837, 1.2696255414512474, 0.47741245918367364, 1.701310837387755, 1.113153498265306, 0.47590777877551044, 0.7980162444125307, 0.7980162444125307, 0.7980162444125307, 0.5723262918254286, 1.2423086965532883]
+Predicted values:  [1.2411477365017514, 0.5376912331490029, 0.5376912331490029, 1.2411477365017514, 0.5376912331490029, 0.5376912331490029, 0.5376912331490029, 0.5376912331490029, 0.5376912331490029, 0.5376912331490029, 0.5376912331490029, 0.5376912331490029, 1.2411477365017514]
+R^2: -0.8674036048977296, MSE: 0.3588099282721966, RMSE: 0.5990074526015486
+
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.20566122399093, 1.272207489297052, 1.2116615550566894, 1.2538205999546486, 1.2243984965532881, 1.2198011369161, 1.2400113954195016, 1.671112432489796, 1.709654198612245, 0.47590777877551044]
+Predicted values:  [1.2411477365017514, 1.2411477365017514, 1.2411477365017514, 1.2411477365017514, 1.251691851895885, 1.2411477365017514, 1.251691851895885, 0.5376912331490029, 0.5376912331490029, 0.5376912331490029]
+R^2: -1.6842049883599448, MSE: 0.2666549077568257, RMSE: 0.5163863938533099
+
+Population len 10
+
+Best params so far: [83910.51077096525, 8.0, 45.513949062390125, 59.2176110886733, 0.0, 3.815677458461188, 3.381657816589591, 2.0, 24.00004358480239, -42.95580586495191, 3.0, 9.5, 0.2986610996104486, 0.004420757822313215, 0.7071366765685205, 1.134783712798548], with fitness: 1.251691851895885
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 78
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [83910.51077096525, 8.0, 45.513949062390125, 59.2176110886733, 0.0, 3.815677458461188, 3.381657816589591, 2.0, 24.00004358480239, -42.95580586495191, 3.0, 9.5, 0.2986610996104486, 0.004420757822313215, 0.7071366765685205, 1.134783712798548], with fitness: 1.3109534983673474
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 99
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.2466129786394557, 1.219222910612245, 1.2248722652607709, 1.2420076362358279, 0.7370041193051835, 0.7749852598276328, 1.2892166022222227, 1.2246357024489796, 1.2516763509750573, 1.2872436992743768, 1.2435106498412702, 1.2527161128798188]
+Predicted values:  [1.2580076998483167, 1.2508686492700878, 1.2508686492700878, 1.2580076998483167, 0.5166508457386843, 0.8097780395881252, 1.2580076998483167, 1.2580076998483167, 1.2580076998483167, 1.2580076998483167, 1.2580076998483167, 1.2580076998483167]
+R^2: 0.8656312053728888, MSE: 0.004587490829089929, RMSE: 0.06773101821979298
+
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.2493647886167802, 1.2505243759183677, 1.2521118670748301, 1.2474586580045353, 1.2841254983673474, 1.2529918707029477, 1.2651024212698414, 1.2318254839002272, 1.2130515296598643, 1.2492349056235832]
+Predicted values:  [1.2580076998483167, 1.2508686492700878, 1.2580076998483167, 1.2580076998483167, 1.2580076998483167, 1.2580076998483167, 1.2580076998483167, 1.0010463222973478, 1.2580076998483167, 1.2508686497662738]
+R^2: -17.10499971673057, MSE: 0.0056261242368221736, RMSE: 0.07500749453769386
+
+Population len 10
+
+Best params so far: [83910.51077096525, 8.0, 45.513949062390125, 59.2176110886733, 0.0, 3.815677458461188, 3.381657816589591, 2.0, 24.00004358480239, -42.95580586495191, 3.0, 9.5, 0.2986610996104486, 0.004420757822313215, 0.7071366765685205, 1.134783712798548], with fitness: 1.2580076998483167
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 126
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [83910.51077096525, 8.0, 45.51394906239013, 59.21761108867331, 0.0, 3.815677458461188, 3.381657816589591, 2.0, 24.000043584802388, -42.95580586495191, 3.0, 9.5, 0.2986610996104486, 0.004420757822313215, 0.7071366765685205, 1.1347837127985483], with fitness: 1.280178834421769
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 144
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.7022473163265304, 1.2469344521088432, 1.2156206371428575, 1.2587943084353739, 1.2261327010884358, 1.2124172194557827, 1.2215471079818594, 1.2751102697959187, 1.1313544729931972]
+Predicted values:  [0.95561405420347, 1.2568031372156159, 1.2568031372156159, 1.2120799668228557, 1.2568031372156159, 1.2568031372156159, 1.208616576368142, 1.2568031372156159, 0.95561405420347]
+R^2: 0.5976112302906644, MSE: 0.011385350303089022, RMSE: 0.10670215697486636
+
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.275908076145125, 1.2285187360090706, 1.2630435582312929, 1.219249700634921, 1.2433430920181407, 1.2361266765986396, 1.2207500267120184, 1.264581057771909, 1.2342403333786847, 1.2546210925623582]
+Predicted values:  [1.2568031372156159, 1.2568031372156159, 1.2568031372156159, 1.2568031372156159, 1.2568031372156159, 1.2568031372156159, 1.2568031372156159, 1.1415977169470322, 1.2120799677238114, 1.2086165754671863]
+R^2: -5.417954202063243, MSE: 0.0022255124633499784, RMSE: 0.04717533744818343
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Here
+!=========================================== Starting experiment 1615197352 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.3225539586394562, 0.0, 0.0, 0.11114560918367344, 0.0, 0.0, 0.08951078122448976, 0.6104814489795924]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 37
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [27771.710052094546, 7.0, -5.522330352530208, 88.80287629650549, 1.0, -46.349821381926546, 37.076935044505895, 7.5, -11.222518105928962, -8.708482487971189, 7.5, 3.5, 0.1839226325680543, 0.7576220120076691, 0.10129842469461736, 0.885991652569893], with fitness: 1.1581710055054777
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 53
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.6930769754612245, 1.1674155661929106, 0.7934498393279185, 0.7934498393279185, 1.51840222282449, 0.6930769754612245, 1.4903839690485716]
+Predicted values:  [0.7096021835915425, 1.1687902979758131, 0.7096021835915425, 0.7096021835915425, 0.7096021835915425, 0.7096021835915425, 0.7096021835915425]
+R^2: -0.5825685658945212, MSE: 0.18262665908637585, RMSE: 0.4273484048014873
+
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.1556558686633729, 1.1529472143132116, 0.09392760816326524, 1.065143679512572, 0.9839524043673469, 0.6930769754612245, 0.8000341969132245, 0.7934498393279185, 1.7673394558857143, 0.6930769754612245]
+Predicted values:  [1.1687902979758131, 1.1504320832926387, 0.7172047945629085, 1.0553028063643688, 1.0099521021755267, 0.7096021835915425, 0.7096021835915425, 0.7096021835915425, 0.7096021835915425, 0.7096021835915425]
+R^2: 0.08673684857789687, MSE: 0.15239887978878197, RMSE: 0.3903829911622457
+
+Population len 10
+
+Best params so far: [27771.71005209455, 7.0, -5.522330352530208, 88.8028762965055, 1.0, -46.349821381926546, 37.0769350445059, 7.5, -11.222518105928962, -8.708482487971189, 7.5, 3.5, 0.7567968187168659, 0.07981472563620662, 0.7858907055706057, 0.885991652569893], with fitness: 1.1687902979758131
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 72
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [27771.710052094546, 7.0, -5.522330352530208, 88.80287629650549, 1.0, -46.349821381926546, 37.076935044505895, 7.5, -11.222518105928962, -8.708482487971189, 7.5, 3.5, 0.1839226325680543, 0.7576220120076691, 0.10129842469461736, 0.885991652569893], with fitness: 1.173117730317508
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 91
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.1428620611445757, 1.0288095636782713, 1.848740191028571, 0.7504259888087348, 1.1626407391252418, 1.5264234270077548, 1.0229203963313325, 0.4050114813994173, 1.1596308770414607, 1.2396649592352311]
+Predicted values:  [1.1615235705663283, 0.7343633143352122, 0.7343633143352122, 0.7343633143352122, 1.1666403228079327, 0.7343633143352122, 0.7343633143352122, 0.4097196228873178, 1.1615235705860012, 0.7343633143352122]
+R^2: -0.6640492391899895, MSE: 0.2295136588056561, RMSE: 0.479075838261184
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.1683983270951663, 1.786658492548571, 1.1617179614668098, 1.1639643069018257, 1.161844879619334, 1.1540338841306121, 1.1202414621972072, 1.0739326393085233, 1.8194746310285712, 0.0]
+Predicted values:  [1.1615235705663283, 0.7343633143352122, 1.163955826251053, 1.1615235705663283, 1.1666403228079327, 1.1615235705663283, 1.1475375236524183, 0.7343633143352122, 0.7343633143352122, 0.7343633143352122]
+R^2: -0.34731820873967667, MSE: 0.29402709097705376, RMSE: 0.5422426495371364
+
+Population len 10
+
+Best params so far: [27771.710052094546, 7.0, -5.522330352530208, 88.80287629650549, 1.0, -46.349821381926546, 37.076935044505895, 7.5, -11.222518105928962, -8.708482487971189, 7.5, 3.5, 0.7567968187168659, 0.07981472563620662, 0.7858907055706057, 0.885991652569893], with fitness: 1.1666403228079327
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 110
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [0.885991652569893, 7.0, -5.522330352530208, 88.8028762965055, 1.0, -46.349821381926546, 37.0769350445059, 7.5, -11.222518105928962, -8.708482487971189, 7.5, 3.5, 0.1839226325680543, 0.7576220120076691, 0.10129842469461736, 27771.71005209455], with fitness: 2.3044277702236737
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 139
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.8143487783755097, 1.0505349257142857, 0.8309624559183671, 1.207786356433942, 0.8309624559183671, 1.882730304497959, 1.8177648993551014, 0.8260524073469384, 1.0269666008163265, 0.8256793648979588, 0.8317525853061222, 1.2444771907626209, 1.2663987164769064, 1.9025137624571429, 1.0269666008163265, 0.8430356987755101, 1.0269666008163265, 1.1281357608506983, 0.8633774783673467, 1.1583117749319012]
+Predicted values:  [1.8024574322559452, 0.9455507537119895, 0.9455507537119895, 0.9455507537119895, 0.9455507537119895, 0.9456019473749688, 0.9455507537119895, 0.9455507537119895, 0.9455507537119895, 0.9455507537119895, 0.9455507537119895, 0.9455507537119895, 0.9455507537119895, 0.9456019473749688, 0.9455507537119895, 0.9455507537119895, 0.9455507537119895, 0.9455507537119895, 0.9455507537119895, 0.9455507537119895]
+R^2: -0.09264490305098194, MSE: 0.15052451210553675, RMSE: 0.38797488592115953
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [2.2958103836930612, 0.0, 0.11153903469387748, 1.7919217293959178, 1.6522030681714281, 1.9312846742938776, 1.9129491138857142, 0.0, 0.8317525853061222, 1.1223410984317936]
+Predicted values:  [2.3044276346014865, 0.9456073830740868, 0.9464310892758516, 1.7803483940025888, 1.8024574322559452, 0.9456019473749688, 0.9456019473749688, 0.9455507537119895, 0.9455507537119895, 0.9455507537119895]
+R^2: 0.3622625315982767, MSE: 0.4459604694426774, RMSE: 0.6678027174567931
+
+Population len 10
+
+Best params so far: [0.885991652569893, 7.0, -5.522330352530208, 88.8028762965055, 1.0, -46.349821381926546, 37.0769350445059, 7.5, -11.222518105928962, -8.708482487971189, 7.5, 3.5, 0.1839226325680543, 0.7576220120076691, 0.10129842469461736, 27771.71005209455], with fitness: 2.3044276346014865
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 184
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1615197481 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.08602354122448971, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 30
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [-24007.948978784672, 4.0, 19.13205213984445, -16.0777986808332, 5.5, -66.50214676211277, 20.73137195009287, 9.0, 31.240677189846352, 7.265409137395025, 4.0, 0.0, 0.44273759021083514, 0.8934305749921579, 0.8296323280399374, -0.35469362635195506], with fitness: 0.48804170770326516
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 47
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.24705323545306115, 0.21797729006448968, 0.09535386036519866, 0.48804170770326516, 0.0, 0.46924914075709784, 0.37439067440816315, 0.0]
+Predicted values:  [0.34979766536434875, 0.211102654043481, 0.10173580474677518, 0.4880416851149211, 0.07190969327527437, 0.2345921879615884, 0.03758803126888002, 0.04020855314599314]
+R^2: 0.30803218747552163, MSE: 0.023241505670778286, RMSE: 0.15245165027240043
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.48804170770326516, 0.48804170770326516, 0.10139681995464847, 0.4650396439685711, 0.4650396439685711, 0.0, 0.4007519621439511, 0.21797729006448968, 0.09535386036519866, 0.0]
+Predicted values:  [0.48804168919734425, 0.48804168511491985, 0.08293446448422796, 0.46503963715371366, 0.46503963715371366, 0.048813054306786646, 0.23459157733417538, 0.211102654043481, 0.10173580474677518, 0.07190969327527437]
+R^2: 0.9100419261325629, MSE: 0.0035591840141862086, RMSE: 0.05965889719217251
+
+Population len 10
+
+Best params so far: [-24007.948978784672, 4.0, 19.13205213984445, -16.0777986808332, 5.5, -66.50214676211277, 20.73137195009287, 9.0, 31.240677189846352, 7.265409137395025, 4.0, 0.0, 0.44273759021083514, 0.8934305749921579, 0.8296323280399374, -0.35469362635195506], with fitness: 0.48804168919734425
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 65
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [-70299.24303670533, 4.0, 16.830033768024762, -27.230840349607384, 5.75, -60.13945266164517, 42.90709311594672, 13.0, 81.82758540882416, 29.22848746004474, 5.5, -3.0, 0.44273759021083514, 0.8934305749921579, 0.8296323280399374, -0.7960526175070177], with fitness: 1.3114892522433188
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 83
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.4373129286408162, 0.3153266946363264, 0.0, 0.8985247779567883, 1.3114892522433188, 1.213691220753523, 0.5660838906816329, 0.5660838906816329, 1.3114892522433188]
+Predicted values:  [0.38867227892738887, 0.18558598193646714, 0.48134755759744613, 0.3711623586895241, 1.311489228740069, 0.37116235869384145, 0.39696037320485883, 0.39696037320485883, 1.311489228740069]
+R^2: 0.27293371132798194, MSE: 0.1440072855030974, RMSE: 0.3794829185919933
+
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.3114892522433188, 0.0, 1.3114892522433188, 1.3114892522433188, 1.1309875394053603, 0.48804170770326516, 0.0, 0.5660838906816329, 0.5660838906816329, 0.0]
+Predicted values:  [1.311489228740069, 0.36649918074565646, 1.311489204900727, 1.311489228740069, 1.1309875014220596, 0.4880416902343376, 0.48134755759744613, 0.3969603726609513, 0.39696037416708824, 0.3711622889789062]
+R^2: 0.803054311309868, MSE: 0.05609840936382675, RMSE: 0.23685102778714462
+
+Population len 10
+
+Best params so far: [-70299.24303670533, 4.0, 16.830033768024762, -27.230840349607384, 5.75, -60.13945266164517, 42.90709311594672, 13.0, 81.82758540882416, 29.22848746004474, 5.5, -3.0, 0.44273759021083514, 0.8934305749921579, 0.8296323280399374, -0.7960526175070177], with fitness: 1.311489228740069
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 101
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+/home/jovyan/.local/lib/python3.7/site-packages/sklearn/gaussian_process/kernels.py:409: ConvergenceWarning:
+
+The optimal value found for dimension 0 of parameter k1__k1__constant_value is close to the specified lower bound 1e-05. Decreasing the bound and calling fit again may find a better value.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [-70299.24303670533, 4.0, 16.830033768024762, -27.230840349607387, 5.75, -60.13945266164515, 42.907093115946715, 13.0, 81.82758540882415, 29.228487460044743, 5.5, -3.0, 0.7039167491127499, 0.6272839377867406, 0.8296323280399374, -0.7960526175070178], with fitness: 1.3114892522433188
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 121
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.3114892522433188, 0.8276772770628578, 0.1645870991306121, 0.8993334513371962, 0.5660838906816329, 1.151080718704543, 1.3114892522433188, 1.3114892522433188, 1.151080718704543, 0.8015622213322983, 1.151080718704543]
+Predicted values:  [1.3114892466587218, 0.5344463638791908, 0.5133408358168242, 0.5133408463881654, 0.5660838869791669, 0.5248126653268014, 1.3114892466587218, 1.311489232077169, 0.5248126653268014, 0.5133408358168242, 0.5248126653268014]
+R^2: -0.23041893655984524, MSE: 0.1469373108625054, RMSE: 0.38332402854830977
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.3114892522433188, 0.5723213743084445, 0.09871657052154188, 0.26624059142857126, 0.0, 0.5660838906816329, 0.8276772770628578, 1.151080718704543, 1.151080718704543, 0.885178173946572]
+Predicted values:  [1.3114892466587218, 0.5087579701194919, 0.513339593175475, 1.310773567076144, 0.4970467329198585, 0.5660838869791669, 0.5344463638675155, 0.5248126652456737, 0.5248126653650934, 0.5248067056777603]
+R^2: -0.3216015414726332, MSE: 0.25143324622005886, RMSE: 0.5014311978926509
+
+Population len 10
+
+Best params so far: [-70299.24303670533, 4.0, 16.830033768024762, -27.230840349607387, 5.75, -60.13945266164515, 42.907093115946715, 13.0, 81.82758540882415, 29.228487460044743, 5.5, -3.0, 0.7039167491127499, 0.6272839377867406, 0.8296323280399374, -0.7960526175070178], with fitness: 1.3114892466587218
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 151
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1615197601 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.41408702465306135, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 21
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [93284.19414382154, 2.5, -3.5633104775626934, 42.69334762067566, 1.5, -75.74906280431946, -13.741346452518023, -1.0, -37.74960864601444, 32.321780909831624, 0.0, 6.0, 0.4518181634946028, 0.8680864418609342, 0.4413628027488854, 0.8967182095803439], with fitness: 0.8005295477551021
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 45
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.138013911020408, 0.8267057741496592, 0.8002032469148572, 0.5687869232653059, 0.5140275834005799, 0.0, 0.8214854993808163, 0.7287384432653061, 0.0, 0.8267057741496592, 0.8002032469148572, 0.7693242540307632, 0.8267057741496592, 0.8002032469148572, 0.7365714824603553]
+Predicted values:  [0.6387980226105419, 0.5909493255570842, 0.6314339297599454, 0.5900679880322288, 0.7472578374694, 0.6534308980982957, 0.5962844043083839, 0.6355517190250632, 0.6688013518322352, 0.5909493255570842, 0.6314339297088747, 0.6248044015694076, 0.5909493255570842, 0.6314339297088747, 0.5761204890456841]
+R^2: -0.16771990973938866, MSE: 0.10243701929636881, RMSE: 0.32005783742375193
+
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.8005295477551021, 0.7508828048308982, 0.5140275834005799, 0.7072964798382448, 0.7048026163802856, 0.0, 0.0, 1.138013911020408, 1.5766559688763264, 0.8002032469148572]
+Predicted values:  [0.8005295388874056, 0.7508828025782566, 0.7472578374694, 0.7072964387969456, 0.7048025964374587, 0.6688001128717628, 0.6534308980169781, 0.6387980226105419, 0.5625031367108402, 0.6314339297599454]
+R^2: -0.11867875002125561, MSE: 0.22348674335166296, RMSE: 0.47274384538739683
+
+Population len 10
+
+Best params so far: [93284.19414382154, 2.5, -3.5633104775626934, 42.69334762067566, 1.5, -75.74906280431946, -13.741346452518023, -1.0, -37.74960864601444, 32.321780909831624, 0.0, 6.0, 0.4518181634946028, 0.8680864418609342, 0.4413628027488854, 0.8967182095803439], with fitness: 0.8005295388874056
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 66
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [96813.93960367775, 1.0, -3.5416207685583796, 36.935173277611504, 2.25, -70.69736531722964, -20.573315977932566, -0.75, -33.65133972667833, 48.141459005561885, 0.0, 6.0, 0.08920684411487045, 0.6617190621946808, 0.6436833351742742, 0.927713138584333], with fitness: 1.138013911020408
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 92
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.5258561746612245, 0.49950879980408164, 0.0, 0.0, 1.4119777906122448, 0.7919747003893467, 0.3995769910070124, 0.0, 0.006175060571428571, 0.0, 1.1944323673469381, 0.0, 0.49735037679914074, 0.0, 0.8169865653469386, 0.49735037679914074, 0.8004092345475103]
+Predicted values:  [0.48083037801805184, 0.4749269429517298, 0.6764861972529207, 0.7153933473762265, 0.5997950484028726, 0.6153704367398138, 0.6319378725357383, 0.7153933473762265, 0.48373873028573144, 0.5745799385032289, 0.6195619806051915, 0.6175832218546164, 0.4775068948780829, 0.619206565955226, 0.4797550957625845, 0.4775068948780829, 0.6205838751432923]
+R^2: -0.22886596689352023, MSE: 0.23700132851030506, RMSE: 0.48682782224345506
+
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.138013911020408, 1.1308023750805583, 0.0, 0.7508828048308982, 0.0, 0.0, 0.0, 0.3995769910070124, 0.8004092345475103, 1.1944323673469381]
+Predicted values:  [1.1380138834075013, 1.0743172701892072, 0.9223432009608039, 0.7508823605275188, 0.7153933473762265, 0.7122111894110253, 0.6764861972529207, 0.6319378725357383, 0.6205838751545162, 0.6195619806051599]
+R^2: -0.12905969499568815, MSE: 0.2747378242997822, RMSE: 0.5241543897553298
+
+Population len 10
+
+Best params so far: [96813.93960367775, 1.0, -3.5416207685583796, 36.935173277611504, 2.25, -70.69736531722964, -20.573315977932566, -0.75, -33.65133972667833, 48.141459005561885, 0.0, 6.0, 0.08920684411487045, 0.6617190621946808, 0.6436833351742742, 0.927713138584333], with fitness: 1.1380138834075013
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 113
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+/home/jovyan/.local/lib/python3.7/site-packages/sklearn/gaussian_process/kernels.py:409: ConvergenceWarning:
+
+The optimal value found for dimension 0 of parameter k1__k1__constant_value is close to the specified lower bound 1e-05. Decreasing the bound and calling fit again may find a better value.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [145220.55441172374, 1.0, -12.683317122974156, 31.40201488550531, 2.5625, -75.01449658251597, -14.279074582679478, -2.625, -5.510903796364303, 70.08873095277781, -0.125, 6.125, 0.9836939318704693, 0.3060773188664523, 0.4413628027488854, -39470.60188601448], with fitness: 1.3166452297959184
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 131
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.8571998875510205, 0.7148195436734693, 0.0, 0.0, 0.0, 0.7515344787755103, 0.9420474983673469, 0.7148195436734693, 1.191806418367347]
+Predicted values:  [0.6333590642736614, 0.6333590642745711, 0.6333590642736614, 0.6333590642736614, 0.6333590642736614, 0.6333590642824075, 0.6333590642736614, 0.6333590642745707, 0.6333590642736614]
+R^2: -0.01869490574174293, MSE: 0.1875472079660192, RMSE: 0.43306720952528743
+
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.3166452297959184, 1.1690178861224485, 1.138013911020408, 1.094490515574651, 0.7515344787755103, 0.7148195436734693, 0.7135655588912655, 0.8571998875510205, 0.0, 0.0]
+Predicted values:  [1.3166451956319536, 1.1690178593397764, 1.1380138793253107, 1.103693108241656, 0.6333590642824075, 0.6333590642745711, 0.6333590642745689, 0.6333590642736614, 0.6333590642736614, 0.6333590642736614]
+R^2: 0.5367174342330647, MSE: 0.08795111305457126, RMSE: 0.2965655291070951
+
+Population len 10
+
+Best params so far: [145220.55441172374, 1.0, -12.683317122974156, 31.40201488550531, 2.5625, -75.01449658251597, -14.279074582679478, -2.625, -5.510903796364303, 70.08873095277781, -0.125, 6.125, 0.9836939318704693, 0.3060773188664523, 0.4413628027488854, -39470.60188601448], with fitness: 1.3166451956319536
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 162
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1615197676 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.0, 0.09558247690655204, 0.0, 0.0, 0.0, 0.0, 0.0, 0.09359630247046183]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 41
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [43405.16652425814, 5.0, 59.77697261105178, 99.60178286064229, 3.5, -79.96257051959887, -90.64085279245715, -3.5, 8.559805889852143, -58.27101907819849, 1.0, -1.5, 0.9149413401850902, 0.6418499154627841, 0.6348156697565733, 1.061539445547393], with fitness: 0.5674799022012206
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 64
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.4604482213796245, 0.6139463698095348, 0.0, 0.0, 0.0, 0.6083785108625959, 0.5334258457346082, 0.5250615470978041, 0.4604482213796245, 0.0877441024489795, 0.488473681946865, 0.551323513647384, 0.4604482213796245, 0.49615729517800794]
+Predicted values:  [0.24119704678359727, 0.24119704678359727, 0.23619800425406376, 0.24119704678359727, 0.24119704678359727, 0.24119704678359727, 0.24119704678359727, 0.5250615329055281, 0.24119704678359727, 0.24119704674347364, 0.24119704678359727, 0.24119705139836406, 0.24119704678359727, 0.24119704678359727]
+R^2: -0.2383874283796823, MSE: 0.06581381487340461, RMSE: 0.25654203334620357
+
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.5674799022012206, 0.5250615470978041, 0.5250615470978041, 0.41066578171428575, 0.5180139316779144, 0.551323513647384, 0.4604482213796245, 0.0, 0.0, 0.0]
+Predicted values:  [0.5674798858881733, 0.5250610254057126, 0.5250610657336666, 0.24119704678359727, 0.24119704678359727, 0.24119704678359727, 0.24119704678359727, 0.24119704678359727, 0.24119704678359727, 0.24119704678359727]
+R^2: 0.24316483542697787, MSE: 0.04241247890246451, RMSE: 0.20594290204438828
+
+Population len 10
+
+Best params so far: [43405.16652425814, 5.0, 59.77697261105178, 99.60178286064229, 3.5, -79.96257051959887, -90.64085279245715, -3.5, 8.559805889852143, -58.27101907819849, 1.0, -1.5, 0.9149413401850902, 0.6418499154627841, 0.6348156697565733, 1.061539445547393], with fitness: 0.5674798858881733
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 84
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [65107.37932022212, 5.0, 63.010640922884875, 109.70659633749723, 4.5, -75.56914850550882, -102.21365170003789, -5.0, -10.422175557487076, -63.41123482578752, 1.5, -1.25, 0.20430632128517423, 0.6069229798579516, 0.6348156697565733, -3145.7799777129044], with fitness: 0.6083785108625959
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 111
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.6083785108625959, 0.3881602132944164, 0.6083785108625959, 0.0, 0.0, 0.6124615078066775, 0.0, 0.5519068209751388, 0.0, 0.0, 0.6124615078066775, 0.0, 0.5250615470978041, 0.6009529308107593, 0.3881602132944164, 0.6083785108625959, 0.6199862605009634, 0.5495562968988121]
+Predicted values:  [0.3299954437657783, 0.3299954437657783, 0.3299954437657783, 0.3299954437657783, 0.3299954437657783, 0.3299954437657783, 0.3299954437657783, 0.3281296317106078, 0.3299954437657783, 0.3299954437657783, 0.3299954437657783, 0.3299954437657783, 0.5250615427210618, 0.3301826901387292, 0.3299954437657783, 0.3299954437657783, 0.3299954437657783, 0.3299954431383788]
+R^2: 0.0056229507914122845, MSE: 0.07266156583540878, RMSE: 0.26955809361881305
+
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.6083785108625959, 0.6083785108625959, 0.5674799022012206, 0.5642962472473428, 0.5250615470978041, 0.6009529308107593, 0.6083785108625959, 0.3881602132944164, 0.6083785108625959, 0.0]
+Predicted values:  [0.6083785217537285, 0.6083784855511987, 0.3299954437657783, 0.5642962365956875, 0.5250614915746792, 0.3301826901387292, 0.3299954437657783, 0.3299954437657783, 0.3299954437657783, 0.3299954437657783]
+R^2: -0.20898052480933704, MSE: 0.03969897886449234, RMSE: 0.1992460259691328
+
+Population len 10
+
+Best params so far: [65107.37932022212, 5.0, 63.010640922884875, 109.70659633749723, 4.5, -75.56914850550882, -102.21365170003789, -5.0, -10.422175557487076, -63.41123482578752, 1.5, -1.25, 0.20430632128517423, 0.6069229798579516, 0.6348156697565733, -3145.7799777129044], with fitness: 0.6083785217537285
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 131
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [48830.71972324913, 5.0, 60.58538968901006, 74.33071990114, 3.75, -78.86421501607636, -5.767881823511857, -3.875, 3.814310528017339, -16.088672328182497, 1.125, 1.0, 0.20430632128517423, 0.6069229798579516, 0.6348156697565733, -785.6488398440656], with fitness: 1.6837764274448979
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 157
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.3730859454350166, 0.52039974713669, 1.3763878973147154, 0.38016873110204086, 0.4635298540987755, 0.610528179140555, 0.610528179140555, 0.0, 0.44815721440816336, 1.3868472326530614, 0.4038107939591836, 0.4038107939591836, 0.3863420086122449, 0.3863420086122449, 0.4038107939591836, 0.4635298540987755, 0.4485031948163266]
+Predicted values:  [0.39160646844881813, 0.39160646844881813, 0.39160646844881813, 0.39160646844881813, 1.749299021558364, 0.39160646844881813, 0.39160646844881813, 0.39160646844881813, 0.39160646844881813, 0.39160646844881813, 0.39160646844881813, 0.39160646844881813, 0.39160646844881813, 0.39160646844881813, 0.39160646844881813, 1.749299021558364, 0.39160646844881813]
+R^2: -1.5770083678835451, MSE: 0.3825217874483421, RMSE: 0.6184834576998338
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1615197747 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.10061225850340137, 0.0, 0.0, 0.0, 0.0, 0.1118884765306122, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 75
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [1.2859684078564577, 4.0, -2.913878462213744, 12.80195566674017, 8.0, -7.380210223700082, -38.03943718326232, 4.5, 42.937791088574876, -92.17716645486912, 7.5, 1.5, 0.8339145099816442, 0.9775694372128636, 0.3909470629308246, 89896.14897693667], with fitness: 0.5625336010204088
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 93
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.2779366231292521, 0.6685274265306127, 0.6086356832653065, 0.0, 0.47554879490495633, 0.2826700511564632, 0.0991139061224489, 0.0991139061224489, 0.2713241359183671]
+Predicted values:  [0.10517225340434118, 0.17655437496614937, 0.1835172477841031, 0.137123853962316, 0.20276907839979919, 0.13840516201926917, 0.2537334530744431, 0.25373345306086587, 0.18436426456388993]
+R^2: -0.435048488561411, MSE: 0.06911235624655886, RMSE: 0.26289229019991983
+
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.5625336010204088, 0.5444330160544226, 0.4156985501496597, 0.38269075459183727, 0.0991139061224489, 0.0991139061224489, 0.47554879490495633, 0.2713241359183671, 0.5364814454421777, 0.0]
+Predicted values:  [0.5625335698372752, 0.5418453931787559, 0.41569813115077864, 0.24735806399461024, 0.25373345305523226, 0.2537334530528218, 0.20276907839979919, 0.1843642645505688, 0.17211947295418545, 0.10594796909751741]
+R^2: 0.2552426399170674, MSE: 0.029209145363942784, RMSE: 0.17090683240860438
+
+Population len 10
+
+Best params so far: [1.2859684078564577, 4.0, -2.913878462213744, 12.80195566674017, 8.0, -7.380210223700082, -38.03943718326232, 4.5, 42.937791088574876, -92.17716645486912, 7.5, 1.5, 0.8339145099816442, 0.9775694372128636, 0.3909470629308246, 89896.14897693667], with fitness: 0.5625335698372752
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 109
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [1.2859684078564577, 4.0, -2.913878462213744, 12.80195566674017, 8.0, -7.380210223700082, -38.03943718326232, 4.5, 42.937791088574876, -92.17716645486912, 7.5, 1.5, 0.8339145099816442, 0.9775694372128636, 0.3909470629308246, 89896.14897693667], with fitness: 0.5625336010204088
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 125
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.4169372331428569, 0.0, 0.2870761474489798, 0.17605736857142834, 0.17605736857142834, 0.0991139061224489, 0.11153903469387748]
+Predicted values:  [0.15368248434392892, 0.15368949424311415, 0.15368737243192285, 0.15368988110384832, 0.15368988110384835, 0.15368959863186957, 0.15368452543398792]
+R^2: -0.04685401177368709, MSE: 0.016638778042896315, RMSE: 0.12899138747566177
+
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.5625336010204088, 0.0901832195918367, 0.4257950964285717, 0.4156985501496597, 0.17605736857142834, 0.11953137578231288, 0.0991139061224489, 0.0, 0.2870761474489798, 0.0]
+Predicted values:  [0.5625335805780018, 0.1536778551796951, 0.42756681487804593, 0.4156942762867004, 0.15368988110384832, 0.1536828109461801, 0.15368959863186954, 0.15368949424311415, 0.15368737243192282, 0.15367194812546103]
+R^2: 0.7849269263556264, MSE: 0.007370793256714211, RMSE: 0.08585332408657344
+
+Population len 10
+
+Best params so far: [1.2859684078564577, 4.0, -2.913878462213744, 12.80195566674017, 8.0, -7.380210223700082, -38.03943718326232, 4.5, 42.937791088574876, -92.17716645486912, 7.5, 1.5, 0.8339145099816442, 0.9775694372128636, 0.3909470629308246, 89896.14897693667], with fitness: 0.5625335805780018
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 160
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1615197875 ===========================================!
+/opt/conda/lib/python3.7/site-packages/ipykernel_launcher.py:53: RuntimeWarning:
+
+invalid value encountered in double_scalars
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+!=========================================== Starting experiment 1615197880 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+!=========================================== Starting experiment 1615197887 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.0, 0.0, 0.09531687647690656, 0.0, 0.0, 0.0, 0.09914580861677998, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 30
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+/home/jovyan/.local/lib/python3.7/site-packages/sklearn/gaussian_process/kernels.py:409: ConvergenceWarning:
+
+The optimal value found for dimension 0 of parameter k1__k1__constant_value is close to the specified lower bound 1e-05. Decreasing the bound and calling fit again may find a better value.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [75551.3763946805, 6.0, 46.58062440272638, 134.26422737909346, 2.0, -60.75310473913376, -37.63381321409142, -3.5, -10.566188049814357, -42.28440185133723, -1.5, 1.5, 0.8804609578818114, 0.8762338766566039, 0.04374443146312068, 0.46893453548205244], with fitness: 0.6512583116232653
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 49
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.6940371000596328, 0.6512583116232653, 0.09531687647690656, 0.6438028276308285, 0.6385027384967346, 0.42780641319183693, 0.6385027384967346, 0.6673763577534411, 0.42780641319183693, 0.3734283496326531]
+Predicted values:  [0.23745922131136307, 0.6512583012772417, 0.23745922131136307, 0.23745922131136307, 0.23745922131136307, 0.23745922131136307, 0.23745922131136307, 0.23745922131136307, 0.23745922131136307, 0.23745922131136307]
+R^2: -1.9932739886090562, MSE: 0.09912351922834142, RMSE: 0.31483887820334616
+
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.6512583116232653, 0.6512583116232653, 0.6512583116232653, 0.6430297849684897, 0.6271143731156469, 0.6940371000596328, 0.09531687647690656, 0.6438028276308285, 0.7519595089530614, 0.42780641319183693]
+Predicted values:  [0.6512583012772417, 0.6512583012772417, 0.6512364944361991, 0.6430297646901654, 0.6321394327706771, 0.23745922131136307, 0.23745922131136307, 0.23745922131136307, 0.23745922131136307, 0.23745922131136307]
+R^2: -1.1310329199530664, MSE: 0.0694750783094715, RMSE: 0.2635812556110003
+
+Population len 10
+
+Best params so far: [75551.3763946805, 6.0, 46.58062440272638, 134.26422737909346, 2.0, -60.75310473913376, -37.63381321409142, -3.5, -10.566188049814357, -42.28440185133723, -1.5, 1.5, 0.8804609578818114, 0.8762338766566039, 0.04374443146312068, 0.46893453548205244], with fitness: 0.6512583012772417
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 84
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [0.46893453548205244, 6.0, 46.58062440272637, 134.26422737909348, 2.0, -60.75310473913376, -37.63381321409142, -3.5, -10.566188049814357, -42.28440185133722, -1.5, 1.5, 0.6985830365632838, 0.6059252447741666, 0.04374443146312068, 75551.3763946805], with fitness: 0.7646656962122451
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 106
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.7563940962333467, 0.3614651592653061, 0.7646656962122451, 0.7646656962122451, 0.10061225850340137, 0.7563940962333467, 0.7646656962122451, 0.6351639965428164, 0.10061225850340137, 0.6351639965428164, 0.6212674195926531, 0.3595855572244898, 0.7303577273202326]
+Predicted values:  [0.4448591775029236, 0.4448591775029236, 0.7646656605756913, 0.7646656605756913, 0.4448591775029236, 0.4448591775029236, 0.7646659213921472, 0.4448591775029236, 0.4448591775029236, 0.4448591775029236, 0.4448608003486747, 0.4448591775029236, 0.4448591775029236]
+R^2: 0.15737762517764764, MSE: 0.04849281629321685, RMSE: 0.22021084508537914
+
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.7646656962122451, 0.7646656962122451, 0.7646656962122451, 0.7646656962122451, 0.7646656962122451, 0.736157207421714, 0.6212674195926531, 0.7563940962333467, 0.0, 0.10061225850340137]
+Predicted values:  [0.7646659213921472, 0.7645109234439698, 0.7645417812380509, 0.7646656605756913, 0.7646656605756913, 0.7361520866810631, 0.44486080012297874, 0.4448591775029236, 0.4448591775029236, 0.4448591775029236]
+R^2: 0.43600652085931646, MSE: 0.0444578969366137, RMSE: 0.21085041365056342
+
+Population len 10
+
+Best params so far: [0.46893453548205244, 6.0, 46.58062440272637, 134.26422737909348, 2.0, -60.75310473913376, -37.63381321409142, -3.5, -10.566188049814357, -42.28440185133722, -1.5, 1.5, 0.6985830365632838, 0.6059252447741666, 0.04374443146312068, 75551.3763946805], with fitness: 0.7646659213921472
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 130
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [0.46893453548205244, 6.0, 46.58062440272637, 134.26422737909348, 2.0, -60.75310473913376, -37.63381321409142, -3.5, -10.566188049814357, -42.28440185133722, -1.5, 1.5, 0.6985830365632838, 0.6059252447741666, 0.04374443146312068, 75551.3763946805], with fitness: 0.7646656962122451
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 167
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.7646656962122451, 0.7646656962122451, 0.6351639965428164, 0.6351639965428164, 0.7646656962122451, 0.6351639965428164, 0.6351639965428164, 0.6351639965428164, 0.7646656962122451, 0.6351639965428164, 0.7646656962122451, 0.7646656962122451, 0.7646656962122451, 0.7646656962122451, 0.7646656962122451, 0.6351639965428164, 0.6351639965428164, 0.7646656962122451, 0.6351639965428164, 0.6351639965428164, 0.6351639965428164, 0.6351639965428164, 0.7646656962122451, 0.6351639965428164, 0.6351639965428164, 0.7646656962122451, 0.7646656962122451, 0.7646656962122451]
+Predicted values:  [0.7646655096186175, 0.764666821070267, 0.6148373073936175, 0.6148373073936175, 0.7646731729531318, 0.6148373073936175, 0.6148373074045231, 0.6148373073822616, 0.7646655096186175, 0.6148373073936175, 0.7646731729531318, 0.7646608050362613, 0.7646608050362613, 0.7646731729531318, 0.764666821070267, 0.6148373073936175, 0.6148373073936175, 0.764666821070267, 0.6148373073936175, 0.6148373073936175, 0.6148373073936175, 0.6148373073936175, 0.764666821070267, 0.6148373073936175, 0.6148373073936175, 0.7646731729531318, 0.764666821070267, 0.764666821070267]
+R^2: 0.9507266181232331, MSE: 0.00020658715585313684, RMSE: 0.014373140083264228
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1615197983 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.0, 0.0, 0.09717714629430721, 0.0, 0.0, 0.0, 0.09558247690655204, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 27
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [19361.181112881866, 7.5, 65.23197552932064, 88.17830728131851, 1.0, 7.024424020163437, -9.158658282038182, 8.0, -26.93943493024304, -62.7622193968082, 0.0, 7.0, 0.8085799890021416, 0.10696630929604256, 0.7352659538842599, 0.5713662205764468], with fitness: 1.1713630412244898
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 49
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.4683412411114286, 0.740677941475441, 0.8179195995504898, 0.6333863443666938, 0.0, 0.8179195995504898, 0.0, 0.0, 0.36738570335701226, 0.0, 0.0, 0.0, 0.0]
+Predicted values:  [0.13052827402897735, 0.13054133637579232, 0.13052827402897735, 0.13052827402897735, 0.13052827402897735, 0.13052827402897735, 0.13052827402897735, 0.13052827402897735, 0.3673856999922192, 0.13052827402897735, 0.11386330758171567, 0.11386487344253544, 0.13052827402897735]
+R^2: -0.19335970400831104, MSE: 0.13810633839555703, RMSE: 0.37162661152769594
+
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.1887175620408161, 0.36738570335701226, 0.36738570335701226, 0.36738570335701226, 0.740677941475441, 0.4679601798869387, 0.5457688961199594, 0.6333863443666938, 0.0, 0.10089261451247161]
+Predicted values:  [1.1713629403992802, 0.3673856999922192, 0.3673856983105141, 0.3673856999922192, 0.13054133637579232, 0.13052827402897735, 0.13052827402897735, 0.13052827402897735, 0.13052827402897735, 0.10089385719386425]
+R^2: 0.08076466364234125, MSE: 0.09287567943265872, RMSE: 0.3047551138744988
+
+Population len 10
+
+Best params so far: [19361.181112881866, 7.5, 65.23197552932064, 88.17830728131851, 1.0, 7.024424020163437, -9.158658282038182, 8.0, -26.93943493024304, -62.7622193968082, 0.0, 7.0, 0.8085799890021416, 0.10696630929604256, 0.7352659538842599, 0.5713662205764468], with fitness: 1.1713629403992802
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 73
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [19361.181112881866, 7.5, 65.23197552932064, 88.17830728131851, 1.0, 7.024424020163437, -9.158658282038182, 8.0, -26.93943493024304, -62.7622193968082, 0.0, 7.0, 0.8085799890021416, 0.10696630929604256, 0.7352659538842599, 0.5713662205764468], with fitness: 1.183251950612245
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 104
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.47020516654081634, 0.3898558925359184, 1.1358139114285715, 1.1464633917006801, 0.5183976261224492, 0.4679601798869387, 1.2955531234693876, 0.4678195166216327, 1.1447265885260771, 1.2955531234693878, 0.5216509297959185, 0.3905794851889796, 1.2955531234693876, 0.4685544337644898, 0.4381463050836735, 0.46977304817346943, 0.015176424730612242, 0.4676063239685714, 1.1001703136961447, 1.2955531234693878, 0.4679601798869387, 1.2955531234693876]
+Predicted values:  [0.2479520194783387, 0.24772319333503082, 1.1423149826170662, 0.2479520194783387, 0.2479520194783387, 0.46838214187125277, 0.2479520194783387, 0.46838214187125277, 1.1418063256104192, 0.2479520194783387, 0.2479520194783387, 0.24772326267725012, 0.2479520194783387, 0.46807745631926395, 0.2479520194783387, 0.2479520194783387, 0.2479520194783387, 0.46838214187125277, 1.1423149826170662, 0.2479520194783387, 0.4683253083732667, 0.2479520194783387]
+R^2: -0.8391933542393764, MSE: 0.3033687441736705, RMSE: 0.5507892012137406
+
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.2209933869387752, 1.1136986084807257, 1.1055935068934242, 1.1384205486167795, 1.110616626621315, 0.0, 0.46802829539714286, 0.4679601798869387, 0.4678195166216327, 0.4682394468257143]
+Predicted values:  [1.1773074489555146, 1.1421668774704652, 1.1423149826170662, 1.1423149826170662, 1.1418063256104192, 0.2479520194783387, 0.46838214187125277, 0.46838214187125277, 0.4683821418736065, 0.4683821418736065]
+R^2: 0.9594703261204701, MSE: 0.006653617836696574, RMSE: 0.0815697115153448
+
+Population len 10
+
+Best params so far: [19361.181112881866, 7.5, 65.23197552932064, 88.17830728131851, 1.0, 7.024424020163437, -9.158658282038182, 8.0, -26.93943493024304, -62.7622193968082, 0.0, 7.0, 0.8085799890021416, 0.10696630929604256, 0.7352659538842599, 0.5713662205764468], with fitness: 1.1773074489555146
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 123
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [1438.81163560301, 2.0, 54.14106724023894, 68.24057959229073, 1.0, 8.117027734589389, -20.079469372323956, 5.5, -29.289246780156205, -57.37831731126592, 0.0, 3.0, 0.8085799890021416, 0.10696630929604256, 0.7352659538842599, 0.7593101306437454], with fitness: 1.2859768996863585
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 143
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.1236880953287984, 0.14605122153877534, 0.0, 0.3850611224897959, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.104050507082833]
+Predicted values:  [0.4598088592396706, 0.45980929144932436, 0.4597832537989348, 0.45980929144932436, 0.459809291449262, 0.459809291449262, 0.4597832537989348, 0.4597832537989348, 0.4597829191200404, 0.4597829248944644, 0.45980727853059633]
+R^2: -0.2451905838388706, MSE: 0.2217880140008632, RMSE: 0.4709437482341848
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [1.272918187763695, 1.1145304284353736, 1.1130350588208617, 1.2023278812244897, 0.11843893816326512, 0.3821725061632653, 0.0, 0.0, 1.125614266303855, 1.0801494552266382]
+Predicted values:  [1.2859768170808952, 1.1366552115031707, 1.1153907791532096, 1.1462500028815732, 0.45980929144932436, 0.45980929144932436, 0.459809291449262, 0.459809291449264, 0.4598088592396706, 0.4598072790405408]
+R^2: 0.4804732569282737, MSE: 0.1377341924852725, RMSE: 0.3711255750891772
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Here
+!=========================================== Starting experiment 1615198115 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+[0.19142611020408146, 0.0, 0.0, 0.0, 0.47238414738775525, 0.0, 0.0, 0.0, 0.09963497596371879, 0.0]
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 18
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [50747.543110088736, 7.0, 59.82283892626893, -30.638291297078638, 3.5, -30.15308475842064, -104.81710310079642, -1.0, -44.63645568335209, -123.55602547563358, -2.5, 6.5, 0.9070920634997935, 0.07264304672312205, 0.33751229978411035, 0.373495759749925], with fitness: 0.5319607569142858
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 37
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.7985226304875104, 0.47195129444897965, 0.8256980728003225, 0.7583538291735101, 0.6226547587155103, 0.5070001453102042, 0.7388463741773059, 0.46194770751020414, 0.0, 0.37562652446785283]
+Predicted values:  [0.25571315249018756, 0.25571315249018756, 0.25571315249018756, 0.25571315249018756, 0.25571315249018756, 0.25571315249018756, 0.25571315249018756, 0.25571315249018756, 0.25571315249018756, 0.25571315249018756]
+R^2: -1.5816069969663262, MSE: 0.14724416525364856, RMSE: 0.3837240743733035
+
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.5326458699755103, 0.517472864367347, 0.5048736947714286, 0.47126508983673476, 0.7985226304875104, 0.45673119608163276, 0.8256980728003225, 0.0, 0.5738671321228573, 0.0]
+Predicted values:  [0.5349474100992868, 0.5211240878364669, 0.5048736698568026, 0.47103556638668975, 0.25571315249018756, 0.25571315249018756, 0.25571315249018756, 0.25571315249018756, 0.25571315249018756, 0.25571315249018756]
+R^2: -0.28417385686038066, MSE: 0.08919522613038318, RMSE: 0.29865569830556254
+
+Population len 10
+
+Best params so far: [50747.543110088736, 7.0, 59.82283892626893, -30.638291297078638, 3.5, -30.15308475842064, -104.81710310079642, -1.0, -44.63645568335209, -123.55602547563358, -2.5, 6.5, 0.9070920634997935, 0.07264304672312205, 0.33751229978411035, 0.373495759749925], with fitness: 0.5349474100992868
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 55
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [42592.54330474304, 8.5, 76.59143934948973, 111.12289012257595, 1.25, 13.905166582593207, -107.48788676969198, 0.5, -47.63128202259543, -24.99667190233297, -4.0, 2.75, 0.9070920634997935, 0.07264304672312205, 0.33751229978411035, 0.134809546744802], with fitness: 0.7985226304875104
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 75
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.701538252147555, 0.2152033785714284, 0.0, 0.7397269438788165, 0.6229928841836739, 0.6229928841836739, 0.7099105436868693, 0.7726768746852657, 0.7099105436868693, 0.49272530257142877, 0.747473701595878]
+Predicted values:  [0.19377683749581154, 0.43987212399499304, 0.21613703840553852, 0.4262054272486013, 0.38919591463724357, 0.38919591463724357, 0.5931969394216352, 0.3915032132273149, 0.5931969394216352, 0.38938177706791804, 0.6420905363453056]
+R^2: -0.22125365810382047, MSE: 0.0688139720809548, RMSE: 0.26232417364961774
+
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.7985226304875104, 0.7466715333502167, 0.7448831491000407, 0.0, 0.7099105436868693, 0.7099105436868693, 0.5243765415102042, 0.21912778061224475, 0.7397269438788165, 0.7726768746852657]
+Predicted values:  [0.7985226099368039, 0.7466715210934444, 0.7448831379794353, 0.6420833345071482, 0.5931593931278245, 0.5931969394216352, 0.519809760037489, 0.43987212399499304, 0.4262054272486013, 0.3915032132273149]
+R^2: -0.09875631350878744, MSE: 0.07318619272371325, RMSE: 0.27052946738518757
+
+Population len 10
+
+Best params so far: [42592.54330474304, 8.5, 76.59143934948973, 111.12289012257595, 1.25, 13.905166582593207, -107.48788676969198, 0.5, -47.63128202259543, -24.99667190233297, -4.0, 2.75, 0.9070920634997935, 0.07264304672312205, 0.33751229978411035, 0.134809546744802], with fitness: 0.7985226099368039
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 93
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [42592.54330474304, 8.5, 76.59143934948973, 111.12289012257595, 1.25, 13.905166582593207, -107.48788676969198, 0.5, -47.63128202259543, -24.99667190233297, -4.0, 2.75, 0.9070920634997935, 0.07264304672312205, 0.33751229978411035, 0.134809546744802], with fitness: 0.7985226304875104
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 111
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.2152033785714284, 0.6313262678444284, 0.7397269438788165, 0.7460696174845305, 0.7721011234024897, 0.5596728628612246, 0.2152033785714284, 0.7234039335095914, 0.0]
+Predicted values:  [0.2152033840775596, 0.3778926892843348, 0.3135600365252834, 0.4241528503378656, 0.37789300653550617, 0.31132352724789547, 0.2152033840775596, 0.38132527654650694, 0.43365026764641357]
+R^2: -0.2935553752636284, MSE: 0.09684722341311994, RMSE: 0.31120286536778535
+
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.7985226304875104, 0.646447134595441, 0.7448831491000407, 0.694948007512951, 0.0, 0.7460696174845305, 0.7234039335095914, 0.7721011234024897, 0.6313262678444284, 0.7397269438788165]
+Predicted values:  [0.7985226094867424, 0.2027598780142945, 0.7448831267804923, 0.6949391289949786, 0.43365026764641357, 0.4241528503378656, 0.38132527654650694, 0.37789300653550617, 0.3778926892843348, 0.3135600365252834]
+R^2: -1.0400514965048067, MSE: 0.10068059999498305, RMSE: 0.3173020642778472
+
+Population len 10
+
+Best params so far: [42592.54330474304, 8.5, 76.59143934948973, 111.12289012257595, 1.25, 13.905166582593207, -107.48788676969198, 0.5, -47.63128202259543, -24.99667190233297, -4.0, 2.75, 0.9070920634997935, 0.07264304672312205, 0.33751229978411035, 0.134809546744802], with fitness: 0.7985226094867424
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 128
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+/opt/conda/lib/python3.7/site-packages/scipy/optimize/lbfgsb.py:329: DeprecationWarning:
+
+tostring() is deprecated. Use tobytes() instead.
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Population len 10
+
+Best params so far: [42592.54330474304, 8.5, 76.59143934948973, 111.12289012257595, 1.25, 13.905166582593207, -107.48788676969198, 0.5, -47.63128202259543, -24.99667190233297, -4.0, 2.75, 0.9070920634997935, 0.07264304672312205, 0.33751229978411035, 0.134809546744802], with fitness: 0.7985226304875104
+Number of pairs: 6
+pop len in yield: 10
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 145
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.37368471045170615, 0.0, 0.7129031244994406, 0.7460696174845305, 0.5048736947714286, 0.438699035522449, 0.0, 0.645480893063249]
+Predicted values:  [0.3766589348684667, 1.9308350307500888e-08, 0.5080662686451296, 0.4290622662364373, 0.5047181392479776, 0.3766589348684667, 0.3766424397439399, 0.3766589348684667]
+R^2: 0.4042185191307126, MSE: 0.04505430189788939, RMSE: 0.21225998656809858
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+
+Real values:  [0.7985226304875104, 0.7448831491000407, 0.694948007512951, 0.5446023131806976, 0.7129031244994406, 0.5048736947714286, 0.7460696174845305, 0.0, 0.438699035522449, 0.645480893063249]
+Predicted values:  [0.7985226130651419, 0.7448831304286629, 0.6949479972477006, 0.6896273818637717, 0.5080662686451296, 0.5047181392479776, 0.4290622662364373, 0.3766589348684667, 0.3766589348684667, 0.3766589348684667]
+R^2: 0.23835224758173978, MSE: 0.038147026551874505, RMSE: 0.19531263797275
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Here
+!=========================================== Starting experiment 1615198205 ===========================================!
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+Number of pairs: 6
+pop len in yield: 10

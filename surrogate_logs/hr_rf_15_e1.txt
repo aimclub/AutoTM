@@ -1,0 +1,3424 @@
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1614891983 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 17
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.527909994125366
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 13.133986949920654
+Population len 10
+
+Best params so far: [64347.86084904317, 5.0, 99.59523886761188, 82.26715232033006, 7.0, -7.694908918715413, 4.185619799480662, 7.0, -22.38820721733623, -22.466826893258457, 2.0, 7.0, 0.47591549479050876, 0.7553285740424692, 0.550350480639574, 0.41830892631204963], with fitness: 0.31542445170068034
+ALL ITERATION TIME: 20.772643327713013
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 37
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 16.614450931549072
+
+Real values:  [1.1943972897959185, 0.0, 1.130259112781955, 0.09393728850698167, 1.3033735570354459, 1.1359601160042967, 1.1202278331065756, 1.1179586590762625, 1.1092782172335602, 0.6740763155102042, 0.0]
+Predicted values:  [0.19882863667454354, 0.06711844793079635, 0.19882863667454354, 0.09568216434755251, 0.21823529654135337, 0.21796197273101123, 0.1989658599355532, 0.19882863667454354, 0.1989658599355532, 0.21796197273101123, 0.08698280875939846]
+R^2: -1.4307359141299596, MSE: 0.6019337957122222, RMSE: 0.7758439248407003
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 10.411816835403442
+
+Real values:  [0.31542445170068034, 0.10149362040816329, 1.1588604158968854, 0.6774946702040816, 1.1128693437641723, 0.3226954424489795, 1.21572559613319, 0.09711188915145001, 0.0959754259935553, 0.09558247690655204]
+Predicted values:  [0.20840372504035604, 0.12346975539742214, 0.21796197273101123, 0.21796197273101123, 0.1989658599355532, 0.19882863667454354, 0.19882863667454354, 0.09669399767454345, 0.0958351055720423, 0.08610918106613469]
+R^2: -0.4507495416674743, MSE: 0.2993128493983089, RMSE: 0.5470949180885424
+
+Population len 10
+
+Best params so far: [79880.98947835731, 7.0, 146.8890037906347, 106.85626818665135, 8.5, 14.676508857535609, 25.235751833542544, 10.5, -27.49588101498084, 3.866555662186677, 1.0, 10.0, 0.06645974744729366, 0.48538637478228863, 0.3884934629909014, 0.24331513231758778], with fitness: 0.21796197273101123
+ALL ITERATION TIME: 27.13091540336609
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 55
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 10.016507625579834
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 9.535250902175903
+Population len 10
+
+Best params so far: [79880.98947835731, 7.0, 146.8890037906347, 106.85626818665135, 8.5, 14.676508857535609, 25.235751833542544, 10.5, -27.49588101498084, 3.866555662186677, 1.0, 10.0, 0.06645974744729366, 0.48538637478228863, 0.3884934629909014, 0.24331513231758778], with fitness: 1.153732489795918
+ALL ITERATION TIME: 19.68459177017212
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 79
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 9.6550874710083
+
+Real values:  [0.0, 0.5474390527836736, 0.6003837918938776, 1.0600136461868956, 0.0, 1.0108060048979595, 0.5446719850285715, 1.3471151184489796, 0.004523694951664876, 1.275023933834587, 0.6189988925170068, 0.6028294151591838, 1.0430616573576799, 0.5536140216081633, 1.149816558367347]
+Predicted values:  [0.3655841388910371, 0.6058001996107484, 0.6041780686617688, 0.7707864659734511, 0.3657174326611767, 0.4021566774987468, 0.6058001996107484, 0.8540143500784125, 0.5938642758037836, 0.9141099611325009, 0.544806281696854, 0.6041780686617688, 0.7707864659734511, 0.607500960168863, 0.5289304651431865]
+R^2: 0.32786411268588267, MSE: 0.12782916774044986, RMSE: 0.35753205134707833
+
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 9.57887578010559
+
+Real values:  [1.1688439149301828, 1.0776761455782315, 1.2938293905048333, 1.3883639241632653, 1.0564201278195486, 1.0500096908700323, 0.6804260791836734, 0.6312042762204082, 0.5552689285469389, 0.541832175232653]
+Predicted values:  [0.8832957604638093, 0.8308349150103833, 0.741908630882113, 0.8540143500784125, 0.7707864659734511, 0.7707864659734511, 0.6583529110533334, 0.6298925607424685, 0.607500960168863, 0.6058001996107484]
+R^2: -0.008039377645709278, MSE: 0.08994755705748388, RMSE: 0.2999125823594
+
+Population len 10
+
+Best params so far: [79880.98947835731, 7.0, 146.8890037906347, 106.85626818665135, 8.5, 14.676508857535609, 25.235751833542544, 10.5, -27.49588101498084, 3.866555662186677, 1.0, 10.0, 0.06645974744729366, 0.48538637478228863, 0.3884934629909014, 0.24331513231758778], with fitness: 0.8832957604638093
+ALL ITERATION TIME: 19.345086097717285
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 105
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 10.368345975875854
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 8.664533853530884
+Population len 10
+
+Best params so far: [74522.20362645823, 6.4375, 144.73232919858313, 101.0901712838027, 8.875, 10.686803008654856, 22.14923968496477, 10.3125, -14.35002873954501, 5.047953196558504, 1.1875, 9.4375, 0.06645974744729366, 0.48538637478228863, 0.3884934629909014, 0.37403518927073], with fitness: 1.4732493825306123
+ALL ITERATION TIME: 19.20034384727478
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 125
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 9.80234670639038
+
+Real values:  [0.717845702857143, 1.3927271221224489, 1.3919626625306118, 0.7264787848979593, 1.4076660453877554, 1.002395890612245, 1.0795985191836734, 0.5875650867102042, 1.4258877168163266, 0.9911067444897959, 1.2500592094693879]
+Predicted values:  [0.7441007515834301, 1.374741201268416, 1.374741201268416, 0.7441007515834301, 1.374741201268416, 1.2204982896334433, 1.263805289317525, 0.6010281173861225, 1.374741201268416, 1.3326362581536766, 1.374741201268416]
+R^2: 0.7723413039750772, MSE: 0.01992636330752909, RMSE: 0.1411607711353586
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 8.686614513397217
+
+Real values:  [1.3739220335510205, 1.3887690241632655, 1.3645283898775513, 1.3575675764081632, 1.3613342413061225, 1.4337808445714286, 1.3757382649795913, 1.3820981033469386, 0.9899578408163267, 1.3614663666122448]
+Predicted values:  [1.374741201268416, 1.374741201268416, 1.374741201268416, 1.374741201268416, 1.374741201268416, 1.374741201268416, 1.374741201268416, 1.374741201268416, 1.3326362581536766, 1.374741201268416]
+R^2: 0.12736763794628725, MSE: 0.012192194890325882, RMSE: 0.11041827244766096
+
+Population len 10
+
+Best params so far: [74522.20362645823, 6.4375, 144.73232919858313, 101.0901712838027, 8.875, 10.686803008654856, 22.14923968496477, 10.3125, -14.35002873954501, 5.047953196558504, 1.1875, 9.4375, 0.06645974744729366, 0.48538637478228863, 0.3884934629909014, 0.37403518927073], with fitness: 1.374741201268416
+ALL ITERATION TIME: 18.60588574409485
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 162
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 38.01929426193237
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1614942590 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 28
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 10.869252920150757
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.701816558837891
+Population len 10
+
+Best params so far: [116222.46017322296, 1.5, 23.413000703756374, 124.0424179455065, 7.5, 38.619876098294554, -80.35374108235787, 4.5, 6.368831575325096, 31.617968471727764, 7.5, 2.0, 0.021011516662597485, 0.1305042293355333, 0.3847541405941799, -0.43338041415933837], with fitness: 0.1720509214885954
+ALL ITERATION TIME: 16.684279680252075
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 48
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.2970075607299805
+
+Real values:  [0.0, 0.3188249118847535, 0.0, 0.3188249118847535, 0.3188249118847535, 0.8900404525170065, 0.3188249118847535, 0.0, 0.10736133877551018, 0.0, 0.0]
+Predicted values:  [0.01803664391836734, 0.1262904437094838, 0.00901832195918367, 0.1262904437094838, 0.1262904437094838, 0.14349553585834335, 0.1262904437094838, 0.01803664391836734, 0.1599068164765906, 0.0863847645978392, 0.03207821277551022]
+R^2: 0.031243238462622114, MSE: 0.06523561236599919, RMSE: 0.2554126315709526
+
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.428315877914429
+
+Real values:  [0.1720509214885954, 0.10736133877551018, 0.8900404525170065, 0.3188249118847535, 0.3188249118847535, 0.3188249118847535, 0.3188249118847535, 0.11529945408163272, 0.11529945408163272, 0.09870664615419493]
+Predicted values:  [0.1607006280072029, 0.1599068164765906, 0.14349553585834335, 0.1262904437094838, 0.1262904437094838, 0.1262904437094838, 0.1262904437094838, 0.11529945408163275, 0.11529945408163275, 0.09318958106122448]
+R^2: -0.39834971622647863, MSE: 0.07085276927272144, RMSE: 0.26618183497887576
+
+Population len 10
+
+Best params so far: [116222.46017322296, 1.5, 23.413000703756374, 124.0424179455065, 7.5, 38.619876098294554, -80.35374108235787, 4.5, 6.368831575325096, 31.617968471727764, 7.5, 2.0, 0.021011516662597485, 0.1305042293355333, 0.3847541405941799, -0.43338041415933837], with fitness: 0.1607006280072029
+ALL ITERATION TIME: 12.855442762374878
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 68
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.864483118057251
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.7644500732421875
+Population len 10
+
+Best params so far: [129873.54840544832, 1.75, 11.865376788525154, 143.49929820175902, 7.75, 59.55290248597487, -78.78469145987094, 5.25, 12.07330305238452, 51.61851238886596, 8.25, 1.5, 0.021011516662597485, 0.1305042293355333, 0.3847541405941799, -0.6717702367413741], with fitness: 0.8900404525170065
+ALL ITERATION TIME: 11.739723682403564
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 94
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.264908313751221
+
+Real values:  [0.0, 0.10736133877551014, 0.9479191040907567, 0.40299057430204077, 0.6526512365219593, 0.7058097204081631, 0.2973045198367347, 0.29267819330612244, 0.7822339350566894, 0.7051972828571428, 0.0, 0.8998469433673472, 0.7910300637551021, 0.7822339350566894, 0.8998469433673473, 0.6381502463686938, 0.6631127193632652]
+Predicted values:  [0.7593130336503399, 0.11342357954081632, 0.2480276257863144, 0.7824676413455781, 0.7891741553251699, 0.7497831227333331, 0.7855313014666664, 0.7922643670585032, 0.7856763508544217, 0.7497831227333331, 0.7593130336503399, 0.2405050460474188, 0.7891741553251699, 0.7856763508544217, 0.2405050460474188, 0.7824676413455781, 0.7757345757537414]
+R^2: -1.0023779787130196, MSE: 0.1882655209185835, RMSE: 0.43389574890586735
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.121032238006592
+
+Real values:  [0.8911004742857139, 0.7915393674285714, 0.2934641643265306, 0.6526512365219593, 0.7924253915102041, 0.7822339350566894, 0.7822339350566894, 0.29753000024489795, 0.7236157074285713, 0.3281944418367353]
+Predicted values:  [0.5547253383413363, 0.7891741553251699, 0.7922643670585032, 0.7891741553251699, 0.7891741553251699, 0.7856763508544217, 0.7856763508544217, 0.7855313014666664, 0.7429698828353739, 0.306904943061225]
+R^2: -0.2618282840576802, MSE: 0.061960134376160624, RMSE: 0.24891792698831602
+
+Population len 10
+
+Best params so far: [141494.84345627378, 1.125, -2.5683660830878665, 167.4100917790636, 7.875, 85.41331712935745, -75.69814706681163, 5.8125, 21.30731181577389, 61.81931072327543, 8.4375, 1.8125, 0.021011516662597485, 0.1305042293355333, 0.3847541405941799, -0.8282991027348485], with fitness: 0.7922643670585032
+ALL ITERATION TIME: 12.492168188095093
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 113
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.985153913497925
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.88468861579895
+Population len 10
+
+Best params so far: [128858.65181474836, 1.3125, 10.422317310334254, 145.72625486228503, 7.6875, 62.016596613826, -78.02594407458476, 5.15625, 13.838071695549493, 46.71863959750159, 7.96875, 1.90625, 0.021011516662597485, 0.1305042293355333, 0.3847541405941799, -0.6308397584470935], with fitness: 0.8736986471655329
+ALL ITERATION TIME: 11.979682445526123
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 141
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.880064487457275
+
+Real values:  [0.6465173771908761, 0.8050115607346937, 0.39998630911564687, 0.7689164968163265, 0.17204509489795913, 0.8709105219047625, 0.4176288533013204, 0.0, 0.7694001266122448, 0.5190226528776736, 0.5190226528776736, 0.6465173771908761, 0.9995849095537415, 0.8050115607346937, 0.6465173771908761, 0.7905868694693877, 0.5445727794723673, 0.7694001266122448, 0.8291450754285712]
+Predicted values:  [0.20992831900472356, 0.7861380623959184, 0.17205092148859544, 0.7924776036714285, 0.19999486047524012, 0.2549572055792317, 0.20992831900472356, 0.17184802576790725, 0.7924776036714285, 0.4264414722289958, 0.4264414722289958, 0.20992831900472356, 0.7004906829349514, 0.7861380623959184, 0.20992831900472356, 0.7924776036714285, 0.4902566859237386, 0.7924776036714285, 0.7813444266161451]
+R^2: -0.06631978274578643, MSE: 0.0626740419042382, RMSE: 0.25034784182061204
+
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.80743145942688
+
+Real values:  [0.8736986471655329, 0.7918719457959184, 0.7694001266122448, 0.7739302441632651, 0.7629995874285714, 0.7694001266122448, 0.7910300637551021, 0.8050115607346937, 0.7995193484897958, 0.662101908342857]
+Predicted values:  [0.8753328277006803, 0.7924776036714285, 0.7924776036714285, 0.7924776036714285, 0.8086576512514739, 0.7924776036714285, 0.7924776036714285, 0.7861380623959184, 0.7861380623959184, 0.6349997630669975]
+R^2: 0.8053503970623087, MSE: 0.0004768730006532324, RMSE: 0.021837422023976007
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1614942679 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 28
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.797733068466187
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.466017007827759
+Population len 10
+
+Best params so far: [86725.23628811123, 2.0, 66.7421529685173, 111.7488530714104, 4.0, -22.974879546906024, -26.256201211664386, -1.0, 1.9237109529198833, -9.785234582517447, 3.0, 0.5, 0.4046673201271299, 0.04062175021809311, 0.054091505839228504, -0.07055367448341288], with fitness: 0.8242709033528689
+ALL ITERATION TIME: 15.38064694404602
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 52
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.30959439277649
+
+Real values:  [0.8175247173120527, 0.523453883527698, 0.8236211977202159, 0.8259741953120526, 0.8245385982916446, 0.37681469536903256, 0.8270316184957262, 0.8218798473569506, 0.8252455011896037, 0.8242599834345016, 0.523453883527698, 0.37681469536903256, 0.4058719229446124, 0.0, 0.30603511596638666]
+Predicted values:  [0.8238401046209505, 0.6007437791195266, 0.8231923948201615, 0.8231923948201615, 0.8231923948201615, 0.5507677321748035, 0.8238401046209505, 0.8231923948201615, 0.8231923948201615, 0.8231923948201615, 0.5990149634070947, 0.5468718933820749, 0.7507099850477952, 0.08953833847100748, 0.605603718729476]
+R^2: 0.7110554058047482, MSE: 0.01917339649701412, RMSE: 0.13846803420650602
+
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 2.8812620639801025
+
+Real values:  [0.8229881276426649, 0.8294890204549098, 0.8173550464140935, 0.8235417419651139, 0.8247730373936853, 0.822117523720216, 0.817419559352869, 0.8236234025773587, 0.8121096397610321, 0.9932891655976682]
+Predicted values:  [0.8238401046209505, 0.8238401046209505, 0.8238401046209505, 0.6788360557272523, 0.8231923948201615, 0.8231923948201615, 0.8231923948201615, 0.8231923948201615, 0.8231923948201615, 0.4552730155776632]
+R^2: -10.603429471927582, MSE: 0.031063579804228258, RMSE: 0.1762486306449734
+
+Population len 10
+
+Best params so far: [86725.23628811123, 2.0, 66.7421529685173, 111.7488530714104, 4.0, -22.974879546906024, -26.256201211664386, -1.0, 1.9237109529198833, -9.785234582517447, 3.0, 0.5, 0.4046673201271299, 0.04062175021809311, 0.054091505839228504, -0.07055367448341288], with fitness: 0.8238401046209505
+ALL ITERATION TIME: 11.299735307693481
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 73
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 1.9812109470367432
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 1.9450087547302246
+Population len 10
+
+Best params so far: [86725.23628811123, 2.0, 66.7421529685173, 111.7488530714104, 4.0, -22.974879546906024, -26.256201211664386, -1.0, 1.9237109529198833, -9.785234582517447, 3.0, 0.5, 0.012792316756959021, 0.7673161170342863, 0.7574017131896316, -0.07055367448341288], with fitness: 0.8293476847814404
+ALL ITERATION TIME: 4.04513955116272
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 88
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 1.9776699542999268
+
+Real values:  [0.8311350602549098, 0.8247525527406241, 0.8169343158426647, 0.8262490016385833, 0.8288867599283792, 0.8239393583732771]
+Predicted values:  [0.8211041058998555, 0.8234887169359411, 0.8234887169359411, 0.8211041058998555, 0.752581289250619, 0.8234887169359411]
+R^2: -48.974981899787174, MSE: 0.0009990625641879802, RMSE: 0.031607950964717406
+
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 1.969538688659668
+
+Real values:  [0.8271192089038895, 0.8232734905773588, 0.8292735881283791, 0.8225451337610322, 0.8131090124056857, 0.8220603272712363, 0.8222069344549099, 0.8193342360467466, 0.821058781475318, 0.8175270715569506]
+Predicted values:  [0.8234887169359411, 0.824986615362859, 0.824986615362859, 0.8234887169359411, 0.8234887169359411, 0.8234887169359411, 0.8234887169359411, 0.8211041058998555, 0.8211041058998555, 0.752581289250619]
+R^2: -22.294862943386704, MSE: 0.00043678944156404556, RMSE: 0.020899508165601544
+
+Population len 10
+
+Best params so far: [86725.23628811122, 2.0, 66.7421529685173, 111.7488530714104, 4.0, -22.974879546906024, -26.256201211664383, -1.0, 1.9237109529198833, -9.785234582517447, 3.0, 0.5, 0.4046673201271299, 0.04062175021809311, 0.054091505839228504, -0.07055367448341288], with fitness: 0.824986615362859
+ALL ITERATION TIME: 4.064173221588135
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 108
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 1.9802296161651611
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 1.9808001518249512
+Population len 10
+
+Best params so far: [184291.2064851201, 2.0, 66.7421529685173, 111.7488530714104, 4.0, -22.974879546906024, -26.256201211664386, -1.0, 1.9237109529198833, -9.785234582517447, 3.0, 0.5, 0.012792316756959021, 0.7673161170342863, 0.7574017131896316, -97566.04075068343], with fitness: 0.8321434184589915
+ALL ITERATION TIME: 4.090873718261719
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 127
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 2.055501699447632
+
+Real values:  [0.8182614331896038, 0.81594585103042, 0.8235387729038894, 0.8215620056385833, 0.8190512968222569, 0.8263758497202159, 0.8153102742508281, 0.8162419041691956, 0.820018363475318, 0.8230277043732772]
+Predicted values:  [0.8080925212751504, 0.8236006241327152, 0.828000710070522, 0.8236006241327152, 0.828000710070522, 0.828000710070522, 0.828000710070522, 0.828000710070522, 0.828000710070522, 0.828000710070522]
+R^2: -4.416631414806198, MSE: 6.56564658410978e-05, RMSE: 0.008102867754140987
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 3.7306158542633057
+
+Real values:  [0.8179524703732771, 0.8245574142100119, 0.817873355597767, 0.8236980888630732, 0.8257289713120527, 0.8251734062508281, 0.8239160267814404, 0.8267901858834813, 0.8245003053120528, 0.8245565269487873]
+Predicted values:  [0.828000710070522, 0.828000710070522, 0.8276496501848077, 0.828000710070522, 0.828000710070522, 0.828000710070522, 0.828000710070522, 0.8236006241327152, 0.8230964147337023, 0.8230964147337023]
+R^2: -2.20859761860901, MSE: 2.7102711454994668e-05, RMSE: 0.005206026455464347
+
+Population len 10
+
+Best params so far: [184291.2064851201, 2.0, 66.7421529685173, 111.7488530714104, 4.0, -22.974879546906024, -26.256201211664386, -1.0, 1.9237109529198833, -9.785234582517447, 3.0, 0.5, 0.012792316756959021, 0.7673161170342863, 0.7574017131896316, -97566.04075068343], with fitness: 0.828000710070522
+ALL ITERATION TIME: 5.889549493789673
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 152
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 4.800405263900757
+!=========================================== Starting experiment 1614942735 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 23
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.441157102584839
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.696710586547852
+Population len 10
+
+Best params so far: [39419.484289302025, 10.0, 89.01323843895156, -19.108627285440292, -3.0, -4.441871588663211, -26.430941304516303, -1.0, 22.78042518632787, -24.29722942649896, -1.0, 7.0, 0.714570312438586, 0.14048014072743864, 0.4945289651216188, -0.14249343926291413], with fitness: 0.8021416687834286
+ALL ITERATION TIME: 14.25331735610962
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 41
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 3.983757257461548
+
+Real values:  [0.7480972956940817, 0.7629143202568163, 0.2652215265306128, 0.7480972956940817, 0.8257487397678366, 0.8063498988491429, 0.7615909601205715, 0.7777293633005715, 0.7556183502617961]
+Predicted values:  [0.6222602463613287, 0.7066933206095798, 0.2605851135306585, 0.6222602463613287, 0.7540382930034802, 0.7392124127049888, 0.695205338660409, 0.6564066265847872, 0.6905530068082457]
+R^2: 0.7113776308448128, MSE: 0.007540201046319573, RMSE: 0.08683433103513594
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 3.959853172302246
+
+Real values:  [0.8021416687834286, 0.7556183502617961, 0.7556183502617961, 0.0, 0.8063498988491429, 0.708587194227588, 0.6502819408163265, 0.7615909601205715, 0.7556183502617961, 0.7777293633005715]
+Predicted values:  [0.7974893369312653, 0.6905530068082457, 0.7556183502617962, 0.7540382930034802, 0.7392124127049888, 0.7085871942275881, 0.44167731750729733, 0.695205338660409, 0.6905530068082457, 0.6564066265847872]
+R^2: -0.21946155314849336, MSE: 0.06442119774372398, RMSE: 0.2538133127787508
+
+Population len 10
+
+Best params so far: [39419.484289302025, 10.0, 89.01323843895156, -19.108627285440292, -3.0, -4.441871588663211, -26.430941304516303, -1.0, 22.78042518632787, -24.29722942649896, -1.0, 7.0, 0.714570312438586, 0.14048014072743864, 0.4945289651216188, -0.14249343926291413], with fitness: 0.7974893369312653
+ALL ITERATION TIME: 8.04985523223877
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 56
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 4.265033006668091
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 4.391988039016724
+Population len 10
+
+Best params so far: [40628.26357369337, 12.5, 112.13769979938863, -7.851985342844532, -2.375, 2.3921679215061538, -16.745693692939575, -0.375, 41.54426654632647, -58.10603367582296, -2.875, 7.0, 0.44150780306078197, 0.08002570273744214, 0.4599690429234825, -0.5891136170070583], with fitness: 0.8528735345711838
+ALL ITERATION TIME: 8.772052764892578
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 82
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.0630505084991455
+
+Real values:  [0.8702514388487346, 0.6314242781234286, 0.8702514388487346, 0.8036171255890614, 0.8699892384405714, 0.8021416687834286, 0.8049420905876041, 0.8528735345711838, 0.5807881969185673, 0.8036171255890614, 0.8838009314627877, 0.8648050401136325, 1.0755020436734692, 0.7613573904180287, 0.7690318589662858, 0.8885374270493185, 0.7559614428128165]
+Predicted values:  [0.8196672011339998, 0.43400460563021187, 0.8196672011339998, 0.8431479844202041, 0.831407592777102, 0.8202306425183673, 0.5976675040780598, 0.8431479844202041, 0.6714215365882279, 0.8196672011339998, 0.7959674524226122, 0.3811559764215106, 0.6505815969880948, 0.7884586013451428, 0.7680016564938196, 0.7851679386031163, 0.7551740041777958]
+R^2: -1.8249724261091385, MSE: 0.031329987011033414, RMSE: 0.1770027881448013
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.484845876693726
+
+Real values:  [0.8528735345711838, 0.8036171255890614, 0.8528735345711838, 0.7528387954809798, 0.8021416687834286, 0.8702514388487346, 0.8702514388487346, 0.9087326636734695, 0.7819932538622041, 0.6921526464127346]
+Predicted values:  [0.8431479844202041, 0.8431479844202041, 0.8431479844202041, 0.831407592777102, 0.8202306425183673, 0.831407592777102, 0.8196672011339998, 0.8073041289029387, 0.7864437598530204, 0.7237422029562669]
+R^2: 0.3775895674212869, MSE: 0.0023625192565454194, RMSE: 0.04860575332761976
+
+Population len 10
+
+Best params so far: [40628.26357369337, 12.5, 112.13769979938863, -7.851985342844532, -2.375, 2.3921679215061538, -16.745693692939575, -0.375, 41.54426654632647, -58.10603367582296, -2.875, 7.0, 0.44150780306078197, 0.08002570273744214, 0.4599690429234825, -0.5891136170070583], with fitness: 0.8431479844202041
+ALL ITERATION TIME: 12.660961389541626
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 108
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.484875679016113
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.107699632644653
+Population len 10
+
+Best params so far: [60942.42194524192, 14.0, 126.01237661565085, -1.0980001772870764, -2.0, 6.492591627607773, -10.934545125993537, 0.0, 52.80257136232563, -78.39131622541734, -4.0, 7.0, 0.714570312438586, 0.14048014072743864, 0.4945289651216188, -19589.74788663739], with fitness: 0.8638063520291428
+ALL ITERATION TIME: 11.707520723342896
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 124
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.111791610717773
+
+Real values:  [0.868823360165061, 0.8041630349417144, 0.868823360165061, 0.8077136060466938, 0.8638063520291428, 0.8063498988491429, 0.868249867532408]
+Predicted values:  [0.7113905277707471, 0.8138053450205879, 0.7113905277707471, 0.751294100070147, 0.8638063520291428, 0.8065517083032585, 0.7754076221521877]
+R^2: -8.490751236923655, MSE: 0.008780864497711977, RMSE: 0.09370626712078535
+
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.022162199020386
+
+Real values:  [0.8638063520291428, 0.8638063520291428, 0.0, 0.8545582227466939, 0.8545582227466939, 0.8041630349417144, 0.8063498988491429, 0.868249867532408, 0.8077136060466938, 0.868823360165061]
+Predicted values:  [0.8638063520291428, 0.6952746419531783, 0.10095598954124807, 0.8554830356749388, 0.8543897539291428, 0.8138053450205879, 0.8065517083032585, 0.7754076221521877, 0.751294100070147, 0.7113905277707471]
+R^2: 0.8836458528803385, MSE: 0.007527688755436397, RMSE: 0.08676225420905335
+
+Population len 10
+
+Best params so far: [60942.42194524192, 14.0, 126.01237661565085, -1.0980001772870764, -2.0, 6.492591627607773, -10.934545125993537, 0.0, 52.80257136232563, -78.39131622541734, -4.0, 7.0, 0.714570312438586, 0.14048014072743864, 0.4945289651216188, -19589.74788663739], with fitness: 0.8638063520291428
+ALL ITERATION TIME: 10.238252878189087
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 149
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.368337631225586
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.49480128288269
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1614942826 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 34
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.313313007354736
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.876826286315918
+Population len 10
+
+Best params so far: [-43791.52737494049, 9.0, 74.98317197311064, 78.965357854878, -2.5, -70.65932786494392, -102.98546673687486, -3.5, -15.639988721581751, -2.3294791799265937, 3.0, 0.5, 0.6963199915102942, 0.865801437233288, 0.8498632322226157, 0.47056597289278695], with fitness: 1.3283716797305145
+ALL ITERATION TIME: 14.329344749450684
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 59
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.900531053543091
+
+Real values:  [0.4112523744972735, 1.1490283619939714, 0.4632816095454288, 1.2679904789622578, 0.6180111445086245, 1.1189269483240534, 1.2733726025428578, 0.9611265131683674, 1.261608917262608, 0.6189202167535225, 1.1199279626097678, 1.3746454520113183, 0.5331128266666675, 1.2748165531551026, 0.6590569349330613, 0.9094295089795916]
+Predicted values:  [0.7759158830860403, 1.1820830417999728, 0.9102933550683089, 1.019462031856001, 0.8936050922679712, 1.2943964129121592, 1.108788028275257, 0.7418434885184566, 1.0371640003673437, 0.8936050922679712, 1.2943964129121592, 1.1399638514201211, 0.2935736238348471, 1.108788028275257, 0.7682198245300914, 0.4281102796852858]
+R^2: 0.3390557125843201, MSE: 0.06984024332030496, RMSE: 0.2642730469047212
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.1418445110321045
+
+Real values:  [1.3250324197305143, 0.0, 0.0, 0.006175060571428571, 1.3958454259500939, 1.2644669629510208, 1.2641534160122454, 0.9823825712130569, 0.9078615920966243, 0.8053594852857142]
+Predicted values:  [1.2943964129121592, 0.44492679065123353, 0.501427848589225, 1.091866804442, 1.1399638514201211, 1.1085292609691344, 1.108788028275257, 0.9775585638253019, 0.9159183705782571, 0.7883383549714285]
+R^2: 0.422097044020046, MSE: 0.17433631163964713, RMSE: 0.41753600041151795
+
+Population len 10
+
+Best params so far: [-43791.52737494049, 9.0, 74.98317197311064, 78.965357854878, -2.5, -70.65932786494392, -102.98546673687486, -3.5, -15.639988721581751, -2.3294791799265937, 3.0, 0.5, 0.6963199915102942, 0.865801437233288, 0.8498632322226157, 0.47056597289278695], with fitness: 1.2943964129121592
+ALL ITERATION TIME: 13.146632194519043
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 81
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.771578788757324
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 11.286040306091309
+Population len 10
+
+Best params so far: [-43791.52737494049, 9.0, 74.98317197311064, 78.965357854878, -2.5, -70.65932786494392, -102.98546673687486, -3.5, -15.639988721581751, -2.3294791799265937, 3.0, 0.5, 0.6963199915102942, 0.865801437233288, 0.8498632322226157, 0.47056597289278695], with fitness: 1.3280016914447998
+ALL ITERATION TIME: 18.185463905334473
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 99
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 10.890804767608643
+
+Real values:  [0.9736542209378534, 0.9756491774684655, 1.3435774278359307, 1.1230891837765846, 0.974598857264384, 0.6244913991783265, 0.722356703692298, 1.041868899905604, 0.383763411020408]
+Predicted values:  [0.9937108234735226, 0.992974644361744, 1.250117279068454, 0.7850921910955835, 0.973052771567105, 0.5818313965764614, 0.6141060181293337, 0.5252388830270607, 0.8820444548670163]
+R^2: 0.00681946060094718, MSE: 0.07249002841133326, RMSE: 0.2692397229446897
+
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 3.7314929962158203
+
+Real values:  [1.3196067118162285, 1.27339870156391, 1.2733101470326535, 1.3476526933461348, 0.9768689599990779, 0.0, 0.9738513772643838, 0.974666158284792, 0.39963960285714284, 1.1011167829172932]
+Predicted values:  [1.3338603618810518, 0.7850921910955835, 1.0821847373965627, 1.1324533188588244, 0.9937108234735226, 0.25413208490068045, 0.973052771567105, 0.973052771567105, 0.8820444548670163, 0.7850921910955835]
+R^2: 0.5849116688392794, MSE: 0.07189420973019828, RMSE: 0.26813095630717143
+
+Population len 10
+
+Best params so far: [-43791.52737494049, 9.0, 74.98317197311064, 78.965357854878, -2.5, -70.65932786494392, -102.98546673687486, -3.5, -15.639988721581751, -2.3294791799265937, 3.0, 0.5, 0.6963199915102942, 0.865801437233288, 0.8498632322226157, 0.47056597289278695], with fitness: 1.3338603618810518
+ALL ITERATION TIME: 14.726975917816162
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 121
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 4.502309083938599
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 4.713183164596558
+Population len 10
+
+Best params so far: [-45086.45270884775, 8.625, 76.89136172131845, 87.27314964758898, -3.75, -95.51911845694525, -127.15026799121866, -4.4375, -21.201383699048428, 2.7751299259863664, 3.375, 0.8125, 0.11737043222963695, 0.8354426507712132, 0.7046636468850009, 0.5225069396732587], with fitness: 1.3733358871828698
+ALL ITERATION TIME: 9.332401514053345
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 138
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.909149885177612
+
+Real values:  [1.3605203929424607, 1.3472012199583796, 1.3435193880400123, 1.0274993327239719, 1.360823150207359, 0.6174557904081226, 1.2440913870326535, 1.3418699589787877]
+Predicted values:  [1.3245948497770414, 1.356054478801045, 1.356054478801045, 0.6423320934984945, 1.3083318573205516, 0.634089664433294, 1.3519489022516862, 1.0264610028928984]
+R^2: 0.4554454070867795, MSE: 0.03300350378490715, RMSE: 0.18166866484043734
+
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.4185264110565186
+
+Real values:  [1.3482263893461348, 1.365143413081237, 1.3486877023257264, 1.3455335574277674, 1.3461938948563388, 1.264627360502041, 1.3450542732236859, 1.3382115675338895, 0.2152033785714284, 0.0]
+Predicted values:  [1.356054478801045, 1.3519489022516862, 1.2258876641077703, 1.0047926023130467, 1.2570118687839171, 1.3519489022516862, 1.355608343240053, 1.3245948497770414, 0.7831225864209473, 0.933566824065376]
+R^2: 0.4526642816574852, MSE: 0.1341374152443604, RMSE: 0.36624775117993613
+
+Population len 10
+
+Best params so far: [-45086.45270884775, 8.625, 76.89136172131845, 87.27314964758898, -3.75, -95.51911845694525, -127.15026799121866, -4.4375, -21.201383699048428, 2.7751299259863664, 3.375, 0.8125, 0.11737043222963695, 0.8354426507712132, 0.7046636468850009, 0.5225069396732587], with fitness: 1.356054478801045
+ALL ITERATION TIME: 11.458707571029663
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 155
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.613053560256958
+!=========================================== Starting experiment 1614942921 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 67
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 17.44386339187622
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.328584909439087
+Population len 10
+
+Best params so far: [93871.93823422914, 9.0, 46.75763504845528, 49.42976261031198, -1.0, -1.1376952361666497, -21.56069297350593, 8.5, -92.89594730488977, -6.862730334402428, -0.5, 1.5, 0.21664755464968755, 0.17120009415446313, 0.868400413986822, 1.052138429919101], with fitness: 1.1218360023071967
+ALL ITERATION TIME: 22.892595052719116
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 92
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.507648229598999
+
+Real values:  [1.1132367967218044, 1.1172990046702471, 1.111698412189044, 0.7547096147292648, 1.0067458750285718, 1.1204347043480127, 1.329490994865306, 1.038434138702041, 1.4130611960897963, 0.8140333771529387, 0.10517612335204073, 1.1370940212116005, 0.8334135808585308, 1.1077169900622985, 0.8334135808585308, 0.8981897026176874]
+Predicted values:  [1.1079601016144536, 1.1079601016144536, 1.1079601016144536, 0.8561646707167541, 1.1079601016144536, 1.1079601016144536, 1.1079601016144536, 1.1079601016144536, 1.1079601016144536, 0.9780600182524438, 0.24357961451247195, 1.1079601016144536, 0.8494048325750658, 1.1079601016144536, 0.8494048325750658, 1.1079601016144536]
+R^2: 0.8038384513298156, MSE: 0.016202671354463384, RMSE: 0.12728971425242255
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.48184061050415
+
+Real values:  [1.1212561586981742, 1.1158480070332977, 1.116743856227712, 1.1224955580537057, 1.1581656507029479, 1.1079621479011816, 1.137621566216971, 0.09055109602577865, 1.1139927889881849, 1.1082811516090227]
+Predicted values:  [1.1079601016144536, 1.1079601016144536, 1.1079601016144536, 1.1079601016144536, 0.9969039842193947, 0.5247606488959329, 1.1079601016144536, 0.5049814552727109, 1.1079601016144536, 1.1079601016144536]
+R^2: 0.43847436395331685, MSE: 0.053932557308185136, RMSE: 0.23223384186673815
+
+Population len 10
+
+Best params so far: [93871.93823422914, 9.0, 46.75763504845528, 49.42976261031198, -1.0, -1.1376952361666497, -21.56069297350593, 8.5, -92.89594730488977, -6.862730334402428, -0.5, 1.5, 0.21664755464968755, 0.17120009415446313, 0.868400413986822, 1.052138429919101], with fitness: 1.1079601016144536
+ALL ITERATION TIME: 14.093239784240723
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 114
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.64191460609436
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 7.009816646575928
+Population len 10
+
+Best params so far: [93871.93823422915, 9.0, 46.75763504845527, 49.42976261031199, 8.0, -1.1376952361666497, -21.560692973505933, 8.5, -92.89594730488977, -6.862730334402428, -0.5, 2.25, 0.21664755464968755, 0.17120009415446313, 0.868400413986822, 1.052138429919101], with fitness: 1.2090278698412695
+ALL ITERATION TIME: 14.765153646469116
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 140
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.758309364318848
+
+Real values:  [1.1102056061740064, 1.1364183131972785, 1.095849262887218, 1.1398290388208614, 1.1721010415419502, 1.1772502111564627, 0.8132017598103674, 1.169194302312925, 1.1771420741950112, 1.109213550320086, 1.1816405689795917, 1.117807271480129, 1.1343936916734694, 0.8132017598103674, 0.6831043904861225, 1.1414195934693874, 1.178833318185941]
+Predicted values:  [1.071409468046173, 0.9609362172663424, 1.0674204009421886, 0.9609362172663424, 1.1519628052275128, 1.1519628052275128, 1.073377833130517, 1.1519628052275128, 1.1519628052275128, 1.071409468046173, 1.1519628052275128, 1.1133035854889453, 1.071409468046173, 1.073377833130517, 1.1089668981128067, 0.9609362172663424, 1.1519628052275128]
+R^2: -0.13744997174457918, MSE: 0.02490714181067626, RMSE: 0.15781996645125818
+
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 12.338475942611694
+
+Real values:  [1.1934897900226755, 1.176624175328798, 1.1680445168253968, 1.1768367816780045, 1.178490123628118, 1.1729255717006801, 1.1137690921632653, 1.1018008027368422, 1.1792808512471653, 1.1245923550461867]
+Predicted values:  [1.1519628052275128, 1.1519628052275128, 1.113329169546507, 1.1519628052275128, 1.1519628052275128, 1.1519628052275128, 0.6804172089788302, 1.1133035854889453, 1.1519628052275128, 1.1133035854889453]
+R^2: -19.872561430236203, MSE: 0.01958881744004817, RMSE: 0.1399600565877571
+
+Population len 10
+
+Best params so far: [93871.93823422915, 9.0, 46.75763504845527, 49.42976261031199, 8.0, -1.1376952361666497, -21.560692973505933, 8.5, -92.89594730488977, -6.862730334402428, -0.5, 2.25, 0.21664755464968755, 0.17120009415446313, 0.868400413986822, 1.052138429919101], with fitness: 1.1519628052275128
+ALL ITERATION TIME: 21.201802968978882
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 160
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.127912998199463
+!=========================================== Starting experiment 1614943006 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 36
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.434521913528442
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 4.904545068740845
+Population len 10
+
+Best params so far: [0.6523283521353368, 9.0, 109.13942316611588, 49.468923044973124, -2.0, -87.93829780927172, -93.17945025065262, -2.5, -16.368320052756708, 8.709743103600722, 6.5, 6.5, 0.6358665525184771, 0.43907674644127115, 0.6401031898292043, 27351.75333349655], with fitness: 1.9882598761142858
+ALL ITERATION TIME: 11.462467908859253
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 52
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.3566505908966064
+
+Real values:  [0.9405157771428572, 0.6698223792764899, 1.1362826865306122, 0.5530206663183674, 0.0, 0.5222975014965987, 0.17788088637959162]
+Predicted values:  [1.5517547544331618, 1.493765538748264, 1.8079492209952464, 1.7817814818, 0.5350654784667388, 1.7667435089638093, 1.141351695545752]
+R^2: -5.0863122553858835, MSE: 0.8252430606350373, RMSE: 0.9084288968516123
+
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.365666389465332
+
+Real values:  [1.8286100059102042, 1.4588159972979595, 1.6532306466693878, 0.5402025117605443, 0.49343654204081633, 0.09558247690655204, 0.6698223792764899, 1.022233309819928, 0.0, 0.8072633114549798]
+Predicted values:  [1.8079492209952464, 1.3382354846203843, 1.7501223114163267, 1.7817814818, 1.7667435089638093, 1.5342899746490233, 1.493765538748264, 0.8334704967380407, 0.877650982755959, 0.8022150697364083]
+R^2: -0.8981847730516062, MSE: 0.6741873219607458, RMSE: 0.821089107198936
+
+Population len 10
+
+Best params so far: [0.6523283521353368, 9.0, 109.13942316611588, 49.468923044973124, -2.0, -87.93829780927172, -93.17945025065262, -2.5, -16.368320052756708, 8.709743103600722, 6.5, 6.5, 0.6358665525184771, 0.43907674644127115, 0.6401031898292043, 27351.75333349655], with fitness: 1.8079492209952464
+ALL ITERATION TIME: 12.854426383972168
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 83
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.16626501083374
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 8.741472244262695
+Population len 10
+
+Best params so far: [27351.75333349655, 9.0, 109.13942316611588, 49.468923044973124, -2.0, -87.93829780927172, -93.17945025065262, -2.5, -16.368320052756708, 8.709743103600722, 6.5, 6.5, 0.8015441530405806, 0.4733925229775059, 0.030173703077271186, 0.6523283521353368], with fitness: 1.7938492295265303
+ALL ITERATION TIME: 16.037638664245605
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 104
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.316088676452637
+
+Real values:  [1.1238926151020405, 1.1269696459142857, 0.4980361149968571, 0.5096428118542857, 1.7405172274040819, 0.7296965559183668, 1.1743871571428572, 1.6786076792408164, 1.2334002518367346, 1.6709716303428572, 1.5751457538775513, 0.4951777632653056]
+Predicted values:  [1.2673688922568522, 1.247745803394766, 0.4962748319908286, 0.5134441382454694, 1.7949613043428567, 0.7015978258087981, 0.6627335028302124, 1.7949613043428567, 0.6627335028302124, 1.6957707658213124, 1.6688142350010886, 0.61848469529345]
+R^2: 0.736788116429797, MSE: 0.05537709317498373, RMSE: 0.23532338000076347
+
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.120331764221191
+
+Real values:  [1.5800486299346939, 1.1357858055061225, 1.7967749128489794, 0.0, 1.6266918968734694, 1.6585396682448978, 1.2750027328798186, 1.1244766065306122, 1.1159999577510207, 0.0]
+Predicted values:  [1.7949613043428567, 1.247745803394766, 1.7682671270510206, 0.1676468640105643, 1.6957707658213124, 1.6401927124858506, 1.2215778539942401, 1.2673688922568522, 1.1799497602321545, 1.1308212587387754]
+R^2: 0.6267951593061477, MSE: 0.13988678839898433, RMSE: 0.3740144227152
+
+Population len 10
+
+Best params so far: [47865.07908735486, 9.0, 109.13942316611588, 49.468923044973124, -2.0, -87.93829780927172, -93.17945025065262, -2.5, -16.368320052756708, 8.709743103600722, 6.5, 6.5, 0.8015441530405806, 0.4733925229775059, 0.030173703077271186, -20512.673425506175], with fitness: 1.7949613043428567
+ALL ITERATION TIME: 12.550018548965454
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 121
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.563609600067139
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 7.982954978942871
+Population len 10
+
+Best params so far: [0.6523283521353368, 9.0, 109.13942316611588, 49.468923044973124, -2.0, -87.93829780927172, -93.17945025065262, -2.5, -16.368320052756708, 8.709743103600722, 6.5, 6.5, 0.4196237179312342, 0.4733925229775059, 0.030173703077271186, 27351.75333349655], with fitness: 1.8697306540734697
+ALL ITERATION TIME: 14.660994529724121
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 138
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.139424800872803
+
+Real values:  [1.74536687997551, 1.3376674143265306, 1.1301898967346937, 1.13405193877551, 1.6605129885469385, 1.3648809950204084, 1.1179800897959185, 1.1453958522448975]
+Predicted values:  [1.717951345461224, 1.5546821355863945, 1.043395468299256, 1.083853359076943, 1.7986035063863945, 1.484667610365634, 1.0966114576410246, 1.0966114576410246]
+R^2: 0.7862033177028974, MSE: 0.011769316364682479, RMSE: 0.10848648010089773
+
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.125358819961548
+
+Real values:  [1.808662134889796, 1.5963110281387758, 1.7308861305877548, 1.5792650175265306, 1.7412759995673468, 1.6632675359183668, 1.4115739584081632, 1.3264760158367346, 1.690672212302041, 1.1990190689795917]
+Predicted values:  [1.820493316462041, 1.806340837129796, 1.5773263065009522, 1.717951345461224, 1.736280335303673, 1.6100334106482534, 1.5546821355863945, 1.484667610365634, 1.5734187151918364, 1.083853359076943]
+R^2: 0.546280815408336, MSE: 0.016244189768331394, RMSE: 0.12745269619875207
+
+Population len 10
+
+Best params so far: [0.6523283521353368, 9.0, 109.13942316611588, 49.468923044973124, -2.0, -87.93829780927172, -93.17945025065262, -2.5, -16.368320052756708, 8.709743103600722, 6.5, 6.5, 0.4196237179312342, 0.4733925229775059, 0.030173703077271186, 27351.75333349655], with fitness: 1.820493316462041
+ALL ITERATION TIME: 10.368390560150146
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 157
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.144027948379517
+!=========================================== Starting experiment 1614943095 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 54
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 14.107762098312378
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.531657457351685
+Population len 10
+
+Best params so far: [0.028702701180910783, 1.5, 99.77181871781445, -6.322400503526602, 6.0, -8.019505092341376, -77.94933908909134, -1.5, -23.63187318234631, 21.337179529907758, 5.5, 5.5, 0.25217930132634647, 0.3243699810529037, 0.04567538224336931, 10298.893900760659], with fitness: 1.3551189004468314
+ALL ITERATION TIME: 19.768696546554565
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 77
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.63118052482605
+
+Real values:  [0.0, 1.3667278057099894, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.598506750612246, 0.0, 0.0, 0.0, 0.0]
+Predicted values:  [1.3496192928850697, 1.3496192928850697, 1.3386200777615465, 1.3386200777615465, 1.3496192928850697, 1.3496192928850697, 1.3496192928850697, 0.05967385414965983, 1.3496192928850697, 1.3496192928850697, 1.3496192928850697, 1.3386200777615465, 1.3496192928850697, 0.0]
+R^2: -1.6262925583844856, MSE: 1.40639931000004, RMSE: 1.185917075515839
+
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 4.005426406860352
+
+Real values:  [1.3274896067841029, 0.0, 1.3241936682234157, 0.0, 0.0, 0.0, 0.0, 1.3192405116176154, 0.7570186643990928, 0.7701069020408164]
+Predicted values:  [1.3496192928850697, 1.3496192928850697, 1.3496192928850697, 1.3496192928850697, 1.3496192928850697, 1.3496192928850697, 1.3496192928850697, 1.3386200777615465, 0.7664673639788359, 0.7618197653413595]
+R^2: -1.679599377470452, MSE: 0.9109030886176692, RMSE: 0.9544124310892379
+
+Population len 10
+
+Best params so far: [0.028702701180910783, 1.5, 99.77181871781445, -6.322400503526602, 6.0, -8.019505092341376, -77.94933908909134, -1.5, -23.63187318234631, 21.337179529907758, 5.5, 5.5, 0.25217930132634647, 0.3243699810529037, 0.04567538224336931, 10298.893900760659], with fitness: 1.3496192928850697
+ALL ITERATION TIME: 10.7576425075531
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 104
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 4.107242822647095
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 4.1602089405059814
+Population len 10
+
+Best params so far: [0.028702701180910783, 1.5, 99.77181871781447, -6.322400503526602, 6.0, -8.019505092341376, -77.94933908909135, -1.5, -23.63187318234631, 21.337179529907758, 5.5, 5.5, 0.7777809282936924, 0.12586629078887446, 0.04567538224336931, 10298.893900760657], with fitness: 1.3536176067841033
+ALL ITERATION TIME: 8.389412879943848
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 131
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.7449822425842285
+
+Real values:  [0.3251654721224487, 1.3406635114027925, 0.3251654721224487, 0.3251654721224487, 0.869612881632653, 1.353375784227712, 1.349297761886144, 0.0, 0.9255404949516647, 1.321334290350161, 0.9263560648764767, 0.3251654721224487, 0.9378721379162188, 1.340863614088077, 0.3251654721224487, 0.0, 0.3251654721224487, 0.6046660281179135]
+Predicted values:  [1.3284804544047364, 1.3481127419362695, 1.3481127419362695, 1.3360466515560327, 0.9343174480818199, 1.3360466515560327, 1.3284804544047364, 0.0, 0.9346474677028285, 1.3284804544047364, 0.9344796236387396, 1.3481127419362695, 0.9343174480818199, 1.3284804544047364, 1.3284804544047364, 0.04957810885714288, 1.3481127419362695, 0.7712232657898717]
+R^2: -0.5259622738935821, MSE: 0.34499817363352325, RMSE: 0.587365451515088
+
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 4.11785101890564
+
+Real values:  [1.3341947895982815, 1.3316628252588614, 0.3251654721224487, 0.7283948825396823, 0.3251654721224487, 0.3251654721224487, 0.7752882494331067, 0.7567215088435372, 0.7567215088435372, 1.3249467500708916]
+Predicted values:  [1.3481127419362695, 1.3481127419362695, 1.3481127419362695, 0.7712232657898717, 1.3481127419362695, 1.3360466515560327, 0.7712232657898717, 0.7712232657898717, 0.7693762742252457, 1.3284804544047364]
+R^2: -1.0382513812330774, MSE: 0.3117421027339671, RMSE: 0.5583386989399598
+
+Population len 10
+
+Best params so far: [0.028702701180910783, 1.5, 99.77181871781447, -6.322400503526602, 6.0, -8.019505092341376, -77.94933908909135, -1.5, -23.63187318234631, 21.337179529907758, 5.5, 5.5, 0.7777809282936924, 0.12586629078887446, 0.04567538224336931, 10298.893900760657], with fitness: 1.3481127419362695
+ALL ITERATION TIME: 11.969807624816895
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 157
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 4.246403932571411
+!=========================================== Starting experiment 1614943156 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 23
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 4.7758283615112305
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 4.327129125595093
+Population len 10
+
+Best params so far: [115314.20711221283, 3.5, 61.627419325512385, 124.65745574651305, 0.0, -25.988782736958292, -127.67679092278429, -0.5, -2.4040794498087763, -9.543008676743522, 1.5, -0.5, 0.3829122707768312, 0.006851865025727877, 0.7651691226996756, 0.6862741784934706], with fitness: 1.2924928478734286
+ALL ITERATION TIME: 9.219237327575684
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 39
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 2.5695488452911377
+
+Real values:  [0.5582473431949511, 0.6625698251890324, 0.5589579662807347, 0.0, 0.5408678758079184, 0.44784153928571524, 0.5408678758079184]
+Predicted values:  [1.014885118909555, 0.6298603907050043, 0.8948474074562615, 0.3832186027951682, 0.7658087368321839, 0.7007976253076468, 0.7658087368321839]
+R^2: -1.232670930943371, MSE: 0.09063567755822073, RMSE: 0.3010575984063859
+
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 2.581843852996826
+
+Real values:  [1.2867870568530204, 0.5582473431949511, 0.2617626632653065, 0.5589579662807347, 0.5408678758079184, 0.5408678758079184, 0.4454609387755112, 0.6406155408959593, 0.6406155408959593, 0.6625698251890324]
+Predicted values:  [1.1439237895336327, 1.014885118909555, 0.8332670483298912, 0.8948474074562615, 0.7658087368321839, 0.7658087368321839, 0.7007976253076468, 0.6406155408959594, 0.6748585867220489, 0.6298603907050043]
+R^2: -0.33764608774182325, MSE: 0.08370030488976068, RMSE: 0.28931004975589886
+
+Population len 10
+
+Best params so far: [115314.20711221283, 3.5, 61.627419325512385, 124.65745574651305, 0.0, -25.988782736958292, -127.67679092278429, -0.5, -2.4040794498087763, -9.543008676743522, 1.5, -0.5, 0.3829122707768312, 0.006851865025727877, 0.7651691226996756, 0.6862741784934706], with fitness: 1.1439237895336327
+ALL ITERATION TIME: 5.259268522262573
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 61
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 2.6937289237976074
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 2.771549940109253
+Population len 10
+
+Best params so far: [86485.86170702048, 3.5, 70.90997223765277, 122.84742710769784, -0.5, -25.111960944669384, -120.46381298248667, -0.75, -1.5443854930458603, -11.319351816160829, 1.875, -0.125, 0.3829122707768312, 0.006851865025727877, 0.7651691226996756, 22184.731031528772], with fitness: 1.3691210715780329
+ALL ITERATION TIME: 5.577783107757568
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 86
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 1.9928159713745117
+
+Real values:  [0.6998387337795919, 0.570847305657808, 1.1598609995351234, 0.8655206245884897, 0.0, 0.6893279899632652, 0.8920504902412651, 1.0303090392399592, 0.579749320247143, 1.1688111765490872, 0.5581778596978082, 1.0598719415767994, 1.0581068511364127, 0.7168299565322019, 0.7257199919016111, 1.0233660910766937]
+Predicted values:  [1.3002901892200294, 0.568398375473815, 1.210928150318372, 1.051387216730474, 0.7247918316917641, 1.3002901892200294, 0.8918877345487483, 1.051387216730474, 0.6301625913951583, 1.210928150318372, 0.5569628776932424, 1.0362641130080874, 1.0362641130080874, 1.3485454628639304, 1.3485454628639304, 1.051387216730474]
+R^2: -0.5485130152920359, MSE: 0.13061606224226519, RMSE: 0.3614084424059089
+
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 1.9587092399597168
+
+Real values:  [1.3774934238229306, 0.7285998826761331, 0.7429833086835659, 0.7157567872816326, 0.7163357024734691, 1.2886944409346532, 1.1721993832085928, 1.1551870669894735, 0.8938499273841223, 0.8920504902412651]
+Predicted values:  [1.3738459476759917, 1.3485454628639304, 1.3485454628639304, 1.3002901892200294, 1.3002901892200294, 1.217244475038234, 1.210928150318372, 1.210928150318372, 0.8918877345487483, 0.8918877345487483]
+R^2: -1.432349958875828, MSE: 0.14434494497145653, RMSE: 0.37992755226681907
+
+Population len 10
+
+Best params so far: [86485.86170702048, 3.5, 70.90997223765277, 122.84742710769784, -0.5, -25.111960944669384, -120.46381298248667, -0.75, -1.5443854930458603, -11.319351816160829, 1.875, -0.125, 0.3829122707768312, 0.006851865025727877, 0.7651691226996756, 22184.731031528772], with fitness: 1.3738459476759917
+ALL ITERATION TIME: 4.060941934585571
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 106
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 2.032851219177246
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 1.8753502368927002
+Population len 10
+
+Best params so far: [86485.86170702048, 3.5, 70.90997223765277, 122.84742710769784, -0.5, -25.111960944669384, -120.46381298248667, -0.75, -1.5443854930458603, -11.319351816160829, 1.875, -0.125, 0.3829122707768312, 0.006851865025727877, 0.7651691226996756, 22184.731031528772], with fitness: 1.3757701593331348
+ALL ITERATION TIME: 4.018038034439087
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 123
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 1.9805583953857422
+
+Real values:  [0.8445652765779033, 1.7345386971714287, 1.2673011877264897, 1.740077540844898, 1.0081061502375102, 1.7474120824775512, 1.7045973860897954, 1.231404884266667]
+Predicted values:  [0.7893157041118348, 1.184840400628308, 1.2700758375968006, 1.184840400628308, 1.203314420901603, 1.184840400628308, 1.2230884956799635, 1.112909580409794]
+R^2: -0.2800460020316673, MSE: 0.15175022847151054, RMSE: 0.3895513168653272
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 1.81026029586792
+
+Real values:  [1.367914950353543, 1.2698574562979181, 1.269535548134653, 1.269592374257102, 1.2713643313999592, 1.709746367314285, 1.0046303416660816, 1.7421872069673472, 1.745067786967347, 1.739611332681633]
+Predicted values:  [1.2913284640261342, 1.2700758375968006, 1.2700758375968006, 1.2700758375968006, 1.2700758375968006, 1.2230884956799635, 1.203314420901603, 1.184840400628308, 1.184840400628308, 1.184840400628308]
+R^2: -0.8481001412438445, MSE: 0.12144399448013816, RMSE: 0.34848815543736655
+
+Population len 10
+
+Best params so far: [86485.86170702048, 3.5, 70.90997223765277, 122.84742710769784, -0.5, -25.111960944669384, -120.46381298248667, -0.75, -1.5443854930458603, -11.319351816160829, 1.875, -0.125, 0.3829122707768312, 0.006851865025727877, 0.7651691226996756, 22184.731031528772], with fitness: 1.2913284640261342
+ALL ITERATION TIME: 3.896697521209717
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 152
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 3.3164844512939453
+!=========================================== Starting experiment 1614943197 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 20
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.122661828994751
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.0661656856536865
+Population len 10
+
+Best params so far: [112916.39800362609, 9.0, 72.5222361650959, 106.15923367408595, -0.5, -19.298259207379466, 43.733780843101904, 6.0, 25.730983705448384, 11.46180872425846, 1.5, 0.0, 0.3290609352221431, 0.4551241959136394, 0.8762486559166744, 0.9642028741795685], with fitness: 0.7740262484223261
+ALL ITERATION TIME: 11.331405878067017
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 36
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.014529466629028
+
+Real values:  [0.7693981658986531, 0.8000973019570613, 0.7589748269206937, 0.8024203773365308, 0.5485939111693838, 0.7740262484223261, 0.950718015604817]
+Predicted values:  [0.4787929891371026, 0.7072721287706377, 0.4787929891371026, 0.7740262484223263, 0.309573576222208, 0.7740262484223263, 0.4393024633640882]
+R^2: -4.863608863351176, MSE: 0.07015036541574833, RMSE: 0.2648591425942256
+
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.116751432418823
+
+Real values:  [0.8024203773365308, 0.9909182776682453, 0.0, 0.7740262484223261, 0.7619559838651835, 0.8000973019570613, 0.6868284584596168, 0.7693981658986531, 0.7589748269206937, 0.9540877654007354]
+Predicted values:  [0.7740262484223263, 0.6642207035376445, 0.2620617256238061, 0.7740262484223263, 0.4787929891371026, 0.7072721287706377, 0.47675763766049084, 0.4787929891371026, 0.4787929891371026, 0.4393024633640882]
+R^2: -0.10250534397753785, MSE: 0.07370985618255907, RMSE: 0.27149559146063323
+
+Population len 10
+
+Best params so far: [149168.77467790162, 9.0, 72.5222361650959, 156.84848477183783, -3.75, -19.298259207379466, 43.73378084310191, 6.0, 81.82229904050325, 29.803332217787272, -1.25, 0.0, 0.3290609352221431, 0.4551241959136394, 0.8762486559166744, 0.9642028741795685], with fitness: 0.7740262484223263
+ALL ITERATION TIME: 12.237858772277832
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 53
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.366593599319458
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 7.793675184249878
+Population len 10
+
+Best params so far: [49581.699217769536, 7.0, 72.5222361650959, 106.15923367408595, -0.5, -58.29580491979906, 43.73378084310191, 6.0, 25.730983705448388, -50.53983977548766, 1.0, 0.0, 0.6432062298485425, 0.4551241959136394, 0.8762486559166744, 0.3277061848443865], with fitness: 1.0077934569743676
+ALL ITERATION TIME: 15.317570686340332
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 70
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.963243007659912
+
+Real values:  [0.37198901340226487, 1.0699722801680673, 8.621269387755104e-06, 0.3714757454267547, 0.7949260485826122, 0.7640867431257548, 0.7194586982815101, 0.8145100723706125]
+Predicted values:  [0.4949878253350503, 0.5862524851622712, 0.33245391312961253, 0.4949878253350503, 0.3187852262304079, 0.7927399458700817, 0.7872594487244203, 0.8138882288986148]
+R^2: 0.24954527079403022, MSE: 0.07587713387103695, RMSE: 0.2754580437580957
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.390390396118164
+
+Real values:  [1.006886209627429, 0.908588122603645, 0.8173703584940002, 0.8145100723706125, 0.8121527268173472, 0.7640867431257548, 0.7194586982815101, 1.0797514816086438, 0.3714757454267547, 0.3714757454267547]
+Predicted values:  [0.8212932907338695, 0.8388716685846924, 0.8334322887391267, 0.7943241558829127, 0.8067904731655184, 0.7927399458700817, 0.7872594487244203, 0.5862524851622712, 0.4949878253350503, 0.41879222694853196]
+R^2: 0.383872371223705, MSE: 0.030645261668486228, RMSE: 0.17505788090939017
+
+Population len 10
+
+Best params so far: [-60113.65607412642, 9.0, -98.00269842772981, -227.66432309042077, 11.25, 52.095311040379116, -86.4533253200442, 1.5, -270.81559686754184, -107.44008893987798, -6.125, 3.375, 0.3290609352221431, 0.4551241959136394, 0.8762486559166744, 1.1692332681497353], with fitness: 0.8388716685846924
+ALL ITERATION TIME: 12.474989175796509
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 89
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.861623287200928
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 9.134796142578125
+Population len 10
+
+Best params so far: [150083.4223771933, 10.5, 53.57502121033749, 147.917673518977, 0.0, -8.564507845500021, 29.268546824974578, 4.0, -40.62587178451842, 26.781745529288116, 6.0, 1.0, 0.9084395884082659, 0.4752752139820666, 0.8762486559166744, 1.6280431925762724], with fitness: 1.5530469555510207
+ALL ITERATION TIME: 18.117618799209595
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 107
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 10.676852941513062
+
+Real values:  [0.6120261432836734, 0.0, 0.0, 0.8149138477723675, 0.7194586982815101, 0.7964938165171427, 0.5538348805069389, 1.3487036793469387, 1.1021191703358575]
+Predicted values:  [0.7393602612161946, 0.433190683541941, 0.433190683541941, 0.7670754754584935, 0.7620255621236204, 0.9279924420150124, 0.5981144280847337, 0.7165157167921363, 0.8310515573170797]
+R^2: 0.4452379202204523, MSE: 0.0986682888484587, RMSE: 0.3141150885399469
+
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 10.081573247909546
+
+Real values:  [1.5624521294285718, 0.0, 0.0, 0.9054492287260939, 0.8334135792021483, 1.1028884720950412, 0.8149138477723675, 0.7194586982815101, 0.6120261432836734, 0.003691120167800454]
+Predicted values:  [1.0134233721282597, 0.9093710738422626, 0.43442098981256183, 0.8292003453578836, 0.7739203218405886, 0.8310515573170797, 0.7670754754584935, 0.7407051504363974, 0.7393602612161946, 0.2559558695235302]
+R^2: 0.39034849507966496, MSE: 0.14829499737478422, RMSE: 0.3850908949518077
+
+Population len 10
+
+Best params so far: [150083.4223771933, 10.5, 53.57502121033749, 147.917673518977, 0.0, -8.564507845500021, 29.268546824974578, 4.0, -40.62587178451842, 26.781745529288116, 6.0, 1.0, 0.9084395884082659, 0.4752752139820666, 0.8762486559166744, 1.6280431925762724], with fitness: 1.0134233721282597
+ALL ITERATION TIME: 20.86362099647522
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 126
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.45688271522522
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 7.6282830238342285
+Population len 10
+
+Best params so far: [150083.4223771933, 10.5, 53.57502121033749, 147.917673518977, 0.0, -8.564507845500021, 29.268546824974578, 4.0, -40.62587178451842, 26.781745529288116, 6.0, 1.0, 0.9084395884082659, 0.4752752139820666, 0.8762486559166744, 1.6280431925762724], with fitness: 1.5098628167755104
+ALL ITERATION TIME: 16.228301763534546
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 145
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.383673906326294
+
+Real values:  [0.6966436481168572, 0.39660090823797944, 0.8941517405075061, 0.8944017070381185, 1.1095105669387755, 0.27384796299319764, 0.7987891627713347, 0.0, 0.4084067184288775, 0.0]
+Predicted values:  [0.7264946222009434, 0.47098256389101695, 0.8541979798476007, 0.9293129555997082, 1.1567035002336692, 0.31346858516916104, 0.9009358710873888, 0.0, 0.5351096134470552, 0.06139781046791607]
+R^2: 0.9681263102621998, MSE: 0.004329304102908721, RMSE: 0.06579744754098536
+
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 7.175588846206665
+
+Real values:  [1.5380849518775515, 0.8151058788616324, 1.1073367689113678, 0.8941517405075061, 0.4339313789631225, 0.8944017070381185, 0.8006798199514573, 0.7609659137833059, 0.4084067184288775, 0.0]
+Predicted values:  [1.3047935420562493, 1.1567035002336692, 1.0293556217830082, 0.9364732662662794, 0.03196148426704013, 0.8541979798476007, 0.7331098477257492, 0.3268683142472763, 0.5351096134470552, 0.07202911454848601]
+R^2: 0.6465019128613793, MSE: 0.0556430367613591, RMSE: 0.23588776305980583
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1614943330 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 43
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 13.975217580795288
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.940193176269531
+Population len 10
+
+Best params so far: [59400.35306649248, 6.0, 113.50973167365218, 13.367767803823554, 9.0, -81.32190245306683, -4.882374173850302, -2.5, -22.748882894496703, 17.41006892341279, 8.0, 3.5, 0.3569850717004379, 0.9293448127376152, 0.7768985446838882, -0.32984217343156286], with fitness: 1.303462957142857
+ALL ITERATION TIME: 21.03017234802246
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 60
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.440391302108765
+
+Real values:  [0.9626618017959185, 1.2420488481632657, 1.0646718944126983, 0.7207515481495511, 1.0414369728707482, 1.2143310681632655, 1.259908108979592, 1.485537763897959]
+Predicted values:  [1.2520060455555555, 1.2520060455555555, 0.7354724779745627, 1.029060692561905, 0.7354724779745627, 1.2520060455555555, 1.245357573734014, 0.8461121681350605]
+R^2: -1.1373482435232565, MSE: 0.09891956351743622, RMSE: 0.31451480651542657
+
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 7.058789014816284
+
+Real values:  [1.2204028800000002, 0.0, 0.8992202940408165, 0.5396030316326536, 1.202971862857143, 1.299869147755102, 1.221897928163266, 1.1568753858646614, 0.0, 1.6034181451224492]
+Predicted values:  [1.2520060455555555, 0.044700368367346914, 1.2520060455555555, 0.3409246202292785, 1.25335681444898, 1.245357573734014, 1.249318006857143, 1.1701714756881487, 0.24931163227291792, 0.8461121681350605]
+R^2: 0.7075654223731797, MSE: 0.0809035215171647, RMSE: 0.2844354434967005
+
+Population len 10
+
+Best params so far: [59400.35306649248, 6.0, 113.50973167365217, 13.367767803823554, 9.0, -81.32190245306683, -4.882374173850302, -2.5, -22.748882894496703, 17.410068923412787, 8.0, 3.5, 0.5109838489287314, 0.2678687688504304, 0.7768985446838882, -0.32984217343156286], with fitness: 1.25335681444898
+ALL ITERATION TIME: 15.602259397506714
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 87
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.357121467590332
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.951566457748413
+Population len 10
+
+Best params so far: [153015.7974774619, 7.5, 32.71575597512516, -0.08000700595490962, 8.25, -31.603557576506887, 35.380283138715384, -1.375, -2.151883959459756, -8.937690585360054, 5.0, 7.25, 0.09164615733326764, 0.6107651473791078, 0.7117838671351319, -0.3790732238864253], with fitness: 1.710800576306123
+ALL ITERATION TIME: 15.422574758529663
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 103
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.805065870285034
+
+Real values:  [1.3167618609795921, 1.16488190628, 1.7033694542653066, 1.7027094791632655, 1.2131281471836735, 1.6982981301836737, 1.5213178338367346]
+Predicted values:  [1.0706918673553536, 0.589215398315053, 1.7117048626904765, 1.7117048626904765, 1.149083765804763, 1.7117048626904765, 1.167554595622642]
+R^2: -0.5081709325125778, MSE: 0.07450323115537746, RMSE: 0.2729528002336255
+
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.610796213150024
+
+Real values:  [1.717917904469388, 1.7065316220204083, 1.709577149367347, 1.714384529367347, 1.701945850591837, 1.7120282273265308, 1.620748657363265, 1.4751547575102042, 0.09533433984962396, 1.307521360979592]
+Predicted values:  [1.7117048626904765, 1.7117048626904765, 1.7117048626904765, 1.7117048626904765, 1.7028130213401362, 1.7117048626904765, 1.5458212460726917, 1.167554595622642, 0.10082361402721093, 1.0706918673553536]
+R^2: 0.9315529581045732, MSE: 0.01564282463717271, RMSE: 0.12507127822634864
+
+Population len 10
+
+Best params so far: [153015.79747746192, 7.5, 32.715755975125155, -0.08000700595490962, 8.25, -31.603557576506887, 35.380283138715384, -1.375, -2.151883959459756, -8.937690585360055, 5.0, 7.25, 0.09164615733326764, 0.6107651473791078, 0.7117838671351319, -0.3790732238864252], with fitness: 1.7117048626904765
+ALL ITERATION TIME: 13.517381429672241
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 123
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.708893775939941
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 8.740025043487549
+Population len 10
+
+Best params so far: [153015.79747746192, 7.5, 32.71575597512516, -0.08000700595490962, 8.25, -31.603557576506887, 35.380283138715384, -1.375, -2.151883959459756, -8.937690585360055, 5.0, 7.25, 0.09164615733326764, 0.6107651473791078, 0.7117838671351319, -0.3790732238864253], with fitness: 1.7319080918163265
+ALL ITERATION TIME: 16.569228172302246
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 143
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.930524110794067
+
+Real values:  [1.7096594203877553, 1.708221331816327, 1.6969461069183676, 1.6997173134489794, 1.6802166420204083, 1.7154986052857144, 1.7015983799795924, 1.6763148983469391, 1.67994005222449, 1.6989469669183677, 1.6830697538571429]
+Predicted values:  [1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457]
+R^2: -0.09839943042420662, MSE: 0.00018268121284226697, RMSE: 0.0135159614102093
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 7.009765148162842
+
+Real values:  [1.7008314273265308, 1.7209002946734695, 1.6832541697755106, 1.7059832632448981, 1.6938773697755105, 1.6919280885510206, 1.7284756595714288, 1.67707779222449, 1.7223689163061229, 1.7017657812040816]
+Predicted values:  [1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457, 1.6995117306148457]
+R^2: -0.037413933442336234, MSE: 0.00027243813940358835, RMSE: 0.01650570020943033
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1614943439 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 21
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 3.0232443809509277
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.346239328384399
+Population len 10
+
+Best params so far: [114564.87209664301, 6.0, 136.46100271595031, 105.42381887735829, -1.0, -52.601250639663505, 3.611295339956037, 0.0, -26.045909583988227, 7.573233530910123, 1.5, -1.0, 0.3806520099685685, 0.058617283989843116, 0.07984536449534951, 0.575719463092538], with fitness: 0.6834409938875102
+ALL ITERATION TIME: 8.495390176773071
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 40
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 3.311391830444336
+
+Real values:  [0.713916751445755, 0.6735655821514694, 1.2880289227755102, 0.4875011450668243, 0.9080449561503758, 0.553015749121057, 0.8538845536897144, 0.8731081213223673, 0.9048299580837809, 0.10494413589435765]
+Predicted values:  [0.6449309882984066, 0.6418791126933372, 0.6303634596850285, 0.5894245316118499, 0.5877872276891288, 0.588185404137297, 0.2791861953798614, 0.2954771089747593, 0.5877872276891288, 0.2760633009111471]
+R^2: -0.5068629005243779, MSE: 0.13462108742055884, RMSE: 0.3669074643838128
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 4.557969808578491
+
+Real values:  [0.6834409938875102, 0.0, 0.10682747418967582, 0.6735655821514694, 0.0, 0.6058338102370039, 0.6293432000102448, 0.4875011450668243, 0.553015749121057, 0.0]
+Predicted values:  [0.6833659168030857, 0.2037145883147165, 0.12218366863587374, 0.6418791126933372, 0.29252529193841825, 0.605833810237004, 0.605833810237004, 0.5894245316118499, 0.588185404137297, 0.5877872276891288]
+R^2: 0.42171026397946076, MSE: 0.04859823284078004, RMSE: 0.22045006881554843
+
+Population len 10
+
+Best params so far: [114564.87209664301, 6.0, 136.46100271595031, 105.42381887735829, -1.0, -52.601250639663505, 3.611295339956037, 0.0, -26.045909583988227, 7.573233530910123, 1.5, -1.0, 0.3806520099685685, 0.058617283989843116, 0.07984536449534951, 0.575719463092538], with fitness: 0.6833659168030857
+ALL ITERATION TIME: 7.971808195114136
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 61
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 4.621898412704468
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 3.3324134349823
+Population len 10
+
+Best params so far: [125329.15221959415, 6.0, 141.87752717549057, 134.09958193881724, -1.375, -51.62643081783862, 0.09767735278087208, -2.25, -23.769335391966727, 5.405183391541518, 2.25, -0.625, 0.3806520099685685, 0.058617283989843116, 0.07984536449534951, 0.4340309453412805], with fitness: 1.2957560876228573
+ALL ITERATION TIME: 8.068796396255493
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 84
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 3.3425896167755127
+
+Real values:  [0.79655432507483, 0.5602448451565142, 0.8530557845022555, 0.6435684892340408, 0.8017691144081631, 1.18194584962406, 0.8490735400339418, 0.8424314953508055, 1.2777713052653064, 1.2782617908448979, 1.2616009735265308, 0.853531430044683, 0.6435684892340408, 0.5463695843840776]
+Predicted values:  [0.7686251774902336, 0.39017663479352815, 0.8769042978411224, 1.1302761159396897, 0.7686251774902336, 0.8548900961672772, 0.8769042978411224, 0.8769042978411224, 0.855803695257156, 0.855803695257156, 0.855803695257156, 0.8769042978411224, 1.1302761159396897, 0.44137027734247025]
+R^2: -0.28065649316899854, MSE: 0.0819169719538707, RMSE: 0.2862114112921962
+
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.234074592590332
+
+Real values:  [1.2696943267616327, 0.0, 0.6435684892340408, 0.8927230752910849, 0.897475960661654, 0.8514684779501609, 0.8526839911617612, 0.8797539879505907, 0.8464696268223414, 0.8104299525437639]
+Predicted values:  [1.2350473324060571, 0.4137720100218817, 1.1302761159396897, 0.9039168426305046, 0.8958468429528106, 0.8769042978411224, 0.6985023844894329, 0.6985023844894329, 0.8769042978411224, 0.7108176127660316]
+R^2: 0.47919446352447537, MSE: 0.047753993880346964, RMSE: 0.21852687221563155
+
+Population len 10
+
+Best params so far: [125329.15221959415, 6.0, 141.87752717549057, 134.09958193881724, -1.375, -51.62643081783862, 0.09767735278087208, -2.25, -23.769335391966727, 5.405183391541518, 2.25, -0.625, 0.3806520099685685, 0.058617283989843116, 0.07984536449534951, 0.4340309453412805], with fitness: 1.2350473324060571
+ALL ITERATION TIME: 8.684364080429077
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 106
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 3.3234612941741943
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 3.382622718811035
+Population len 10
+
+Best params so far: [126762.31940780266, 6.1875, 141.27642904577309, 127.21256358228192, -1.34375, -56.2839438263986, 0.5220190066823549, -1.875, -23.15783183033995, 3.929444717743066, 2.5625, -0.28125, 0.592733730194373, 0.8287659512538447, 0.6902579054055096, 0.4636598050352053], with fitness: 1.2984084223020407
+ALL ITERATION TIME: 6.8227221965789795
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 121
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 3.8924367427825928
+
+Real values:  [0.694306597142857, 0.6436928817034284, 1.286005451567347, 1.1963971402792697, 0.5877920680223099, 1.2902209493836734]
+Predicted values:  [0.9133885049205587, 0.6193279867682883, 1.30251276212585, 0.8526209389307061, 0.6134413802279421, 0.8324737865862891]
+R^2: 0.3493235071796449, MSE: 0.06287257510031963, RMSE: 0.25074404300066555
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.166879177093506
+
+Real values:  [1.2798916641755103, 0.0, 1.2737969154857145, 0.09055109602577865, 1.271882372802449, 0.694306597142857, 0.10179683174603171, 1.274722357587755, 0.6436928817034284, 0.5877920680223099]
+Predicted values:  [1.30251276212585, 0.39914227636420124, 1.300894653235483, 0.19503625861458182, 1.286535540506034, 0.9133885049205587, 0.6233376838023819, 0.8324737865862891, 0.6193279867682883, 0.6134413802279421]
+R^2: 0.7303236461522409, MSE: 0.06885294993236307, RMSE: 0.26239845642145665
+
+Population len 10
+
+Best params so far: [126762.31940780266, 6.1875, 141.2764290457731, 127.21256358228192, -1.34375, -56.2839438263986, 0.5220190066823549, -1.875, -23.157831830339955, 3.9294447177430656, 2.5625, -0.28125, 0.592733730194373, 0.8287659512538447, 0.6902579054055096, 0.46365980503520526], with fitness: 1.30251276212585
+ALL ITERATION TIME: 9.162683010101318
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 142
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 3.300717353820801
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 3.7538840770721436
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1614943504 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 47
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.57266092300415
+positioning_mutation selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.8214147090911865
+Population len 10
+
+Best params so far: [78589.09621885548, 7.5, 72.7379404408466, 71.57048974431355, 1.5, -14.812045789470837, -3.458758260584915, 7.0, -21.84501202582723, -19.18847215586623, 0.5, 1.5, 0.25181728879722165, 0.35748409071933906, 0.6310631305357045, 1.0359272639276704], with fitness: 1.563146563244898
+ALL ITERATION TIME: 14.51212191581726
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 67
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.974363803863525
+
+Real values:  [0.10723028763505404, 0.7665925164524079, 1.5243139612040817, 0.9204441771428573, 0.7601366977645307, 0.7665925164524079, 0.7601366977645307, 0.10723028763505404, 1.1907343902947847, 0.90398416122449, 0.10723028763505404]
+Predicted values:  [0.7149425718213303, 1.2569284522831148, 1.5199881854597668, 1.150994954013703, 1.3481550684014119, 1.2569284522831148, 1.3481550684014119, 0.7166358112771126, 1.1680933083207, 1.151505656796442, 0.7149425718213303]
+R^2: -0.15447860956780923, MSE: 0.21794048033716207, RMSE: 0.46684095829003913
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.545238733291626
+
+Real values:  [1.5705609767142856, 1.5139293640612244, 1.4890470440612247, 0.7404277161561221, 0.7601366977645307, 0.0, 0.7665925164524079, 1.1596465030977443, 1.1710861860193342, 1.209730692335601]
+Predicted values:  [1.5199881854597668, 1.5199881854597668, 1.5199881854597668, 1.290542453576112, 1.3481550684014119, 0.28772632564295175, 1.2569284522831148, 1.1630832636825736, 1.1610179755658534, 1.1680933083207]
+R^2: 0.5330775789196422, MSE: 0.09770061196638005, RMSE: 0.31257097108717574
+
+Population len 10
+
+Best params so far: [78589.09621885548, 7.5, 72.7379404408466, 71.57048974431355, 1.5, -14.812045789470837, -3.458758260584915, 7.0, -21.84501202582723, -19.18847215586623, 0.5, 1.5, 0.25181728879722165, 0.35748409071933906, 0.6310631305357045, 1.0359272639276704], with fitness: 1.5199881854597668
+ALL ITERATION TIME: 11.6461021900177
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 91
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.047614574432373
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.843939542770386
+Population len 10
+
+Best params so far: [55862.28525613801, 7.5, 72.73794044084659, 63.84985268231163, 1.5, -14.812045789470837, -3.458758260584915, 7.0, -43.89703886790965, -19.18847215586623, 0.5, 1.5, 0.25181728879722165, 0.35748409071933906, 0.6310631305357045, 0.9476435269999515], with fitness: 1.5607357644995918
+ALL ITERATION TIME: 12.004297256469727
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 111
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 4.904307126998901
+
+Real values:  [0.6830977393550204, 1.5616009855877546, 0.0, 0.09535386036519866, 1.5794500990571423, 1.4839531245240818, 0.13672445446712006, 0.10455142953181264, 0.09914580861677998, 1.5603226002816324, 0.9780807524353742]
+Predicted values:  [1.0337525808603252, 1.421165464743767, 0.18567439698851163, 0.20860415467658697, 1.421165464743767, 1.5522626370383688, 0.2025680773497228, 0.10395586754461776, 0.2244741757328934, 1.421165464743767, 0.9642441522995338]
+R^2: 0.9460439454536727, MSE: 0.023572806913723245, RMSE: 0.15353438349022425
+
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.020109415054321
+
+Real values:  [1.53863831552, 1.4813109502383672, 0.5789322748299327, 1.5585295595714286, 1.4931880567142857, 1.8360681086644899, 1.5682340410979587, 1.568249144363265, 0.6830977393550204, 0.9581720308027211]
+Predicted values:  [1.5522626370383688, 1.5522626370383688, 1.4871455077853921, 1.5216494430904763, 1.5365868206637219, 1.4283907792488084, 1.421165464743767, 1.421165464743767, 1.0337525808603252, 0.9642441522995338]
+R^2: 0.2872581916896948, MSE: 0.1165773904627341, RMSE: 0.3414343135402974
+
+Population len 10
+
+Best params so far: [55862.28525613801, 7.5, 72.73794044084659, 63.84985268231163, 1.5, -14.812045789470837, -3.458758260584915, 7.0, -43.89703886790965, -19.18847215586623, 0.5, 1.5, 0.25181728879722165, 0.35748409071933906, 0.6310631305357045, 0.9476435269999515], with fitness: 1.5522626370383688
+ALL ITERATION TIME: 10.028947353363037
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 130
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 4.41284704208374
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 4.576655864715576
+Population len 10
+
+Best params so far: [0.9697144612318812, 7.5, 72.73794044084659, 65.78001194781211, 1.5, -14.812045789470837, -3.458758260584915, 7.0, -38.38403215738904, -19.18847215586623, 0.5, 1.5, 0.9587738792901603, 0.35748409071933906, 0.6310631305357045, 61543.987996817385], with fitness: 1.832830294174694
+ALL ITERATION TIME: 9.10499358177185
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 156
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.292113780975342
+
+Real values:  [1.1782032449795925, 1.1041234969323306, 1.1430974223265309, 1.2318663210204084, 1.54588966522449, 1.113802219469388, 1.230367558979592, 1.5271827014489794, 1.203602615810956, 1.2389255700000006, 1.1011191339548871, 1.5076696087673467, 1.2328499059183677, 1.1720787784489801, 1.2408888275510208, 1.2028357791331024, 1.171800970693878]
+Predicted values:  [1.7303228500770615, 1.5199851249169798, 1.7303228500770615, 1.7303228500770615, 1.564536090725892, 1.7303228500770615, 1.673893888550286, 1.5373048366878226, 1.5690189510440815, 1.7303228500770615, 1.5770247384920961, 1.56854035561551, 1.6828187876043266, 1.7303228500770615, 1.673893888550286, 1.6752009128462042, 1.7303228500770615]
+R^2: -9.689801270027774, MSE: 0.2053060066722568, RMSE: 0.4531070587314402
+
+!=========================================== Starting experiment 1614943575 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 37
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.393022060394287
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.225306987762451
+Population len 10
+
+Best params so far: [31066.856911572093, 4.0, 75.45506874647876, 28.579118479398417, 6.0, -75.59982306678957, 23.399008205332038, 1.0, -19.33592855427201, -36.43943557811819, 3.0, 8.0, 0.12669060646364383, 0.9656443423840035, 0.888346400425175, 0.6178895960570612], with fitness: 0.2332694525510202
+ALL ITERATION TIME: 14.735770225524902
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 80
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 11.868898630142212
+
+Real values:  [0.2332694525510202, 0.2332694525510202, 0.631224898367347, 0.6283485016326531, 0.0, 0.2332694525510202, 0.0, 0.26142921251700646, 0.3052805387755098, 0.5071444043537415, 0.4819646862244897, 0.24834813823129226, 0.6321229367346939, 0.43295833632653014, 0.4287404556122448, 0.21342426314525784, 0.0, 0.2332694525510202, 0.21342426314525784, 0.5425624326530609, 0.44591569285714266, 0.6312078820408163, 0.0, 0.4650947448979592, 0.21342426314525784, 0.21342426314525784, 1.353724159828142, 0.4579536108843533, 0.0, 0.24834813823129226, 0.628814430612245, 0.2332694525510202, 0.2332694525510202, 0.0]
+Predicted values:  [0.20994250729591818, 0.20994250729591818, 0.1847337044563192, 0.1847337044563192, 0.060645986801825945, 0.20994250729591818, 0.012862047427368416, 0.20994250729591818, 0.16328861678571413, 0.20994250729591818, 0.20994250729591818, 0.16328861678571413, 0.21908675567400623, 0.19575981041890422, 0.1522625108231291, 0.046653890510204035, 0.04558059040534905, 0.20994250729591818, 0.046653890510204035, 0.1412364048605441, 0.1522625108231291, 0.1847337044563192, 0.03164524287312566, 0.1522625108231291, 0.046653890510204035, 0.046653890510204035, 0.21908675567400623, 0.15038065323863217, 0.022253645150247036, 0.16328861678571413, 0.1847337044563192, 0.20994250729591818, 0.20994250729591818, 0.060645986801825945]
+R^2: -0.2872800405075002, MSE: 0.09259932623425296, RMSE: 0.30430137402623236
+
+mutation_one_param selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.641563653945923
+
+Real values:  [0.2332694525510202, 0.2332694525510202, 0.09359630247046183, 1.3466651076262088, 0.2332694525510202, 0.2332694525510202, 0.2332694525510202, 0.2982217251700677, 0.0959754259935553, 0.0]
+Predicted values:  [0.20994250729591818, 0.20994250729591818, 0.018783195445757243, 0.17268021450859278, 0.20994250729591818, 0.20994250729591818, 0.20994250729591818, 0.20994250729591818, 0.08637788339419976, 0.046957988614393105]
+R^2: -0.08099381799649552, MSE: 0.13966486479528703, RMSE: 0.37371762708666423
+
+Population len 10
+
+Best params so far: [31066.856911572093, 4.0, 75.45506874647876, 28.579118479398417, 6.0, -75.59982306678957, 23.399008205332038, 1.0, -19.33592855427201, -36.43943557811819, 3.0, 8.0, 0.12669060646364383, 0.9656443423840035, 0.888346400425175, 0.6178895960570612], with fitness: 0.20994250729591818
+ALL ITERATION TIME: 17.62134861946106
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 109
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.075233697891235
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.812012195587158
+Population len 10
+
+Best params so far: [57949.58375392184, 6.0, 96.85777870393656, 97.53451436925373, 2.0, -9.263597497018822, -9.208391515533762, 1.0, -95.88318751223342, -41.969750102641946, 0.0, 5.0, 0.12669060646364383, 0.9656443423840035, 0.888346400425175, 0.06244290280530196], with fitness: 1.3300894467120186
+ALL ITERATION TIME: 12.003318548202515
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 129
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.7556726932525635
+
+Real values:  [0.5563460477673471, 0.6988589150281632, 0.7113070718239713, 0.6988589150281631, 0.6988589150281632, 0.7113070718239713, 0.7113070718239713, 0.6076275322284448, 0.7113070718239713, 0.7113070718239713, 0.09391597722878621]
+Predicted values:  [0.5305319666163265, 0.9327978375506578, 0.9327978375506578, 0.9327978375506578, 0.9327978375506578, 0.9327978375506578, 0.9327978375506578, 0.9327978375506578, 0.9327978375506578, 0.9327978375506578, 0.050916264200501236]
+R^2: -0.5202250712335048, MSE: 0.047065829499404944, RMSE: 0.21694660518064104
+
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.334572076797485
+
+Real values:  [1.3130034848072563, 0.6988589150281632, 0.7113070718239713, 0.6988589150281631, 0.6988589150281632, 0.7113070718239713, 0.7113070718239713, 0.5560636277142856, 0.4995073882993196, 0.2593834628571425]
+Predicted values:  [0.9423953801500137, 0.9327978375506578, 0.9327978375506578, 0.9327978375506578, 0.9327978375506578, 0.9327978375506578, 0.9327978375506578, 0.5305319666163265, 0.2889425973286036, 0.2725818269517327]
+R^2: 0.2151004417536582, MSE: 0.049387069728690836, RMSE: 0.22223201778477114
+
+Population len 10
+
+Best params so far: [57949.58375392184, 6.0, 96.85777870393656, 97.53451436925373, 2.0, -9.263597497018822, -9.208391515533762, 1.0, -95.88318751223342, -41.969750102641946, 0.0, 5.0, 0.12669060646364383, 0.9656443423840035, 0.888346400425175, 0.06244290280530196], with fitness: 0.9423953801500137
+ALL ITERATION TIME: 13.193642616271973
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 157
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 4.619451522827148
+!=========================================== Starting experiment 1614943643 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 30
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.8540425300598145
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 8.169459104537964
+Population len 10
+
+Best params so far: [85046.30083373058, 2.5, -31.249381670857844, -19.03563038637365, 4.0, -30.507838341118465, -2.5833848027665383, 5.0, 10.789213414008735, -38.866361774957454, 0.0, 9.5, 0.060399939848765016, 0.9955991715610298, 0.5898561329250163, -0.01896933780028548], with fitness: 0.9242081609795925
+ALL ITERATION TIME: 16.13668990135193
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 53
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.917744159698486
+
+Real values:  [0.0991139061224489, 0.8403493575276973, 1.2041755525877549, 0.0991139061224489, 0.6705557852384612, 0.840546225970846, 0.0991139061224489, 0.0991139061224489, 0.0991139061224489, 0.7892748603232899, 0.6972743616374286, 0.1046076321728691, 0.6100553706705538, 0.1046076321728691]
+Predicted values:  [0.8218928324669147, 0.6611976433054504, 0.6748427443964058, 0.7657920730290366, 0.5093915501580409, 0.6611976433054504, 0.7657920730290366, 0.7657920730290366, 0.7657920730290366, 0.6968837065870628, 0.6972743616374286, 0.5126632622407349, 0.843175632895105, 0.5126632622407349]
+R^2: -0.5502174327855665, MSE: 0.219041203500396, RMSE: 0.4680183794472136
+
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.311871767044067
+
+Real values:  [0.9242081609795925, 0.5251139891156467, 0.0991139061224489, 0.11163129693877544, 0.0991139061224489, 0.0991139061224489, 0.0991139061224489, 0.0991139061224489, 0.6972743616374286, 0.6972743616374286]
+Predicted values:  [0.9068197797110088, 0.8301361425211333, 0.8218928324669147, 0.17016562352530745, 0.7657920730290366, 0.7657920730290366, 0.7657920730290366, 0.7657920730290366, 0.6972743616374286, 0.6972743616374286]
+R^2: -1.463839165061907, MSE: 0.23970156265475717, RMSE: 0.48959326246871204
+
+Population len 10
+
+Best params so far: [85046.30083373058, 2.5, -31.249381670857844, -19.03563038637365, 4.0, -30.507838341118465, -2.5833848027665383, 5.0, 10.789213414008735, -38.866361774957454, 0.0, 9.5, 0.060399939848765016, 0.9955991715610298, 0.5898561329250163, -0.01896933780028548], with fitness: 0.9068197797110088
+ALL ITERATION TIME: 12.36020803451538
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 74
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.380599021911621
+mutation_one_param selected
+mutation_one_param selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.438140392303467
+Population len 10
+
+Best params so far: [96889.00620863301, 2.125, -14.149120300977714, -21.265124831590654, 4.25, -30.09484409712735, 0.25606086495708347, 4.0, 0.828805682498805, -38.87862666767234, 0.375, 12.75, 0.6853428987199089, 0.0865866208616145, 0.939934146514722, 0.019069164785018716], with fitness: 1.0468751930987756
+ALL ITERATION TIME: 12.93084454536438
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 94
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 8.0151207447052
+
+Real values:  [0.684805031397175, 0.785301324462204, 0.0, 0.7627540070097674, 0.0, 0.0, 0.0, 0.7627540070097674, 0.7186738574149668, 0.0, 0.0]
+Predicted values:  [0.5253871133941757, 0.6382894193387448, 0.10218155394957977, 0.5229087039118674, 0.2924073324850217, 0.10218155394957977, 0.06100216758703477, 0.5229087039118674, 0.5066034607772123, 0.10218155394957977, 0.10218155394957977]
+R^2: 0.7763637066717727, MSE: 0.030730868836937066, RMSE: 0.1753022214261333
+
+positioning_mutation selected
+mutation_one_param selected
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 8.591186046600342
+
+Real values:  [1.0468751930987756, 1.2577916782622536, 0.7468091472039591, 0.7285812706080408, 0.785301324462204, 0.684805031397175, 0.0, 0.7627540070097674, 0.7186738574149668, 0.0]
+Predicted values:  [0.9086678659688129, 0.7046165742559154, 0.6721282324835631, 0.7285812706080408, 0.6382894193387448, 0.5253871133941757, 0.22746275180769965, 0.5229087039118674, 0.5066034607772123, 0.2924073324850217]
+R^2: 0.5648863352028972, MSE: 0.06174487469159018, RMSE: 0.24848515990213615
+
+Population len 10
+
+Best params so far: [96889.00620863301, 2.125, -14.149120300977714, -21.265124831590654, 4.25, -30.09484409712735, 0.25606086495708347, 4.0, 0.828805682498805, -38.87862666767234, 0.375, 12.75, 0.6853428987199089, 0.0865866208616145, 0.939934146514722, 0.019069164785018716], with fitness: 0.9086678659688129
+ALL ITERATION TIME: 16.71912908554077
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 113
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 9.371219635009766
+mutation_one_param selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 9.3752920627594
+Population len 10
+
+Best params so far: [-0.01896933780028548, 2.5, -31.249381670857844, -19.03563038637365, 4.0, -30.507838341118465, -2.5833848027665383, 5.0, 10.789213414008735, -38.866361774957454, 0.0, 9.5, 0.060399939848765016, 0.9955991715610298, 0.5898561329250163, 85046.30083373058], with fitness: 1.2577916782622536
+ALL ITERATION TIME: 18.871134519577026
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 142
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 11.356575012207031
+
+Real values:  [0.0008664636734693877, 0.8213990247130616, 0.6077373082258506, 0.6077373082258506, 0.0, 0.6437475300993595, 0.7921804468164896, 0.8009698039124084, 0.816734050437318, 0.0, 0.6437475300993595, 0.0, 0.0, 0.0008664636734693877, 0.08157610236734693, 0.0008664636734693877, 0.0008664636734693877, 0.6077373082258506, 0.785301324462204, 0.1118904484693877]
+Predicted values:  [0.09215331147959187, 0.4763356914146629, 0.8842393464005867, 0.8842393464005867, 0.03644954801020413, 0.945716847844065, 0.7679986076718083, 0.7788095941625307, 0.5795060359246482, 0.029734171836734668, 0.945716847844065, 0.1414199531364432, 0.029734171836734668, 0.08224192086734698, 0.01982278122448978, 0.08224192086734698, 0.13150856252419835, 0.8842393464005867, 0.7650463607364614, 0.4261503482652368]
+R^2: 0.6990144128781517, MSE: 0.03764383761468907, RMSE: 0.19402019898631448
+
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 15.348030805587769
+
+Real values:  [1.2577916782622536, 1.1855716606027213, 0.6437475300993595, 0.6437475300993595, 0.9197121793627214, 0.6077373082258506, 0.7381733714325629, 0.6077373082258506, 0.832737806209524, 0.8009698039124084]
+Predicted values:  [1.1858501789700917, 1.1328590092420983, 0.945716847844065, 0.945716847844065, 0.9178750339096602, 0.8842393464005867, 1.0107551614247416, 0.8842393464005867, 0.8951539727896863, 0.7788095941625307]
+R^2: 0.1468783301337412, MSE: 0.042192295496732, RMSE: 0.20540763251820027
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+!=========================================== Starting experiment 1614943756 ===========================================!
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 21
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 6.246532440185547
+positioning_mutation selected
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.813597679138184
+Population len 10
+
+Best params so far: [85198.82147150804, 4.0, 35.40341079270703, 48.218502612950275, 5.5, -48.700647089228006, 12.661392299451183, 9.0, 1.4144986585855222, -0.5719992395209843, 1.0, 0.5, 0.41623989563946695, 0.9322372503925147, 0.5686629307728415, 0.7481856832037076], with fitness: 0.5160600426122458
+ALL ITERATION TIME: 12.184432744979858
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 39
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.214050054550171
+
+Real values:  [0.11150314438775501, 1.0761373969918366, 0.9877302626729796, 0.8401504415901496, 0.0, 0.5405394326530613, 0.6041646283130205, 0.6923072575338776, 0.0008664636734693877]
+Predicted values:  [0.4940961719214491, 0.5051028210612246, 0.43278735825483106, 0.3089985929968343, 0.09191549488298498, 0.42052311926262637, 0.42052311926262637, 0.33890746636143343, 0.2544729103012129]
+R^2: 0.04583970654134783, MSE: 0.14536956052793304, RMSE: 0.38127360324041976
+
+positioning_mutation selected
+positioning_mutation selected
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 6.863537549972534
+
+Real values:  [0.5160600426122458, 1.0761373969918366, 0.5038853520000001, 0.11150314438775501, 0.45708809283173496, 0.9807052647954289, 0.5402973616326532, 0.5856461838232245, 0.6923072575338776, 0.10549585690276106]
+Predicted values:  [0.43278735825483106, 0.5051028210612246, 0.5038853520000001, 0.4940961719214491, 0.45493945160724525, 0.43278735825483106, 0.42052311926262637, 0.42052311926262637, 0.33890746636143343, 0.10385070167330086]
+R^2: -0.06876786339009344, MSE: 0.0946116515074338, RMSE: 0.3075900705605332
+
+Population len 10
+
+Best params so far: [195012.20534761902, 4.25, -38.90901407797212, -59.32046670339273, -1.25, -88.02997197612878, 9.594520295506651, -1.75, -54.178020500688106, 37.888852892431984, 8.5, 2.25, 0.019488653406346423, 0.7075870910590643, 0.7792537397456849, 1.1237170312921612], with fitness: 0.5051028210612246
+ALL ITERATION TIME: 14.192986965179443
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 57
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.174280166625977
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 5.291072368621826
+Population len 10
+
+Best params so far: [195012.20534761902, 4.25, -38.90901407797212, -59.32046670339273, -1.25, -88.02997197612878, 9.594520295506651, -1.75, -54.178020500688106, 37.888852892431984, 8.5, 2.25, 0.019488653406346423, 0.7075870910590643, 0.7792537397456849, 1.1237170312921612], with fitness: 1.0761373969918366
+ALL ITERATION TIME: 10.578846216201782
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 78
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 7.450310945510864
+
+Real values:  [0.7157263865306122, 0.0, 0.09359630247046183, 0.7219418372095507, 0.22017249351428575, 0.22017249351428575, 0.4297614559183677, 0.854287762429959, 0.6500363256749386, 1.0259731799613316, 0.7249231180119593, 0.13089270556734697]
+Predicted values:  [0.29154535771020423, 0.850320136054747, 0.14099519053223813, 0.8008053569697633, 0.850320136054747, 0.850320136054747, 0.3554628706459985, 0.8890841482679797, 0.8149146306563511, 0.9616869879934693, 0.907021873164951, 0.850320136054747]
+R^2: -0.7921530425108363, MSE: 0.1911997094722063, RMSE: 0.4372638899705832
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 4.786933183670044
+
+Real values:  [1.0761373969918364, 1.0259731799613316, 0.7249231180119593, 0.854287762429959, 0.0, 0.22017249351428575, 0.22017249351428575, 0.8103495426845715, 0.7220823430078775, 0.5038853520000001]
+Predicted values:  [1.0136012469712856, 0.9616869879934693, 0.907021873164951, 0.8890841482679797, 0.850320136054747, 0.850320136054747, 0.850320136054747, 0.825861273189234, 0.7657627091825143, 0.5038853520000001]
+R^2: -0.298389233071628, MSE: 0.15617792543839443, RMSE: 0.3951935290947897
+
+Population len 10
+
+Best params so far: [195012.20534761902, 4.25, -38.90901407797212, -59.32046670339273, -1.25, -88.02997197612878, 9.594520295506651, -1.75, -54.178020500688106, 37.888852892431984, 8.5, 2.25, 0.019488653406346423, 0.7075870910590643, 0.7792537397456849, 1.1237170312921612], with fitness: 1.0136012469712856
+ALL ITERATION TIME: 12.34284496307373
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 97
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 5.093516111373901
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 4.093447923660278
+Population len 10
+
+Best params so far: [195012.20534761902, 4.25, -38.90901407797212, -59.32046670339273, -1.25, -88.02997197612878, 9.594520295506651, -1.75, -54.178020500688106, 37.888852892431984, 8.5, 2.25, 0.019488653406346423, 0.7075870910590643, 0.7792537397456849, 1.1237170312921612], with fitness: 1.0761373969918366
+ALL ITERATION TIME: 9.299886703491211
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 119
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 3.993098020553589
+
+Real values:  [1.137578759206349, 1.0073629721202133, 0.8633194646536694, 0.3882542239795921, 0.9833706868673472, 0.3882542239795921, 1.1835769560648979, 1.1348158041950112, 0.24593647244897976, 1.0259731799613316, 0.24593647244897976, 1.146517652095238, 0.7440941710601225]
+Predicted values:  [1.0189650261298389, 0.8682592392224906, 0.9140108144251023, 0.22912801192097687, 1.0019240288922453, 0.22912801192097687, 1.0668607259793874, 1.0189650261298389, 0.2666954514686358, 1.0259731799613316, 0.24087493108256144, 1.0189650261298389, 0.7589248482122163]
+R^2: 0.9171334140575405, MSE: 0.010074266560053596, RMSE: 0.1003706459083212
+
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 3.6273796558380127
+
+Real values:  [1.0750363138816326, 1.1827865722159183, 1.0259731799613316, 1.0259731799613316, 1.0259731799613316, 1.0259731799613316, 1.1362272005215417, 1.1348927407936504, 1.1395458172108843, 0.9833706868673472]
+Predicted values:  [1.0668607259793874, 1.0668607259793874, 1.0259731799613316, 1.0259731799613316, 1.0259731799613316, 1.0259731799613316, 1.0189650261298389, 1.0189650261298389, 1.0189650261298389, 1.0019240288922453]
+R^2: -0.3514001627456127, MSE: 0.005557924831147097, RMSE: 0.07455149113966197
+
+Population len 10
+
+Best params so far: [195012.20534761902, 4.25, -38.90901407797212, -59.32046670339273, -1.25, -88.02997197612878, 9.594520295506651, -1.75, -54.178020500688106, 37.888852892431984, 8.5, 2.25, 0.019488653406346423, 0.7075870910590643, 0.7792537397456849, 1.1237170312921612], with fitness: 1.0668607259793874
+ALL ITERATION TIME: 7.725692987442017
+Number of pairs: 6
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+Blend crossover is called!
+CURRENT COUNTER: 141
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN CROSSOVER: 3.81329607963562
+INFO:kube_fitness.tasks:Calculating fitness...
+INFO:kube_fitness.tasks:Getting results
+TIME OF THE FITNESS FUNCTION IN MUTATION: 3.8917088508605957
