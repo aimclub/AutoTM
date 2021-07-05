@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 
 import os
 from typing import List
@@ -20,7 +20,8 @@ from selection import selection
 from kube_fitness.tasks import IndividualDTO
 
 # getting config vars
-with open('config.yaml') as file:
+#with open('config.yaml') as file:
+with open("../../algorithms_for_tuning/genetic_algorithm/config.yaml") as file:
     config = yaml.load(file)
 
 if not config['testMode']:
@@ -57,6 +58,7 @@ else:
 
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 LOG_FILE_PATH = config['paths']['logFile']
+DATASET = "20newsgroups"
 
 
 # TODO: add irace default params

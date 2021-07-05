@@ -60,12 +60,12 @@ def selection_fitness_prop(population, best_proc, children_num):
 
 def selection_rank_based(population, best_proc, children_num):
     print('Hello! I am rank-based selector, nice to meet you!')
-    all_fitness = []
     population.sort(key=operator.attrgetter('fitness_value'))
     for ix, individ in enumerate(population):
         individ._prob = (2 * ix / (len(population) * (len(population) - 1)))
     if children_num == 2:
-        return yield_matching_pairs(round((len(population) * (1 - best_proc)) // 2), population) * (len(population) / 2)
+        return yield_matching_pairs(round((len(population) * (1 - best_proc)) // 2),
+                                    population)  # * (len(population) / 2)
     else:
         return yield_matching_pairs(round((len(population) * (1 - best_proc))), population)
 
