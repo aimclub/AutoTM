@@ -43,7 +43,7 @@
 
 ## Script called for each configuration that executes the target algorithm
 ## to be tuned. See templates.
-# targetRunner = "./target-runner"
+targetRunner = "../../algorithms_for_tuning/genetic_algorithm/genetic_algorithm.py"
 
 ## Number of times to retry a call to targetRunner if the call failed.
 # targetRunnerRetries = 0
