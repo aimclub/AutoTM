@@ -24,7 +24,11 @@ if not config['testMode']:
 
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 LOG_FILE_PATH = config['paths']['logFile']
+DATASET = config['datasetName']
 
+# os.environ["CELERY_BROKER_URL"] = "amqp://guest:guest@rabbitmq-service:5672"
+# os.environ["CELERY_RESULT_BACKEND"] = "redis://redis:6379/1"
+# make_celery_app()
 
 @click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--num-individuals', default=10, help='number of individuals in generation')
@@ -101,7 +105,7 @@ class GA:
         list_of_individuals = []
         for i in range(self.num_individuals):
             list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                     params=self.init_individ()))
+                                                     params=self.init_individ(), dataset=DATASET))
         population_with_fitness = parallel_fitness(list_of_individuals)
         return population_with_fitness
 
@@ -164,9 +168,9 @@ class GA:
                                                           alpha=self.alpha)
 
                         new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                            params=child_1))
+                                                            params=child_1, dataset=DATASET))
                         new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                            params=child_2))
+                                                            params=child_2, dataset=DATASET))
                         evaluations_counter += 2
                     else:
                         child_1 = self.crossover(parent_1=parent_1,
@@ -175,7 +179,7 @@ class GA:
                                                  alpha=self.alpha
                                                  )
                         new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                            params=child_1))
+                                                            params=child_1, dataset=DATASET))
 
                         evaluations_counter += 1
 
@@ -240,7 +244,7 @@ class GA:
                         params = self.mutation(copy.deepcopy(population[i].params),
                                                elem_mutation_prob=copy.deepcopy(population[i].params[13]))
                         population[i] = IndividualDTO(id=str(uuid.uuid4()),
-                                                      params=[float(i) for i in params])  # TODO: check mutation
+                                                      params=[float(i) for i in params], dataset=DATASET)  # TODO: check mutation
                     evaluations_counter += 1
 
                 population = parallel_fitness(population)
