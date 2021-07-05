@@ -208,6 +208,9 @@ class GA:
             # Crossover
             for i, j in pairs_generator:
 
+                if i is None:
+                    break
+
                 parent_1 = copy.deepcopy(i.params)
                 parent_2 = copy.deepcopy(j.params)
 
