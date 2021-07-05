@@ -16,7 +16,7 @@ from crossover import crossover
 from selection import selection
 
 # getting config vars
-with open('~/PycharmProjects/AutoTM/algorithms_for_tuning/genetic_algorithm/config.yaml') as file:
+with open('../../algorithms_for_tuning/genetic_algorithm/config.yaml') as file:
     config = yaml.load(file)
 
 if not config['testMode']:
@@ -27,7 +27,7 @@ LOG_FILE_PATH = config['paths']['logFile']
 
 
 # TODO: add irace default params
-@click.command()
+@click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--num-individuals', default=10, help='number of individuals in generation')
 @click.option('--mutation-type', default="combined",
               help='mutation type can have value from (mutation_one_param, combined, psm, positioning_mutation)')
