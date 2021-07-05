@@ -1,3 +1,5 @@
+TEST_MODE = True
+
 import os
 import click
 import random
@@ -7,15 +9,21 @@ import copy
 import operator
 import uuid
 import gc
-
-from kube_fitness.tasks import make_celery_app, parallel_fitness, IndividualDTO
+import yaml
 
 from mutation import mutation
 from crossover import crossover
 from selection import selection
 
-NUM_FITNESS_EVALUATIONS = 150
+# getting config vars
+with open('config.yaml') as file:
+    config = yaml.load(file)
 
+if not config['testMode']:
+    from kube_fitness.tasks import make_celery_app, parallel_fitness, IndividualDTO
+
+NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
+LOG_FILE_PATH = config['paths']['logFile']
 
 @click.command()
 @click.option('--num-individuals', default=10)
@@ -36,7 +44,7 @@ def run_algorithm(num_individuals,
            num_fitness_evaluations=NUM_FITNESS_EVALUATIONS,
            best_proc=best_proc,
            alpha=cross_alpha)
-    best_value = g.run(verbose=True, logs_path="logs")
+    best_value = g.run(verbose=True)
     return best_value
 
 
@@ -96,15 +104,17 @@ class GA:
         population_with_fitness = parallel_fitness(list_of_individuals)
         return population_with_fitness
 
-    def run(self, logs_path, verbose=False):
+    def run(self, verbose=False):
 
         evaluations_counter = 0
         ftime = str(int(time.time()))
 
+        os.makedirs(LOG_FILE_PATH, exist_ok=True)
+
         print(
             '!=========================================== Starting experiment {} ===========================================!'.format(
                 ftime))
-        log_file_path = os.path.join(logs_path, 'log_{}_trial_rank_based'.format(ftime))
+        log_file_path = os.path.join(LOG_FILE_PATH, 'log_{}_trial_rank_based'.format(ftime))
         with open(log_file_path, 'w') as log_file:
             log_file.write('=======================\n')
             log_file.write(
