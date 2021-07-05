@@ -61,7 +61,7 @@ def selection_fitness_prop(population, best_proc, children_num):
 def selection_rank_based(population, best_proc, children_num):
     print('Hello! I am rank-based selector, nice to meet you!')
     all_fitness = []
-    population.sort(key=operator.attrgetter('fitness'))
+    population.sort(key=operator.attrgetter('fitness_value'))
     for ix, individ in enumerate(population):
         individ._prob = (2 * ix / (len(population) * (len(population) - 1)))
     if children_num == 2:
