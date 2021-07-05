@@ -1,4 +1,4 @@
-TEST_MODE = True
+#!/usr/bin/env python3
 
 import os
 import click
@@ -25,14 +25,19 @@ if not config['testMode']:
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 LOG_FILE_PATH = config['paths']['logFile']
 
+
+# TODO: add irace default params
 @click.command()
-@click.option('--num-individuals', default=10)
-@click.option('--mutation-type', default="combined")
-@click.option('--crossover-type', default="blend_crossover")
-@click.option('--selection-type', default="fitness_prop")
-@click.option('--elem-cross-prob', default=None)
-@click.option('--cross-alpha', default=None)
-@click.option('--best-proc', default=0.4)
+@click.option('--num-individuals', default=10, help='number of individuals in generation')
+@click.option('--mutation-type', default="combined",
+              help='mutation type can have value from (mutation_one_param, combined, psm, positioning_mutation)')
+@click.option('--crossover-type', default="blend_crossover",
+              help='crossover type can have value from (crossover_pmx, crossover_one_point, blend_crossover)')
+@click.option('--selection-type', default="fitness_prop",
+              help='selection type can have value from (fitness_prop, rank_based)')
+@click.option('--elem-cross-prob', default=None, help='crossover probability')
+@click.option('--cross-alpha', default=None, help='alpha for blend crosover')
+@click.option('--best-proc', default=0.4, help='number of best parents to propagate')
 def run_algorithm(num_individuals,
                   mutation_type, crossover_type, selection_type,
                   elem_cross_prob, cross_alpha,
@@ -51,8 +56,7 @@ def run_algorithm(num_individuals,
 class GA:
     def __init__(self, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
-                 selection_type='fitness_prop', mutation_probability=0.6,
-                 elem_mutation_prob=0.1, elem_cross_prob=0.2, num_fitness_evaluations=200,
+                 selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations=200,
                  best_proc=0.3, alpha=None):
 
         if crossover_type == 'blend_crossover':
@@ -65,8 +69,6 @@ class GA:
         self.mutation = mutation(mutation_type)  # mutation function
         self.crossover = crossover(crossover_type)  # crossover finction
         self.selection = selection(selection_type)  # selection function
-        self.mutation_probability = mutation_probability  # ?
-        self.elem_mutation_prob = elem_mutation_prob  # ?
         self.elem_cross_prob = elem_cross_prob
         self.alpha = alpha
         self.num_fitness_evaluations = num_fitness_evaluations
