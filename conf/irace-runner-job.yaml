@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fitness-config
+data:
+  config.yaml: |
+    {{ datasets_config_content | indent( width=4, indentfirst=False) }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: irace-runner
+spec:
+  template:
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: fitness-config
+      containers:
+      - name: irace
+        image: node2.bdcl:5000/irace-runner:latest
+        workingDir: /app/irace_config/ga_test
+        env:
+#          - name: CELERY_BROKER_URL
+#            value: "amqp://guest:guest@rabbitmq-service:5672"
+#          - name: CELERY_RESULT_BACKEND
+#            value: "redis://redis:6379/1" # "rpc://"
+          - name: FITNESS_CONFIG_PATH
+            value: /etc/fitness/config.yaml
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/fitness/config.yaml
+            subPath: config.yaml
+      restartPolicy: Never
+  backoffLimit: 1
