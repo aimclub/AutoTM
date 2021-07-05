@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.6
-
+import logging
 import os
 from typing import List
 
@@ -18,6 +18,9 @@ from crossover import crossover
 from selection import selection
 
 from kube_fitness.tasks import IndividualDTO
+
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.DEBUG)
+logger = logging.getLogger("GA")
 
 # getting config vars
 if "FITNESS_CONFIG_PATH" in os.environ:
@@ -175,183 +178,158 @@ class GA:
 
         os.makedirs(LOG_FILE_PATH, exist_ok=True)
 
-        print(
-            '!=========================================== Starting experiment {} ===========================================!'.format(
-                ftime))
-        log_file_path = os.path.join(LOG_FILE_PATH, 'log_{}_trial_rank_based'.format(ftime))
-        with open(log_file_path, 'w') as log_file:
-            log_file.write('=======================\n')
-            log_file.write(
-                'ALGORITHM PARAMS  number of individuals {}; number of fitness evals {}; crossover prob {}: \n'.format(
-                    self.num_individuals, self.num_fitness_evaluations, self.elem_cross_prob))
-            log_file.write('=======================\n')
+        logger.info(f"Starting experiment: {ftime}")
 
-            # population initialization
-            population = self.init_population()
+        logger.info(f"ALGORITHM PARAMS  number of individuals {self.num_individuals}; "
+                    f"number of fitness evals {self.num_fitness_evaluations}; "
+                    f"crossover prob {self.elem_cross_prob}: \n")
 
-            evaluations_counter = self.num_individuals
+        # population initialization
+        population = self.init_population()
 
-            log_file.write('=======================\n')
-            log_file.write('POPULATION IS CREATED \n')
-            log_file.write('=======================\n')
+        evaluations_counter = self.num_individuals
 
-            x, y = [], []
-            high_fitness = 0
-            for ii in range(self.num_iterations):
+        logger.info("POPULATION IS CREATED")
 
-                new_generation = []
+        x, y = [], []
+        high_fitness = 0
+        for ii in range(self.num_iterations):
 
-                log_file.write('=======================\n')
-                log_file.write('ENTERING GENERATION {} \n'.format(ii))
-                log_file.write('=======================\n')
+            new_generation = []
 
-                population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
-                pairs_generator = self.selection(population=population,
-                                                 best_proc=self.best_proc, children_num=self.crossover_children)
+            logger.info(f"ENTERING GENERATION {ii}")
 
-                log_file.write('=======================\n')
-                log_file.write('PAIRS ARE CREATED \n')
-                log_file.write('=======================\n')
+            population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
+            pairs_generator = self.selection(population=population,
+                                             best_proc=self.best_proc, children_num=self.crossover_children)
 
-                # Crossover
-                for i, j in pairs_generator:
+            logger.info(f"PAIRS ARE CREATED")
 
-                    parent_1 = copy.deepcopy(i.params)
-                    parent_2 = copy.deepcopy(j.params)
+            # Crossover
+            for i, j in pairs_generator:
 
-                    if self.crossover_children == 2:
+                parent_1 = copy.deepcopy(i.params)
+                parent_2 = copy.deepcopy(j.params)
 
-                        child_1, child_2 = self.crossover(parent_1=parent_1,
-                                                          parent_2=parent_2,
-                                                          elem_cross_prob=self.elem_cross_prob,
-                                                          alpha=self.alpha)
+                if self.crossover_children == 2:
 
-                        new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                            dataset=self.dataset,
-                                                            params=child_1))
-                        new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                            dataset=self.dataset,
-                                                            params=child_2))
-                        evaluations_counter += 2
-                    else:
-                        child_1 = self.crossover(parent_1=parent_1,
-                                                 parent_2=parent_2,
-                                                 elem_cross_prob=self.elem_cross_prob,
-                                                 alpha=self.alpha
-                                                 )
-                        new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                            dataset=self.dataset,
-                                                            params=child_1))
+                    child_1, child_2 = self.crossover(parent_1=parent_1,
+                                                      parent_2=parent_2,
+                                                      elem_cross_prob=self.elem_cross_prob,
+                                                      alpha=self.alpha)
 
-                        evaluations_counter += 1
+                    new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
+                                                        dataset=self.dataset,
+                                                        params=child_1))
+                    new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
+                                                        dataset=self.dataset,
+                                                        params=child_2))
+                    evaluations_counter += 2
+                else:
+                    child_1 = self.crossover(parent_1=parent_1,
+                                             parent_2=parent_2,
+                                             elem_cross_prob=self.elem_cross_prob,
+                                             alpha=self.alpha
+                                             )
+                    new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
+                                                        dataset=self.dataset,
+                                                        params=child_1))
 
-                print('CURRENT COUNTER: {}'.format(evaluations_counter))
-                new_generation = estimate_fitness(new_generation)
-
-                new_generation.sort(key=operator.attrgetter('fitness_value'), reverse=True)
-                population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
-
-                log_file.write('=======================\n')
-                log_file.write('CROSSOVER IS OVER \n')
-                log_file.write('=======================\n')
-
-                if evaluations_counter >= self.num_fitness_evaluations:
-                    log_file.write('=======================\n')
-                    log_file.write('TERMINATION IS TRIGGERED \n')
-                    log_file.write('=======================\n')
-                    log_file.write('THE BEST FITNESS {}\n'.format(population[0].fitness_value))
-                    #                     log_file.write('THE BEST SCORES {}\n'.format(population[0].scores))
-                    log_file.write('THE BEST PARAMS {}\n'.format(''.join([str(i) for i in population[0].params])))
-                    log_file.close()
-                    return population[0].fitness_value
-
-                del pairs_generator
-                gc.collect()
-
-                population_params = [copy.deepcopy(individ.params) for individ in population]
-
-                the_best_guy_params = copy.deepcopy(population[0].params)
-                new_generation = [individ for individ in new_generation if individ.params != the_best_guy_params]
-
-                population = population[0:int(self.num_individuals * self.best_proc)] + new_generation[:(
-                        self.num_individuals - int(self.num_individuals * self.best_proc))]
-
-                try:
-                    del new_generation
-                except:
-                    pass
-
-                gc.collect()
-
-                population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
-
-                try:
-                    del population[self.num_individuals]
-                except:
-                    pass
-
-                # mutation params 12, 13
-                for i in range(1, len(population)):
-                    if random.random() <= population[i].params[12]:
-                        for idx in range(3):
-                            if random.random() < population[i].params[13]:
-                                if idx == 0:
-                                    population[i].params[12] = np.random.uniform(low=0, high=1, size=1)[0]
-                                elif idx == 2:
-                                    population[i].params[13] = np.random.uniform(low=0, high=1, size=1)[0]
-                                elif idx == 3:
-                                    population[i].params[13] = np.random.uniform(low=0, high=1, size=1)[0]
-
-                    if random.random() <= population[i].params[12]:
-                        params = self.mutation(copy.deepcopy(population[i].params),
-                                               elem_mutation_prob=copy.deepcopy(population[i].params[13]))
-                        population[i] = IndividualDTO(id=str(uuid.uuid4()),
-                                                      dataset=self.dataset,
-                                                      params=[float(i) for i in params])  # TODO: check mutation
                     evaluations_counter += 1
 
-                population = estimate_fitness(population)
+            logger.info(f"CURRENT COUNTER: {evaluations_counter}")
 
-                ###
-                log_file.write('=======================\n')
-                log_file.write('MUTATION IS OVER \n')
-                log_file.write('=======================\n')
+            new_generation = estimate_fitness(new_generation)
 
-                population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
+            new_generation.sort(key=operator.attrgetter('fitness_value'), reverse=True)
+            population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
-                if evaluations_counter >= self.num_fitness_evaluations:
-                    log_file.write('=======================\n')
-                    log_file.write('TERMINATION IS TRIGGERED \n')
-                    log_file.write('=======================\n')
-                    log_file.write('THE BEST FITNESS {}\n'.format(population[0].fitness_value))
-                    #                     log_file.write('THE BEST SCORES {}\n'.format(population[0].scores))
-                    log_file.write('THE BEST PARAMS {}\n'.format('; '.join([str(i) for i in population[0].params])))
-                    log_file.close()
-                    return population[0].fitness_value
+            logger.info("CROSSOVER IS OVER")
 
-                current_fitness = population[0].fitness_value
-                if (current_fitness > high_fitness) or (ii == 0):
-                    high_fitness = current_fitness
+            if evaluations_counter >= self.num_fitness_evaluations:
+                bparams = ''.join([str(i) for i in population[0].params])
+                logger.info(f"TERMINATION IS TRIGGERED.\n"
+                            f"THE BEST FITNESS {population[0].fitness_value}.\n"
+                            f"THE BEST PARAMS {bparams}.")
+                return population[0].fitness_value
 
-                log_file.write('=======================\n')
-                log_file.write('GENERATION {} IS OVER \n'.format(ii))
-                log_file.write('=======================\n')
-                log_file.write('THE BEST FITNESS {}\n'.format(population[0].fitness_value))
-                #                 log_file.write('THE BEST SCORES {}\n'.format(population[0].scores))
-                log_file.write('THE BEST PARAMS {}\n'.format('; '.join([str(i) for i in population[0].params])))
+            del pairs_generator
+            gc.collect()
 
-                x.append(ii)
-                y.append(population[0].fitness_value)
+            population_params = [copy.deepcopy(individ.params) for individ in population]
 
-                print('Population len {}'.format(len(population)))
-                print()
-                print('Best params so far: {}, with fitness: {}'.format(population[0].params,
-                                                                        population[0].fitness_value))
-            log_file.close()
-            print()
-            print(y)
-            # plot_ga(x, y, fig_title='Genetic algorithm convergence', x_title='Iteration', y_title='Best perplexity')
-            return population[0].fitness_value
+            the_best_guy_params = copy.deepcopy(population[0].params)
+            new_generation = [individ for individ in new_generation if individ.params != the_best_guy_params]
+
+            population = population[0:int(self.num_individuals * self.best_proc)] + new_generation[:(
+                    self.num_individuals - int(self.num_individuals * self.best_proc))]
+
+            try:
+                del new_generation
+            except:
+                pass
+
+            gc.collect()
+
+            population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
+
+            try:
+                del population[self.num_individuals]
+            except:
+                pass
+
+            # mutation params 12, 13
+            for i in range(1, len(population)):
+                if random.random() <= population[i].params[12]:
+                    for idx in range(3):
+                        if random.random() < population[i].params[13]:
+                            if idx == 0:
+                                population[i].params[12] = np.random.uniform(low=0, high=1, size=1)[0]
+                            elif idx == 2:
+                                population[i].params[13] = np.random.uniform(low=0, high=1, size=1)[0]
+                            elif idx == 3:
+                                population[i].params[13] = np.random.uniform(low=0, high=1, size=1)[0]
+
+                if random.random() <= population[i].params[12]:
+                    params = self.mutation(copy.deepcopy(population[i].params),
+                                           elem_mutation_prob=copy.deepcopy(population[i].params[13]))
+                    population[i] = IndividualDTO(id=str(uuid.uuid4()),
+                                                  dataset=self.dataset,
+                                                  params=[float(i) for i in params])  # TODO: check mutation
+                evaluations_counter += 1
+
+            population = estimate_fitness(population)
+
+            ###
+            logger.info("MUTATION IS OVER")
+
+            population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
+
+            if evaluations_counter >= self.num_fitness_evaluations:
+                bparams = ''.join([str(i) for i in population[0].params])
+                logger.info(f"TERMINATION IS TRIGGERED.\n"
+                            f"THE BEST FITNESS {population[0].fitness_value}.\n"
+                            f"THE BEST PARAMS {bparams}.")
+                return population[0].fitness_value
+
+            current_fitness = population[0].fitness_value
+            if (current_fitness > high_fitness) or (ii == 0):
+                high_fitness = current_fitness
+
+            bparams = ''.join([str(i) for i in population[0].params])
+            logger.info(f"TERMINATION IS TRIGGERED.\n"
+                        f"THE BEST FITNESS {population[0].fitness_value}.\n"
+                        f"THE BEST PARAMS {bparams}.")
+
+            x.append(ii)
+            y.append(population[0].fitness_value)
+
+            logger.info(f"Population len {len(population)}. "
+                        f"Best params so far: {population[0].params}, with fitness: {population[0].fitness_value}.")
+
+        logger.info(f"Y: {y}")
+
+        return population[0].fitness_value
 
 
 if __name__ == "__main__":
