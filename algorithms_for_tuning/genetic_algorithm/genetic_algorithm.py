@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import os
+from typing import List
+
 import click
 import random
 import numpy as np
@@ -15,12 +17,43 @@ from mutation import mutation
 from crossover import crossover
 from selection import selection
 
+from kube_fitness.tasks import IndividualDTO
+
 # getting config vars
-with open('../../algorithms_for_tuning/genetic_algorithm/config.yaml') as file:
+with open('./algorithms_for_tuning/genetic_algorithm/config.yaml') as file:
     config = yaml.load(file)
 
 if not config['testMode']:
-    from kube_fitness.tasks import make_celery_app, parallel_fitness, IndividualDTO
+    from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
+    from kube_fitness.tasks import parallel_fitness as estimate_fitness
+else:
+    from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
+    from tqdm import tqdm
+
+    TopicModelFactory.init_factory_settings(
+        num_processors=os.getenv("NUM_PROCESSORS", None),
+        dataset_settings=config["datasets"]
+    )
+
+    def prepare_fitness_estimator():
+        pass
+
+    def estimate_fitness(population: List[IndividualDTO],
+                         use_tqdm: bool = False,
+                         tqdm_check_period: int = 2) -> List[IndividualDTO]:
+        results = []
+
+        for p in tqdm(population):
+            individual = copy.deepcopy(p)
+            individual.fitness_value = calculate_fitness_of_individual(
+                dataset=individual.dataset,
+                params=individual.params,
+                fitness_name=individual.fitness_name,
+                force_dataset_settings_checkout=individual.force_dataset_settings_checkout
+            )
+            results.append(individual)
+        return results
+
 
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 LOG_FILE_PATH = config['paths']['logFile']
@@ -28,6 +61,7 @@ LOG_FILE_PATH = config['paths']['logFile']
 
 # TODO: add irace default params
 @click.command(context_settings=dict(allow_extra_args=True))
+@click.option('--dataset', help='dataset name in the config')
 @click.option('--num-individuals', default=10, help='number of individuals in generation')
 @click.option('--mutation-type', default="combined",
               help='mutation type can have value from (mutation_one_param, combined, psm, positioning_mutation)')
@@ -38,11 +72,15 @@ LOG_FILE_PATH = config['paths']['logFile']
 @click.option('--elem-cross-prob', default=None, help='crossover probability')
 @click.option('--cross-alpha', default=None, help='alpha for blend crosover')
 @click.option('--best-proc', default=0.4, help='number of best parents to propagate')
-def run_algorithm(num_individuals,
+def run_algorithm(dataset,
+                  num_individuals,
                   mutation_type, crossover_type, selection_type,
                   elem_cross_prob, cross_alpha,
                   best_proc):
-    g = GA(num_individuals=num_individuals, num_iterations=400, mutation_type=mutation_type,
+    g = GA(dataset=dataset,
+           num_individuals=num_individuals,
+           num_iterations=400,
+           mutation_type=mutation_type,
            crossover_type=crossover_type,
            selection_type=selection_type,
            elem_cross_prob=elem_cross_prob,
@@ -54,10 +92,11 @@ def run_algorithm(num_individuals,
 
 
 class GA:
-    def __init__(self, num_individuals, num_iterations,
+    def __init__(self, dataset, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
                  selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations=200,
-                 best_proc=0.3, alpha=None):
+                 best_proc=0.3, alpha=None,):
+        self.dataset = dataset
 
         if crossover_type == 'blend_crossover':
             self.crossover_children = 1
@@ -102,11 +141,13 @@ class GA:
         list_of_individuals = []
         for i in range(self.num_individuals):
             list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
+                                                     dataset=self.dataset,
                                                      params=self.init_individ()))
-        population_with_fitness = parallel_fitness(list_of_individuals)
+        population_with_fitness = estimate_fitness(list_of_individuals)
         return population_with_fitness
 
     def run(self, verbose=False):
+        prepare_fitness_estimator()
 
         evaluations_counter = 0
         ftime = str(int(time.time()))
@@ -165,8 +206,10 @@ class GA:
                                                           alpha=self.alpha)
 
                         new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
+                                                            dataset=self.dataset,
                                                             params=child_1))
                         new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
+                                                            dataset=self.dataset,
                                                             params=child_2))
                         evaluations_counter += 2
                     else:
@@ -176,12 +219,13 @@ class GA:
                                                  alpha=self.alpha
                                                  )
                         new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
+                                                            dataset=self.dataset,
                                                             params=child_1))
 
                         evaluations_counter += 1
 
                 print('CURRENT COUNTER: {}'.format(evaluations_counter))
-                new_generation = parallel_fitness(new_generation)
+                new_generation = estimate_fitness(new_generation)
 
                 new_generation.sort(key=operator.attrgetter('fitness_value'), reverse=True)
                 population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
@@ -241,10 +285,11 @@ class GA:
                         params = self.mutation(copy.deepcopy(population[i].params),
                                                elem_mutation_prob=copy.deepcopy(population[i].params[13]))
                         population[i] = IndividualDTO(id=str(uuid.uuid4()),
+                                                      dataset=self.dataset,
                                                       params=[float(i) for i in params])  # TODO: check mutation
                     evaluations_counter += 1
 
-                population = parallel_fitness(population)
+                population = estimate_fitness(population)
 
                 ###
                 log_file.write('=======================\n')

@@ -8,3 +8,8 @@ paths:
 
 globalAlgoParams:
   numEvals: 150
+
+datasets:
+  20newsgroups:
+    base_path: "./resources/20newsgroups"
+    topic_count: 20
