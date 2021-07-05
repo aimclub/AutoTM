@@ -79,7 +79,7 @@ maxExperiments = 200
 
 ## Debug level of the output of irace. Set this to 0 to silence all debug
 ## messages. Higher values provide more verbose debug messages.
-# debugLevel = 0
+debugLevel = 10
 
 ## Number of iterations.
 # nbIterations = 0

@@ -20,21 +20,20 @@ from selection import selection
 from kube_fitness.tasks import IndividualDTO
 
 # getting config vars
-#with open('config.yaml') as file:
-with open("../../algorithms_for_tuning/genetic_algorithm/config.yaml") as file:
+if "FITNESS_CONFIG_PATH" in os.environ:
+    filepath = os.environ["FITNESS_CONFIG_PATH"]
+else:
+    filepath = "../../algorithms_for_tuning/genetic_algorithm/config.yaml"
+
+with open(filepath, "r") as file:
     config = yaml.load(file)
 
 if not config['testMode']:
     from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
     from kube_fitness.tasks import parallel_fitness as estimate_fitness
 else:
-    from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
+    # from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
     from tqdm import tqdm
-
-    TopicModelFactory.init_factory_settings(
-        num_processors=os.getenv("NUM_PROCESSORS", None),
-        dataset_settings=config["datasets"]
-    )
 
     def prepare_fitness_estimator():
         pass
@@ -46,19 +45,39 @@ else:
 
         for p in tqdm(population):
             individual = copy.deepcopy(p)
-            individual.fitness_value = calculate_fitness_of_individual(
-                dataset=individual.dataset,
-                params=individual.params,
-                fitness_name=individual.fitness_name,
-                force_dataset_settings_checkout=individual.force_dataset_settings_checkout
-            )
+            individual.fitness_value = random.random()
             results.append(individual)
+
         return results
+
+    # TopicModelFactory.init_factory_settings(
+    #     num_processors=os.getenv("NUM_PROCESSORS", None),
+    #     dataset_settings=config["datasets"]
+    # )
+    #
+    # def prepare_fitness_estimator():
+    #     pass
+    #
+    # def estimate_fitness(population: List[IndividualDTO],
+    #                      use_tqdm: bool = False,
+    #                      tqdm_check_period: int = 2) -> List[IndividualDTO]:
+    #     results = []
+    #
+    #     for p in tqdm(population):
+    #         individual = copy.deepcopy(p)
+    #         individual.fitness_value = calculate_fitness_of_individual(
+    #             dataset=individual.dataset,
+    #             params=individual.params,
+    #             fitness_name=individual.fitness_name,
+    #             force_dataset_settings_checkout=individual.force_dataset_settings_checkout
+    #         )
+    #         results.append(individual)
+    #     return results
 
 
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 LOG_FILE_PATH = config['paths']['logFile']
-DATASET = "20newsgroups"
+# DATASET = "20newsgroups"
 
 
 # TODO: add irace default params
