@@ -20,7 +20,7 @@ from selection import selection
 from kube_fitness.tasks import IndividualDTO
 
 # getting config vars
-with open('./algorithms_for_tuning/genetic_algorithm/config.yaml') as file:
+with open('config.yaml') as file:
     config = yaml.load(file)
 
 if not config['testMode']:
