@@ -2,6 +2,7 @@ appName: geneticAlgo
 logLevel: WARN
 
 testMode: True
+datasetName: "lenta_ru"
 
 paths:
   logFile: "logs"
