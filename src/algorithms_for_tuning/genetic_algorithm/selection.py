@@ -13,7 +13,7 @@ def yield_matching_pairs(pairs, population):
         idx = 0
         selection_probability = random.random()
         for ix, individ in enumerate(population):
-            if selection_probability < individ._prob:
+            if selection_probability <= individ._prob:
                 idx = ix
                 chosen.append(individ)
                 break
@@ -21,7 +21,7 @@ def yield_matching_pairs(pairs, population):
         selection_probability = random.random()
         for k, individ in enumerate(population):
             if (k != idx):
-                if selection_probability < individ._prob:
+                if selection_probability <= individ._prob:
                     elems = frozenset((idx, k))
                     if (len(population_pairs_pool) == 0) or (
                             (len(population_pairs_pool) > 0) and (elems not in population_pairs_pool)):
@@ -33,8 +33,10 @@ def yield_matching_pairs(pairs, population):
         if len(chosen) == 1:
             selection_idx = np.random.choice([m for m in [i for i in range(len(population))] if m != idx])
             chosen.append(population[selection_idx])
-        yield chosen[0], chosen[1]
-
+        if len(chosen) == 0:
+            yield None, None
+        else:
+            yield chosen[0], chosen[1]  # TODO: fix IndexError: list index out of range
 
 def selection_fitness_prop(population, best_proc, children_num):
     all_fitness = []
