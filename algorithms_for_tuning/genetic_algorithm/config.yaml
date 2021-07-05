@@ -1,0 +1,10 @@
+appName: geneticAlgo
+logLevel: WARN
+
+testMode: True
+
+paths:
+  logFile: "logs"
+
+globalAlgoParams:
+  numEvals: 150
