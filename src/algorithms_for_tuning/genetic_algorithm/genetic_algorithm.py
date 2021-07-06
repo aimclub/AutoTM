@@ -1,5 +1,7 @@
 #!/usr/bin/env python3.6
 import logging
+import sys
+from logging import config
 
 import os
 import warnings
@@ -19,9 +21,9 @@ from yaml import Loader
 from mutation import mutation
 from crossover import crossover
 from selection import selection
+from algorithms_for_tuning.utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
-logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.ERROR)
 
 from kube_fitness.tasks import IndividualDTO, TqdmToLogger
 
@@ -59,30 +61,6 @@ else:
 
         return results
 
-    # TopicModelFactory.init_factory_settings(
-    #     num_processors=os.getenv("NUM_PROCESSORS", None),
-    #     dataset_settings=config["datasets"]
-    # )
-    #
-    # def prepare_fitness_estimator():
-    #     pass
-    #
-    # def estimate_fitness(population: List[IndividualDTO],
-    #                      use_tqdm: bool = False,
-    #                      tqdm_check_period: int = 2) -> List[IndividualDTO]:
-    #     results = []
-    #
-    #     for p in tqdm(population):
-    #         individual = copy.deepcopy(p)
-    #         individual.fitness_value = calculate_fitness_of_individual(
-    #             dataset=individual.dataset,
-    #             params=individual.params,
-    #             fitness_name=individual.fitness_name,
-    #             force_dataset_settings_checkout=individual.force_dataset_settings_checkout
-    #         )
-    #         results.append(individual)
-    #     return results
-
 
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 LOG_FILE_PATH = config['paths']['logFile']
@@ -102,11 +80,17 @@ LOG_FILE_PATH = config['paths']['logFile']
 @click.option('--elem-cross-prob', default=None, help='crossover probability')
 @click.option('--cross-alpha', default=None, help='alpha for blend crosover')
 @click.option('--best-proc', default=0.4, help='number of best parents to propagate')
+@click.option('--log-file', default="/var/log/tm-alg.log", help='a log file to write logs of the algorithm execution to')
 def run_algorithm(dataset,
                   num_individuals,
                   mutation_type, crossover_type, selection_type,
                   elem_cross_prob, cross_alpha,
-                  best_proc):
+                  best_proc, log_file):
+    logging_config = make_log_config_dict(filename=log_file)
+    logging.config.dictConfig(logging_config)
+
+    logger.info(f"Starting a new run of algorithm. Args: {sys.argv[1:]}")
+
     if elem_cross_prob is not None:
         elem_cross_prob = float(elem_cross_prob)
 
@@ -194,7 +178,7 @@ class GA:
 
         logger.info(f"ALGORITHM PARAMS  number of individuals {self.num_individuals}; "
                     f"number of fitness evals {self.num_fitness_evaluations}; "
-                    f"crossover prob {self.elem_cross_prob}: \n")
+                    f"crossover prob {self.elem_cross_prob}")
 
         # population initialization
         population = self.init_population()
@@ -263,8 +247,8 @@ class GA:
 
             if evaluations_counter >= self.num_fitness_evaluations:
                 bparams = ''.join([str(i) for i in population[0].params])
-                logger.info(f"TERMINATION IS TRIGGERED.\n"
-                            f"THE BEST FITNESS {population[0].fitness_value}.\n"
+                logger.info(f"TERMINATION IS TRIGGERED."
+                            f"THE BEST FITNESS {population[0].fitness_value}."
                             f"THE BEST PARAMS {bparams}.")
                 return population[0].fitness_value
 
@@ -322,8 +306,8 @@ class GA:
 
             if evaluations_counter >= self.num_fitness_evaluations:
                 bparams = ''.join([str(i) for i in population[0].params])
-                logger.info(f"TERMINATION IS TRIGGERED.\n"
-                            f"THE BEST FITNESS {population[0].fitness_value}.\n"
+                logger.info(f"TERMINATION IS TRIGGERED."
+                            f"THE BEST FITNESS {population[0].fitness_value}."
                             f"THE BEST PARAMS {bparams}.")
                 return population[0].fitness_value
 
@@ -332,8 +316,8 @@ class GA:
                 high_fitness = current_fitness
 
             bparams = ''.join([str(i) for i in population[0].params])
-            logger.info(f"TERMINATION IS TRIGGERED.\n"
-                        f"THE BEST FITNESS {population[0].fitness_value}.\n"
+            logger.info(f"TERMINATION IS TRIGGERED."
+                        f"THE BEST FITNESS {population[0].fitness_value}."
                         f"THE BEST PARAMS {bparams}.")
 
             x.append(ii)
