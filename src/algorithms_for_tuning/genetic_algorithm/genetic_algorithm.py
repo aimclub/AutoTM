@@ -21,7 +21,7 @@ from yaml import Loader
 from mutation import mutation
 from crossover import crossover
 from selection import selection
-from src.algorithms_for_tuning.utils import make_log_config_dict
+from utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
 
@@ -67,7 +67,6 @@ LOG_FILE_PATH = config['paths']['logFile']
 # DATASET = "20newsgroups"
 
 
-# TODO: add irace default params
 @click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--dataset', help='dataset name in the config')
 @click.option('--num-individuals', default=10, help='number of individuals in generation')
