@@ -26,12 +26,8 @@
 ##    condition is satisfied, FALSE otherwise.
 
 # 1:            2:                   3: 4:      5:
-dataset         "--dataset "           c  ("20newsgroups")
+dataset         "--dataset "          c  ("20newsgroups")
 num_individuals "--num-individuals "  i  (5, 50)
-mutation        "--mutation-type "   c  ("mutation_one_param" ,"combined", "psm", "positioning_mutation")
-crossover       "--crossover-type "  c  ("crossover_pmx" ,"crossover_one_point", "blend_crossover")
-selection       "--selection-type "  c  ("fitness_prop" ,"rank_based")
-elem_cross_prob "--elem-cross-prob "  r  (0.0, 1.0) | crossover %in% c("crossover_one_point")
-cross_alpha     "--cross-alpha "      r  (0.0, 1.0) | crossover %in% c("blend_crossover")
-best_proc       "--best-proc "        r  (0.1, 0.9)
+max_num_trials  "--max-num-trials "   i  (1, 10)
+init_method     "--init-method "      c  ("latin_hypercube" ,"random")
 log_file        "--log-file "         c  ("/tmp/tm-alg.txt")
