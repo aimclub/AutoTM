@@ -41,6 +41,7 @@ with open(filepath, "r") as file:
 if not config['testMode']:
     from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
     from kube_fitness.tasks import parallel_fitness as estimate_fitness
+    from kube_fitness.tasks import log_best_solution
 else:
     # from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
     from tqdm import tqdm
@@ -60,6 +61,9 @@ else:
             results.append(individual)
 
         return results
+
+    def log_best_solution(individual: IndividualDTO):
+        pass
 
 
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
@@ -330,7 +334,10 @@ class GA:
 
         logger.info(f"Y: {y}")
 
-        return population[0].fitness_value
+        best_individual = population[0]
+        log_best_solution(best_individual)
+
+        return best_individual.fitness_value
 
 
 if __name__ == "__main__":
