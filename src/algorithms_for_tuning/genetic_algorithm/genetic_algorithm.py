@@ -21,7 +21,7 @@ from yaml import Loader
 from mutation import mutation
 from crossover import crossover
 from selection import selection
-from algorithms_for_tuning.utils import make_log_config_dict
+from src.algorithms_for_tuning.utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
 
@@ -108,7 +108,7 @@ def run_algorithm(dataset,
            best_proc=best_proc,
            alpha=cross_alpha)
     best_value = g.run(verbose=True)
-    print(best_value)
+    print(best_value * (-1))
 
 
 class GA:
@@ -260,8 +260,10 @@ class GA:
             the_best_guy_params = copy.deepcopy(population[0].params)
             new_generation = [individ for individ in new_generation if individ.params != the_best_guy_params]
 
-            population = population[0:int(self.num_individuals * self.best_proc)] + new_generation[:(
-                    self.num_individuals - int(self.num_individuals * self.best_proc))]
+            new_generation_n = min((self.num_individuals - int(np.ceil(self.num_individuals * self.best_proc))), len(new_generation))
+            old_generation_n = self.num_individuals - new_generation_n
+
+            population = population[:old_generation_n] + new_generation[:new_generation_n]
 
             try:
                 del new_generation
