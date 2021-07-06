@@ -32,7 +32,6 @@ def crossover_one_point(parent_1, parent_2, **kwargs):
 # returns one child (!)
 def crossover_blend(parent_1, parent_2, **kwargs):
     alpha = kwargs['alpha']
-    print('Blend crossover is called!')
     child = []
     u = random.random()
     gamma = (1 - 2 * alpha) * u - alpha

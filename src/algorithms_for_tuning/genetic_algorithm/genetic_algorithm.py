@@ -1,6 +1,8 @@
 #!/usr/bin/env python3.6
 import logging
+
 import os
+import warnings
 from typing import List
 
 import click
@@ -12,14 +14,17 @@ import operator
 import uuid
 import gc
 import yaml
+from yaml import Loader
 
 from mutation import mutation
 from crossover import crossover
 from selection import selection
 
-from kube_fitness.tasks import IndividualDTO
+warnings.filterwarnings("ignore")
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.ERROR)
 
-logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.DEBUG)
+from kube_fitness.tasks import IndividualDTO, TqdmToLogger
+
 logger = logging.getLogger("GA")
 
 # getting config vars
@@ -29,7 +34,7 @@ else:
     filepath = "../../algorithms_for_tuning/genetic_algorithm/config.yaml"
 
 with open(filepath, "r") as file:
-    config = yaml.load(file)
+    config = yaml.load(file, Loader=Loader)
 
 if not config['testMode']:
     from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
@@ -46,7 +51,8 @@ else:
                          tqdm_check_period: int = 2) -> List[IndividualDTO]:
         results = []
 
-        for p in tqdm(population):
+        tqdm_out = TqdmToLogger(logger, level=logging.INFO)
+        for p in tqdm(population, file=tqdm_out):
             individual = copy.deepcopy(p)
             individual.fitness_value = random.random()
             results.append(individual)
@@ -101,6 +107,12 @@ def run_algorithm(dataset,
                   mutation_type, crossover_type, selection_type,
                   elem_cross_prob, cross_alpha,
                   best_proc):
+    if elem_cross_prob is not None:
+        elem_cross_prob = float(elem_cross_prob)
+
+    if cross_alpha is not None:
+        cross_alpha = float(cross_alpha)
+
     g = GA(dataset=dataset,
            num_individuals=num_individuals,
            num_iterations=400,
@@ -112,7 +124,7 @@ def run_algorithm(dataset,
            best_proc=best_proc,
            alpha=cross_alpha)
     best_value = g.run(verbose=True)
-    return best_value
+    print(best_value)
 
 
 class GA:

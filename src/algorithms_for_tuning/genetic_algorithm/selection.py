@@ -4,7 +4,7 @@ import random
 
 
 def yield_matching_pairs(pairs, population):
-    print('Number of pairs: {}'.format(pairs))
+    # print('Number of pairs: {}'.format(pairs))
     population.sort(key=operator.attrgetter('fitness_value'))
     population_pairs_pool = []
 
@@ -61,7 +61,7 @@ def selection_fitness_prop(population, best_proc, children_num):
 
 
 def selection_rank_based(population, best_proc, children_num):
-    print('Hello! I am rank-based selector, nice to meet you!')
+    # print('Hello! I am rank-based selector, nice to meet you!')
     population.sort(key=operator.attrgetter('fitness_value'))
     for ix, individ in enumerate(population):
         individ._prob = (2 * ix / (len(population) * (len(population) - 1)))
