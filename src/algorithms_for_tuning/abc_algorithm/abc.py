@@ -430,21 +430,21 @@ class ABC:
         best_fitness = np.max(fitness)
         if best_fitness > self.best_solution:
             self.best_solution = best_fitness
-        print(f'best fitness on current iteration: {best_fitness - 1}')
-        print(f'global best fitness: {self.best_solution - 1}')
+        logger.info(f'best fitness on current iteration: {best_fitness - 1}')
+        logger.info(f'global best fitness: {self.best_solution - 1}')
 
     def run(self, iterations):
 
         self.init_resources_method()
-        print('Population is initialized')
-        print(f'Fitness counts: {self.fitness_evals}')
+        logger.info('Population is initialized')
+        logger.info(f'Fitness counts: {self.fitness_evals}')
 
         random_search_res = np.max([bee.fitness_value for bee in self.employed_bees])
 
         for i in range(iterations):
             self._employed_bees_phase()
-            print('Employed bees phase is over')
-            print(f'Fitness counts: {self.fitness_evals}')
+            logger.info('Employed bees phase is over')
+            logger.info(f'Fitness counts: {self.fitness_evals}')
 
             if self.fitness_evals >= self.num_fitness_evaluations:
                 self._show_best_solution()
@@ -452,8 +452,8 @@ class ABC:
 
             self._calculate_probabilities()
             self._onlooker_bees_phase()
-            print('Onlooker bees phase is over')
-            print(f'Fitness counts: {self.fitness_evals}')
+            logger.info('Onlooker bees phase is over')
+            logger.info(f'Fitness counts: {self.fitness_evals}')
 
             if self.fitness_evals >= self.num_fitness_evaluations:
                 self._show_best_solution()
