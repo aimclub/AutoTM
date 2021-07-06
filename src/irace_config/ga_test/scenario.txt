@@ -63,7 +63,7 @@ targetRunner = "../../algorithms_for_tuning/genetic_algorithm/genetic_algorithm.
 ## Maximum number of runs (invocations of targetRunner) that will be
 ## performed. It determines the maximum budget of experiments for the
 ## tuning.
-maxExperiments = 200
+maxExperiments = 180
 
 ## Maximum total execution time in seconds for the executions of
 ## targetRunner. targetRunner must return two values: cost and time.
@@ -79,13 +79,13 @@ maxExperiments = 200
 
 ## Debug level of the output of irace. Set this to 0 to silence all debug
 ## messages. Higher values provide more verbose debug messages.
-debugLevel = 10
+debugLevel = 4
 
 ## Number of iterations.
-# nbIterations = 0
+# nbIterations = 5
 
 ## Number of runs of the target algorithm per iteration.
-# nbExperimentsPerIteration = 0
+# nbExperimentsPerIteration = 8
 
 ## Randomly sample the training instances or use them in the order given.
 # sampleInstances = 1

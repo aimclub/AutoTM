@@ -27,7 +27,7 @@
 
 # 1:            2:                   3: 4:      5:
 dataset         "--dataset "           c  ("20newsgroups")
-num_individuals "--num-individuals "  i  (5, 10)
+num_individuals "--num-individuals "  i  (5, 6)
 mutation        "--mutation-type "   c  ("mutation_one_param" ,"combined", "psm", "positioning_mutation")
 crossover       "--crossover-type "  c  ("crossover_pmx" ,"crossover_one_point", "blend_crossover")
 selection       "--selection-type "  c  ("fitness_prop" ,"rank_based")

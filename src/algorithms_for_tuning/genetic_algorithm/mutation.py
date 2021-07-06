@@ -53,10 +53,8 @@ def positioning_mutation(individ, elem_mutation_prob=0.1):
 
 def mutation_combined(individ, elem_mutation_prob=0.1):
     if random.random() <= individ[14]:  # TODO: check 14th position
-        print('mutation_one_param selected')
         return mutation_one_param(individ, elem_mutation_prob)
     else:
-        print('positioning_mutation selected')
         return positioning_mutation(individ, elem_mutation_prob)
     pass
 
