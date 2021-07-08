@@ -192,6 +192,7 @@ class GA:
 
         x, y = [], []
         high_fitness = 0
+        best_solution = None
         for ii in range(self.num_iterations):
 
             new_generation = []
@@ -253,7 +254,8 @@ class GA:
                 logger.info(f"TERMINATION IS TRIGGERED."
                             f"THE BEST FITNESS {population[0].fitness_value}."
                             f"THE BEST PARAMS {bparams}.")
-                return population[0].fitness_value
+                # return population[0].fitness_value
+                break
 
             del pairs_generator
             gc.collect()
@@ -314,7 +316,8 @@ class GA:
                 logger.info(f"TERMINATION IS TRIGGERED."
                             f"THE BEST FITNESS {population[0].fitness_value}."
                             f"THE BEST PARAMS {bparams}.")
-                return population[0].fitness_value
+                # return population[0].fitness_value
+                break
 
             current_fitness = population[0].fitness_value
             if (current_fitness > high_fitness) or (ii == 0):

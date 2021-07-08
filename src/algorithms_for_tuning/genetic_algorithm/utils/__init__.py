@@ -25,6 +25,11 @@ def make_log_config_dict(filename: str = "/var/log/tm-alg.txt") -> Dict[str, Any
             }
         },
         'loggers': {
+            'root': {
+                'handlers': ['default', 'logfile'],
+                'level': 'DEBUG',
+                'propagate': False
+            },
             'GA': {
                 'handlers': ['default', 'logfile'],
                 'level': 'DEBUG',
