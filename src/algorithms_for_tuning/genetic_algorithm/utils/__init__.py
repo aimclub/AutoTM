@@ -1,7 +1,14 @@
-from typing import Dict, Any
+import os
+from typing import Dict, Any, Optional
 
 
-def make_log_config_dict(filename: str = "/var/log/tm-alg.txt") -> Dict[str, Any]:
+def make_log_config_dict(filename: str = "/var/log/tm-alg.txt", uid: Optional[str] = None) -> Dict[str, Any]:
+    if uid:
+        dirname = os.path.dirname(filename)
+        file, ext = os.path.splitext(os.path.basename(filename))
+        log_filename = os.path.join(dirname, f"{file}-{uid}.{ext}")
+    else:
+        log_filename = filename
     return {
         'version': 1,
         'disable_existing_loggers': True,
@@ -21,7 +28,7 @@ def make_log_config_dict(filename: str = "/var/log/tm-alg.txt") -> Dict[str, Any
                 'level': 'DEBUG',
                 'formatter': 'standard',
                 'class': 'logging.FileHandler',
-                'filename': filename,
+                'filename': log_filename,
             }
         },
         'loggers': {
