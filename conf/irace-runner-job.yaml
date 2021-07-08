@@ -5,6 +5,9 @@ metadata:
   name: irace-runner
 spec:
   template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
     spec:
       volumes:
         - name: irace-files
@@ -14,7 +17,6 @@ spec:
       - name: irace
         image: node2.bdcl:5000/irace-runner:latest
         imagePullPolicy: Always
-        workingDir: /app/irace_config/ga_test
         args: ["/app/irace_config/ga_test", "--parallel", "10"]
         env:
           - name: CELERY_BROKER_URL
@@ -27,4 +29,4 @@ spec:
           - name: irace-files
             mountPath: /var/lib/irace/
       restartPolicy: Never
-  backoffLimit: 1
+  backoffLimit: 0
