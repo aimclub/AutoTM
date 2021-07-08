@@ -17,6 +17,9 @@ ENV IRACE_HOME=/usr/local/lib/R/site-library/irace
 
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
+
+RUN apt install -y --no-install-recommends uuid-runtime
+
 COPY kube_fitness-0.1.0-py3-none-any.whl /tmp/kube_fitness-0.1.0-py3-none-any.whl
 RUN pip install /tmp/kube_fitness-0.1.0-py3-none-any.whl
 
