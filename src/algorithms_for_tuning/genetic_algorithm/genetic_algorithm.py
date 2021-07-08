@@ -89,7 +89,8 @@ def run_algorithm(dataset,
                   mutation_type, crossover_type, selection_type,
                   elem_cross_prob, cross_alpha,
                   best_proc, log_file):
-    logging_config = make_log_config_dict(filename=log_file)
+    run_uid = uuid.uuid4() if not config['testMode'] else None
+    logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
     logging.config.dictConfig(logging_config)
 
     logger.info(f"Starting a new run of algorithm. Args: {sys.argv[1:]}")
