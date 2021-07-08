@@ -134,3 +134,4 @@ algorithms_for_tuning/genetic_algorithm/logs/*
 algorithms_for_tuning/genetic_algorithm/bigartm.*
 logs
 resources
+*.whl

@@ -20,4 +20,4 @@ else
 fi
 
 cd "${dir}" || exit 1
-exec "$IRACE_HOME"/bin/irace "${args}" "${@}"
+exec "$IRACE_HOME"/bin/irace ${args} "${@}"

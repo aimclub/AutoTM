@@ -1,0 +1,12 @@
+celery == 4.4.7
+bigartm == 0.9.2
+tqdm == 4.50.2
+numpy == 1.19.2
+PyYAML == 5.3.1
+redis == 3.5.3
+jinja2 == 2.11.2
+dataclasses-json == 0.5.2
+mlflow == 1.18.0
+click == 8.0.1
+PyMySQL==0.9.3
+psycopg2-binary==2.8.5
