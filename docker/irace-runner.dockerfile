@@ -10,10 +10,10 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD5
 RUN add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/"
 RUN apt install -y --no-install-recommends r-base
 
+RUN mkdir /var/lib/irace
+
 ENV IRACE_HOME=/usr/local/lib/R/site-library/irace
 
 COPY src /app
 
-#WORKDIR /app/irace_config/ga_test
-
-ENTRYPOINT ["$IRACE_HOME/bin/irace"]
+ENTRYPOINT ["/app/run-irace.sh"]

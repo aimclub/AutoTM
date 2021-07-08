@@ -1,0 +1,29 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: irace-files-pv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/ess_storage/DN_1/storage/home/khodorchenko/irace-tm-experiments/
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: irace-files-pvc
+spec:
+  storageClassName: manual
+  volumeName: irace-files-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
