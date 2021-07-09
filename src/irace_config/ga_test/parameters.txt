@@ -26,7 +26,6 @@
 ##    condition is satisfied, FALSE otherwise.
 
 # 1:            2:                   3: 4:      5:
-dataset         "--dataset "           c  ("20newsgroups")
 num_individuals "--num-individuals "  i  (5, 50)
 mutation        "--mutation-type "   c  ("mutation_one_param" ,"combined", "psm", "positioning_mutation")
 crossover       "--crossover-type "  c  ("crossover_pmx" ,"crossover_one_point", "blend_crossover")
