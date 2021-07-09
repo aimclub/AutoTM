@@ -1,12 +1,10 @@
 from dataclasses import dataclass
-from dataclasses_json import dataclass_json
 from typing import List, Optional
 import random
 import time
 from tqdm import tqdm
 
 
-@dataclass_json
 @dataclass
 class IndividualDTO:
     id: str
