@@ -8,7 +8,7 @@ paths:
   logFile: "logs"
 
 globalAlgoParams:
-  numEvals: 20
+  numEvals: 150
 
 datasets:
   20newsgroups:
