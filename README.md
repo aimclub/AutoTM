@@ -4,7 +4,11 @@ Automatic parameters selection for topic models (ARTM approach) using evolutiona
 How to run experiments on kubernetes.
 
 NOTE: If everything has already been setup earlier, 
-you only need to execute only p. 6 and p. 7 actions.  
+you only need to execute only, p.3, p.4, p. 6 and p. 7 actions.
+It all can be done with a single special command:
+```
+./bin/recreate-irace.sh
+```
 
 1. It is assumed that kube-fitness is already deployed on the cluster 
    in the right namespace.
