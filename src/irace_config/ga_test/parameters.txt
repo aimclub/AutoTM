@@ -34,3 +34,4 @@ elem_cross_prob "--elem-cross-prob "  r  (0.0, 1.0) | crossover %in% c("crossove
 cross_alpha     "--cross-alpha "      r  (0.0, 1.0) | crossover %in% c("blend_crossover")
 best_proc       "--best-proc "        r  (0.1, 0.9)
 log_file        "--log-file "         c  ("/var/log/tm-alg.txt")
+exp_id          "--exp-id "         c  (2)

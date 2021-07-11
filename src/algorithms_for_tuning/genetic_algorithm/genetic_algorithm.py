@@ -5,7 +5,7 @@ from logging import config
 
 import os
 import warnings
-from typing import List
+from typing import List, Optional
 
 import click
 import random
@@ -84,11 +84,12 @@ LOG_FILE_PATH = config['paths']['logFile']
 @click.option('--cross-alpha', default=None, help='alpha for blend crosover')
 @click.option('--best-proc', default=0.4, help='number of best parents to propagate')
 @click.option('--log-file', default="/var/log/tm-alg.log", help='a log file to write logs of the algorithm execution to')
+@click.option('--exp-id', type=int, help='mlflow experiment id')
 def run_algorithm(dataset,
                   num_individuals,
                   mutation_type, crossover_type, selection_type,
                   elem_cross_prob, cross_alpha,
-                  best_proc, log_file):
+                  best_proc, log_file, exp_id):
     run_uid = uuid.uuid4() if not config['testMode'] else None
     logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
     logging.config.dictConfig(logging_config)
@@ -110,7 +111,8 @@ def run_algorithm(dataset,
            elem_cross_prob=elem_cross_prob,
            num_fitness_evaluations=NUM_FITNESS_EVALUATIONS,
            best_proc=best_proc,
-           alpha=cross_alpha)
+           alpha=cross_alpha,
+           exp_id=exp_id)
     best_value = g.run(verbose=True)
     print(best_value * (-1))
 
@@ -119,7 +121,7 @@ class GA:
     def __init__(self, dataset, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
                  selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations=200,
-                 best_proc=0.3, alpha=None,):
+                 best_proc=0.3, alpha=None, exp_id: Optional[int] = None):
         self.dataset = dataset
 
         if crossover_type == 'blend_crossover':
@@ -136,6 +138,8 @@ class GA:
         self.alpha = alpha
         self.num_fitness_evaluations = num_fitness_evaluations
         self.best_proc = best_proc
+
+        self.exp_id = exp_id
 
     @staticmethod
     def init_individ(high_decor=1e5,
@@ -166,7 +170,8 @@ class GA:
         for i in range(self.num_individuals):
             list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
                                                      dataset=self.dataset,
-                                                     params=self.init_individ()))
+                                                     params=self.init_individ(),
+                                                     exp_id=self.exp_id))
         population_with_fitness = estimate_fitness(list_of_individuals)
         return population_with_fitness
 
@@ -224,10 +229,12 @@ class GA:
 
                     new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
                                                         dataset=self.dataset,
-                                                        params=child_1))
+                                                        params=child_1,
+                                                        exp_id=self.exp_id))
                     new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
                                                         dataset=self.dataset,
-                                                        params=child_2))
+                                                        params=child_2,
+                                                        exp_id=self.exp_id))
                     evaluations_counter += 2
                 else:
                     child_1 = self.crossover(parent_1=parent_1,
@@ -237,7 +244,8 @@ class GA:
                                              )
                     new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
                                                         dataset=self.dataset,
-                                                        params=child_1))
+                                                        params=child_1,
+                                                        exp_id=self.exp_id))
 
                     evaluations_counter += 1
 
@@ -302,7 +310,7 @@ class GA:
                                            elem_mutation_prob=copy.deepcopy(population[i].params[13]))
                     population[i] = IndividualDTO(id=str(uuid.uuid4()),
                                                   dataset=self.dataset,
-                                                  params=[float(i) for i in params])  # TODO: check mutation
+                                                  params=[float(i) for i in params], exp_id=self.exp_id)  # TODO: check mutation
                 evaluations_counter += 1
 
             population = estimate_fitness(population)
