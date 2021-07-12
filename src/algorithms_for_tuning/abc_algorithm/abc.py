@@ -6,8 +6,8 @@ import os
 import sys
 import copy
 import uuid
-from kube_fitness.tasks import make_celery_app, parallel_fitness, IndividualDTO
-from kube_fitness.tasks import IndividualDTO, TqdmToLogger
+# from kube_fitness.tasks import make_celery_app, parallel_fitness, IndividualDTO
+# from kube_fitness.tasks import IndividualDTO, TqdmToLogger
 import click
 import yaml
 from yaml import Loader
@@ -309,7 +309,7 @@ class ABC:
             row = row[:12] + [0.0, 0.0, 0.0] + [np.array(row[-1])]
             list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
                                                      params=self._int_check(np.array(row)), dataset=self.dataset))
-        self.employed_bees = parallel_fitness(list_of_individuals)
+        self.employed_bees = estimate_fitness(list_of_individuals)
         abc_fitness(self.employed_bees)
         self.fitness_evals += len(list_of_individuals)
 
@@ -322,7 +322,7 @@ class ABC:
             params = self._init_random_params()
             list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
                                                      params=self._int_check(params), dataset=self.dataset))
-        self.employed_bees = parallel_fitness(list_of_individuals)
+        self.employed_bees = estimate_fitness(list_of_individuals)
         abc_fitness(self.employed_bees)
         self.fitness_evals += len(list_of_individuals)
 
@@ -380,7 +380,7 @@ class ABC:
             current_params = self._explore_new_source(bee_idx)
             new_employed_bees_solutions.append(IndividualDTO(id=str(uuid.uuid4()),
                                                              params=current_params, dataset=self.dataset))
-        new_employed_bees = parallel_fitness(new_employed_bees_solutions)
+        new_employed_bees = estimate_fitness(new_employed_bees_solutions)
         abc_fitness(new_employed_bees)
         self.fitness_evals += len(new_employed_bees_solutions)
         for i in range(len(new_employed_bees)):
@@ -417,7 +417,7 @@ class ABC:
                     counter += 1
                     if counter == self.food_resources_num:
                         flag = False
-        new_onlooker_bees = parallel_fitness(new_onlooker_bees_solutions)
+        new_onlooker_bees = estimate_fitness(new_onlooker_bees_solutions)
         abc_fitness(new_onlooker_bees)
         for idx, ix in enumerate(solution_indices):
             if new_onlooker_bees[idx].fitness_value > self.employed_bees[ix].fitness_value:
@@ -435,7 +435,7 @@ class ABC:
                 new_scout_bees.append(IndividualDTO(id=str(uuid.uuid4()),
                                                     params=self._init_random_params(), dataset=self.dataset))
         if len(new_scout_bees) > 0:
-            new_bees = parallel_fitness(new_scout_bees)
+            new_bees = estimate_fitness(new_scout_bees)
             abc_fitness(new_bees)
             self.fitness_evals += len(new_scout_bees)
             for ix, i in enumerate(guys_to_remove):
@@ -454,7 +454,6 @@ class ABC:
         logger.info(f'global best fitness: {self.best_solution - 1}')
 
     def run(self, iterations):
-
         self.init_resources_method()
         logger.info('Population is initialized')
         logger.info(f'Fitness counts: {self.fitness_evals}')
@@ -462,6 +461,7 @@ class ABC:
         random_search_res = np.max([bee.fitness_value for bee in self.employed_bees])
 
         for i in range(iterations):
+            print(i)
             self._employed_bees_phase()
             logger.info('Employed bees phase is over')
             logger.info(f'Fitness counts: {self.fitness_evals}')
