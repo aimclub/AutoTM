@@ -1,5 +1,6 @@
 import click
 import numpy as np
+from scipy.optimize import differential_evolution
 
 
 def type_check(res):
@@ -11,10 +12,14 @@ def type_check(res):
 
 @click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--dataset', help='dataset name in the config')
-@click.option('--num-individuals', default=10, help='colony size')  # colony size
-@click.option('--max-num-trials', default=5, help='maximum number of source trials')
-@click.option('--init-method', default='latin_hypercube',
-              help='method of population initialization (latin hypercube or random)')
+@click.option('--strategy', default='best1bin', help='strategy of the algorithm')  # colony size
+@click.option('--maxiter', default=None, help='maximum number of generations to evolve')
+@click.option('--popsize', default=10, help='population size')
+@click.option('--tol', default=None, help='relative tolerance for convergence')
+@click.option('--mutation', default=None, help='mutation constant')
+@click.option('--recombination', default=None, help='recombinaiton constant')
+@click.option('--init', default=None, help='type of population initialization')
+@click.option('--atol', default=None, help='absolute tolerance for convergence')
 @click.option('--log-file', default="/var/log/tm-alg.log",
               help='a log file to write logs of the algorithm execution to')
 def run_algorithm():
