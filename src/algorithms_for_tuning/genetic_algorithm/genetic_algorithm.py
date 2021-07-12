@@ -21,7 +21,7 @@ from yaml import Loader
 from mutation import mutation
 from crossover import crossover
 from selection import selection
-from utils import make_log_config_dict
+from algorithms_for_tuning.utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
 
@@ -46,8 +46,10 @@ else:
     # from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
     from tqdm import tqdm
 
+
     def prepare_fitness_estimator():
         pass
+
 
     def estimate_fitness(population: List[IndividualDTO],
                          use_tqdm: bool = False,
@@ -62,13 +64,12 @@ else:
 
         return results
 
+
     def log_best_solution(individual: IndividualDTO):
         pass
 
-
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 LOG_FILE_PATH = config['paths']['logFile']
-# DATASET = "20newsgroups"
 
 
 @click.command(context_settings=dict(allow_extra_args=True))
@@ -83,7 +84,8 @@ LOG_FILE_PATH = config['paths']['logFile']
 @click.option('--elem-cross-prob', default=None, help='crossover probability')
 @click.option('--cross-alpha', default=None, help='alpha for blend crosover')
 @click.option('--best-proc', default=0.4, help='number of best parents to propagate')
-@click.option('--log-file', default="/var/log/tm-alg.log", help='a log file to write logs of the algorithm execution to')
+@click.option('--log-file', default="/var/log/tm-alg.log",
+              help='a log file to write logs of the algorithm execution to')
 @click.option('--exp-id', type=int, help='mlflow experiment id')
 def run_algorithm(dataset,
                   num_individuals,
@@ -274,7 +276,8 @@ class GA:
             the_best_guy_params = copy.deepcopy(population[0].params)
             new_generation = [individ for individ in new_generation if individ.params != the_best_guy_params]
 
-            new_generation_n = min((self.num_individuals - int(np.ceil(self.num_individuals * self.best_proc))), len(new_generation))
+            new_generation_n = min((self.num_individuals - int(np.ceil(self.num_individuals * self.best_proc))),
+                                   len(new_generation))
             old_generation_n = self.num_individuals - new_generation_n
 
             population = population[:old_generation_n] + new_generation[:new_generation_n]
@@ -310,7 +313,8 @@ class GA:
                                            elem_mutation_prob=copy.deepcopy(population[i].params[13]))
                     population[i] = IndividualDTO(id=str(uuid.uuid4()),
                                                   dataset=self.dataset,
-                                                  params=[float(i) for i in params], exp_id=self.exp_id)  # TODO: check mutation
+                                                  params=[float(i) for i in params],
+                                                  exp_id=self.exp_id)  # TODO: check mutation
                 evaluations_counter += 1
 
             population = estimate_fitness(population)
