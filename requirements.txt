@@ -11,3 +11,4 @@ click == 8.0.1
 PyMySQL==0.9.3
 psycopg2-binary==2.8.5
 pymongo==3.11.3
+scikit-learn==0.24.2

@@ -3,6 +3,7 @@ from numpy.random import choice, permutation, rand
 from numpy import random
 from sklearn.preprocessing import MinMaxScaler
 import os
+import sys
 import copy
 import uuid
 from kube_fitness.tasks import make_celery_app, parallel_fitness, IndividualDTO
@@ -13,8 +14,12 @@ from yaml import Loader
 from typing import List
 import logging
 import warnings
+from algorithms_for_tuning.utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
+
+from kube_fitness.tasks import IndividualDTO, TqdmToLogger
+
 logger = logging.getLogger("ABC")
 
 # getting config vars
@@ -29,12 +34,15 @@ with open(filepath, "r") as file:
 if not config['testMode']:
     from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
     from kube_fitness.tasks import parallel_fitness as estimate_fitness
+    from kube_fitness.tasks import log_best_solution
 else:
     # from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
     from tqdm import tqdm
 
+
     def prepare_fitness_estimator():
         pass
+
 
     def estimate_fitness(population: List[IndividualDTO],
                          use_tqdm: bool = False,
@@ -49,6 +57,9 @@ else:
 
         return results
 
+
+    def log_best_solution(individual: IndividualDTO):
+        pass
 
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 LOG_FILE_PATH = config['paths']['logFile']
@@ -66,12 +77,19 @@ PROBLEM_DIM = config['globalAlgoParams']['problemDim']
 def run_algorithm(dataset, num_individuals,
                   max_num_trials, init_method,
                   log_file):
-    abc_algo = ABC(colony_size=num_individuals,
+    run_uid = uuid.uuid4() if not config['testMode'] else None
+    logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
+    logging.config.dictConfig(logging_config)
+
+    logger.info(f"Starting a new run of algorithm. Args: {sys.argv[1:]}")
+    abc_algo = ABC(dataset=dataset,
+                   colony_size=num_individuals,
                    max_num_trials=max_num_trials,
                    init_method=init_method,
                    problem_dim=PROBLEM_DIM,
                    num_fitness_evaluations=NUM_FITNESS_EVALUATIONS)
-    print(round(abc_algo.best_solution - 1, 3) * (-1))
+    abc_algo.run(16)
+    print(round(abc_algo.best_solution - 1, 3) * (-1))  # according to the code logic
 
 
 def lhd(n_sam, n_val, val_rng=None, method='random', criterion=None,
@@ -211,12 +229,14 @@ def abc_fitness(sources):
 
 class ABC:
     def __init__(self,
+                 dataset,
                  colony_size,
                  max_num_trials=5,
                  init_method='latin_hypercube',
                  problem_dim=16,
                  num_fitness_evaluations=150,
                  ):
+        self.dataset = dataset
         self.colony_size = colony_size
         self.problem_dim = problem_dim
         self.scout_limit = (colony_size * problem_dim) / 2  # TODO: fix
@@ -288,7 +308,7 @@ class ABC:
             row = row.tolist()
             row = row[:12] + [0.0, 0.0, 0.0] + [np.array(row[-1])]
             list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                     params=self._int_check(np.array(row)), dataset=DATASET))
+                                                     params=self._int_check(np.array(row)), dataset=self.dataset))
         self.employed_bees = parallel_fitness(list_of_individuals)
         abc_fitness(self.employed_bees)
         self.fitness_evals += len(list_of_individuals)
@@ -301,7 +321,7 @@ class ABC:
         for _ in range(self.food_resources_num):
             params = self._init_random_params()
             list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                     params=self._int_check(params), dataset=DATASET))
+                                                     params=self._int_check(params), dataset=self.dataset))
         self.employed_bees = parallel_fitness(list_of_individuals)
         abc_fitness(self.employed_bees)
         self.fitness_evals += len(list_of_individuals)
@@ -359,7 +379,7 @@ class ABC:
         for bee_idx, bee in enumerate(self.employed_bees):
             current_params = self._explore_new_source(bee_idx)
             new_employed_bees_solutions.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                             params=current_params, dataset=DATASET))
+                                                             params=current_params, dataset=self.dataset))
         new_employed_bees = parallel_fitness(new_employed_bees_solutions)
         abc_fitness(new_employed_bees)
         self.fitness_evals += len(new_employed_bees_solutions)
@@ -391,7 +411,7 @@ class ABC:
                     selected_sources.append(bee_idx)
                     current_params = self._explore_new_source(bee_idx)
                     new_onlooker_bees_solutions.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                                     params=current_params, dataset=DATASET))
+                                                                     params=current_params, dataset=self.dataset))
                     solution_indices.append(bee_idx)
                     self.fitness_evals += 1
                     counter += 1
@@ -413,7 +433,7 @@ class ABC:
             if trial >= self.max_num_trials:
                 guys_to_remove.append(ix)
                 new_scout_bees.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                    params=self._init_random_params(), dataset=DATASET))
+                                                    params=self._init_random_params(), dataset=self.dataset))
         if len(new_scout_bees) > 0:
             new_bees = parallel_fitness(new_scout_bees)
             abc_fitness(new_bees)
@@ -490,3 +510,7 @@ class ABC:
         for i in [1, 4, 7, 10, 11]:
             res[i] = float(np.round(res[i]))
         return res
+
+
+if __name__ == "__main__":
+    run_algorithm()
