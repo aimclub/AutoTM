@@ -15,7 +15,7 @@
 
 ## File to save tuning results as an R dataset, either absolute path or
 ## relative to execDir.
-logFile = "./abc_irace.Rdata"
+logFile = "./de_irace.Rdata"
 
 ## Previously saved log file to recover the execution of irace, either
 ## absolute path or relative to the current directory.  If empty or NULL,
@@ -43,7 +43,7 @@ trainInstancesFile = "instances.txt"
 
 ## Script called for each configuration that executes the target algorithm
 ## to be tuned. See templates.
-targetRunner = "../../algorithms_for_tuning/abc_algorithm/abc.py"
+targetRunner = "../../algorithms_for_tuning/de_algorithm/de.py"
 
 ## Number of times to retry a call to targetRunner if the call failed.
 # targetRunnerRetries = 0

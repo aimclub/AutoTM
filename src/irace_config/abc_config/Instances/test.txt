@@ -1,1 +1,0 @@
-rosenbrock_20 --function=12 --nvar 20
