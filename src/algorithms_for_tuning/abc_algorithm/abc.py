@@ -36,7 +36,9 @@ with open(filepath, "r") as file:
     config = yaml.load(file, Loader=Loader)
 
 if not config['testMode']:
+    from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
     from kube_fitness.tasks import parallel_fitness as estimate_fitness
+    from kube_fitness.tasks import log_best_solution
 else:
     # from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
     from tqdm import tqdm
@@ -477,6 +479,8 @@ class ABC:
         logger.info(f'global best fitness: {self.best_solution.fitness_value - 1}')
 
     def run(self, iterations):
+        prepare_fitness_estimator()
+
         self.init_resources_method()
         logger.info('Population is initialized')
         logger.info(f'Fitness counts: {self.fitness_evals}')
