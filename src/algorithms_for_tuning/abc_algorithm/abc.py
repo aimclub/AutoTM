@@ -1,19 +1,22 @@
-import numpy as np
-from numpy.random import choice, permutation, rand
-from numpy import random
-from sklearn.preprocessing import MinMaxScaler
+import copy
+import logging
 import os
 import sys
-import copy
 import uuid
+import warnings
+from logging import config
+from typing import List
+
 # from kube_fitness.tasks import make_celery_app, parallel_fitness, IndividualDTO
 # from kube_fitness.tasks import IndividualDTO, TqdmToLogger
 import click
+import numpy as np
 import yaml
+from numpy import random
+from numpy.random import permutation, rand
+from sklearn.preprocessing import MinMaxScaler
 from yaml import Loader
-from typing import List
-import logging
-import warnings
+
 from algorithms_for_tuning.utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
@@ -32,9 +35,7 @@ with open(filepath, "r") as file:
     config = yaml.load(file, Loader=Loader)
 
 if not config['testMode']:
-    from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
     from kube_fitness.tasks import parallel_fitness as estimate_fitness
-    from kube_fitness.tasks import log_best_solution
 else:
     # from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
     from tqdm import tqdm
@@ -101,8 +102,7 @@ def lhd(n_sam, n_val, val_rng=None, method='random', criterion=None,
 
         # Check if the given val_rng is in the correct shape
         if not (val_rng.shape == (n_val, 2)):
-            raise ShapeError("'val_rng' has incompatible shape: %s != (%s, %s)"
-                             % (val_rng.shape, n_val, 2))
+            raise Exception("'val_rng' has incompatible shape: %s != (%s, %s)" % (val_rng.shape, n_val, 2))
 
     # TODO: Implement constraints method again!
     # Make sure that constraints is a numpy array
@@ -111,33 +111,34 @@ def lhd(n_sam, n_val, val_rng=None, method='random', criterion=None,
 
     if constraints is None:
         pass
-    elif (constraints.shape[-1] == 0):
+    elif constraints.shape[-1] == 0:
         # If constraints is empty, there are no constraints
         constraints = None
-    elif (constraints.ndim != 2):
+    elif constraints.ndim != 2:
         # If constraints is not two-dimensional, it is invalid
-        raise ShapeError("Constraints must be two-dimensional!")
-    elif (constraints.shape[-1] == n_val):
+        raise Exception("Constraints must be two-dimensional!")
+    elif constraints.shape[-1] == n_val:
         # If constraints has the same number of values, it is valid
-        constraints = _extract_sam_set(constraints, val_rng)
+        # constraints = _extract_sam_set(constraints, val_rng)
+        raise NotImplementedError("You should not get here")
     else:
         # If not empty and not right shape, it is invalid
-        raise ShapeError("Constraints has incompatible number of values: "
+        raise Exception("Constraints has incompatible number of values: "
                          "%s =! %s" % (np.shape(constraints)[1], n_val))
 
     # Check for cases in which some methods make no sense
-    if (n_sam == 1 and method.lower() in ('fixed', 'f')):
+    if n_sam == 1 and method.lower() in ('fixed', 'f'):
         method = 'center'
-    elif (criterion is not None and method.lower() in ('random', 'r')):
+    elif criterion is not None and method.lower() in ('random', 'r'):
         method = 'fixed'
 
     # Check for cases in which some criterions make no sense
     # If so, criterion will be changed to something useful
     if criterion is None:
         pass
-    elif (n_sam == 1):
+    elif n_sam == 1:
         criterion = None
-    elif (n_val == 1 or n_sam == 2):
+    elif n_val == 1 or n_sam == 2:
         criterion = None
     elif isinstance(criterion, (int, float)):
         if not (0 <= criterion <= 1):
@@ -154,12 +155,15 @@ def lhd(n_sam, n_val, val_rng=None, method='random', criterion=None,
         sam_set = _lhd_fixed(n_sam, n_val)
     elif method.lower() in ('center', 'c'):
         sam_set = _lhd_center(n_sam, n_val)
+    else:
+        raise Exception(f"Method is not known: {method.lower()}")
 
     # Pick correct criterion
     if criterion is not None:
-        multi_obj = Multi_LHD(sam_set, criterion, iterations, quickscan,
-                              constraints)
-        sam_set, mm_val, corr_val, multi_val = multi_obj()
+        raise NotImplementedError("You should not get here")
+        # multi_obj = Multi_LHD(sam_set, criterion, iterations, quickscan,
+        #                       constraints)
+        # sam_set, mm_val, corr_val, multi_val = multi_obj()
 
     # If a val_rng was given, scale sam_set to this range
     if val_rng is not None:
@@ -167,7 +171,8 @@ def lhd(n_sam, n_val, val_rng=None, method='random', criterion=None,
         sam_set = val_rng[:, 0] + sam_set * (val_rng[:, 1] - val_rng[:, 0])
 
     if get_score and criterion is not None:
-        return (sam_set, np.array([mm_val, corr_val, multi_val]))
+        raise NotImplementedError("You should not get here")
+        # return (sam_set, np.array([mm_val, corr_val, multi_val]))
     else:
         return (sam_set)
 
@@ -345,12 +350,6 @@ class ABC:
         params = [float(i) for i in params]
         return params
 
-    def _int_check(res):
-        res = list(res)
-        for i in [1, 4, 7, 10, 11]:
-            res[i] = int(res[i])
-        return [float(i) for i in res]
-
     def _explore_new_source(self, current_bee_idx):
         change_param = random.choice([i for i in range(12)] + [15])
 
@@ -461,7 +460,6 @@ class ABC:
         random_search_res = np.max([bee.fitness_value for bee in self.employed_bees])
 
         for i in range(iterations):
-            print(i)
             self._employed_bees_phase()
             logger.info('Employed bees phase is over')
             logger.info(f'Fitness counts: {self.fitness_evals}')
