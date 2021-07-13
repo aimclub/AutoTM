@@ -101,7 +101,7 @@ class BigartmFitness:
 
     def make_individ(self, x):
         params = [float(i) for i in x]
-        params = params[:-1] + [0.0, 0.0, 0.0] + params[-1]
+        params = params[:-1] + [0.0, 0.0, 0.0] + [params[-1]]
         return IndividualDTO(
             id=str(uuid.uuid4()),
             dataset=self.dataset,
