@@ -92,7 +92,7 @@ def run_algorithm(dataset, num_individuals,
                    num_fitness_evaluations=NUM_FITNESS_EVALUATIONS,
                    exp_id=exp_id)
     abc_algo.run(16)
-    print(round(abc_algo.best_solution.fitness_value, 3) * (-1))  # according to the code logic
+    print(round(abc_algo.best_solution.fitness_value - 1, 3) * (-1))  # according to the code logic
 
 
 def lhd(n_sam, n_val, val_rng=None, method='random', criterion=None,
@@ -244,6 +244,7 @@ class ABC:
                  num_fitness_evaluations=150,
                  exp_id=3
                  ):
+        print(dataset, colony_size)
         self.exp_id = exp_id
         self.dataset = dataset
         self.colony_size = colony_size

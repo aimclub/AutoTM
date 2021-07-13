@@ -7,6 +7,9 @@ import numpy as np
 from scipy.optimize import differential_evolution
 import warnings
 import yaml
+from yaml import Loader
+
+from algorithms_for_tuning.utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
 
