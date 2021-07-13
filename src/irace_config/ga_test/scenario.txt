@@ -43,7 +43,7 @@ trainInstancesFile = "instances.txt"
 
 ## Script called for each configuration that executes the target algorithm
 ## to be tuned. See templates.
-targetRunner = "../../algorithms_for_tuning/genetic_algorithm/genetic_algorithm.py"
+targetRunner = "run.sh"
 
 ## Number of times to retry a call to targetRunner if the call failed.
 # targetRunnerRetries = 0
