@@ -2,14 +2,19 @@
 
 import os
 import logging
+from typing import List
 import click
+import uuid
 import numpy as np
 from scipy.optimize import differential_evolution
 import warnings
 import yaml
 from yaml import Loader
+import copy
+import random
 
 from algorithms_for_tuning.utils import make_log_config_dict
+from kube_fitness.tasks import IndividualDTO, TqdmToLogger
 
 warnings.filterwarnings("ignore")
 
@@ -56,61 +61,87 @@ else:
 
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 
+DATASET_NAME = None
+EXP_ID = None
+ALG_ID = 'DE'
+BEST_SOLUTION = None
+
+HIGH_DECOR = 1e5
+LOW_DECOR = 0
+HIGH_N = 8
+LOW_N = 0
+HIGH_SM = 1e2
+LOW_SM = 1e-3
+HIGH_SP = -1e-3
+LOW_SP = -1e2
+
+BOUNDS = [
+    (LOW_DECOR, HIGH_DECOR),
+    (LOW_N, HIGH_N),
+    (LOW_SM, HIGH_SM),
+    (LOW_SM, HIGH_SM),
+    (LOW_N, HIGH_N),
+    (LOW_SP, HIGH_SP),
+    (LOW_SP, HIGH_SP),
+    (LOW_N, HIGH_N),
+    (LOW_SP, HIGH_SP),
+    (LOW_SP, HIGH_SP),
+    (LOW_N, HIGH_N),
+    (LOW_N, HIGH_N),
+    (LOW_DECOR, HIGH_DECOR)
+]
+
+
+def BigartmOptimizer(x, *args):
+    individ = [IndividualDTO(id=str(uuid.uuid4()),
+                             dataset=DATASET_NAME,
+                             params=[float(i) for i in x],
+                             exp_id=EXP_ID,
+                             alg_id=ALG_ID)]
+
+    population = estimate_fitness(individ)
+    fitness = individ[0].fitness_value
+    global BEST_SOLUTION
+    if BEST_SOLUTION is None or fitness > BEST_SOLUTION.fitness_value:
+        BEST_SOLUTION = population[0]
+    return -fitness
+
+
+@click.command(context_settings=dict(allow_extra_args=True))
+@click.option('--dataset', required=True, type=str, help='dataset name in the config')
+@click.option('--strategy', type=str, default='best1bin', help='strategy of the algorithm')  # colony size
+@click.option('--popsize', type=int, default=10, help='population size')
+@click.option('--tol', type=float, default=None, help='relative tolerance for convergence')
+@click.option('--mutation', type=float, default=None, help='mutation constant')
+@click.option('--recombination', type=float, default=None, help='recombinaiton constant')
+@click.option('--init', type=str, default=None, help='type of population initialization')
+@click.option('--atol', type=float, default=None, help='absolute tolerance for convergence')
+@click.option('--log-file', type=str, default="/var/log/tm-alg.log",
+              help='a log file to write logs of the algorithm execution to')
+@click.option('--exp-id', required=True, type=int, help='mlflow experiment id')
+def run_algorithm(dataset, strategy, popsize,
+                  tol, mutation, recombination,
+                  init, atol, log_file, exp_id):
+    global DATASET_NAME
+    DATASET_NAME = dataset
+    global EXP_ID
+    EXP_ID = exp_id
+    maxiter = int(np.ceil(NUM_FITNESS_EVALUATIONS / popsize))
+    res_fitness = differential_evolution(BigartmOptimizer, BOUNDS,
+                                         strategy=strategy, maxiter=maxiter,
+                                         popsize=popsize, tol=tol,
+                                         mutation=mutation, recombination=recombination,
+                                         init=init, atol=atol)
+    BEST_SOLUTION.fitness_value = -BEST_SOLUTION.fitness_value
+    log_best_solution(BEST_SOLUTION)
+    print(res_fitness * (-1))
+
+
 def type_check(res):
     res = list(res)
     for i in [1, 4, 7, 10, 11]:
         res[i] = int(res[i])
     return res
-
-
-@click.command(context_settings=dict(allow_extra_args=True))
-@click.option('--dataset', help='dataset name in the config')
-@click.option('--strategy', default='best1bin', help='strategy of the algorithm')  # colony size
-@click.option('--maxiter', default=None, help='maximum number of generations to evolve')
-@click.option('--popsize', default=10, help='population size')
-@click.option('--tol', default=None, help='relative tolerance for convergence')
-@click.option('--mutation', default=None, help='mutation constant')
-@click.option('--recombination', default=None, help='recombinaiton constant')
-@click.option('--init', default=None, help='type of population initialization')
-@click.option('--atol', default=None, help='absolute tolerance for convergence')
-@click.option('--log-file', default="/var/log/tm-alg.log",
-              help='a log file to write logs of the algorithm execution to')
-def run_algorithm():
-
-    raise NotImplementedError
-
-
-def BigartmOptimizer(x):
-    params = x
-    print('PARAMS: ', params)
-
-    t = Topic_model(experiments_path, S=S)
-
-    params = type_check(params)
-    t.init_model(params)
-    t.train()
-
-    try:
-        scores = get_last_avg_vals(t.model, S)
-        print(scores)
-    except:
-        print('NO SCORES SHALL PASS!')
-
-    # Additional penalty for creating unmeaningfull main topics
-    #     theta = t.model.get_theta()
-    #     theta_trans = theta.T[['main{}'.format(i) for i in range(S)]]
-    #     theta_trans_vals = theta_trans.max(axis=1)
-    #     fine_elems_coeff = len(np.where(np.array(theta_trans_vals)>=0.2)[0])/theta_trans.shape[0]
-    try:
-        fitness = t.get_avg_coherence_score(for_individ_fitness=True)  # *fine_elems_coeff
-    except:
-        fitness = 0
-    if np.isnan(fitness):
-        fitness = 0
-    print()
-    print('CURRENT FITNESS: {}'.format(fitness))
-    print()
-    return -fitness
 
 
 if __name__ == "__main__":

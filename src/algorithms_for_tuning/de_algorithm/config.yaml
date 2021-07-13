@@ -1,16 +1,4 @@
-appName: geneticAlgo
-logLevel: WARN
-
-testMode: True
-
-paths:
-  logFile: "logs"
+testMode: False
 
 globalAlgoParams:
-  numEvals: 20
-  problemDim: 16
-
-datasets:
-  20newsgroups:
-    base_path: "./resources/20newsgroups"
-    topic_count: 20
+  numEvals: 150

@@ -2,15 +2,6 @@ appName: geneticAlgo
 logLevel: WARN
 
 testMode: False
-datasetName: "lenta_ru"
-
-paths:
-  logFile: "logs"
 
 globalAlgoParams:
   numEvals: 150
-
-datasets:
-  20newsgroups:
-    base_path: "./resources/20newsgroups"
-    topic_count: 20
