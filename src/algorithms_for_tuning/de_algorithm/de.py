@@ -2,11 +2,11 @@
 
 import os
 import logging
-from typing import List
+from typing import List, Optional
 import click
 import uuid
 import numpy as np
-from scipy.optimize import differential_evolution
+from scipy.optimize import differential_evolution, OptimizeResult
 import warnings
 import yaml
 from yaml import Loader
@@ -24,7 +24,7 @@ logger = logging.getLogger("DE")
 if "FITNESS_CONFIG_PATH" in os.environ:
     filepath = os.environ["FITNESS_CONFIG_PATH"]
 else:
-    filepath = "../../algorithms_for_tuning/genetic_algorithm/config.yaml"
+    filepath = "../../algorithms_for_tuning/de_algorithm/config.yaml"
 
 with open(filepath, "r") as file:
     config = yaml.load(file, Loader=Loader)
@@ -63,7 +63,7 @@ NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 
 DATASET_NAME = None
 EXP_ID = None
-ALG_ID = 'DE'
+ALG_ID = 'de'
 BEST_SOLUTION = None
 
 HIGH_DECOR = 1e5
@@ -92,19 +92,46 @@ BOUNDS = [
 ]
 
 
-def BigartmOptimizer(x, *args):
-    individ = [IndividualDTO(id=str(uuid.uuid4()),
-                             dataset=DATASET_NAME,
-                             params=[float(i) for i in x],
-                             exp_id=EXP_ID,
-                             alg_id=ALG_ID)]
+class BigartmFitness:
 
-    population = estimate_fitness(individ)
-    fitness = individ[0].fitness_value
-    global BEST_SOLUTION
-    if BEST_SOLUTION is None or fitness > BEST_SOLUTION.fitness_value:
-        BEST_SOLUTION = population[0]
-    return -fitness
+    def __init__(self, dataset: str, exp_id: Optional[int] = None):
+        self.dataset = dataset
+        self.exp_id = exp_id
+        # self.best_solution: Optional[IndividualDTO] = None
+
+    def make_individ(self, x):
+        return IndividualDTO(
+            id=str(uuid.uuid4()),
+            dataset=self.dataset,
+            params=[float(i) for i in x],
+            exp_id=self.exp_id,
+            alg_id=ALG_ID
+        )
+
+    def __call__(self, x):
+        population = [self.make_individ(x)]
+
+        population = estimate_fitness(population)
+        individ = population[0]
+
+        # if self.best_solution is None or individ.fitness_value > self.best_solution.fitness_value:
+        #     self.best_solution = copy.deepcopy(individ)
+
+        return -1 * individ.fitness_value
+
+# def BigartmOptimizer(x, *args):
+#     individ = [IndividualDTO(id=str(uuid.uuid4()),
+#                              dataset=DATASET_NAME,
+#                              params=[float(i) for i in x],
+#                              exp_id=EXP_ID,
+#                              alg_id=ALG_ID)]
+#
+#     population = estimate_fitness(individ)
+#     fitness = individ[0].fitness_value
+#     global BEST_SOLUTION
+#     if BEST_SOLUTION is None or fitness > BEST_SOLUTION.fitness_value:
+#         BEST_SOLUTION = population[0]
+#     return -fitness
 
 
 @click.command(context_settings=dict(allow_extra_args=True))
@@ -127,14 +154,32 @@ def run_algorithm(dataset, strategy, popsize,
     global EXP_ID
     EXP_ID = exp_id
     maxiter = int(np.ceil(NUM_FITNESS_EVALUATIONS / popsize))
-    res_fitness = differential_evolution(BigartmOptimizer, BOUNDS,
-                                         strategy=strategy, maxiter=maxiter,
-                                         popsize=popsize, tol=tol,
-                                         mutation=mutation, recombination=recombination,
-                                         init=init, atol=atol)
-    BEST_SOLUTION.fitness_value = -BEST_SOLUTION.fitness_value
-    log_best_solution(BEST_SOLUTION)
-    print(res_fitness * (-1))
+    prepare_fitness_estimator()
+    fitness = BigartmFitness(dataset, exp_id)
+    res_fitness: OptimizeResult = differential_evolution(
+        fitness,
+        BOUNDS,
+        strategy=strategy,
+        maxiter=maxiter,
+        popsize=popsize,
+        tol=tol,
+        mutation=mutation,
+        recombination=recombination,
+        init=init,
+        atol=atol
+    )
+
+    if not res_fitness.success:
+        raise Exception(
+            f"The DE run has failed. "
+            f"Number of performed iterations(nit): {res_fitness.nit if 'nit' in res_fitness else 'unknown'}. "
+            f"Number of fitness evaluations (nfev): {res_fitness.nfev if 'nfev' in res_fitness else 'unknown'} "
+            f"Message: {res_fitness.message}."
+        )
+
+    best_solution = fitness.make_individ(res_fitness.x)
+    log_best_solution(best_solution)
+    print(res_fitness.fun * (-1))
 
 
 def type_check(res):
