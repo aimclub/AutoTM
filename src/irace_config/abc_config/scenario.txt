@@ -13,7 +13,7 @@ trainInstancesFile = "instances.txt"
 # configurationsFile = ""
 # forbiddenFile = ""
 
-targetRunner = "../../algorithms_for_tuning/abc_algorithm/abc.py"
+targetRunner = "run.sh"
 
 # targetRunnerData = ""
 # targetRunnerParallel = ""
