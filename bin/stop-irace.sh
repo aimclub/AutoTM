@@ -9,4 +9,8 @@ else
   kubectl_args="-n ${KUBE_NAMESPACE}"
 fi
 
-exec kubectl ${kubectl_args} delete -f conf/irace-runner-job.yaml --ignore-not-found=true
+# check for presence of the first argument
+[[ $# -eq 1 ]] || exit 1
+alg_name=$1
+
+exec kubectl ${kubectl_args} delete -f conf/irace-runner-job-"${alg_name}".yaml --ignore-not-found=true
