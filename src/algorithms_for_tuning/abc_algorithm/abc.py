@@ -247,7 +247,6 @@ class ABC:
                  num_fitness_evaluations=150,
                  exp_id=3
                  ):
-        print(dataset, colony_size)
         self.exp_id = exp_id
         self.dataset = dataset
         self.colony_size = colony_size
