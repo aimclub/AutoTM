@@ -69,7 +69,7 @@ else:
         pass
 
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
-LOG_FILE_PATH = config['paths']['logFile']
+# LOG_FILE_PATH = config['paths']['logFile']
 
 
 @click.command(context_settings=dict(allow_extra_args=True))
@@ -183,7 +183,7 @@ class GA:
         evaluations_counter = 0
         ftime = str(int(time.time()))
 
-        os.makedirs(LOG_FILE_PATH, exist_ok=True)
+        # os.makedirs(LOG_FILE_PATH, exist_ok=True)
 
         logger.info(f"Starting experiment: {ftime}")
 

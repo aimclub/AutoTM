@@ -26,8 +26,8 @@
 ##    condition is satisfied, FALSE otherwise.
 
 # 1:            2:                   3: 4:      5:
-dataset         "--dataset "          c  ("20newsgroups")
 num_individuals "--num-individuals "  i  (5, 50)
 max_num_trials  "--max-num-trials "   i  (1, 10)
 init_method     "--init-method "      c  ("latin_hypercube" ,"random")
-log_file        "--log-file "         c  ("/tmp/tm-alg.txt")
+log_file        "--log-file "         c  ("/var/log/tm-alg.txt")
+exp_id          "--exp-id "         c  (3)

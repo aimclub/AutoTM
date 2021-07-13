@@ -1,0 +1,5 @@
+testMode: False
+
+globalAlgoParams:
+  numEvals: 150
+  problemDim: 16
