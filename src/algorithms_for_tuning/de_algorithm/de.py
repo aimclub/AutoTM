@@ -2,6 +2,7 @@
 
 import os
 import logging
+from logging import config
 from typing import List, Optional
 import click
 import uuid
@@ -61,10 +62,7 @@ else:
 
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 
-DATASET_NAME = None
-EXP_ID = None
 ALG_ID = 'de'
-BEST_SOLUTION = None
 
 HIGH_DECOR = 1e5
 LOW_DECOR = 0
@@ -137,10 +135,10 @@ class BigartmFitness:
 def run_algorithm(dataset, strategy, popsize,
                   tol, mutation, recombination,
                   init, atol, log_file, exp_id):
-    global DATASET_NAME
-    DATASET_NAME = dataset
-    global EXP_ID
-    EXP_ID = exp_id
+    run_uid = uuid.uuid4() if not config['testMode'] else None
+    logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
+    logging.config.dictConfig(logging_config)
+
     maxiter = int(np.ceil(NUM_FITNESS_EVALUATIONS / popsize))
     prepare_fitness_estimator()
     fitness = BigartmFitness(dataset, exp_id)

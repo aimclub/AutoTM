@@ -26,12 +26,12 @@
 ##    condition is satisfied, FALSE otherwise.
 
 # 1:            2:                   3: 4:      5:
-strategy        "--strategy "         c  ('best1bin', 'best1exp', 'rand1exp', 'randtobest1exp', 'currenttobest1exp', 'best2exp', 'rand2exp', 'randtobest1bin', 'currenttobest1bin', 'best2bin', 'rand2bin', 'rand1bin')
+strategy        "--strategy "         c  ("best1bin", "best1exp", "rand1exp", "randtobest1exp", "currenttobest1exp", "best2exp", "rand2exp", "randtobest1bin", "currenttobest1bin", "best2bin", "rand2bin", "rand1bin")
 popsize         "--popsize "          i  (1, 2)
 tol             "--tol "              r  (0.001, 0.1)
 mutation        "--mutation "         r  (0, 2)
 recombination   "--recombination "    r  (0, 1)
-init            "--init "             c  ('latinhypercube', 'sobol', 'halton', 'random')
+init            "--init "             c  ("latinhypercube", "random")
 atol            "--atol "             r  (0, 1)
 log_file        "--log-file "         c  ("/var/log/tm-alg-de.txt")
 exp_id          "--exp-id "           c  (4)
