@@ -27,7 +27,7 @@
 
 # 1:            2:                   3: 4:      5:
 strategy        "--strategy "         c  ('best1bin', 'best1exp', 'rand1exp', 'randtobest1exp', 'currenttobest1exp', 'best2exp', 'rand2exp', 'randtobest1bin', 'currenttobest1bin', 'best2bin', 'rand2bin', 'rand1bin')
-popsize         "--popsize "          i  (1, 50)
+popsize         "--popsize "          i  (1, 2)
 tol             "--tol "              f  (0.001, 0.1)
 mutation        "--mutation "         f  (0, 2)
 recombination   "--recombination "    f  (0, 1)
