@@ -92,7 +92,7 @@ def run_algorithm(dataset, num_individuals,
                    num_fitness_evaluations=NUM_FITNESS_EVALUATIONS,
                    exp_id=exp_id)
     abc_algo.run(16)
-    print(round(abc_algo.best_solution - 1, 3) * (-1))  # according to the code logic
+    print(round(abc_algo.best_solution.fitness_value, 3) * (-1))  # according to the code logic
 
 
 def lhd(n_sam, n_val, val_rng=None, method='random', criterion=None,
@@ -256,7 +256,7 @@ class ABC:
         self.trials = [0 for _ in range(self.food_resources_num)]
         self.probabilities = [0 for _ in range(self.food_resources_num)]
         self.max_num_trials = max_num_trials  # TODO: check the vals
-        self.best_solution = -1
+        self.best_solution: IndividualDTO = IndividualDTO(fitness_value=-1, id="-1", params=[])
         self.fitness_evals = 0
         self.num_fitness_evaluations = num_fitness_evaluations
 
@@ -319,7 +319,8 @@ class ABC:
             list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
                                                      params=self._int_check(np.array(row)),
                                                      dataset=self.dataset,
-                                                     exp_id=self.exp_id))
+                                                     exp_id=self.exp_id,
+                                                     alg_id="abc"))
         self.employed_bees = estimate_fitness(list_of_individuals)
         abc_fitness(self.employed_bees)
         self.fitness_evals += len(list_of_individuals)
@@ -334,7 +335,8 @@ class ABC:
             list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
                                                      params=self._int_check(params),
                                                      dataset=self.dataset,
-                                                     exp_id=self.exp_id))
+                                                     exp_id=self.exp_id,
+                                                     alg_id="abc"))
         self.employed_bees = estimate_fitness(list_of_individuals)
         abc_fitness(self.employed_bees)
         self.fitness_evals += len(list_of_individuals)
@@ -388,7 +390,8 @@ class ABC:
             new_employed_bees_solutions.append(IndividualDTO(id=str(uuid.uuid4()),
                                                              params=current_params,
                                                              dataset=self.dataset,
-                                                             exp_id=self.exp_id
+                                                             exp_id=self.exp_id,
+                                                             alg_id="abc"
                                                              ))
         new_employed_bees = estimate_fitness(new_employed_bees_solutions)
         abc_fitness(new_employed_bees)
@@ -423,7 +426,8 @@ class ABC:
                     new_onlooker_bees_solutions.append(IndividualDTO(id=str(uuid.uuid4()),
                                                                      params=current_params,
                                                                      dataset=self.dataset,
-                                                                     exp_id=self.exp_id))
+                                                                     exp_id=self.exp_id,
+                                                                     alg_id="abc"))
                     solution_indices.append(bee_idx)
                     self.fitness_evals += 1
                     counter += 1
@@ -447,7 +451,8 @@ class ABC:
                 new_scout_bees.append(IndividualDTO(id=str(uuid.uuid4()),
                                                     params=self._init_random_params(),
                                                     dataset=self.dataset,
-                                                    exp_id=self.exp_id))
+                                                    exp_id=self.exp_id,
+                                                    alg_id="abc"))
         if len(new_scout_bees) > 0:
             new_bees = estimate_fitness(new_scout_bees)
             abc_fitness(new_bees)
@@ -457,22 +462,24 @@ class ABC:
                 self.trials[i] = 0
 
     def _show_best_solution(self):
-        fitness = []
-        for bee in self.employed_bees:
-            fitness.append(bee.fitness_value)
-        fitness = np.array(fitness)
-        best_fitness = np.max(fitness)
-        if best_fitness > self.best_solution:
-            self.best_solution = best_fitness
-        logger.info(f'best fitness on current iteration: {best_fitness - 1}')
-        logger.info(f'global best fitness: {self.best_solution - 1}')
+        # fitness = []
+        # for bee in self.employed_bees:
+        #     fitness.append(bee.fitness_value)
+        # fitness = np.array(fitness)
+        # best_fitness = np.max(fitness)
+        best_ind: IndividualDTO = max(self.employed_bees, key=lambda ind: ind.fitness_value)
+
+        if best_ind.fitness_value > self.best_solution.fitness_value:
+            self.best_solution = best_ind
+        logger.info(f'best fitness on current iteration: {self.best_solution.fitness_value - 1}')
+        logger.info(f'global best fitness: {self.best_solution.fitness_value - 1}')
 
     def run(self, iterations):
         self.init_resources_method()
         logger.info('Population is initialized')
         logger.info(f'Fitness counts: {self.fitness_evals}')
 
-        random_search_res = np.max([bee.fitness_value for bee in self.employed_bees])
+       # random_search_res = np.max([bee.fitness_value for bee in self.employed_bees])
 
         for i in range(iterations):
             self._employed_bees_phase()
@@ -499,7 +506,8 @@ class ABC:
                 break
 
             self._show_best_solution()
-        return random_search_res
+
+        return self.best_solution.fitness_value
 
     def _check_param_limits(self, params, idx):
         try:
