@@ -28,8 +28,6 @@ def run_algorithm():
 
 def BigartmOptimizer(x):
     params = x
-    S = 20
-    experiments_path = EXPERIMENTS_PATH
     print('PARAMS: ', params)
     t = Topic_model(experiments_path, S=S)
 
