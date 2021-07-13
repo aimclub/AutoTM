@@ -173,7 +173,8 @@ class GA:
             list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
                                                      dataset=self.dataset,
                                                      params=self.init_individ(),
-                                                     exp_id=self.exp_id))
+                                                     exp_id=self.exp_id,
+                                                     alg_id="ga"))
         population_with_fitness = estimate_fitness(list_of_individuals)
         return population_with_fitness
 
@@ -232,11 +233,13 @@ class GA:
                     new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
                                                         dataset=self.dataset,
                                                         params=child_1,
-                                                        exp_id=self.exp_id))
+                                                        exp_id=self.exp_id,
+                                                        alg_id="ga"))
                     new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
                                                         dataset=self.dataset,
                                                         params=child_2,
-                                                        exp_id=self.exp_id))
+                                                        exp_id=self.exp_id,
+                                                        alg_id="ga"))
                     evaluations_counter += 2
                 else:
                     child_1 = self.crossover(parent_1=parent_1,
@@ -247,7 +250,8 @@ class GA:
                     new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
                                                         dataset=self.dataset,
                                                         params=child_1,
-                                                        exp_id=self.exp_id))
+                                                        exp_id=self.exp_id,
+                                                        alg_id="ga"))
 
                     evaluations_counter += 1
 
@@ -314,7 +318,8 @@ class GA:
                     population[i] = IndividualDTO(id=str(uuid.uuid4()),
                                                   dataset=self.dataset,
                                                   params=[float(i) for i in params],
-                                                  exp_id=self.exp_id)  # TODO: check mutation
+                                                  exp_id=self.exp_id,
+                                                  alg_id="ga")  # TODO: check mutation
                 evaluations_counter += 1
 
             population = estimate_fitness(population)
