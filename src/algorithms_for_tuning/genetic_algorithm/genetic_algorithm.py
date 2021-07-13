@@ -5,6 +5,7 @@ from logging import config
 
 import os
 import warnings
+from pprint import pprint
 from typing import List, Optional
 
 import click
@@ -72,7 +73,7 @@ NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 
 
 @click.command(context_settings=dict(allow_extra_args=True))
-@click.option('--dataset', help='dataset name in the config')
+@click.option('--dataset', required=True, help='dataset name in the config')
 @click.option('--num-individuals', default=10, help='number of individuals in generation')
 @click.option('--mutation-type', default="combined",
               help='mutation type can have value from (mutation_one_param, combined, psm, positioning_mutation)')
@@ -85,7 +86,7 @@ NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 @click.option('--best-proc', default=0.4, help='number of best parents to propagate')
 @click.option('--log-file', default="/var/log/tm-alg.log",
               help='a log file to write logs of the algorithm execution to')
-@click.option('--exp-id', type=int, help='mlflow experiment id')
+@click.option('--exp-id', required=True, type=int, help='mlflow experiment id')
 def run_algorithm(dataset,
                   num_individuals,
                   mutation_type, crossover_type, selection_type,
