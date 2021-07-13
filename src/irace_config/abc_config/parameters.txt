@@ -29,5 +29,5 @@
 num_individuals "--num-individuals "  i  (5, 50)
 max_num_trials  "--max-num-trials "   i  (1, 10)
 init_method     "--init-method "      c  ("latin_hypercube" ,"random")
-log_file        "--log-file "         c  ("/tmp/tm-alg-abc.txt")
+log_file        "--log-file "         c  ("/var/log/tm-alg-abc.txt")
 exp_id          "--exp-id "           c  (3)
