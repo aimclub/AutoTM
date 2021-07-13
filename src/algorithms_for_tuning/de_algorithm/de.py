@@ -100,10 +100,12 @@ class BigartmFitness:
         # self.best_solution: Optional[IndividualDTO] = None
 
     def make_individ(self, x):
+        params = [float(i) for i in x]
+        params = params[:-1] + [0.0, 0.0, 0.0] + params[-1]
         return IndividualDTO(
             id=str(uuid.uuid4()),
             dataset=self.dataset,
-            params=[float(i) for i in x],
+            params=params,
             exp_id=self.exp_id,
             alg_id=ALG_ID
         )
@@ -118,21 +120,6 @@ class BigartmFitness:
         #     self.best_solution = copy.deepcopy(individ)
 
         return -1 * individ.fitness_value
-
-
-# def BigartmOptimizer(x, *args):
-#     individ = [IndividualDTO(id=str(uuid.uuid4()),
-#                              dataset=DATASET_NAME,
-#                              params=[float(i) for i in x],
-#                              exp_id=EXP_ID,
-#                              alg_id=ALG_ID)]
-#
-#     population = estimate_fitness(individ)
-#     fitness = individ[0].fitness_value
-#     global BEST_SOLUTION
-#     if BEST_SOLUTION is None or fitness > BEST_SOLUTION.fitness_value:
-#         BEST_SOLUTION = population[0]
-#     return -fitness
 
 
 @click.command(context_settings=dict(allow_extra_args=True))
