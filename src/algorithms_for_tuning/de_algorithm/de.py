@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import click
 import numpy as np
 from scipy.optimize import differential_evolution
