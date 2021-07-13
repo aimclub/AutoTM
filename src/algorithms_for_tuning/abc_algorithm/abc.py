@@ -92,6 +92,7 @@ def run_algorithm(dataset, num_individuals,
                    num_fitness_evaluations=NUM_FITNESS_EVALUATIONS,
                    exp_id=exp_id)
     abc_algo.run(16)
+    log_best_solution(abc_algo.best_solution)
     print(round(abc_algo.best_solution.fitness_value - 1, 3) * (-1))  # according to the code logic
 
 
