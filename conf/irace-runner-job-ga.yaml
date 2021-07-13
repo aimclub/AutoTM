@@ -19,7 +19,7 @@ spec:
       - name: irace
         image: node2.bdcl:5000/irace-runner:latest
         imagePullPolicy: Always
-        args: ["/app/irace_config/ga_test", "--parallel", "1"]
+        args: ["/app/irace_config/ga_test", "--parallel", "100"]
 #        args: ["/app/irace_config/ga_test"]
         env:
           - name: CELERY_BROKER_URL
