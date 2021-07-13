@@ -75,9 +75,10 @@ PROBLEM_DIM = config['globalAlgoParams']['problemDim']
               help='method of population initialization (latin hypercube or random)')
 @click.option('--log-file', default="/var/log/tm-alg.log",
               help='a log file to write logs of the algorithm execution to')
+@click.option('--exp-id', type=int, help='mlflow experiment id')
 def run_algorithm(dataset, num_individuals,
                   max_num_trials, init_method,
-                  log_file):
+                  log_file, exp_id):
     run_uid = uuid.uuid4() if not config['testMode'] else None
     logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
     logging.config.dictConfig(logging_config)
@@ -88,7 +89,8 @@ def run_algorithm(dataset, num_individuals,
                    max_num_trials=max_num_trials,
                    init_method=init_method,
                    problem_dim=PROBLEM_DIM,
-                   num_fitness_evaluations=NUM_FITNESS_EVALUATIONS)
+                   num_fitness_evaluations=NUM_FITNESS_EVALUATIONS,
+                   exp_id=exp_id)
     abc_algo.run(16)
     print(round(abc_algo.best_solution - 1, 3) * (-1))  # according to the code logic
 
@@ -240,7 +242,9 @@ class ABC:
                  init_method='latin_hypercube',
                  problem_dim=16,
                  num_fitness_evaluations=150,
+                 exp_id=3
                  ):
+        self.exp_id = exp_id
         self.dataset = dataset
         self.colony_size = colony_size
         self.problem_dim = problem_dim
@@ -313,7 +317,9 @@ class ABC:
             row = row.tolist()
             row = row[:12] + [0.0, 0.0, 0.0] + [np.array(row[-1])]
             list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                     params=self._int_check(np.array(row)), dataset=self.dataset))
+                                                     params=self._int_check(np.array(row)),
+                                                     dataset=self.dataset,
+                                                     exp_id=self.exp_id))
         self.employed_bees = estimate_fitness(list_of_individuals)
         abc_fitness(self.employed_bees)
         self.fitness_evals += len(list_of_individuals)
@@ -326,7 +332,9 @@ class ABC:
         for _ in range(self.food_resources_num):
             params = self._init_random_params()
             list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                     params=self._int_check(params), dataset=self.dataset))
+                                                     params=self._int_check(params),
+                                                     dataset=self.dataset,
+                                                     exp_id=self.exp_id))
         self.employed_bees = estimate_fitness(list_of_individuals)
         abc_fitness(self.employed_bees)
         self.fitness_evals += len(list_of_individuals)
@@ -378,7 +386,10 @@ class ABC:
         for bee_idx, bee in enumerate(self.employed_bees):
             current_params = self._explore_new_source(bee_idx)
             new_employed_bees_solutions.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                             params=current_params, dataset=self.dataset))
+                                                             params=current_params,
+                                                             dataset=self.dataset,
+                                                             exp_id=self.exp_id
+                                                             ))
         new_employed_bees = estimate_fitness(new_employed_bees_solutions)
         abc_fitness(new_employed_bees)
         self.fitness_evals += len(new_employed_bees_solutions)
@@ -410,7 +421,9 @@ class ABC:
                     selected_sources.append(bee_idx)
                     current_params = self._explore_new_source(bee_idx)
                     new_onlooker_bees_solutions.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                                     params=current_params, dataset=self.dataset))
+                                                                     params=current_params,
+                                                                     dataset=self.dataset,
+                                                                     exp_id=self.exp_id))
                     solution_indices.append(bee_idx)
                     self.fitness_evals += 1
                     counter += 1
@@ -432,7 +445,9 @@ class ABC:
             if trial >= self.max_num_trials:
                 guys_to_remove.append(ix)
                 new_scout_bees.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                    params=self._init_random_params(), dataset=self.dataset))
+                                                    params=self._init_random_params(),
+                                                    dataset=self.dataset,
+                                                    exp_id=self.exp_id))
         if len(new_scout_bees) > 0:
             new_bees = estimate_fitness(new_scout_bees)
             abc_fitness(new_bees)

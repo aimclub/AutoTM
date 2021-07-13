@@ -1,8 +1,57 @@
 #!/usr/bin/env python3
+
+import os
+import logging
 import click
 import numpy as np
 from scipy.optimize import differential_evolution
+import warnings
+import yaml
 
+warnings.filterwarnings("ignore")
+
+logger = logging.getLogger("DE")
+
+# getting config vars
+if "FITNESS_CONFIG_PATH" in os.environ:
+    filepath = os.environ["FITNESS_CONFIG_PATH"]
+else:
+    filepath = "../../algorithms_for_tuning/genetic_algorithm/config.yaml"
+
+with open(filepath, "r") as file:
+    config = yaml.load(file, Loader=Loader)
+
+if not config['testMode']:
+    from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
+    from kube_fitness.tasks import parallel_fitness as estimate_fitness
+    from kube_fitness.tasks import log_best_solution
+else:
+    # from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
+    from tqdm import tqdm
+
+
+    def prepare_fitness_estimator():
+        pass
+
+
+    def estimate_fitness(population: List[IndividualDTO],
+                         use_tqdm: bool = False,
+                         tqdm_check_period: int = 2) -> List[IndividualDTO]:
+        results = []
+
+        tqdm_out = TqdmToLogger(logger, level=logging.INFO)
+        for p in tqdm(population, file=tqdm_out):
+            individual = copy.deepcopy(p)
+            individual.fitness_value = random.random()
+            results.append(individual)
+
+        return results
+
+
+    def log_best_solution(individual: IndividualDTO):
+        pass
+
+NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 
 def type_check(res):
     res = list(res)
@@ -31,6 +80,7 @@ def run_algorithm():
 def BigartmOptimizer(x):
     params = x
     print('PARAMS: ', params)
+
     t = Topic_model(experiments_path, S=S)
 
     params = type_check(params)

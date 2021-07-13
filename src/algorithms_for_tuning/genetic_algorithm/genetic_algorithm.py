@@ -69,7 +69,6 @@ else:
         pass
 
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
-# LOG_FILE_PATH = config['paths']['logFile']
 
 
 @click.command(context_settings=dict(allow_extra_args=True))
