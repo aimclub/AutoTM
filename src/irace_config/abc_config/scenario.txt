@@ -4,13 +4,10 @@
 
 # parameterFile = "./parameters.txt"
 # execDir = "./"
-
-logFile = "./abc_irace.Rdata"
-
+# logFile = "./abc_irace.Rdata"
 # recoveryFile = ""
 
 trainInstancesDir = ""
-
 trainInstancesFile = "instances.txt"
 
 # configurationsFile = ""
