@@ -3,7 +3,6 @@
 set -ex
 
 echo "Input arguments: [" "${@}" "]"
-exit 1
 
 ./bin/stop-irace.sh "${@}"
 ./bin/build-docker.sh
