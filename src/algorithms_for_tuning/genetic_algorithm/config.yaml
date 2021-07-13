@@ -1,8 +1,8 @@
 appName: geneticAlgo
 logLevel: WARN
 
-testMode: False
+testMode: True
 
 globalAlgoParams:
-  numEvals: 150
+  numEvals: 20
 

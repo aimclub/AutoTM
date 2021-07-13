@@ -1,4 +1,4 @@
-testMode: False
+testMode: True
 
 globalAlgoParams:
   numEvals: 150
