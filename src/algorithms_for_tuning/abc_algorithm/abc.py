@@ -68,14 +68,14 @@ PROBLEM_DIM = config['globalAlgoParams']['problemDim']
 
 
 @click.command(context_settings=dict(allow_extra_args=True))
-@click.option('--dataset', help='dataset name in the config')
+@click.option('--dataset', required=True, help='dataset name in the config')
 @click.option('--num-individuals', default=10, help='colony size')  # colony size
 @click.option('--max-num-trials', default=5, help='maximum number of source trials')
 @click.option('--init-method', default='latin_hypercube',
               help='method of population initialization (latin hypercube or random)')
 @click.option('--log-file', default="/var/log/tm-alg.log",
               help='a log file to write logs of the algorithm execution to')
-@click.option('--exp-id', type=int, help='mlflow experiment id')
+@click.option('--exp-id', required=True, type=int, help='mlflow experiment id')
 def run_algorithm(dataset, num_individuals,
                   max_num_trials, init_method,
                   log_file, exp_id):
