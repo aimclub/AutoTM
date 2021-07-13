@@ -119,6 +119,7 @@ class BigartmFitness:
 
         return -1 * individ.fitness_value
 
+
 # def BigartmOptimizer(x, *args):
 #     individ = [IndividualDTO(id=str(uuid.uuid4()),
 #                              dataset=DATASET_NAME,
