@@ -23,6 +23,7 @@ def type_check(res):
 @click.option('--log-file', default="/var/log/tm-alg.log",
               help='a log file to write logs of the algorithm execution to')
 def run_algorithm():
+
     raise NotImplementedError
 
 
