@@ -9,4 +9,8 @@ else
   kubectl_args="-n ${KUBE_NAMESPACE}"
 fi
 
-exec kubectl ${kubectl_args} apply -f conf/irace-runner-job.yaml
+# check for presence of the first argument
+[[ $# -eq 1 ]] || exit 1
+alg_name=$1
+
+exec kubectl ${kubectl_args} apply -f conf/irace-runner-job-"${alg_name}".yaml

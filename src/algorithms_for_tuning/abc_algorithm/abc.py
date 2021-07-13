@@ -63,7 +63,6 @@ else:
         pass
 
 NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
-LOG_FILE_PATH = config['paths']['logFile']
 PROBLEM_DIM = config['globalAlgoParams']['problemDim']
 
 
