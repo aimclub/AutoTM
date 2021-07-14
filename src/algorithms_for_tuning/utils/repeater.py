@@ -125,9 +125,6 @@ class Repeater:
                                                     stdout=sys.stdout, stderr=sys.stdout, cwd=workdir)
         ret_code = await proc.wait()
 
-        # await asyncio.sleep(1)
-        # ret_code = 0
-
         if ret_code != 0:
             msg = f"Return code {ret_code} != 0 for run (repetition {rep_num}) with cmd '{cmd}' and args '{args}'"
             logger.error(msg)
@@ -163,23 +160,6 @@ class Repeater:
                 processes = processes[free_slots:] if len(processes) > free_slots else []
                 logger.info(f"{total_done_count} configurations have been calculated. "
                             f"{len(configurations) - total_done_count} are left.")
-            # for p in processes:
-            #     if len(run_slots) <= max_parallel_processes:
-            #         run_slots.append(asyncio.create_task(p))
-            #     else:
-            #         done, pending = await asyncio.wait(run_slots, return_when=FIRST_COMPLETED)
-            #         self._check_for_exceptions(done)
-            #         run_slots = list(pending)
-            #         run_slots.append(asyncio.create_task(p))
-            #         total_done_count += len(done)
-            #         logger.info(f"{total_done_count} configurations have been calculated. "
-            #                     f"{len(configurations) - total_done_count} are left.")
-            #
-            # done, _ = await asyncio.wait(run_slots, return_when=ALL_COMPLETED)
-            # self._check_for_exceptions(done)
-            # total_done_count += len(done)
-            # logger.info(f"{total_done_count} configurations have been calculated. "
-            #             f"{len(configurations) - total_done_count} are left.")
         else:
             logger.info(f"No restrictions on number of parallel processes. "
                         f"Starting all {len(configurations)} configurations.")
