@@ -123,12 +123,12 @@ class BigartmFitness:
 @click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--dataset', required=True, type=str, help='dataset name in the config')
 @click.option('--strategy', type=str, default='best1bin', help='strategy of the algorithm')  # colony size
-@click.option('--popsize', type=int, default=10, help='population size')
-@click.option('--tol', type=float, default=None, help='relative tolerance for convergence')
-@click.option('--mutation', type=float, default=None, help='mutation constant')
-@click.option('--recombination', type=float, default=None, help='recombinaiton constant')
-@click.option('--init', type=str, default=None, help='type of population initialization')
-@click.option('--atol', type=float, default=None, help='absolute tolerance for convergence')
+@click.option('--popsize', type=int, default=15, help='population size')
+@click.option('--tol', type=float, default=0.01, help='relative tolerance for convergence')
+@click.option('--mutation', type=float, default=0.5, help='mutation constant')
+@click.option('--recombination', type=float, default=0.7, help='recombinaiton constant')
+@click.option('--init', type=str, default='latinhypercube', help='type of population initialization')
+@click.option('--atol', type=float, default=0, help='absolute tolerance for convergence')
 @click.option('--log-file', type=str, default="/var/log/tm-alg.log",
               help='a log file to write logs of the algorithm execution to')
 @click.option('--exp-id', required=True, type=int, help='mlflow experiment id')
@@ -139,7 +139,7 @@ def run_algorithm(dataset, strategy, popsize,
     logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
     logging.config.dictConfig(logging_config)
 
-    maxiter = int(np.ceil(NUM_FITNESS_EVALUATIONS / popsize))
+    maxiter = int(np.ceil(NUM_FITNESS_EVALUATIONS / (popsize * len(BOUNDS)) - 1))
     prepare_fitness_estimator()
     fitness = BigartmFitness(dataset, exp_id)
     res_fitness: OptimizeResult = differential_evolution(
@@ -156,10 +156,11 @@ def run_algorithm(dataset, strategy, popsize,
     )
 
     if not res_fitness.success:
-        raise Exception(
+        logger.error(
             f"The DE run has failed. "
             f"Number of performed iterations(nit): {res_fitness.nit if 'nit' in res_fitness else 'unknown'}. "
             f"Number of fitness evaluations (nfev): {res_fitness.nfev if 'nfev' in res_fitness else 'unknown'} "
+            f"Resulting fitness so far (fun): {res_fitness.fun if 'fun' in res_fitness else 'unknown'} "
             f"Message: {res_fitness.message}."
         )
 
