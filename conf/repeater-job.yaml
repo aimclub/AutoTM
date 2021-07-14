@@ -13,6 +13,8 @@ spec:
         - name: repeater-checkpoints
           persistentVolumeClaim:
             claimName: repeater-checkpoints-pvc
+        - name: varlog
+          emptyDir: { }
       containers:
       - name: irace
         image: node2.bdcl:5000/exp-repeater:latest
@@ -28,5 +30,14 @@ spec:
         volumeMounts:
           - name: repeater-checkpoints
             mountPath: /var/lib/repeater/
+          - name: varlog
+            mountPath: /var/log/
+      - name: alglog
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        args: [ /bin/sh, -c, 'sleep 5 && tail -n+1 -f /var/log/repeater.log' ]
+        volumeMounts:
+          - name: varlog
+            mountPath: /var/log
       restartPolicy: Never
   backoffLimit: 0
