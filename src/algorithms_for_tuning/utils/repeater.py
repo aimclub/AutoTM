@@ -140,7 +140,8 @@ class Repeater:
         logger.info("Starting the run")
         configurations = list(self._prepare_configurations(previous_checkpoint_path))
         configurations = random.sample(configurations, len(configurations))
-        processes = (self._execute_run(rep_num, cmd, workdir, args) for rep_num, cmd, workdir, args in configurations)
+        # processes = (self._execute_run(rep_num, cmd, workdir, args) for rep_num, cmd, workdir, args in configurations)
+        processes = [self._execute_run(rep_num, cmd, workdir, args) for rep_num, cmd, workdir, args in configurations]
         logger.info(f"Initial number of configurations to calculate: {len(configurations)}")
 
         if len(configurations) == 0:
@@ -149,25 +150,36 @@ class Repeater:
 
         if max_parallel_processes:
             logger.info(f"Max count of parallel processes are restricted to {max_parallel_processes}")
-            run_slots: List[Future] = []
-            total_done_count = 0
-            for p in processes:
-                if len(run_slots) <= max_parallel_processes:
-                    run_slots.append(asyncio.create_task(p))
-                else:
-                    done, pending = await asyncio.wait(run_slots, return_when=FIRST_COMPLETED)
-                    self._check_for_exceptions(done)
-                    run_slots = list(pending)
-                    run_slots.append(asyncio.create_task(p))
-                    total_done_count += len(done)
-                    logger.info(f"{total_done_count} configurations have been calculated. "
-                                f"{len(configurations) - total_done_count} are left.")
 
-            done, _ = await asyncio.wait(run_slots, return_when=ALL_COMPLETED)
-            self._check_for_exceptions(done)
-            total_done_count += len(done)
-            logger.info(f"{total_done_count} configurations have been calculated. "
-                        f"{len(configurations) - total_done_count} are left.")
+            total_done_count = 0
+            run_slots: List[Future]  = [asyncio.create_task(p) for p in processes[:max_parallel_processes]]
+            processes = processes[max_parallel_processes:] if len(processes) > max_parallel_processes else []
+            while len(run_slots) > 0:
+                done, pending = await asyncio.wait(run_slots, return_when=FIRST_COMPLETED)
+                self._check_for_exceptions(done)
+                total_done_count += len(done)
+                free_slots = max_parallel_processes - len(pending)
+                run_slots = list(pending) + processes[:free_slots]
+                processes = processes[free_slots:] if len(processes) > free_slots else []
+                logger.info(f"{total_done_count} configurations have been calculated. "
+                            f"{len(configurations) - total_done_count} are left.")
+            # for p in processes:
+            #     if len(run_slots) <= max_parallel_processes:
+            #         run_slots.append(asyncio.create_task(p))
+            #     else:
+            #         done, pending = await asyncio.wait(run_slots, return_when=FIRST_COMPLETED)
+            #         self._check_for_exceptions(done)
+            #         run_slots = list(pending)
+            #         run_slots.append(asyncio.create_task(p))
+            #         total_done_count += len(done)
+            #         logger.info(f"{total_done_count} configurations have been calculated. "
+            #                     f"{len(configurations) - total_done_count} are left.")
+            #
+            # done, _ = await asyncio.wait(run_slots, return_when=ALL_COMPLETED)
+            # self._check_for_exceptions(done)
+            # total_done_count += len(done)
+            # logger.info(f"{total_done_count} configurations have been calculated. "
+            #             f"{len(configurations) - total_done_count} are left.")
         else:
             logger.info(f"No restrictions on number of parallel processes. "
                         f"Starting all {len(configurations)} configurations.")
