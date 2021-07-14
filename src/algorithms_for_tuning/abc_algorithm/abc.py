@@ -6,7 +6,7 @@ import sys
 import uuid
 import warnings
 from logging import config
-from typing import List
+from typing import List, Optional
 
 # from kube_fitness.tasks import make_celery_app, parallel_fitness, IndividualDTO
 # from kube_fitness.tasks import IndividualDTO, TqdmToLogger
@@ -62,7 +62,7 @@ else:
         return results
 
 
-    def log_best_solution(individual: IndividualDTO):
+    def log_best_solution(individual: IndividualDTO, alg_args: Optional[str]):
         pass
 
 NUM_FITNESS_EVALUATIONS = config['abcAlgoParams']['numEvals']
@@ -94,7 +94,7 @@ def run_algorithm(dataset, num_individuals,
                    num_fitness_evaluations=NUM_FITNESS_EVALUATIONS,
                    exp_id=exp_id)
     abc_algo.run(16)
-    log_best_solution(abc_algo.best_solution)
+    log_best_solution(abc_algo.best_solution, alg_args=' '.join(sys.argv))
     print(round(abc_algo.best_solution.fitness_value - 1, 3) * (-1))  # according to the code logic
 
 

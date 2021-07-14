@@ -66,7 +66,7 @@ else:
         return results
 
 
-    def log_best_solution(individual: IndividualDTO):
+    def log_best_solution(individual: IndividualDTO, alg_args: Optional[str]):
         pass
 
 NUM_FITNESS_EVALUATIONS = config['gaAlgoParams']['numEvals']
@@ -115,7 +115,7 @@ def run_algorithm(dataset,
            best_proc=best_proc,
            alpha=cross_alpha,
            exp_id=exp_id)
-    best_value = g.run(verbose=True)
+    best_value = g.run(verbose=True, alg_args=" ".join(sys.argv))
     print(best_value * (-1))
 
 
@@ -178,7 +178,7 @@ class GA:
         population_with_fitness = estimate_fitness(list_of_individuals)
         return population_with_fitness
 
-    def run(self, verbose=False):
+    def run(self, verbose=False, alg_args: Optional[str] = None):
         prepare_fitness_estimator()
 
         evaluations_counter = 0
@@ -355,7 +355,7 @@ class GA:
         logger.info(f"Y: {y}")
 
         best_individual = population[0]
-        log_best_solution(best_individual)
+        log_best_solution(best_individual, alg_args=alg_args)
 
         return best_individual.fitness_value
 
