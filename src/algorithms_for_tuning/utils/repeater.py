@@ -93,7 +93,8 @@ class Repeater:
 
         return checkpoint
 
-    def _prepare_configurations(self, previous_checkpoint_path: Optional[str]) -> Iterable[Tuple[int, str, List[str]]]:
+    def _prepare_configurations(self, previous_checkpoint_path: Optional[str]) \
+            -> Iterable[Tuple[int, str, str, List[str]]]:
         logger.info("Preparing the list of configurations for the run")
         datasets: List[str] = self.cfg["datasets"]
         alg_configs: List[dict] = self.cfg["configurations"]
@@ -102,22 +103,23 @@ class Repeater:
 
         for dataset in datasets:
             for alg_cfg in alg_configs:
-                cmd, args, repetitions = alg_cfg["cmd"], alg_cfg["args"], alg_cfg["repetitions"]
+                cmd, args, workdir, repetitions = alg_cfg["cmd"], alg_cfg["args"], alg_cfg["workdir"], alg_cfg["repetitions"]
                 args = ["--dataset", dataset] + args.split(" ")
                 for i in range(repetitions):
                     record = self._get_checkpoint_record(i, cmd, args)
                     if record in checkpoint:
                         logger.info(f"Found configuration '{record}' in checkpoint. Skipping.")
                     else:
-                        yield i, cmd, args
+                        yield i, cmd, workdir, args
 
     def _save_to_checkpoint(self, rep_num, cmd: str, args: List[str]) -> None:
         if self.checkpoint_path:
             with open(self.checkpoint_path, "a") as f:
                 f.write(self._get_checkpoint_record(rep_num, cmd, args))
 
-    async def _execute_run(self, rep_num: int, cmd: str, args: List[str]) -> None:
-        proc = await asyncio.create_subprocess_exec(program=cmd, args=args, stdout=sys.stdout, stderr=sys.stdout)
+    async def _execute_run(self, rep_num: int, cmd: str, workdir: str, args: List[str]) -> None:
+        proc = await asyncio.create_subprocess_exec(program=cmd, args=args,
+                                                    stdout=sys.stdout, stderr=sys.stdout, cwd=workdir)
         ret_code = await proc.wait()
         if ret_code != 0:
             msg = f"Return code {ret_code} != 0 for run (repetition {rep_num}) with cmd '{cmd}' and args '{args}'"
@@ -131,7 +133,7 @@ class Repeater:
         logger.info("Starting the run")
         configurations = list(self._prepare_configurations(previous_checkpoint_path))
         configurations = random.sample(configurations, len(configurations))
-        processes = (self._execute_run(rep_num, cmd, args) for rep_num, cmd, args in configurations)
+        processes = (self._execute_run(rep_num, cmd, workdir, args) for rep_num, cmd, workdir, args in configurations)
         logger.info(f"Initial number of configurations to calculate: {len(configurations)}")
 
         if max_parallel_processes:
@@ -162,11 +164,13 @@ def extract_datetime(filename: str) -> datetime.datetime:
 
 def find_checkpoints(checkpoint_dir: str, checkpoint_prefix: str) -> Tuple[str, str]:
     logger.info(f"Looking for the previous checkpoint file in {checkpoint_dir}")
+
     files = glob.glob(f"{checkpoint_dir}/{checkpoint_prefix}_*.txt")
     files = sorted(files, key=lambda x: extract_datetime(x), reverse=True)
     previous_checkpoint_file = files[1] if len(files) > 0 else None
     cur_dt = datetime.datetime.now().strftime(DATETIME_FORMAT)
     checkpoint_file = f"{checkpoint_dir}/{checkpoint_prefix}_{cur_dt}.txt"
+
     return previous_checkpoint_file, checkpoint_file
 
 
@@ -176,7 +180,7 @@ def find_checkpoints(checkpoint_dir: str, checkpoint_prefix: str) -> Tuple[str, 
 @click.option('--checkpoint-prefix',
               required=False, default="repeater-checkpoint", help='a prefix to be used in checkpoint files', type=str)
 @click.option('--parallel',
-              required=False, help='a max number of parallel processes running at the same moment', type=int)
+              required=False, help='a max number ofparallel processes running at the same moment', type=int)
 def main(yaml_config: str, checkpoint_dir: Optional[str], checkpoint_prefix: Optional[str], parallel: Optional[int]):
     logging.config.dictConfig(LOGGING_CONF)
 
