@@ -90,8 +90,9 @@ def extract_datetime(filename: str) -> datetime.datetime:
 
 @click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--config', required=True, help='a path to the config file', type=str)
-@click.option('--checkpoint-dir', required=False, help='a path to the config file', type=str)
-@click.option('--checkpoint-prefix', required=False, default="checkpoint", help='a path to the config file', type=str)
+@click.option('--checkpoint-dir', required=False, help='a path to the directory where checkpoints is stored', type=str)
+@click.option('--checkpoint-prefix',
+              required=False, default="repeater-checkpoint", help='a prefix to be used in checkpoint files ', type=str)
 def main(config: str, checkpoint_dir: Optional[str], checkpoint_prefix: Optional[str]):
     with open(config, "r") as f:
         cfg = yaml.load(f)
