@@ -1,4 +1,4 @@
 testMode: True
 
-globalAlgoParams:
+deAlgoParams:
   numEvals: 150

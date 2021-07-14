@@ -24,7 +24,7 @@ spec:
           - name: CELERY_RESULT_BACKEND
             value: "redis://redis:6379/1"
           - name: FITNESS_CONFIG_PATH
-            value: "config.yaml"
+            value: "irace_config/config.yaml"
         volumeMounts:
           - name: repeater-checkpoints
             mountPath: /var/lib/repeater/

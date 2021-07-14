@@ -1,0 +1,11 @@
+testMode: False
+
+gaAlgoParams:
+  numEvals: 150
+
+deAlgoParams:
+  numEvals: 150
+
+abcAlgoParams:
+  numEvals: 150
+  problemDim: 16

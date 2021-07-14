@@ -3,6 +3,6 @@ logLevel: WARN
 
 testMode: True
 
-globalAlgoParams:
+gaAlgoParams:
   numEvals: 20
 

@@ -69,7 +69,7 @@ else:
     def log_best_solution(individual: IndividualDTO):
         pass
 
-NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
+NUM_FITNESS_EVALUATIONS = config['gaAlgoParams']['numEvals']
 
 
 @click.command(context_settings=dict(allow_extra_args=True))
