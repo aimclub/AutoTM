@@ -7,7 +7,7 @@ import random
 import shutil
 import sys
 from asyncio import Future
-from asyncio.tasks import FIRST_COMPLETED
+from asyncio.tasks import FIRST_COMPLETED, ALL_COMPLETED
 from logging import config
 from typing import List, Tuple, Iterable, Set
 from typing import Optional
@@ -17,7 +17,10 @@ import yaml
 
 DATETIME_FORMAT = "%Y-%m-%dT%H-%M-%S"
 FULL_RECORD_SYMBOL = "END"
-LOGGING_CONF = {
+
+
+def get_logging_config(logfile: str):
+    return {
         'version': 1,
         'disable_existing_loggers': True,
         'formatters': {
@@ -36,7 +39,7 @@ LOGGING_CONF = {
                 'level': 'DEBUG',
                 'formatter': 'standard',
                 'class': 'logging.FileHandler',
-                'filename': '/var/log/repeater.log',
+                'filename': f'{logfile}',
             }
         },
         'loggers': {
@@ -60,7 +63,7 @@ logger = logging.getLogger("REPEATER")
 class Repeater:
     @staticmethod
     def _get_checkpoint_record(rep_num, cmd: str, args: List[str]) -> str:
-        return f"{rep_num}]\t{cmd}\t{' '.join(args)}\t{FULL_RECORD_SYMBOL}"
+        return f"{rep_num}\t{cmd}\t{' '.join(args)}\t{FULL_RECORD_SYMBOL}"
 
     @staticmethod
     def _check_for_exceptions(done: Set[Future]) -> None:
@@ -76,7 +79,7 @@ class Repeater:
     def _load_and_prepare_checkpoint(self, previous_checkpoint_path: Optional[str]) -> Set[str]:
         logger.info(f"Trying to load a checkpoint if possible. Previous checkpoint path: {previous_checkpoint_path}")
         if self.checkpoint_path and previous_checkpoint_path:
-            if os.path.exists(previous_checkpoint_path):
+            if not os.path.exists(previous_checkpoint_path):
                 logger.warning(f"Previous checkpoint file was not found on path {previous_checkpoint_path}. "
                                f"Continue without reading and copying its content")
             else:
@@ -87,7 +90,7 @@ class Repeater:
         if os.path.exists(self.checkpoint_path):
             logger.info(f"Loading checkpoint data from {self.checkpoint_path}")
             with open(self.checkpoint_path, "r") as f:
-                checkpoint = set(line.strip() for line in f.readlines() if line.endswith(FULL_RECORD_SYMBOL))
+                checkpoint = set(line.strip() for line in f.readlines() if line.strip().endswith(FULL_RECORD_SYMBOL))
         else:
             checkpoint = set()
 
@@ -115,12 +118,16 @@ class Repeater:
     def _save_to_checkpoint(self, rep_num, cmd: str, args: List[str]) -> None:
         if self.checkpoint_path:
             with open(self.checkpoint_path, "a") as f:
-                f.write(self._get_checkpoint_record(rep_num, cmd, args))
+                f.write(self._get_checkpoint_record(rep_num, cmd, args) + "\n")
 
     async def _execute_run(self, rep_num: int, cmd: str, workdir: str, args: List[str]) -> None:
         proc = await asyncio.create_subprocess_exec(program=cmd, args=args,
                                                     stdout=sys.stdout, stderr=sys.stdout, cwd=workdir)
         ret_code = await proc.wait()
+
+        # await asyncio.sleep(1)
+        # ret_code = 0
+
         if ret_code != 0:
             msg = f"Return code {ret_code} != 0 for run (repetition {rep_num}) with cmd '{cmd}' and args '{args}'"
             logger.error(msg)
@@ -136,6 +143,10 @@ class Repeater:
         processes = (self._execute_run(rep_num, cmd, workdir, args) for rep_num, cmd, workdir, args in configurations)
         logger.info(f"Initial number of configurations to calculate: {len(configurations)}")
 
+        if len(configurations) == 0:
+            logger.warning(f"No configurations to calculate. Interrupting execution.")
+            return
+
         if max_parallel_processes:
             logger.info(f"Max count of parallel processes are restricted to {max_parallel_processes}")
             run_slots: List[Future] = []
@@ -147,9 +158,16 @@ class Repeater:
                     done, pending = await asyncio.wait(run_slots, return_when=FIRST_COMPLETED)
                     self._check_for_exceptions(done)
                     run_slots = list(pending)
+                    run_slots.append(asyncio.create_task(p))
                     total_done_count += len(done)
                     logger.info(f"{total_done_count} configurations have been calculated. "
                                 f"{len(configurations) - total_done_count} are left.")
+
+            done, _ = await asyncio.wait(run_slots, return_when=ALL_COMPLETED)
+            self._check_for_exceptions(done)
+            total_done_count += len(done)
+            logger.info(f"{total_done_count} configurations have been calculated. "
+                        f"{len(configurations) - total_done_count} are left.")
         else:
             logger.info(f"No restrictions on number of parallel processes. "
                         f"Starting all {len(configurations)} configurations.")
@@ -167,7 +185,7 @@ def find_checkpoints(checkpoint_dir: str, checkpoint_prefix: str) -> Tuple[str, 
 
     files = glob.glob(f"{checkpoint_dir}/{checkpoint_prefix}_*.txt")
     files = sorted(files, key=lambda x: extract_datetime(x), reverse=True)
-    previous_checkpoint_file = files[1] if len(files) > 0 else None
+    previous_checkpoint_file = files[0] if len(files) > 0 else None
     cur_dt = datetime.datetime.now().strftime(DATETIME_FORMAT)
     checkpoint_file = f"{checkpoint_dir}/{checkpoint_prefix}_{cur_dt}.txt"
 
@@ -180,9 +198,15 @@ def find_checkpoints(checkpoint_dir: str, checkpoint_prefix: str) -> Tuple[str, 
 @click.option('--checkpoint-prefix',
               required=False, default="repeater-checkpoint", help='a prefix to be used in checkpoint files', type=str)
 @click.option('--parallel',
-              required=False, help='a max number ofparallel processes running at the same moment', type=int)
-def main(yaml_config: str, checkpoint_dir: Optional[str], checkpoint_prefix: Optional[str], parallel: Optional[int]):
-    logging.config.dictConfig(LOGGING_CONF)
+              required=False, help='a max number of parallel processes running at the same moment', type=int)
+@click.option('--log-file', default="/var/log/repeator.log",
+              help='a log file to write logs of the algorithm execution to')
+def main(yaml_config: str,
+         checkpoint_dir: Optional[str],
+         checkpoint_prefix: Optional[str],
+         parallel: Optional[int],
+         log_file):
+    logging.config.dictConfig(get_logging_config(log_file))
 
     logger.info(f"Starting repeater with arguments: {sys.argv}")
     with open(yaml_config, "r") as f:

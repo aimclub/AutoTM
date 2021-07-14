@@ -9,14 +9,14 @@ configurations:
     cmd: "/app/irace_config/ga_test/run.sh"
     args: "--some_arg 1 --other_arg 2"
     workdir: "/app/irace_config/ga_test"
-    repetitions: 10
+    repetitions: 2
   - name: "ga_best_solution_#2"
     cmd: "/app/irace_config/ga_test/run.sh"
     args: "--some_arg 3 --other_arg 4"
     workdir: "/app/irace_config/ga_test"
-    repetitions: 10
+    repetitions: 2
   - name: "abc_best_solution_#1"
     cmd: "/app/irace_config/abc_config/run.sh"
     args: "--this_arg 42 --other_arg something"
     workdir: "/app/irace_config/abc_config"
-    repetitions: 10
+    repetitions: 2
