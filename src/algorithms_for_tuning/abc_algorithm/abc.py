@@ -65,8 +65,8 @@ else:
     def log_best_solution(individual: IndividualDTO):
         pass
 
-NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
-PROBLEM_DIM = config['globalAlgoParams']['problemDim']
+NUM_FITNESS_EVALUATIONS = config['abcAlgoParams']['numEvals']
+PROBLEM_DIM = config['abcAlgoParams']['problemDim']
 
 
 @click.command(context_settings=dict(allow_extra_args=True))

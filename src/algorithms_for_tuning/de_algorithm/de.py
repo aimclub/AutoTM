@@ -60,7 +60,7 @@ else:
     def log_best_solution(individual: IndividualDTO):
         pass
 
-NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
+NUM_FITNESS_EVALUATIONS = config['deAlgoParams']['numEvals']
 
 ALG_ID = 'de'
 
