@@ -1,0 +1,4 @@
+testMode: True
+
+boAlgoParams:
+  numEvals: 20

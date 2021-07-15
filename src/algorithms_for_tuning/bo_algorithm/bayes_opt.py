@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
-
-import click
-from hyperopt import STATUS_OK, fmin, hp, tpe
-from typing import List, Optional
-from algorithms_for_tuning.utils import make_log_config_dict
-from kube_fitness.tasks import IndividualDTO, TqdmToLogger
-import warnings
+import copy
 import logging
 import os
-import yaml
-from yaml import Loader
-import copy
 import random
+import sys
 import uuid
-import numpy as np
+import warnings
+from logging import config
+from typing import List, Optional
+
+import click
+import yaml
+from hyperopt import STATUS_OK, fmin, hp, tpe
+from kube_fitness.tasks import IndividualDTO, TqdmToLogger
+from yaml import Loader
+
+from algorithms_for_tuning.utils import make_log_config_dict
 
 ALG_ID = "bo"
 
@@ -51,7 +53,6 @@ if not config['testMode']:
     from kube_fitness.tasks import parallel_fitness as estimate_fitness
     from kube_fitness.tasks import log_best_solution
 else:
-    # from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
     from tqdm import tqdm
 
 
@@ -60,8 +61,8 @@ else:
 
 
     def estimate_fitness(population: List[IndividualDTO],
-                         use_tqdm: bool = False,
-                         tqdm_check_period: int = 2) -> List[IndividualDTO]:
+                         _: bool = False,
+                         __: int = 2) -> List[IndividualDTO]:
         results = []
 
         tqdm_out = TqdmToLogger(logger, level=logging.INFO)
@@ -73,10 +74,10 @@ else:
         return results
 
 
-    def log_best_solution(individual: IndividualDTO, alg_args: Optional[str]):
+    def log_best_solution(_: IndividualDTO, __: Optional[str]):
         pass
 
-NUM_FITNESS_EVALUATIONS = config['deAlgoParams']['numEvals']
+NUM_FITNESS_EVALUATIONS = config['boAlgoParams']['numEvals']
 
 
 class BigartmFitness:
@@ -87,6 +88,7 @@ class BigartmFitness:
         # self.best_solution: Optional[IndividualDTO] = None
 
     def make_individ(self, x):
+        # TODO: adapt this function to work with baesyian optimization
         params = [float(i) for i in x]
         params = params[:-1] + [0.0, 0.0, 0.0] + [params[-1]]
         return IndividualDTO(
@@ -106,32 +108,39 @@ class BigartmFitness:
         # if self.best_solution is None or individ.fitness_value > self.best_solution.fitness_value:
         #     self.best_solution = copy.deepcopy(individ)
 
-        return -1 * individ.fitness_value
+        return {'loss': -1 * individ.fitness_value, 'status': STATUS_OK}
 
 
-def score(params):
-    f_alg = BigartmFitness(**params)
-    try:
-        fitness = f_alg.__call__()
-    except:
-        fitness = 0
-    if np.isnan(fitness):
-        fitness = 0
-    print()
-    print('CURRENT FITNESS: {}'.format(fitness))
-    print()
-    return {'loss': -fitness, 'status': STATUS_OK}
+# def score(params):
+#     f_alg = BigartmFitness(dataset, exp_id)
+#     try:
+#         fitness = f_alg(params)
+#     except:
+#         fitness = 0
+#     if np.isnan(fitness):
+#         fitness = 0
+#     print()
+#     print('CURRENT FITNESS: {}'.format(fitness))
+#     print()
+#     return {'loss': -fitness, 'status': STATUS_OK}
 
 
 @click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--dataset', required=True, type=str, help='dataset name in the config')
 @click.option('--log-file', type=str, default="/var/log/tm-alg.log",
               help='a log file to write logs of the algorithm execution to')
-def run_algorithm(dataset, log_file):
+@click.option('--exp-id', required=True, type=int, help='mlflow experiment id')
+def run_algorithm(dataset, log_file, exp_id):
     run_uid = uuid.uuid4() if not config['testMode'] else None
     logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
     logging.config.dictConfig(logging_config)
-    best = fmin(score, SPACE, algo=tpe.suggest, max_evals=500)
+
+    prepare_fitness_estimator()
+    fitness = BigartmFitness(dataset, exp_id)
+    best_params = fmin(fitness, SPACE, algo=tpe.suggest, max_evals=500)
+    best_solution = fitness.make_individ(best_params)
+    best_solution = log_best_solution(best_solution, wait_for_result_timeout=-1, alg_args=' '.join(sys.argv))
+    print(best_solution.fitness_value * -1)
 
 
 if __name__ == "__main__":
