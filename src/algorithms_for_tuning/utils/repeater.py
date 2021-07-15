@@ -121,7 +121,7 @@ class Repeater:
                 f.write(self._get_checkpoint_record(rep_num, cmd, args) + "\n")
 
     async def _execute_run(self, rep_num: int, cmd: str, workdir: str, args: List[str]) -> None:
-        proc = await asyncio.create_subprocess_exec(program=cmd, args=args,
+        proc = await asyncio.create_subprocess_exec(cmd, *args,
                                                     stdout=sys.stdout, stderr=sys.stdout, cwd=workdir)
         ret_code = await proc.wait()
 

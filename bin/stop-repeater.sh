@@ -9,4 +9,4 @@ else
   kubectl_args="-n ${KUBE_NAMESPACE}"
 fi
 
-exec kubectl ${kubectl_args} delete -f conf/repeater-job.yaml
+exec kubectl ${kubectl_args} delete -f conf/repeater-job.yaml --ignore-not-found=true
