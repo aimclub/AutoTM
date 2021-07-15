@@ -1,0 +1,11 @@
+testMode: True
+
+globalAlgoParams:
+  numEvals: 150
+  numIndividuals: 11
+  mutationType: psm
+  crossoverType: blend_crossiver
+  selectionType: fitness_prop
+  crossAlpha: 0.5046
+  bestProc: 0.4439
+  elemCrossProb: None
