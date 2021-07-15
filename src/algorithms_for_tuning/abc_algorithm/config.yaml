@@ -6,7 +6,7 @@ testMode: True
 paths:
   logFile: "logs"
 
-globalAlgoParams:
+abcAlgoParams:
   numEvals: 20
   problemDim: 16
 

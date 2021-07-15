@@ -2,6 +2,7 @@
 
 import os
 import logging
+import sys
 from logging import config
 from typing import List, Optional
 import click
@@ -57,10 +58,10 @@ else:
         return results
 
 
-    def log_best_solution(individual: IndividualDTO):
+    def log_best_solution(individual: IndividualDTO, alg_args: Optional[str]):
         pass
 
-NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
+NUM_FITNESS_EVALUATIONS = config['deAlgoParams']['numEvals']
 
 ALG_ID = 'de'
 
@@ -165,7 +166,7 @@ def run_algorithm(dataset, strategy, popsize,
         )
 
     best_solution = fitness.make_individ(res_fitness.x)
-    log_best_solution(best_solution)
+    log_best_solution(best_solution, alg_args=' '.join(sys.argv))
     print(res_fitness.fun * (-1))
 
 
