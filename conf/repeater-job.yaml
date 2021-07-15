@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: irace-runner-ga
+  name: repeater
 spec:
   template:
     metadata:
@@ -10,33 +10,32 @@ spec:
         "sidecar.istio.io/inject": "false"
     spec:
       volumes:
-        - name: irace-files
+        - name: repeater-checkpoints
           persistentVolumeClaim:
-            claimName: irace-files-ga-pvc
+            claimName: repeater-checkpoints-pvc
         - name: varlog
           emptyDir: { }
       containers:
-      - name: irace
-        image: node2.bdcl:5000/irace-runner:latest
+      - name: repeater
+        image: node2.bdcl:5000/exp-repeater:latest
         imagePullPolicy: Always
-        args: ["/app/irace_config/ga_test", "--parallel", "100"]
-#        args: ["/app/irace_config/ga_test"]
+        args: ["--config", "repeater-config.yaml", "--checkpoint-dir", "/var/lib/repeater/", "--parallel", "20"]
         env:
           - name: CELERY_BROKER_URL
             value: "amqp://guest:guest@rabbitmq-service:5672"
           - name: CELERY_RESULT_BACKEND
-            value: "redis://redis:6379/1" # "rpc://"
+            value: "redis://redis:6379/1"
           - name: FITNESS_CONFIG_PATH
-            value: "../config.yaml"
+            value: "/app/irace_config/config.yaml"
         volumeMounts:
-          - name: irace-files
-            mountPath: /var/lib/irace/
+          - name: repeater-checkpoints
+            mountPath: /var/lib/repeater/
           - name: varlog
-            mountPath: /var/log
+            mountPath: /var/log/
 #      - name: alglog
 #        image: busybox
 #        imagePullPolicy: IfNotPresent
-#        args: [ /bin/sh, -c, 'sleep 15 && tail -n+1 -f /var/log/tm-alg.log' ]
+#        args: [ /bin/sh, -c, 'sleep 15 && tail -n+1 -f /var/log/repeater.log' ]
 #        volumeMounts:
 #          - name: varlog
 #            mountPath: /var/log
