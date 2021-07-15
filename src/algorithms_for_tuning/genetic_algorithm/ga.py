@@ -16,10 +16,18 @@ import random
 import logging
 import uuid
 
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.neural_network import MLPRegressor
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import BaggingRegressor
+from sklearn.gaussian_process.kernels import RBF
+
+from sklearn.metrics import mean_squared_error
+
 ALG_ID = "ga"
 
 warnings.filterwarnings("ignore")
-
 logger = logging.getLogger("GA_algo")
 
 from kube_fitness.tasks import IndividualDTO, TqdmToLogger
@@ -37,7 +45,6 @@ if not config['testMode']:
     from kube_fitness.tasks import parallel_fitness as estimate_fitness
     from kube_fitness.tasks import log_best_solution
 else:
-    # from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
     from tqdm import tqdm
 
 
@@ -61,6 +68,46 @@ else:
 
     def log_best_solution(individual: IndividualDTO):
         pass
+
+
+class surrogate:
+    def __init__(self, surrogate_name, random_state=None):
+        self.name = surrogate_name
+        self.random_state = random_state
+        self.surrogate = None
+
+    def create(self):
+        if self.name == "random-forest-regressor":
+            self.surrogate = RandomForestRegressor(random_state=self.random_state)
+        elif self.name == "mlp-regressor":
+            self.surrogate = BaggingRegressor(base_estimator=MLPRegressor(activation='tanh', alpha=0.001,
+                                                                          early_stopping=True,
+                                                                          hidden_layer_sizes=(10, 20, 10),
+                                                                          solver='lbfgs'), n_estimators=5,
+                                              random_state=self.random_state)
+        elif self.name == "GPR":  # tune ??
+            kernel = RBF()
+            self.surrogate = GaussianProcessRegressor(kernel=kernel, random_state=self.random_state)
+        elif self.name == "decision-tree-regressor":
+            self.surrogate = DecisionTreeRegressor()
+
+    #             kernel =
+    #             self.regr = GaussianProcessRegressor()
+
+    def fit(self, X, y):
+        self.create()
+        self.surrogate.fit(X, y)
+
+    def score(self, X, y):
+        r_2 = self.surrogate.score(X, y)
+        y_pred = self.surrogate.predict(X)
+        mse = mean_squared_error(y, y_pred)
+        rmse = np.sqrt(mse)
+        return r_2, mse, rmse
+
+    def predict(self, X):
+        m = self.surrogate.predict(X)
+        return m
 
 
 class GA:
