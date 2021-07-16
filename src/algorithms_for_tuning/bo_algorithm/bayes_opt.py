@@ -140,7 +140,7 @@ def run_algorithm(dataset, log_file, exp_id):
 
     prepare_fitness_estimator()
     fitness = BigartmFitness(dataset, exp_id)
-    best_params = fmin(fitness, SPACE, algo=tpe.suggest, max_evals=10)
+    best_params = fmin(fitness, SPACE, algo=tpe.suggest, max_evals=NUM_FITNESS_EVALUATIONS)
     best_solution = fitness.make_individ(**best_params)
     best_solution = log_best_solution(best_solution, wait_for_result_timeout=-1, alg_args=' '.join(sys.argv))
     print(best_solution.fitness_value * -1)

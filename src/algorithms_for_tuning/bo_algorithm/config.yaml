@@ -1,4 +1,4 @@
 testMode: True
 
 boAlgoParams:
-  numEvals: 20
+  numEvals: 150
