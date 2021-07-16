@@ -87,9 +87,26 @@ class BigartmFitness:
         self.exp_id = exp_id
         # self.best_solution: Optional[IndividualDTO] = None
 
-    def make_individ(self, x):
+    def parse_kwargs(self, **kwargs):
+        params = []
+        params.append(kwargs.get('decor', 1))
+        params.append(int(kwargs.get('n1', 1)))
+        params.append(kwargs.get('spb', 1))
+        params.append(kwargs.get('stb', 1))
+        params.append(int(kwargs.get('n2', 1)))
+        params.append(kwargs.get('sp1', 1))
+        params.append(kwargs.get('st1', 1))
+        params.append(int(kwargs.get('n3', 1)))
+        params.append(kwargs.get('sp2', 1))
+        params.append(kwargs.get('st2', 1))
+        params.append(int(kwargs.get('n4', 1)))
+        params.append(int(kwargs.get('B', 1)))
+        params.append(kwargs.get('decor_2', 1))
+        return params
+
+    def make_individ(self, **kwargs):
         # TODO: adapt this function to work with baesyian optimization
-        params = [float(i) for i in x]
+        params = [float(i) for i in self.parse_kwargs(**kwargs)]
         params = params[:-1] + [0.0, 0.0, 0.0] + [params[-1]]
         return IndividualDTO(
             id=str(uuid.uuid4()),
@@ -99,8 +116,8 @@ class BigartmFitness:
             alg_id=ALG_ID
         )
 
-    def __call__(self, x):
-        population = [self.make_individ(x)]
+    def __call__(self, kwargs):
+        population = [self.make_individ(**kwargs)]
 
         population = estimate_fitness(population)
         individ = population[0]
@@ -111,23 +128,9 @@ class BigartmFitness:
         return {'loss': -1 * individ.fitness_value, 'status': STATUS_OK}
 
 
-# def score(params):
-#     f_alg = BigartmFitness(dataset, exp_id)
-#     try:
-#         fitness = f_alg(params)
-#     except:
-#         fitness = 0
-#     if np.isnan(fitness):
-#         fitness = 0
-#     print()
-#     print('CURRENT FITNESS: {}'.format(fitness))
-#     print()
-#     return {'loss': -fitness, 'status': STATUS_OK}
-
-
 @click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--dataset', required=True, type=str, help='dataset name in the config')
-@click.option('--log-file', type=str, default="/var/log/tm-alg.log",
+@click.option('--log-file', type=str, default="/var/log/tm-alg-bo.log",
               help='a log file to write logs of the algorithm execution to')
 @click.option('--exp-id', required=True, type=int, help='mlflow experiment id')
 def run_algorithm(dataset, log_file, exp_id):
@@ -137,8 +140,8 @@ def run_algorithm(dataset, log_file, exp_id):
 
     prepare_fitness_estimator()
     fitness = BigartmFitness(dataset, exp_id)
-    best_params = fmin(fitness, SPACE, algo=tpe.suggest, max_evals=500)
-    best_solution = fitness.make_individ(best_params)
+    best_params = fmin(fitness, SPACE, algo=tpe.suggest, max_evals=10)
+    best_solution = fitness.make_individ(**best_params)
     best_solution = log_best_solution(best_solution, wait_for_result_timeout=-1, alg_args=' '.join(sys.argv))
     print(best_solution.fitness_value * -1)
 
