@@ -12,3 +12,7 @@ abcAlgoParams:
 
 boAlgoParams:
   numEvals: 150
+
+rfSurAlgoParams:
+  numEvals: 150
+

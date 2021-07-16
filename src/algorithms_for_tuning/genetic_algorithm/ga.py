@@ -9,9 +9,9 @@ import time
 from typing import List, Optional
 import copy
 
-from mutation import mutation
-from crossover import crossover
-from selection import selection
+from src.algorithms_for_tuning.genetic_algorithm.mutation import mutation
+from src.algorithms_for_tuning.genetic_algorithm.crossover import crossover
+from src.algorithms_for_tuning.genetic_algorithm.selection import selection
 import random
 import logging
 import uuid
@@ -80,11 +80,14 @@ class Surrogate:
         if self.name == "random-forest-regressor":
             self.surrogate = RandomForestRegressor(self.kwargs)
         elif self.name == "mlp-regressor":
-            self.surrogate = BaggingRegressor(base_estimator=MLPRegressor(self.kwargs), n_estimators=5,
-                                              random_state=self.random_state)
+            br_n_estimators = self.kwargs['br_n_estimators']
+            del self.kwargs['br_n_estimators']
+            self.surrogate = BaggingRegressor(base_estimator=MLPRegressor(self.kwargs),
+                                              n_estimators=br_n_estimators)
         elif self.name == "GPR":  # tune ??
             kernel = RBF()
-            self.surrogate = GaussianProcessRegressor(kernel=kernel, random_state=self.random_state)
+            self.surrogate = GaussianProcessRegressor(kernel=kernel,
+                                                      random_state=self.random_state)
         elif self.name == "decision-tree-regressor":
             self.surrogate = DecisionTreeRegressor()
 

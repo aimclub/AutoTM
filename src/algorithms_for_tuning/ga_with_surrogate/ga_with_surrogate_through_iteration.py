@@ -23,7 +23,7 @@ logger = logging.getLogger("GA_surrogate")
 if "FITNESS_CONFIG_PATH" in os.environ:
     filepath = os.environ["FITNESS_CONFIG_PATH"]
 else:
-    filepath = "../../algorithms_for_tuning/ga_with_rf_surrogate/config.yaml"
+    filepath = "../../algorithms_for_tuning/ga_with_surrogate/config.yaml"
 
 with open(filepath, "r") as file:
     config = yaml.load(file, Loader=Loader)
@@ -68,6 +68,11 @@ CROSS_ALPHA = config['globalAlgoParams']['crossAlpha']
 BEST_PROC = config['globalAlgoParams']['bestProc']
 ELEM_CROSS_PROB = config['globalAlgoParams']['elemCrossProb']
 
+if isinstance(ELEM_CROSS_PROB, str):
+    ELEM_CROSS_PROB = None
+else:
+    ELEM_CROSS_PROB = float(ELEM_CROSS_PROB)
+
 
 @click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--dataset', required=True, help='dataset name in the config')
@@ -77,7 +82,7 @@ ELEM_CROSS_PROB = config['globalAlgoParams']['elemCrossProb']
 @click.option('--surrogate-name', default=None, type=str,
               help="Enter surrogate name if you want to start calculations with surrogate")
 @click.option('--rf-n-estimators', type=int)
-@click.option('--rf-n-criterion', type=str)
+@click.option('--rf-criterion', type=str)
 @click.option('--rf-max-depth', type=int)
 @click.option('--rf-min-samples-split', type=float)
 @click.option('--rf-min-samples-leaf', type=float)
@@ -95,7 +100,7 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
     logging.config.dictConfig(logging_config)
 
     kwargs = dict()
-    if surrogate_name=='random-forest-regressor':
+    if surrogate_name == 'random-forest-regressor':
         kwargs = {
                   'n_estimators': rf_n_estimators,
                   'criterion': rf_criterion,
@@ -105,13 +110,13 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
                   'min_weight_fraction_leaf': rf_min_weight_fraction_leaf,
                   'max_features': rf_max_features,
                   'oob_score': rf_oob_score,
-                  'n_jobs': rf_n_jobs
+                  'n_jobs': rf_n_jobs,
+
                   }
+    elif surrogate_name == 'mlp-regressor':
+        raise NotImplementedError
 
     logger.info(f"Starting a new run of algorithm. Args: {sys.argv[1:]}")
-
-    if ELEM_CROSS_PROB is not None:
-        elem_cross_prob = float(ELEM_CROSS_PROB)
 
     if CROSS_ALPHA is not None:
         cross_alpha = float(CROSS_ALPHA)
@@ -130,3 +135,6 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
            **kwargs)
     best_value = g.run(verbose=True)
     print(best_value * (-1))
+
+if __name__=="__main__":
+    run_algorithm()
