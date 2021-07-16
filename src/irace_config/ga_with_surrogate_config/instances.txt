@@ -1,0 +1,5 @@
+--dataset 20newsgroups --surrogate
+--dataset ads_data --surrogate
+--dataset amazon_food --surrogate
+--dataset hotel-reviews --surrogate
+--dataset lenta_ru --surrogate
