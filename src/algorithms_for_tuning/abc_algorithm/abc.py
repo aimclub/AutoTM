@@ -129,7 +129,7 @@ def lhd(n_sam, n_val, val_rng=None, method='random', criterion=None,
     else:
         # If not empty and not right shape, it is invalid
         raise Exception("Constraints has incompatible number of values: "
-                         "%s =! %s" % (np.shape(constraints)[1], n_val))
+                        "%s =! %s" % (np.shape(constraints)[1], n_val))
 
     # Check for cases in which some methods make no sense
     if n_sam == 1 and method.lower() in ('fixed', 'f'):
@@ -484,7 +484,7 @@ class ABC:
         logger.info('Population is initialized')
         logger.info(f'Fitness counts: {self.fitness_evals}')
 
-       # random_search_res = np.max([bee.fitness_value for bee in self.employed_bees])
+        # random_search_res = np.max([bee.fitness_value for bee in self.employed_bees])
 
         for i in range(iterations):
             self._employed_bees_phase()

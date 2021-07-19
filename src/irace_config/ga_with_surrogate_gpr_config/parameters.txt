@@ -28,7 +28,7 @@
 # 1:                         2:                                3:     4:      5:
 log_file                     "--log-file "                     c  ("/var/log/tm-alg-sur-mlp.txt")
 exp_id                       "--exp-id "                       c  (10)
-surrogate_name               "--surrogate-name"                c  ("GPR")
-gpr_kernel                   "--gpr-kernel"                    c  ("RBF", "RBFwithConstant", "Matern", "WhiteKernel", "ExpSineSquared", "RationalQuadratic")
-gpr_alpha                    "--gpr-alpha"                     c  (0.0000000001, 0.000000001, 0.00000001, 0.0000001)
-gpr_normalize_y              "--gpr-normalize-y"               i  (0, 1)
+surrogate_name               "--surrogate-name "                c  ("GPR")
+gpr_kernel                   "--gpr-kernel "                    c  ("RBF", "RBFwithConstant", "Matern", "WhiteKernel", "ExpSineSquared", "RationalQuadratic")
+gpr_alpha                    "--gpr-alpha "                     c  (0.0000000001, 0.000000001, 0.00000001, 0.0000001)
+gpr_normalize_y              "--gpr-normalize-y "               i  (0, 1)

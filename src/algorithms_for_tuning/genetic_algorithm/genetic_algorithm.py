@@ -27,7 +27,7 @@ NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
 @click.option('--selection-type', default="fitness_prop",
               help='selection type can have value from (fitness_prop, rank_based)')
 @click.option('--elem-cross-prob', default=None, help='crossover probability')
-@click.option('--cross-alpha', default=None, help='alpha for blend crosover')
+@click.option('--cross-alpha', default=None, help='alpha for blend crossover')
 @click.option('--best-proc', default=0.4, help='number of best parents to propagate')
 @click.option('--log-file', default="/var/log/tm-alg.log",
               help='a log file to write logs of the algorithm execution to')
