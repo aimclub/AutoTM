@@ -208,17 +208,20 @@ class GA:
         return population_with_fitness
 
     def save_params(self, population):
-        pops = [copy.deepcopy(individ.params) for individ in population]
-        for p in pops:
-            if any(not el for el in p):
+        params_and_f = [(copy.deepcopy(individ.params), individ.fitness_value) for individ in population]
+
+        for p, f in params_and_f:
+            if any(el is None for el in p):
                 logger.warning(f"Bad params found: {p}")
+            if f is None:
+                logger.warning(f"Bad fitness: {f}. Params: {p}.")
+
+        params_and_f = [(p, f) for p, f in params_and_f if all(el is not None for el in p) and f is not None]
+
+        pops = [p for p, _ in params_and_f]
+        fs = [f for _, f in params_and_f]
+
         self.all_params += pops
-        fs = [individ.fitness_value for individ in population]
-
-        for i, f in enumerate(fs):
-            if not f:
-                logger.warning(f"Bad fitness: {f}. Params: {pops[i]}. Individ: {population[i]}")
-
         self.all_fitness += fs
 
     # TODO: check if this method should return something
@@ -227,8 +230,8 @@ class GA:
         y_val = np.array([individ.fitness_value for individ in population])
         y_pred = self.surrogate.predict(X_val)
         r_2, mse, rmse = self.surrogate.score(X_val, y_val)
-        logger.info("Real values: ", list(y_val))
-        logger.info("Predicted values: ", list(y_pred))
+        logger.info(f"Real values: {list(y_val)}")
+        logger.info(f"Predicted values: list(y_pred)")
         logger.info(f"R^2: {r_2}, MSE: {mse}, RMSE: {rmse}")
         for ix, individ in enumerate(population):
             individ.fitness_value = y_pred[ix]
