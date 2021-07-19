@@ -16,3 +16,5 @@ boAlgoParams:
 rfSurAlgoParams:
   numEvals: 150
 
+mlpSurAlgoParams:
+  numEvals: 150

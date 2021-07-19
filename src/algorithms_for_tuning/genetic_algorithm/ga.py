@@ -75,22 +75,25 @@ class Surrogate:
         self.name = surrogate_name
         self.kwargs = kwargs
         self.surrogate = None
+        self.br_n_estimators = None
+        self.br_n_jobs = None
 
     def create(self):
         if self.name == "random-forest-regressor":
-            print(self.kwargs)
             self.surrogate = RandomForestRegressor(**self.kwargs)
         elif self.name == "mlp-regressor":
-            br_n_estimators = self.kwargs['br_n_estimators']
-            del self.kwargs['br_n_estimators']
-            self.surrogate = BaggingRegressor(base_estimator=MLPRegressor(self.kwargs),
-                                              n_estimators=br_n_estimators)
+            if not self.br_n_estimators:
+                self.br_n_estimators = self.kwargs['br_n_estimators']
+                del self.kwargs['br_n_estimators']
+                self.br_n_jobs = self.kwargs['n_jobs']
+                del self.kwargs['n_jobs']
+            self.surrogate = BaggingRegressor(base_estimator=MLPRegressor(**self.kwargs),
+                                              n_estimators=self.br_n_estimators, n_jobs=self.br_n_jobs)
         elif self.name == "GPR":  # tune ??
             kernel = RBF()
-            self.surrogate = GaussianProcessRegressor(kernel=kernel,
-                                                      random_state=self.random_state)
+            self.surrogate = GaussianProcessRegressor(**self.kwargs)
         elif self.name == "decision-tree-regressor":
-            self.surrogate = DecisionTreeRegressor()
+            self.surrogate = DecisionTreeRegressor(**self.kwargs)
 
     def fit(self, X, y):
         self.create()
@@ -138,7 +141,6 @@ class GA:
             self.surrogate = Surrogate(surrogate_name, **kwargs)
         else:
             self.surrogate = None
-        print(surrogate_name)
         self.exp_id = exp_id
 
     @staticmethod
