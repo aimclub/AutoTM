@@ -14,7 +14,7 @@ from yaml import Loader
 warnings.simplefilter("ignore")
 
 from algorithms_for_tuning.genetic_algorithm.ga import GA
-from algorithms_for_tuning.utils import make_log_config_dict
+from algorithms_for_tuning.utils import make_log_config_dict, log_any_error
 
 warnings.filterwarnings("ignore")
 
@@ -169,4 +169,5 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
 
 
 if __name__ == "__main__":
-    run_algorithm()
+    with log_any_error():
+        run_algorithm()
