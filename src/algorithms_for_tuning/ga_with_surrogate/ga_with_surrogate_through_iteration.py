@@ -105,13 +105,22 @@ else:
 @click.option('--gpr-kernel', type=str)
 @click.option('--gpr-alpha', type=float)
 @click.option('--gpr-normalize-y', type=bool)
+@click.option('--dt-criterion', type=str)
+@click.option('--dt-splitter', type=str)
+@click.option('--dt-max-depth', type=int)
+@click.option('--dt-min-samples-split', type=float)
+@click.option('--dt-min-samples-leaf', type=float)
+@click.option('--dt-max-features', type=str)
+@click.option('--dt-ccp-alpha', type=float)
 def run_algorithm(dataset, log_file, exp_id, surrogate_name,
                   rf_n_estimators, rf_criterion, rf_max_depth, rf_min_samples_split,
                   rf_min_samples_leaf, rf_min_weight_fraction_leaf, rf_max_features, rf_oob_score, rf_n_jobs,
                   br_n_estimators, br_n_jobs, mlp_activation, mlp_hidden_layer_sizes_1, mlp_hidden_layer_sizes_2,
                   mlp_hidden_layer_sizes_3, mlp_solver, mlp_alpha, mlp_learning_rate, mlp_max_iter,
                   mlp_momentum, mlp_early_stopping,
-                  gpr_kernel, gpr_alpha, gpr_normalize_y
+                  gpr_kernel, gpr_alpha, gpr_normalize_y,
+                  dt_criterion, dt_splitter, dt_max_depth, dt_min_samples_split, dt_min_samples_leaf,
+                  dt_max_features, dt_ccp_alpha,
                   ):
     run_uid = uuid.uuid4() if not config['testMode'] else None
     logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
@@ -150,6 +159,17 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
             'gpr_kernel': gpr_kernel,
             'gpr_alpha': gpr_alpha,
             'normalize_y': gpr_normalize_y,
+        }
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+    elif surrogate_name == 'decision-tree-regressor':
+        kwargs = {
+            'criterion': dt_criterion,
+            'splitter': dt_splitter,
+            'max_depth': dt_max_depth,
+            'min_samples_split': dt_min_samples_split,
+            'min_samples_leaf': dt_min_samples_leaf,
+            'max_features': dt_max_features,
+            'ccp_alpha': dt_ccp_alpha,
         }
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
