@@ -112,6 +112,11 @@ class Surrogate:
                 del self.kwargs['gpr_alpha']
             self.surrogate = GaussianProcessRegressor(**self.kwargs)
         elif self.name == "decision-tree-regressor":
+            try:
+                if self.kwargs["max_depth"] == 0:
+                    self.kwargs["max_depth"] = None
+            except KeyError:
+                logger.error("No max_depth")
             self.surrogate = DecisionTreeRegressor(**self.kwargs)
 
     def fit(self, X, y):
