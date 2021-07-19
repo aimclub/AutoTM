@@ -59,7 +59,7 @@ else:
 @click.option('--rf-min-samples-split', type=float)
 @click.option('--rf-min-samples-leaf', type=float)
 @click.option('--rf-min-weight-fraction-leaf', type=float)
-@click.option('--rf-max-features', type=float)
+@click.option('--rf-max-features', type=str)
 @click.option('--rf-oob-score', type=bool)
 @click.option('--rf-n-jobs', type=int)
 @click.option('--br-n-estimators', type=int)
