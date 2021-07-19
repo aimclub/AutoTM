@@ -102,12 +102,16 @@ else:
 @click.option('--mlp-max-iter', type=int)
 @click.option('--mlp-momentum', type=float)
 @click.option('--mlp-early-stopping', type=bool)
+@click.option('--gpr-kernel', type=str)
+@click.option('--gpr-alpha', type=float)
+@click.option('--gpr-normalize-y', type=bool)
 def run_algorithm(dataset, log_file, exp_id, surrogate_name,
                   rf_n_estimators, rf_criterion, rf_max_depth, rf_min_samples_split,
                   rf_min_samples_leaf, rf_min_weight_fraction_leaf, rf_max_features, rf_oob_score, rf_n_jobs,
                   br_n_estimators, br_n_jobs, mlp_activation, mlp_hidden_layer_sizes_1, mlp_hidden_layer_sizes_2,
                   mlp_hidden_layer_sizes_3, mlp_solver, mlp_alpha, mlp_learning_rate, mlp_max_iter,
-                  mlp_momentum, mlp_early_stopping
+                  mlp_momentum, mlp_early_stopping,
+                  gpr_kernel, gpr_alpha, gpr_normalize_y
                   ):
     run_uid = uuid.uuid4() if not config['testMode'] else None
     logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
@@ -139,6 +143,13 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
             'max_iter': mlp_max_iter,
             'momentum': mlp_momentum,
             'early_stopping': mlp_early_stopping,
+        }
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
+    elif surrogate_name == 'GPR':
+        kwargs = {
+            'gpr_kernel': gpr_kernel,
+            'gpr_alpha': gpr_alpha,
+            'normalize_y': gpr_normalize_y,
         }
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 

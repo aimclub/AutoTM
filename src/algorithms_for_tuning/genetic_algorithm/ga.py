@@ -21,7 +21,8 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import BaggingRegressor
-from sklearn.gaussian_process.kernels import RBF
+from sklearn.gaussian_process.kernels import RBF, Matern, WhiteKernel, \
+    ConstantKernel, ExpSineSquared, RationalQuadratic
 
 from sklearn.metrics import mean_squared_error
 
@@ -77,6 +78,7 @@ class Surrogate:
         self.surrogate = None
         self.br_n_estimators = None
         self.br_n_jobs = None
+        self.gpr_kernel = None
 
     def create(self):
         if self.name == "random-forest-regressor":
@@ -90,7 +92,24 @@ class Surrogate:
             self.surrogate = BaggingRegressor(base_estimator=MLPRegressor(**self.kwargs),
                                               n_estimators=self.br_n_estimators, n_jobs=self.br_n_jobs)
         elif self.name == "GPR":  # tune ??
-            kernel = RBF()
+            if not self.gpr_kernel:
+                kernel = self.kwargs['gpr_kernel']
+                del self.kwargs['gpr_kernel']
+                if kernel == 'RBF':
+                    self.gpr_kernel = 1.0 * RBF(1.0)
+                elif kernel == "RBFwithConstant":
+                    self.gpr_kernel = 1.0 * RBF(1.0) + ConstantKernel()
+                elif kernel == 'Matern':
+                    self.gpr_kernel = 1.0 * Matern(1.0)
+                elif kernel == "WhiteKernel":
+                    self.gpr_kernel = 1.0 * WhiteKernel(1.0)
+                elif kernel == "ExpSineSquared":
+                    self.gpr_kernel = ExpSineSquared()
+                elif kernel == "RationalQuadratic":
+                    self.gpr_kernel = RationalQuadratic(1.0)
+                self.kwargs['kernel'] = self.gpr_kernel
+                self.kwargs['alpha'] = self.kwargs['gpr_alpha']
+                del self.kwargs['gpr_alpha']
             self.surrogate = GaussianProcessRegressor(**self.kwargs)
         elif self.name == "decision-tree-regressor":
             self.surrogate = DecisionTreeRegressor(**self.kwargs)
