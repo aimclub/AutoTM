@@ -25,12 +25,10 @@
 ##    other parameters. This expression must return TRUE if the 
 ##    condition is satisfied, FALSE otherwise.
 
-# 1:            2:                   3: 4:      5:
-n_estimators    "--n-estimators "    i  (50, 500)
-criterion       "--criterion "       c  ("crossover_pmx" ,"crossover_one_point", "blend_crossover")
-selection       "--selection-type "  c  ("fitness_prop" ,"rank_based")
-elem_cross_prob "--elem-cross-prob "  r  (0.0, 1.0) | crossover %in% c("crossover_one_point")
-cross_alpha     "--cross-alpha "      r  (0.0, 1.0) | crossover %in% c("blend_crossover")
-best_proc       "--best-proc "        r  (0.1, 0.9)
-log_file        "--log-file "         c  ("/var/log/tm-alg.txt")
-exp_id          "--exp-id "         c  (2)
+# 1:                         2:                                3:     4:      5:
+log_file                     "--log-file "                     c  ("/var/log/tm-alg-sur-mlp.txt")
+exp_id                       "--exp-id "                       c  (11)
+surrogate_name               "--surrogate-name"                c  ("GPR")
+gpr_kernel                   "--gpr-kernel"                    c  ("RBF", "RBFwithConstant", "Matern", "WhiteKernel", "ExpSineSquared", "RationalQuadratic")
+gpr_alpha                    "--gpr-alpha"                     c  (0.0000000001, 0.000000001, 0.00000001, 0.0000001)
+gpr_normalize_y              "--gpr-normalize-y"               i  (0, 1)
