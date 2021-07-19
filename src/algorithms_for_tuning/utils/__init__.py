@@ -56,6 +56,16 @@ def make_log_config_dict(filename: str = "/var/log/tm-alg.txt", uid: Optional[st
                 'handlers': ['default', 'logfile'],
                 'level': 'DEBUG',
                 'propagate': False
-            }
+            },
+            'GA_algo': {
+                'handlers': ['default', 'logfile'],
+                'level': 'DEBUG',
+                'propagate': False
+            },
+            'GA_surrogate': {
+                'handlers': ['default', 'logfile'],
+                'level': 'DEBUG',
+                'propagate': False
+            },
         }
     }
