@@ -27,7 +27,7 @@
 
 # 1:                         2:                                3:     4:      5:
 log_file                     "--log-file "                     c  ("/var/log/tm-alg-sur-mlp.txt")
-exp_id                       "--exp-id "                       c  (15)
+exp_id                       "--exp-id "                       c  (8)
 surrogate_name               "--surrogate-name"                c  ("decision-tree-regressor")
 dt_criterion                 "--dt-criterion"                  c  ("mse", "friedman_mse", "mae", "poisson")
 dt_splitter                  "--dt-splitter"                   c  ("best", "random")

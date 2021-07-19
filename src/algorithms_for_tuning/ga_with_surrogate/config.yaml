@@ -1,6 +1,6 @@
 testMode: True
 
-globalAlgoParams:
+gaWithSurrogateAlgoParams:
   numEvals: 150
   numIndividuals: 11
   mutationType: psm

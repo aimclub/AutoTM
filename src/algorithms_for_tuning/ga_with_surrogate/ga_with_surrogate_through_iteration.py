@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 
+import logging
 import os
 import sys
-import click
 import uuid
-import logging
 import warnings
+from logging import config
+
+import click
 import yaml
 from yaml import Loader
-import copy
-import random
-from typing import List
+
+warnings.simplefilter("ignore")
+
 from algorithms_for_tuning.genetic_algorithm.ga import GA
 from algorithms_for_tuning.utils import make_log_config_dict
-from kube_fitness.tasks import IndividualDTO, TqdmToLogger
 
 warnings.filterwarnings("ignore")
 
@@ -28,45 +29,16 @@ else:
 with open(filepath, "r") as file:
     config = yaml.load(file, Loader=Loader)
 
-if not config['testMode']:
-    from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
-    from kube_fitness.tasks import parallel_fitness as estimate_fitness
-    from kube_fitness.tasks import log_best_solution
-else:
-    # from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
-    from tqdm import tqdm
-
-
-    def prepare_fitness_estimator():
-        pass
-
-
-    def estimate_fitness(population: List[IndividualDTO],
-                         use_tqdm: bool = False,
-                         tqdm_check_period: int = 2) -> List[IndividualDTO]:
-        results = []
-
-        tqdm_out = TqdmToLogger(logger, level=logging.INFO)
-        for p in tqdm(population, file=tqdm_out):
-            individual = copy.deepcopy(p)
-            individual.fitness_value = random.random()
-            results.append(individual)
-
-        return results
-
-
-    def log_best_solution(individual: IndividualDTO):
-        pass
-
 # TODO: check types correctness & None processing
-NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
-NUM_INDIVIDUALS = config['globalAlgoParams']['numIndividuals']
-MUTATION_TYPE = config['globalAlgoParams']['mutationType']
-CROSSOVER_TYPE = config['globalAlgoParams']['crossoverType']
-SELECTION_TYPE = config['globalAlgoParams']['selectionType']
-CROSS_ALPHA = config['globalAlgoParams']['crossAlpha']
-BEST_PROC = config['globalAlgoParams']['bestProc']
-ELEM_CROSS_PROB = config['globalAlgoParams']['elemCrossProb']
+glob_algo_params = config["gaWithSurrogateAlgoParams"]
+NUM_FITNESS_EVALUATIONS = glob_algo_params['numEvals']
+NUM_INDIVIDUALS = glob_algo_params['numIndividuals']
+MUTATION_TYPE = glob_algo_params['mutationType']
+CROSSOVER_TYPE = glob_algo_params['crossoverType']
+SELECTION_TYPE = glob_algo_params['selectionType']
+CROSS_ALPHA = glob_algo_params['crossAlpha']
+BEST_PROC = glob_algo_params['bestProc']
+ELEM_CROSS_PROB = glob_algo_params['elemCrossProb']
 
 if isinstance(ELEM_CROSS_PROB, str):
     ELEM_CROSS_PROB = None
@@ -154,6 +126,8 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
             'early_stopping': mlp_early_stopping,
         }
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
+        if 'n_jobs' not in kwargs:
+            kwargs['n_jobs'] = None
     elif surrogate_name == 'GPR':
         kwargs = {
             'gpr_kernel': gpr_kernel,
@@ -175,8 +149,7 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
 
     logger.info(f"Starting a new run of algorithm. Args: {sys.argv[1:]}")
 
-    if CROSS_ALPHA is not None:
-        cross_alpha = float(CROSS_ALPHA)
+    cross_alpha = float(CROSS_ALPHA) if CROSS_ALPHA else None
 
     g = GA(dataset=dataset,
            num_individuals=NUM_INDIVIDUALS,

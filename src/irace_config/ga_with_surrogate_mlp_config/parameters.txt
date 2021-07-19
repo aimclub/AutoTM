@@ -27,7 +27,7 @@
 
 # 1:                         2:                                3:     4:      5:
 log_file                     "--log-file "                     c  ("/var/log/tm-alg-sur-mlp.txt")
-exp_id                       "--exp-id "                       c  (10)
+exp_id                       "--exp-id "                       c  (11)
 surrogate_name               "--surrogate-name"                c  ("mlp-regressor")
 br_n_estimators              "--br-n-estimators"               i  (5, 15)
 br_n_jobs                    "--br-n-jobs"                     c  (-1)

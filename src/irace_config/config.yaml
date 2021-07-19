@@ -13,8 +13,12 @@ abcAlgoParams:
 boAlgoParams:
   numEvals: 150
 
-rfSurAlgoParams:
+gaWithSurrogateAlgoParams:
   numEvals: 150
-
-mlpSurAlgoParams:
-  numEvals: 150
+  numIndividuals: 11
+  mutationType: psm
+  crossoverType: blend_crossover
+  selectionType: fitness_prop
+  crossAlpha: 0.5046
+  bestProc: 0.4439
+  elemCrossProb: None

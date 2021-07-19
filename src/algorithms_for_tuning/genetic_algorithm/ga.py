@@ -9,9 +9,9 @@ import time
 from typing import List, Optional
 import copy
 
-from src.algorithms_for_tuning.genetic_algorithm.mutation import mutation
-from src.algorithms_for_tuning.genetic_algorithm.crossover import crossover
-from src.algorithms_for_tuning.genetic_algorithm.selection import selection
+from algorithms_for_tuning.genetic_algorithm.mutation import mutation
+from algorithms_for_tuning.genetic_algorithm.crossover import crossover
+from algorithms_for_tuning.genetic_algorithm.selection import selection
 import random
 import logging
 import uuid
