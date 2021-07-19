@@ -1,0 +1,43 @@
+## Template for parameter description file for Iterated Race.
+##
+## The format is one parameter per line. Each line contains:
+##
+## 1: Name of the parameter. An unquoted alphanumeric string,
+##    example: ants
+
+## 2: Switch to pass the parameter. A quoted (possibly empty) string, 
+##    if the value and the switch must be separated, add a space at
+##    the end of the string. Example : "--version1 --ants "
+
+## 3: Type. An unquoted single letter, among 
+##     i: Integer, c: categorical, o: ordinal, r: real.
+
+## 4: For c and o: All possible values, that is, a variable number of
+##    quoted or unquoted strings separated by commas within
+##    parenthesis. Empty strings and strings containing commas or
+##    spaces must be quoted.
+##    For i,r: a pair of unquoted numbers representing minimum and
+##    maximum values. 
+
+## 5: A conditional parameter can be defined according to the values of
+##    one or several other parameters.  This is done by adding a
+##    character '|' followed by an R expression involving the names of
+##    other parameters. This expression must return TRUE if the 
+##    condition is satisfied, FALSE otherwise.
+
+# 1:                         2:                                3:     4:      5:
+log_file                     "--log-file "                     c  ("/var/log/tm-alg-sur-mlp.txt")
+exp_id                       "--exp-id "                       c  (10)
+surrogate_name               "--surrogate-name"                c  ("mlp-regressor")
+br_n_estimators              "--br-n-estimators"               i  (5, 15)
+br_n_jobs                    "--br-n-jobs"                     c  (-1)
+mlp_activation               "--mlp-activation"                c  ("identity", "logistic", "tanh", "relu")
+mlp_hidden_layer_sizes_1     "--mlp-hidden-layer-sizes_1 "     i  (5, 50)
+mlp_hidden_layer_sizes_2     "--mlp-hidden-layer-sizes_2 "     i  (5, 50)
+mlp_hidden_layer_sizes_3     "--mlp-hidden-layer-sizes_3 "     i  (5, 50)
+mlp_solver                   "--mlp-solver"                    c  ("lbfgs", "sgd", "adam")
+mlp_alpha                    "--mlp-alpha"                     c  (0.00001, 0.0001, 0.001, 0.01, 0.1)
+mlp_learning_rate            "--mlp-learning-rate"             c  ("constant", "invscaling", "adaptive")
+mlp_max_iter                 "--mlp-max-iter"                  c  (100, 200, 300, 400, 500)
+mlp_momentum                 "--mlp-momentum"                  c  (0.5, 0.6, 0.7, 0.8, 0.9, 1)
+mlp_early_stopping           "--mlp-early-stopping"            c  (0, 1)

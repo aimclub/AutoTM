@@ -9,9 +9,9 @@ import time
 from typing import List, Optional
 import copy
 
-from mutation import mutation
-from crossover import crossover
-from selection import selection
+from src.algorithms_for_tuning.genetic_algorithm.mutation import mutation
+from src.algorithms_for_tuning.genetic_algorithm.crossover import crossover
+from src.algorithms_for_tuning.genetic_algorithm.selection import selection
 import random
 import logging
 import uuid
@@ -21,7 +21,8 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.ensemble import BaggingRegressor
-from sklearn.gaussian_process.kernels import RBF
+from sklearn.gaussian_process.kernels import RBF, Matern, WhiteKernel, \
+    ConstantKernel, ExpSineSquared, RationalQuadratic
 
 from sklearn.metrics import mean_squared_error
 
@@ -70,29 +71,48 @@ else:
         pass
 
 
-class surrogate:
-    def __init__(self, surrogate_name, random_state=None):
+class Surrogate:
+    def __init__(self, surrogate_name, **kwargs):
         self.name = surrogate_name
-        self.random_state = random_state
+        self.kwargs = kwargs
         self.surrogate = None
+        self.br_n_estimators = None
+        self.br_n_jobs = None
+        self.gpr_kernel = None
 
     def create(self):
         if self.name == "random-forest-regressor":
-            self.surrogate = RandomForestRegressor(random_state=self.random_state)
+            self.surrogate = RandomForestRegressor(**self.kwargs)
         elif self.name == "mlp-regressor":
-            self.surrogate = BaggingRegressor(base_estimator=MLPRegressor(activation='tanh', alpha=0.001,
-                                                                          early_stopping=True,
-                                                                          hidden_layer_sizes=(10, 20, 10),
-                                                                          solver='lbfgs'), n_estimators=5,
-                                              random_state=self.random_state)
+            if not self.br_n_estimators:
+                self.br_n_estimators = self.kwargs['br_n_estimators']
+                del self.kwargs['br_n_estimators']
+                self.br_n_jobs = self.kwargs['n_jobs']
+                del self.kwargs['n_jobs']
+            self.surrogate = BaggingRegressor(base_estimator=MLPRegressor(**self.kwargs),
+                                              n_estimators=self.br_n_estimators, n_jobs=self.br_n_jobs)
         elif self.name == "GPR":  # tune ??
-            kernel = RBF()
-            self.surrogate = GaussianProcessRegressor(kernel=kernel, random_state=self.random_state)
+            if not self.gpr_kernel:
+                kernel = self.kwargs['gpr_kernel']
+                del self.kwargs['gpr_kernel']
+                if kernel == 'RBF':
+                    self.gpr_kernel = 1.0 * RBF(1.0)
+                elif kernel == "RBFwithConstant":
+                    self.gpr_kernel = 1.0 * RBF(1.0) + ConstantKernel()
+                elif kernel == 'Matern':
+                    self.gpr_kernel = 1.0 * Matern(1.0)
+                elif kernel == "WhiteKernel":
+                    self.gpr_kernel = 1.0 * WhiteKernel(1.0)
+                elif kernel == "ExpSineSquared":
+                    self.gpr_kernel = ExpSineSquared()
+                elif kernel == "RationalQuadratic":
+                    self.gpr_kernel = RationalQuadratic(1.0)
+                self.kwargs['kernel'] = self.gpr_kernel
+                self.kwargs['alpha'] = self.kwargs['gpr_alpha']
+                del self.kwargs['gpr_alpha']
+            self.surrogate = GaussianProcessRegressor(**self.kwargs)
         elif self.name == "decision-tree-regressor":
-            self.surrogate = DecisionTreeRegressor()
-
-    #             kernel =
-    #             self.regr = GaussianProcessRegressor()
+            self.surrogate = DecisionTreeRegressor(**self.kwargs)
 
     def fit(self, X, y):
         self.create()
@@ -114,7 +134,8 @@ class GA:
     def __init__(self, dataset, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
                  selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations=200,
-                 best_proc=0.3, alpha=None, exp_id: Optional[int] = None):
+                 best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
+                 **kwargs):
         self.dataset = dataset
 
         if crossover_type == 'blend_crossover':
@@ -124,14 +145,21 @@ class GA:
 
         self.num_individuals = num_individuals
         self.num_iterations = num_iterations
-        self.mutation = mutation(mutation_type)  # mutation function
-        self.crossover = crossover(crossover_type)  # crossover finction
-        self.selection = selection(selection_type)  # selection function
+        self.mutation = mutation(mutation_type)
+        self.crossover = crossover(crossover_type)
+        self.selection = selection(selection_type)
         self.elem_cross_prob = elem_cross_prob
         self.alpha = alpha
+        self.evaluations_counter = 0
         self.num_fitness_evaluations = num_fitness_evaluations
         self.best_proc = best_proc
-
+        self.current_surrogate = None
+        self.all_params = []
+        self.all_fitness = []
+        if surrogate_name:
+            self.surrogate = Surrogate(surrogate_name, **kwargs)
+        else:
+            self.surrogate = None
         self.exp_id = exp_id
 
     @staticmethod
@@ -169,10 +197,80 @@ class GA:
         population_with_fitness = estimate_fitness(list_of_individuals)
         return population_with_fitness
 
+    def save_params(self, population):
+        self.all_params += [individ.params for individ in population]
+        self.all_fitness += [individ.fitness_value for individ in population]
+
+    # TODO: check if this method should return something
+    def surrogate_calculation(self, population):
+        X_val = np.array([individ.params for individ in population])
+        y_val = np.array([individ.fitness_value for individ in population])
+        y_pred = self.surrogate.predict(X_val)
+        r_2, mse, rmse = self.surrogate.score(X_val, y_val)
+        logger.info("Real values: ", list(y_val))
+        logger.info("Predicted values: ", list(y_pred))
+        logger.info(f"R^2: {r_2}, MSE: {mse}, RMSE: {rmse}")
+        for ix, individ in enumerate(population):
+            individ.fitness_value = y_pred[ix]
+
+    def run_crossover(self, pairs_generator, surrogate_iteration):
+        new_generation = []
+
+        for i, j in pairs_generator:
+
+            if i is None:
+                break
+
+            parent_1 = copy.deepcopy(i.params)
+            parent_2 = copy.deepcopy(j.params)
+
+            if self.crossover_children == 2:
+
+                child_1, child_2 = self.crossover(parent_1=parent_1,
+                                                  parent_2=parent_2,
+                                                  elem_cross_prob=self.elem_cross_prob,
+                                                  alpha=self.alpha)
+
+                new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
+                                                    dataset=self.dataset,
+                                                    params=child_1,
+                                                    exp_id=self.exp_id,
+                                                    alg_id=ALG_ID))
+                new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
+                                                    dataset=self.dataset,
+                                                    params=child_2,
+                                                    exp_id=self.exp_id,
+                                                    alg_id=ALG_ID))
+                self.evaluations_counter += 2
+            else:
+                child_1 = self.crossover(parent_1=parent_1,
+                                         parent_2=parent_2,
+                                         elem_cross_prob=self.elem_cross_prob,
+                                         alpha=self.alpha
+                                         )
+                new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
+                                                    dataset=self.dataset,
+                                                    params=child_1,
+                                                    exp_id=self.exp_id,
+                                                    alg_id=ALG_ID))
+
+                self.evaluations_counter += 1
+
+        logger.info(f"CURRENT COUNTER: {self.evaluations_counter}")
+        fitness_calc_time_start = time.time()
+        new_generation = estimate_fitness(new_generation)
+        logger.info(f"TIME OF THE FITNESS FUNCTION IN CROSSOVER: {time.time() - fitness_calc_time_start}")
+        if surrogate_iteration:
+            self.surrogate_calculation(new_generation)
+        else:
+            self.save_params(new_generation)
+
+        return new_generation
+
     def run(self, verbose=False):
         prepare_fitness_estimator()
 
-        evaluations_counter = 0
+        self.evaluations_counter = 0
         ftime = str(int(time.time()))
 
         # os.makedirs(LOG_FILE_PATH, exist_ok=True)
@@ -186,76 +284,39 @@ class GA:
         # population initialization
         population = self.init_population()
 
-        evaluations_counter = self.num_individuals
+        self.evaluations_counter = self.num_individuals
 
         logger.info("POPULATION IS CREATED")
 
         x, y = [], []
         high_fitness = 0
-        best_solution = None
-        for ii in range(self.num_iterations):
+        surrogate_iteration = False
 
-            new_generation = []
+        for ii in range(self.num_iterations):
 
             logger.info(f"ENTERING GENERATION {ii}")
 
+            if self.surrogate is not None:
+                surrogate_iteration = False
+                if ii % 2 != 0:
+                    surrogate_iteration = True
+
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
             pairs_generator = self.selection(population=population,
-                                             best_proc=self.best_proc, children_num=self.crossover_children)
+                                             best_proc=self.best_proc,
+                                             children_num=self.crossover_children)
 
             logger.info(f"PAIRS ARE CREATED")
 
             # Crossover
-            for i, j in pairs_generator:
-
-                if i is None:
-                    break
-
-                parent_1 = copy.deepcopy(i.params)
-                parent_2 = copy.deepcopy(j.params)
-
-                if self.crossover_children == 2:
-
-                    child_1, child_2 = self.crossover(parent_1=parent_1,
-                                                      parent_2=parent_2,
-                                                      elem_cross_prob=self.elem_cross_prob,
-                                                      alpha=self.alpha)
-
-                    new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                        dataset=self.dataset,
-                                                        params=child_1,
-                                                        exp_id=self.exp_id,
-                                                        alg_id=ALG_ID))
-                    new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                        dataset=self.dataset,
-                                                        params=child_2,
-                                                        exp_id=self.exp_id,
-                                                        alg_id=ALG_ID))
-                    evaluations_counter += 2
-                else:
-                    child_1 = self.crossover(parent_1=parent_1,
-                                             parent_2=parent_2,
-                                             elem_cross_prob=self.elem_cross_prob,
-                                             alpha=self.alpha
-                                             )
-                    new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                        dataset=self.dataset,
-                                                        params=child_1,
-                                                        exp_id=self.exp_id,
-                                                        alg_id=ALG_ID))
-
-                    evaluations_counter += 1
-
-            logger.info(f"CURRENT COUNTER: {evaluations_counter}")
-
-            new_generation = estimate_fitness(new_generation)
+            new_generation = self.run_crossover(pairs_generator, surrogate_iteration)
 
             new_generation.sort(key=operator.attrgetter('fitness_value'), reverse=True)
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
             logger.info("CROSSOVER IS OVER")
 
-            if evaluations_counter >= self.num_fitness_evaluations:
+            if self.evaluations_counter >= self.num_fitness_evaluations:
                 bparams = ''.join([str(i) for i in population[0].params])
                 logger.info(f"TERMINATION IS TRIGGERED."
                             f"THE BEST FITNESS {population[0].fitness_value}."
@@ -310,17 +371,24 @@ class GA:
                                                   dataset=self.dataset,
                                                   params=[float(i) for i in params],
                                                   exp_id=self.exp_id,
-                                                  alg_id=ALG_ID)  # TODO: check mutation
-                evaluations_counter += 1
+                                                  alg_id=ALG_ID)
+                self.evaluations_counter += 1
 
+            fitness_calc_time_start = time.time()
             population = estimate_fitness(population)
+            logger.info(f"TIME OF THE FITNESS FUNCTION IN MUTATION: {time.time() - fitness_calc_time_start}")
+
+            if surrogate_iteration:
+                self.surrogate_calculation(population)
+            else:
+                self.save_params(population)
 
             ###
             logger.info("MUTATION IS OVER")
 
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
-            if evaluations_counter >= self.num_fitness_evaluations:
+            if self.evaluations_counter >= self.num_fitness_evaluations:
                 bparams = ''.join([str(i) for i in population[0].params])
                 logger.info(f"TERMINATION IS TRIGGERED."
                             f"THE BEST FITNESS {population[0].fitness_value}."
@@ -331,6 +399,10 @@ class GA:
             current_fitness = population[0].fitness_value
             if (current_fitness > high_fitness) or (ii == 0):
                 high_fitness = current_fitness
+
+            if not surrogate_iteration:
+                self.surrogate.fit(np.array(self.all_params), np.array(self.all_fitness))
+
             bparams = ''.join([str(i) for i in population[0].params])
             logger.info(f"TERMINATION IS TRIGGERED."
                         f"THE BEST FITNESS {population[0].fitness_value}."
