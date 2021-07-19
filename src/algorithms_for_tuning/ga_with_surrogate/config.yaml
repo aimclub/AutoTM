@@ -4,7 +4,7 @@ globalAlgoParams:
   numEvals: 150
   numIndividuals: 11
   mutationType: psm
-  crossoverType: blend_crossiver
+  crossoverType: blend_crossover
   selectionType: fitness_prop
   crossAlpha: 0.5046
   bestProc: 0.4439
