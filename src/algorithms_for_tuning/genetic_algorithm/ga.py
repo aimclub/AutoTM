@@ -205,7 +205,7 @@ class GA:
         return population_with_fitness
 
     def save_params(self, population):
-        self.all_params += [individ.params for individ in population]
+        self.all_params += [copy.deepcopy(individ.params) for individ in population]
         self.all_fitness += [individ.fitness_value for individ in population]
 
     # TODO: check if this method should return something
