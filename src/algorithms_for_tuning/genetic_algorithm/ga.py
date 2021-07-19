@@ -89,6 +89,8 @@ class Surrogate:
                 del self.kwargs['br_n_estimators']
                 self.br_n_jobs = self.kwargs['n_jobs']
                 del self.kwargs['n_jobs']
+                self.kwargs['alpha'] = self.kwargs['mlp_alpha']
+                del self.kwargs['mlp_alpha']
             self.surrogate = BaggingRegressor(base_estimator=MLPRegressor(**self.kwargs),
                                               n_estimators=self.br_n_estimators, n_jobs=self.br_n_jobs)
         elif self.name == "GPR":  # tune ??
