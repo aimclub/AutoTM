@@ -33,6 +33,6 @@ dt_criterion                 "--dt-criterion "                  c  ("mse", "frie
 dt_splitter                  "--dt-splitter "                   c  ("best", "random")
 dt_max_depth                 "--dt-max-depth "                  c  (0, 10, 25, 50, 100, 150, 200)
 df_min_samples_split         "--dt-min-samples-split "          c  (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
-dt_min_samples_leaf          "--dt-min-samples-leaf "           c  (0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1)
+dt_min_samples_leaf          "--dt-min-samples-leaf "           c  (0.05, 0.1, 0.2, 0.3, 0.4, 0.5)
 dt_max_features              "--dt-max-features "               c  ("auto", "sqrt", "log2")
 df_ccp_alpha                 "--dt-ccp-alpha "                  c  (0.0, 0.1, 0.2, 0.3, 0.4, 0.5)
