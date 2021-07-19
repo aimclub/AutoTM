@@ -102,17 +102,17 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
     kwargs = dict()
     if surrogate_name == 'random-forest-regressor':
         kwargs = {
-                  'n_estimators': rf_n_estimators,
-                  'criterion': rf_criterion,
-                  'max_depth': rf_max_depth,
-                  'min_samples_split': rf_min_samples_split,
-                  'min_samples_leaf': rf_min_samples_leaf,
-                  'min_weight_fraction_leaf': rf_min_weight_fraction_leaf,
-                  'max_features': rf_max_features,
-                  'oob_score': rf_oob_score,
-                  'n_jobs': rf_n_jobs,
-
-                  }
+            'n_estimators': rf_n_estimators,
+            'criterion': rf_criterion,
+            'max_depth': rf_max_depth,
+            'min_samples_split': rf_min_samples_split,
+            'min_samples_leaf': rf_min_samples_leaf,
+            'min_weight_fraction_leaf': rf_min_weight_fraction_leaf,
+            'max_features': rf_max_features,
+            'oob_score': rf_oob_score,
+            'n_jobs': rf_n_jobs,
+        }
+        kwargs = {k: v for k, v in kwargs.items() if v is not None}
     elif surrogate_name == 'mlp-regressor':
         raise NotImplementedError
 
@@ -130,11 +130,13 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
            elem_cross_prob=ELEM_CROSS_PROB,
            num_fitness_evaluations=NUM_FITNESS_EVALUATIONS,
            best_proc=BEST_PROC,
-           alpha=CROSS_ALPHA,
+           alpha=cross_alpha,
            exp_id=exp_id,
+           surrogate_name=surrogate_name,
            **kwargs)
     best_value = g.run(verbose=True)
     print(best_value * (-1))
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     run_algorithm()

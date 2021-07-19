@@ -78,7 +78,8 @@ class Surrogate:
 
     def create(self):
         if self.name == "random-forest-regressor":
-            self.surrogate = RandomForestRegressor(self.kwargs)
+            print(self.kwargs)
+            self.surrogate = RandomForestRegressor(**self.kwargs)
         elif self.name == "mlp-regressor":
             br_n_estimators = self.kwargs['br_n_estimators']
             del self.kwargs['br_n_estimators']
@@ -137,6 +138,7 @@ class GA:
             self.surrogate = Surrogate(surrogate_name, **kwargs)
         else:
             self.surrogate = None
+        print(surrogate_name)
         self.exp_id = exp_id
 
     @staticmethod
