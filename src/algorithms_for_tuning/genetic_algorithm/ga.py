@@ -1,5 +1,7 @@
 import os
 import gc
+import sys
+
 import yaml
 from yaml import Loader
 import operator
@@ -67,7 +69,7 @@ else:
         return results
 
 
-    def log_best_solution(individual: IndividualDTO):
+    def log_best_solution(individual: IndividualDTO, alg_args):
         pass
 
 
@@ -122,6 +124,7 @@ class Surrogate:
             self.surrogate = DecisionTreeRegressor(**self.kwargs)
 
     def fit(self, X, y):
+        logger.debug(f"X: {X}, y: {y}")
         self.create()
         self.surrogate.fit(X, y)
 
@@ -205,8 +208,18 @@ class GA:
         return population_with_fitness
 
     def save_params(self, population):
-        self.all_params += [individ.params for individ in population]
-        self.all_fitness += [individ.fitness_value for individ in population]
+        pops = [copy.deepcopy(individ.params) for individ in population]
+        for p in pops:
+            if any(not el for el in p):
+                logger.warning(f"Bad params found: {p}")
+        self.all_params += pops
+        fs = [individ.fitness_value for individ in population]
+
+        for i, f in enumerate(fs):
+            if not f:
+                logger.warning(f"Bad fitness: {f}. Params: {pops[i]}. Individ: {population[i]}")
+
+        self.all_fitness += fs
 
     # TODO: check if this method should return something
     def surrogate_calculation(self, population):
@@ -422,6 +435,6 @@ class GA:
         logger.info(f"Y: {y}")
 
         best_individual = population[0]
-        log_best_solution(best_individual)
+        log_best_solution(best_individual, alg_args=' '.join(sys.argv))
 
         return best_individual.fitness_value
