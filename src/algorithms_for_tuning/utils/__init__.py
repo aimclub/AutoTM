@@ -11,7 +11,6 @@ def log_any_error():
     try:
         yield
     except Exception as ex:
-        print("here I am")
         logger.error("Something has just happened", exc_info=ex)
         # logging.shutdown()
         raise ex

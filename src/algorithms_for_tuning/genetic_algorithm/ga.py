@@ -1,3 +1,4 @@
+import math
 import os
 import gc
 import sys
@@ -210,16 +211,21 @@ class GA:
     def save_params(self, population):
         params_and_f = [(copy.deepcopy(individ.params), individ.fitness_value) for individ in population]
 
+        def check_val(fval):
+            return not (fval is None or math.isnan(fval) or math.isinf(fval))
+
+        def check_params(p):
+            return all(check_val(el) for el in p)
+
+        clean_params_and_f = []
         for p, f in params_and_f:
-            if any(el is None for el in p):
-                logger.warning(f"Bad params found: {p}")
-            if f is None:
-                logger.warning(f"Bad fitness: {f}. Params: {p}.")
+            if not check_params(p) or not check_val(f) :
+                logger.warning(f"Bad params or fitness found. Fitness: {f}. Params: {p}.")
+            else:
+                clean_params_and_f.append((p, f))
 
-        params_and_f = [(p, f) for p, f in params_and_f if all(el is not None for el in p) and f is not None]
-
-        pops = [p for p, _ in params_and_f]
-        fs = [f for _, f in params_and_f]
+        pops = [p for p, _ in clean_params_and_f]
+        fs = [f for _, f in clean_params_and_f]
 
         self.all_params += pops
         self.all_fitness += fs
