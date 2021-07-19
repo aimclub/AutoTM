@@ -7,7 +7,8 @@ import sys
 import uuid
 import warnings
 from logging import config
-from typing import List, Optional
+from multiprocessing.pool import AsyncResult
+from typing import List, Optional, Union
 
 import click
 import yaml
@@ -74,8 +75,12 @@ else:
         return results
 
 
-    def log_best_solution(_: IndividualDTO, __: Optional[str]):
-        pass
+    def log_best_solution(individual: IndividualDTO,
+                          wait_for_result_timeout: Optional[float] = None,
+                          alg_args: Optional[str] = None) -> Union[IndividualDTO, AsyncResult]:
+        ind = copy.deepcopy(individual)
+        ind.fitness_value = random.random()
+        return ind
 
 NUM_FITNESS_EVALUATIONS = config['boAlgoParams']['numEvals']
 
