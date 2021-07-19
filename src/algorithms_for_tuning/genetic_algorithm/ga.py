@@ -209,7 +209,8 @@ class GA:
         return population_with_fitness
 
     def save_params(self, population):
-        params_and_f = [(copy.deepcopy(individ.params), individ.fitness_value) for individ in population]
+        params_and_f = [(copy.deepcopy(individ.params), individ.fitness_value) for individ in
+                        population if individ.fitness_value not in self.all_fitness]
 
         def check_val(fval):
             return not (fval is None or math.isnan(fval) or math.isinf(fval))
@@ -356,7 +357,7 @@ class GA:
             del pairs_generator
             gc.collect()
 
-            population_params = [copy.deepcopy(individ.params) for individ in population]
+            # population_params = [copy.deepcopy(individ.params) for individ in population]
 
             the_best_guy_params = copy.deepcopy(population[0].params)
             new_generation = [individ for individ in new_generation if individ.params != the_best_guy_params]
