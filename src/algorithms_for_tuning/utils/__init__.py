@@ -1,5 +1,20 @@
+import logging
 import os
+from contextlib import contextmanager
+from logging import Logger
 from typing import Dict, Any, Optional
+
+
+@contextmanager
+def log_any_error():
+    logger = logging.getLogger('root')
+    try:
+        yield
+    except Exception as ex:
+        print("here I am")
+        logger.error("Something has just happened", exc_info=ex)
+        # logging.shutdown()
+        raise ex
 
 
 def make_log_config_dict(filename: str = "/var/log/tm-alg.txt", uid: Optional[str] = None) -> Dict[str, Any]:
