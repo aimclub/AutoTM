@@ -64,6 +64,70 @@ spec:
     type: Directory
 ---
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: irace-files-ga-with-surrogate-dt-pv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/ess_storage/DN_1/storage/home/khodorchenko/irace-tm-experiments-ga-with-surrogate-dt/
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: irace-files-ga-with-surrogate-rf-pv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/ess_storage/DN_1/storage/home/khodorchenko/irace-tm-experiments-ga-with-surrogate-rf/
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: irace-files-ga-with-surrogate-gpr-pv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/ess_storage/DN_1/storage/home/khodorchenko/irace-tm-experiments-ga-with-surrogate-gpr/
+    type: Directory
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: irace-files-ga-with-surrogate-mlp-pv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/ess_storage/DN_1/storage/home/khodorchenko/irace-tm-experiments-ga-with-surrogate-mlp/
+    type: Directory
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: irace-files-ga-pvc
@@ -114,3 +178,55 @@ spec:
   resources:
     requests:
       storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: irace-files-ga-with-surrogate-dt-pvc
+spec:
+  storageClassName: manual
+  volumeName: irace-files-ga-with-surrogate-dt-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: irace-files-ga-with-surrogate-rf-pvc
+spec:
+  storageClassName: manual
+  volumeName: irace-files-ga-with-surrogate-rf-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: irace-files-ga-with-surrogate-gpr-pvc
+spec:
+  storageClassName: manual
+  volumeName: irace-files-ga-with-surrogate-gpr-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: irace-files-ga-with-surrogate-mlp-pvc
+spec:
+  storageClassName: manual
+  volumeName: irace-files-ga-with-surrogate-mlp-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
