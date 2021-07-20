@@ -54,7 +54,7 @@ else:
               help="Enter surrogate name if you want to start calculations with surrogate")
 @click.option('--rf-n-estimators', type=int)
 @click.option('--rf-criterion', type=str)
-@click.option('--rf-max-depth', type=int)
+@click.option('--rf-max-depth', type=str)
 @click.option('--rf-min-samples-split', type=float)
 @click.option('--rf-min-samples-leaf', type=float)
 @click.option('--rf-min-weight-fraction-leaf', type=float)
@@ -99,6 +99,14 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
 
     kwargs = dict()
     if surrogate_name == 'random-forest-regressor':
+        if rf_max_depth == 'None':
+            rf_max_depth = None
+        else:
+            rf_max_depth = int(rf_max_depth)
+        if rf_min_samples_split == 2:
+            rf_min_samples_split = int(rf_min_samples_split)
+        if rf_min_samples_leaf == 1:
+            rf_min_samples_leaf = int(rf_min_samples_leaf)
         kwargs = {
             'n_estimators': rf_n_estimators,
             'criterion': rf_criterion,
