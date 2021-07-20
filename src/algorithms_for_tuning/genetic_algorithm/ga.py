@@ -1,33 +1,31 @@
-import math
-import os
-import gc
-import sys
-
-import yaml
-from yaml import Loader
-import operator
-import warnings
-import numpy as np
-import time
-from typing import List, Optional
 import copy
-
-from algorithms_for_tuning.genetic_algorithm.mutation import mutation
-from algorithms_for_tuning.genetic_algorithm.crossover import crossover
-from algorithms_for_tuning.genetic_algorithm.selection import selection
-import random
+import gc
 import logging
+import math
+import operator
+import os
+import random
+import sys
+import time
 import uuid
+import warnings
+from typing import List, Optional
 
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.neural_network import MLPRegressor
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.tree import DecisionTreeRegressor
+import numpy as np
+import yaml
 from sklearn.ensemble import BaggingRegressor
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, Matern, WhiteKernel, \
     ConstantKernel, ExpSineSquared, RationalQuadratic
-
 from sklearn.metrics import mean_squared_error
+from sklearn.neural_network import MLPRegressor
+from sklearn.tree import DecisionTreeRegressor
+from yaml import Loader
+
+from algorithms_for_tuning.genetic_algorithm.crossover import crossover
+from algorithms_for_tuning.genetic_algorithm.mutation import mutation
+from algorithms_for_tuning.genetic_algorithm.selection import selection
 
 ALG_ID = "ga"
 SPEEDUP = True
