@@ -21,8 +21,29 @@ configurations:
 #           --exp-id 6"
 #    workdir: "/app/irace_config/abc_config"
 #    repetitions: 30
-  - name: "bo_best_solution_1"
-    cmd: "/app/irace_config/bo_config/run.sh"
-    args: "--log-file /var/log/tm-alg.txt --exp-id 7"
-    workdir: "/app/irace_config/bo_config"
+#  - name: "bo_best_solution_1"
+#    cmd: "/app/irace_config/bo_config/run.sh"
+#    args: "--log-file /var/log/tm-alg.txt --exp-id 7"
+#    workdir: "/app/irace_config/bo_config"
+#    repetitions: 30
+
+  - name: "mlp_default_solution"
+    cmd: "/app/irace_config/ga_with_surrogate_mlp_config/run.sh"
+    args: "--log-file /var/log/tm-alg-sur-mlp.txt --exp-id 12
+           --surrogate-name mlp-regressor --br-n-estimators 5
+           --br-n-jobs 1 --mlp-activation tanh --mlp-hidden-layer-sizes_1 10
+           --mlp-hidden-layer-sizes_2 20 --mlp-hidden-layer-sizes_3 10 --mlp-solver lbfgs
+           --mlp-alpha 0.0001 --mlp-learning-rate constant --mlp-max-iter 200
+           --mlp-momentum 0.9 --mlp-early-stopping 0"
+    workdir: "/app/irace_config/ga_with_surrogate_mlp_config"
+    repetitions: 30
+
+  - name: "rf_default_solution"
+    cmd: "/app/irace_config/ga_with_surrogate_rf_config/run.sh"
+    args: "--log-file /var/log/tm-alg-sur-rf.txt --exp-id 13
+           --surrogate-name random-forest-regressor --rf-n-estimators 100
+           --rf-criterion mse --rf-max-depth None --rf-min-samples-split 2
+           --rf-min-samples-leaf 1 --rf-min-weight-fraction-leaf 0.0
+           --rf-max-features auto --rf-oob-score False --rf-n-jobs 1"
+    workdir: "/app/irace_config/ga_with_surrogate_rf_config"
     repetitions: 30
