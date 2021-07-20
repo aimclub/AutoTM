@@ -30,7 +30,7 @@ log_file                     "--log-file "                     c  ("/var/log/tm-
 exp_id                       "--exp-id "                       c  (11)
 surrogate_name               "--surrogate-name "                c  ("mlp-regressor")
 br_n_estimators              "--br-n-estimators "               i  (5, 15)
-br_n_jobs                    "--br-n-jobs "                     c  (-1)
+br_n_jobs                    "--br-n-jobs "                     c  (1)
 mlp_activation               "--mlp-activation "                c  ("tanh")
 mlp_hidden_layer_sizes_1     "--mlp-hidden-layer-sizes_1 "     i  (5, 25)
 mlp_hidden_layer_sizes_2     "--mlp-hidden-layer-sizes_2 "     i  (5, 25)
