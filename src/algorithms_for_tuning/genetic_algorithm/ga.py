@@ -209,7 +209,6 @@ class GA:
         population_with_fitness = estimate_fitness(list_of_individuals)
         return population_with_fitness
 
-
     def save_params(self, population):
         params_and_f = [(copy.deepcopy(individ.params), individ.fitness_value) for individ in
                         population if individ.fitness_value not in self.all_fitness]
@@ -222,7 +221,7 @@ class GA:
 
         clean_params_and_f = []
         for p, f in params_and_f:
-            if not check_params(p) or not check_val(f) :
+            if not check_params(p) or not check_val(f):
                 logger.warning(f"Bad params or fitness found. Fitness: {f}. Params: {p}.")
             else:
                 clean_params_and_f.append((p, f))
@@ -260,6 +259,7 @@ class GA:
             logger.info(f"R^2: {r_2}, MSE: {mse}, RMSE: {rmse}")
         for ix, individ in enumerate(population):
             individ.fitness_value = y_pred[ix]
+        return population
 
     def run_crossover(self, pairs_generator, surrogate_iteration):
         new_generation = []
@@ -311,11 +311,14 @@ class GA:
             fitness_calc_time_start = time.time()
             if not SPEEDUP:
                 new_generation = estimate_fitness(new_generation)
+                self.save_params(new_generation)
             logger.info(f"ize of the new generation is {len(new_generation)}")
             logger.info(f"TIME OF THE FITNESS FUNCTION IN CROSSOVER: {time.time() - fitness_calc_time_start}")
+
             if surrogate_iteration:
                 self.surrogate_calculation(new_generation)
-            else:
+            elif not surrogate_iteration and SPEEDUP:
+                new_generation = estimate_fitness(new_generation)
                 self.save_params(new_generation)
 
         return new_generation
@@ -391,8 +394,6 @@ class GA:
 
             population = population[:old_generation_n] + new_generation[:new_generation_n]
 
-
-
             try:
                 del new_generation
             except:
@@ -432,11 +433,13 @@ class GA:
             fitness_calc_time_start = time.time()
             if not SPEEDUP:
                 population = estimate_fitness(population)
+                self.save_params(population)
             logger.info(f"TIME OF THE FITNESS FUNCTION IN MUTATION: {time.time() - fitness_calc_time_start}")
 
             if surrogate_iteration:
                 self.surrogate_calculation(population)
-            else:
+            elif not surrogate_iteration and SPEEDUP:
+                population = estimate_fitness(population)
                 self.save_params(population)
 
             ###
