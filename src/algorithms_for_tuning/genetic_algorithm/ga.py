@@ -209,6 +209,7 @@ class GA:
         population_with_fitness = estimate_fitness(list_of_individuals)
         return population_with_fitness
 
+
     def save_params(self, population):
         params_and_f = [(copy.deepcopy(individ.params), individ.fitness_value) for individ in
                         population if individ.fitness_value not in self.all_fitness]
@@ -233,10 +234,26 @@ class GA:
         self.all_fitness += fs
 
     def surrogate_calculation(self, population):
-        X_val = np.array([individ.params for individ in population])
+        X_val = np.array([copy.deepcopy(individ.params) for individ in population])
         y_pred = self.surrogate.predict(X_val)
         if not SPEEDUP:
             y_val = np.array([individ.fitness_value for individ in population])
+
+            def check_val(fval):
+                return not (fval is None or math.isnan(fval) or math.isinf(fval))
+
+            def check_params(p):
+                return all(check_val(el) for el in p)
+
+            clean_params_and_f = []
+            for i in range(len(y_val)):
+                if not check_params(X_val[i]) or not check_val(y_val[i]):
+                    logger.warning(f"Bad params or fitness found. Fitness: {y_val[i]}. Params: {X_val[i]}.")
+                else:
+                    clean_params_and_f.append((X_val[i], y_val[i]))
+
+            X_val = clean_params_and_f[0]
+            y_val = clean_params_and_f[1]
             r_2, mse, rmse = self.surrogate.score(X_val, y_val)
             logger.info(f"Real values: {list(y_val)}")
             logger.info(f"Predicted values: list(y_pred)")
