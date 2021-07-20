@@ -143,6 +143,10 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
         }
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
     elif surrogate_name == 'decision-tree-regressor':
+        if dt_min_samples_split == 2:
+            dt_min_samples_split = int(dt_min_samples_split)
+        if dt_min_samples_leaf == 1:
+            dt_min_samples_leaf = int(dt_min_samples_leaf)
         kwargs = {
             'criterion': dt_criterion,
             'splitter': dt_splitter,
