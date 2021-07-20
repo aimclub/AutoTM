@@ -30,6 +30,7 @@ from sklearn.gaussian_process.kernels import RBF, Matern, WhiteKernel, \
 from sklearn.metrics import mean_squared_error
 
 ALG_ID = "ga"
+SPEEDUP = True
 
 warnings.filterwarnings("ignore")
 logger = logging.getLogger("GA_algo")
@@ -231,15 +232,15 @@ class GA:
         self.all_params += pops
         self.all_fitness += fs
 
-    # TODO: check if this method should return something
     def surrogate_calculation(self, population):
         X_val = np.array([individ.params for individ in population])
-        y_val = np.array([individ.fitness_value for individ in population])
         y_pred = self.surrogate.predict(X_val)
-        r_2, mse, rmse = self.surrogate.score(X_val, y_val)
-        logger.info(f"Real values: {list(y_val)}")
-        logger.info(f"Predicted values: list(y_pred)")
-        logger.info(f"R^2: {r_2}, MSE: {mse}, RMSE: {rmse}")
+        if not SPEEDUP:
+            y_val = np.array([individ.fitness_value for individ in population])
+            r_2, mse, rmse = self.surrogate.score(X_val, y_val)
+            logger.info(f"Real values: {list(y_val)}")
+            logger.info(f"Predicted values: list(y_pred)")
+            logger.info(f"R^2: {r_2}, MSE: {mse}, RMSE: {rmse}")
         for ix, individ in enumerate(population):
             individ.fitness_value = y_pred[ix]
 
@@ -288,7 +289,8 @@ class GA:
 
         logger.info(f"CURRENT COUNTER: {self.evaluations_counter}")
         fitness_calc_time_start = time.time()
-        new_generation = estimate_fitness(new_generation)
+        if not SPEEDUP:
+            new_generation = estimate_fitness(new_generation)
         logger.info(f"TIME OF THE FITNESS FUNCTION IN CROSSOVER: {time.time() - fitness_calc_time_start}")
         if surrogate_iteration:
             self.surrogate_calculation(new_generation)
@@ -405,7 +407,8 @@ class GA:
                 self.evaluations_counter += 1
 
             fitness_calc_time_start = time.time()
-            population = estimate_fitness(population)
+            if not SPEEDUP:
+                population = estimate_fitness(population)
             logger.info(f"TIME OF THE FITNESS FUNCTION IN MUTATION: {time.time() - fitness_calc_time_start}")
 
             if surrogate_iteration:

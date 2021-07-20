@@ -29,7 +29,6 @@ else:
 with open(filepath, "r") as file:
     config = yaml.load(file, Loader=Loader)
 
-# TODO: check types correctness & None processing
 glob_algo_params = config["gaWithSurrogateAlgoParams"]
 NUM_FITNESS_EVALUATIONS = glob_algo_params['numEvals']
 NUM_INDIVIDUALS = glob_algo_params['numIndividuals']
