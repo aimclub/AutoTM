@@ -305,14 +305,18 @@ class GA:
                 self.evaluations_counter += 1
 
         logger.info(f"CURRENT COUNTER: {self.evaluations_counter}")
-        fitness_calc_time_start = time.time()
-        if not SPEEDUP:
-            new_generation = estimate_fitness(new_generation)
-        logger.info(f"TIME OF THE FITNESS FUNCTION IN CROSSOVER: {time.time() - fitness_calc_time_start}")
-        if surrogate_iteration:
-            self.surrogate_calculation(new_generation)
-        else:
-            self.save_params(new_generation)
+
+        if len(new_generation) > 0:
+
+            fitness_calc_time_start = time.time()
+            if not SPEEDUP:
+                new_generation = estimate_fitness(new_generation)
+            logger.info(f"ize of the new generation is {len(new_generation)}")
+            logger.info(f"TIME OF THE FITNESS FUNCTION IN CROSSOVER: {time.time() - fitness_calc_time_start}")
+            if surrogate_iteration:
+                self.surrogate_calculation(new_generation)
+            else:
+                self.save_params(new_generation)
 
         return new_generation
 
@@ -386,6 +390,8 @@ class GA:
             old_generation_n = self.num_individuals - new_generation_n
 
             population = population[:old_generation_n] + new_generation[:new_generation_n]
+
+
 
             try:
                 del new_generation
