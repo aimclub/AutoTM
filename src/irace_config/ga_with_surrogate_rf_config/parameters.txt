@@ -35,6 +35,6 @@ rf_min_samples_leaf          "--rf-min-samples-leaf "           c  (0.05, 0.1, 0
 rf_min_weight_fraction_leaf  "--rf-min-weight-fraction-leaf "   r  (0.0, 0.5)
 rf_max_features              "--rf-max-features "               c  ("auto", "sqrt", "log2")
 rf_oob_score                 "--rf-oob-score "                  c  (True, False)
-rf_n_jobs                    "--rf-n-jobs "                     c  (-1)
+rf_n_jobs                    "--rf-n-jobs "                     c  (1)
 log_file                     "--log-file "                     c  ("/var/log/tm-alg.txt")
 exp_id                       "--exp-id "                       c  (9)
