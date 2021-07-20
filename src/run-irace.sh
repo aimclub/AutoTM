@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -ex
 
-dir=$1
+chkp_mode=$1
+shift 1
 
+dir=$1
 shift 1
 
 uuid=$(uuidgen)
@@ -10,9 +12,6 @@ dt=$(date '+%Y-%m-%dT%H:%M:%S')
 
 log_file="/var/lib/irace/irace-log-${dt}-${uuid}.Rdata"
 recovery_file="/var/lib/irace/irace-backup.Rdata"
-
-chkp_mode=$1
-shift 1
 
 case "${chkp_mode}" in
 "nochkp")
