@@ -65,6 +65,17 @@ configurations:
 #    workdir: "/app/irace_config/ga_with_surrogate_dt_config"
 #    repetitions: 30
 
+#  - name: "mlp_best_solution"
+#    cmd: "/app/irace_config/ga_with_surrogate_mlp_config/run.sh"
+#    args: "--log-file /var/log/tm-alg-sur-mlp.txt --exp-id 17
+#           --surrogate-name mlp-regressor --br-n-estimators 13
+#           --br-n-jobs 1 --mlp-activation tanh --mlp-hidden-layer-sizes_1 15
+#           --mlp-hidden-layer-sizes_2 11 --mlp-hidden-layer-sizes_3 20
+#           --mlp-solver adam --mlp-alpha 0.00001 --mlp-learning-rate adaptive
+#           --mlp-max-iter 100 --mlp-momentum 0.9 --mlp-early-stopping 1"
+#    workdir: "/app/irace_config/ga_with_surrogate_mlp_config"
+#    repetitions: 30
+
   - name: "rf_best_solution"
     cmd: "/app/irace_config/ga_with_surrogate_rf_config/run.sh"
     args: "--surrogate-name random-forest-regressor --rf-n-estimators 115
@@ -73,4 +84,11 @@ configurations:
            --rf-max-features log2 --rf-oob-score True --rf-n-jobs 1
            --log-file /var/log/tm-alg.txt --exp-id 18"
     workdir: "/app/irace_config/ga_with_surrogate_rf_config"
+    repetitions: 30
+
+  - name: "svr_default_solution"
+    cmd: "/app/irace_config/ga_with_surrogate_svr_config/run.sh"
+    args: "--surrogate-name SVR  --log-file /var/log/tm-alg-sur-svr.txt --exp-id 21
+           --svr-kernel rbf --svr-gamma scale --svr-c 1.0 --svr-epsilon 0.1"
+    workdir: "/app/irace_config/ga_with_surrogate_svr_config"
     repetitions: 30
