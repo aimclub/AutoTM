@@ -128,6 +128,22 @@ spec:
     type: Directory
 ---
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: irace-files-ga-with-surrogate-svr-pv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/ess_storage/DN_1/storage/home/khodorchenko/irace-tm-experiments-ga-with-surrogate-svr/
+    type: Directory
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: irace-files-ga-pvc
@@ -225,6 +241,19 @@ metadata:
 spec:
   storageClassName: manual
   volumeName: irace-files-ga-with-surrogate-mlp-pv
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: irace-files-ga-with-surrogate-svr-pvc
+spec:
+  storageClassName: manual
+  volumeName: irace-files-ga-with-surrogate-svr-pv
   accessModes:
     - ReadWriteOnce
   resources:
