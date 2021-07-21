@@ -21,6 +21,7 @@ from sklearn.gaussian_process.kernels import RBF, Matern, WhiteKernel, \
 from sklearn.metrics import mean_squared_error
 from sklearn.neural_network import MLPRegressor
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.svm import SVR
 from yaml import Loader
 
 from algorithms_for_tuning.genetic_algorithm.crossover import crossover
@@ -122,6 +123,9 @@ class Surrogate:
             except KeyError:
                 logger.error("No max_depth")
             self.surrogate = DecisionTreeRegressor(**self.kwargs)
+        elif self.name == "SVR":
+            self.surrogate = SVR(**self.kwargs)
+
 
     def fit(self, X, y):
         logger.debug(f"X: {X}, y: {y}")
