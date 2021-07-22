@@ -7,13 +7,13 @@ datasets:
   - lenta_ru
 
 configurations:
-#  - name: "ga_best_solution_1"
-#    cmd: "/app/irace_config/ga_test/run.sh"
-#    args: "--num-individuals 11 --mutation-type psm --crossover-type blend_crossover
-#           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-#           --log-file /var/log/tm-alg-ga.txt --exp-id 5"
-#    workdir: "/app/irace_config/ga_test"
-#    repetitions: 30
+  - name: "ga_best_solution_1"
+    cmd: "/app/irace_config/ga_test/run.sh"
+    args: "--num-individuals 11 --mutation-type psm --crossover-type blend_crossover
+           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
+           --log-file /var/log/tm-alg-ga.txt --exp-id 5"
+    workdir: "/app/irace_config/ga_test"
+    repetitions: 60
 #  - name: "abc_best_solution_1"
 #    cmd: "/app/irace_config/abc_config/run.sh"
 #    args: "--num-individuals 21 --max-num-trials 9

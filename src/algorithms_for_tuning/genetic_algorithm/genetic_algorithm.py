@@ -8,13 +8,14 @@ import click
 import uuid
 
 from ga import GA
+from ga import config as cfg
 from algorithms_for_tuning.utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
 
 logger = logging.getLogger("GA")
 
-NUM_FITNESS_EVALUATIONS = config['globalAlgoParams']['numEvals']
+NUM_FITNESS_EVALUATIONS = cfg['gaAlgoParams']['numEvals']
 
 
 @click.command(context_settings=dict(allow_extra_args=True))
