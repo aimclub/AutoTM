@@ -125,6 +125,8 @@ class Surrogate:
             self.surrogate = DecisionTreeRegressor(**self.kwargs)
         elif self.name == "SVR":
             self.surrogate = SVR(**self.kwargs)
+        # else:
+        #     raise Exception('Undefined surr')
 
     def fit(self, X, y):
         logger.debug(f"X: {X}, y: {y}")
@@ -143,16 +145,22 @@ class Surrogate:
         return m
 
 
-def get_prediction_uncertanty(model, X, percentile=90):
+def get_prediction_uncertanty(model, X, surrogate_name, percentile=90):
     interval_len = []
-    for x in range(len(X)):
-        preds = []
-        for pred in model.estimators_:
-            prediction = pred.predict(np.array(X[x]).reshape(1, -1))
-            preds.append(prediction[0])
-        err_down = np.percentile(preds, (100 - percentile) / 2.)
-        err_up = np.percentile(preds, 100 - (100 - percentile) / 2.)
-        interval_len.append(err_up - err_down)
+    if surrogate_name == 'random-forest-regressor':
+        for x in range(len(X)):
+            preds = []
+            for pred in model.estimators_:
+                prediction = pred.predict(np.array(X[x]).reshape(1, -1))
+                preds.append(prediction[0])
+            err_down = np.percentile(preds, (100 - percentile) / 2.)
+            err_up = np.percentile(preds, 100 - (100 - percentile) / 2.)
+            interval_len.append(err_up - err_down)
+    elif surrogate_name == 'GPR':
+        y_hat, y_sigma = model.predict(X, return_std=True)
+        interval_len = list(y_sigma)
+    elif surrogate_name == 'decision-tree-regressor':
+        raise NotImplementedError
     return interval_len
 
 
@@ -230,7 +238,7 @@ class GA:
 
     def _calculate_uncertain_res(self, generation, proc=0.3):
         X = np.array([individ.params for individ in generation])
-        certanty = get_prediction_uncertanty(self.surrogate.surrogate, X)
+        certanty = get_prediction_uncertanty(self.surrogate.surrogate, X, self.surrogate.name)
         recalculate_num = int(np.floor(len(certanty) * proc))
         logger.info('Certanty values: ', certanty)
 
