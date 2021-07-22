@@ -89,6 +89,8 @@ else:
 @click.option('--svr-coef0', type=float, default=0.0)
 @click.option('--svr-c', type=float)
 @click.option('--svr-epsilon', type=float)
+@click.option('--svr-max-iter', type=int)
+@click.option('--calc-scheme', type=str, default='default')
 def run_algorithm(dataset, log_file, exp_id, surrogate_name,
                   rf_n_estimators, rf_criterion, rf_max_depth, rf_min_samples_split,
                   rf_min_samples_leaf, rf_min_weight_fraction_leaf, rf_max_features, rf_oob_score, rf_n_jobs,
@@ -98,7 +100,8 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
                   gpr_kernel, gpr_alpha, gpr_normalize_y,
                   dt_criterion, dt_splitter, dt_max_depth, dt_min_samples_split, dt_min_samples_leaf,
                   dt_max_features, dt_ccp_alpha,
-                  svr_kernel, svr_degree, svr_gamma, svr_coef0, svr_c, svr_epsilon,
+                  svr_kernel, svr_degree, svr_gamma, svr_coef0, svr_c, svr_epsilon, svr_max_iter,
+                  calc_scheme,
                   ):
     run_uid = uuid.uuid4() if not config['testMode'] else None
     logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
@@ -172,6 +175,7 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
             'coef0': svr_coef0,
             'C': svr_c,
             'epsilon': svr_epsilon,
+            'max_iter': svr_max_iter,
         }
 
     logger.info(f"Starting a new run of algorithm. Args: {sys.argv[1:]}")
@@ -190,6 +194,7 @@ def run_algorithm(dataset, log_file, exp_id, surrogate_name,
            alpha=cross_alpha,
            exp_id=exp_id,
            surrogate_name=surrogate_name,
+           calc_scheme=calc_scheme,
            **kwargs)
     best_value = g.run(verbose=True)
     print(best_value * (-1))
