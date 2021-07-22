@@ -28,7 +28,7 @@
 # 1:                      2:                             3:     4:      5:
 surrogate_name               "--surrogate-name "                c  ("SVR")
 log_file                     "--log-file "                      c  ("/var/log/tm-alg-sur-svr.txt")
-exp_id                       "--exp-id "                        c  (16)
+exp_id                       "--exp-id "                        c  (22)
 svr_kernel                   "--svr-kernel "                     c  ("linear", "poly", "rbf", "sigmoid")
 svr_degree                   "--svr-degree "                     c  (2, 3, 4, 5)   | svr_kernel %in% c("poly")
 svr_gamma                    "--svr-gamma "                      c  ("auto", "scale")

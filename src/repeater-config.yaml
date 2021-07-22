@@ -75,20 +75,37 @@ configurations:
 #           --mlp-max-iter 100 --mlp-momentum 0.9 --mlp-early-stopping 1"
 #    workdir: "/app/irace_config/ga_with_surrogate_mlp_config"
 #    repetitions: 30
+#
+#  - name: "gpr_best_solution"
+#    cmd: "/app/irace_config/ga_with_surrogate_gpr_config/run.sh"
+#    args: "--log-file /var/log/tm-alg-sur-mlp.txt --exp-id 19
+#           --surrogate-name GPR --gpr-kernel RBF
+#           --gpr-alpha 0.000000001 --gpr-normalize-y 1"
+#    workdir: "/app/irace_config/ga_with_surrogate_gpr_config"
+#    repetitions: 30
 
-  - name: "rf_best_solution"
-    cmd: "/app/irace_config/ga_with_surrogate_rf_config/run.sh"
-    args: "--surrogate-name random-forest-regressor --rf-n-estimators 115
-           --rf-criterion mae --rf-max-depth 10 --rf-min-samples-split 0.05
-           --rf-min-samples-leaf 0.1 --rf-min-weight-fraction-leaf 0.0936
-           --rf-max-features log2 --rf-oob-score True --rf-n-jobs 1
-           --log-file /var/log/tm-alg.txt --exp-id 18"
-    workdir: "/app/irace_config/ga_with_surrogate_rf_config"
+  - name: "de_best_solution"
+    cmd: "/app/irace_config/de_config/run.sh"
+    args: "--strategy rand2bin --popsize 2 --tol 0.0489
+           --mutation 1.223 --recombination 0.9404
+           --init latinhypercube --atol 0.6488
+           --log-file /var/log/tm-alg-de.txt --exp-id 24"
+    workdir: "/app/irace_config/de_config"
     repetitions: 30
 
-  - name: "svr_default_solution"
-    cmd: "/app/irace_config/ga_with_surrogate_svr_config/run.sh"
-    args: "--surrogate-name SVR  --log-file /var/log/tm-alg-sur-svr.txt --exp-id 21
-           --svr-kernel rbf --svr-gamma scale --svr-c 1.0 --svr-epsilon 0.1"
-    workdir: "/app/irace_config/ga_with_surrogate_svr_config"
-    repetitions: 30
+#  - name: "rf_best_solution"
+#    cmd: "/app/irace_config/ga_with_surrogate_rf_config/run.sh"
+#    args: "--surrogate-name random-forest-regressor --rf-n-estimators 115
+#           --rf-criterion mae --rf-max-depth 10 --rf-min-samples-split 0.05
+#           --rf-min-samples-leaf 0.1 --rf-min-weight-fraction-leaf 0.0936
+#           --rf-max-features log2 --rf-oob-score True --rf-n-jobs 1
+#           --log-file /var/log/tm-alg.txt --exp-id 18"
+#    workdir: "/app/irace_config/ga_with_surrogate_rf_config"
+#    repetitions: 30
+#
+#  - name: "svr_default_solution"
+#    cmd: "/app/irace_config/ga_with_surrogate_svr_config/run.sh"
+#    args: "--surrogate-name SVR  --log-file /var/log/tm-alg-sur-svr.txt --exp-id 21
+#           --svr-kernel rbf --svr-gamma scale --svr-c 1.0 --svr-epsilon 0.1"
+#    workdir: "/app/irace_config/ga_with_surrogate_svr_config"
+#    repetitions: 30
