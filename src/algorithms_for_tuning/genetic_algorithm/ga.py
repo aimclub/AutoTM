@@ -357,20 +357,19 @@ class GA:
         if len(new_generation) > 0:
 
             fitness_calc_time_start = time.time()
-            if not SPEEDUP:
+            if not SPEEDUP or not self.surrogate:
                 new_generation = estimate_fitness(new_generation)
                 self.save_params(new_generation)
             logger.info(f"ize of the new generation is {len(new_generation)}")
             logger.info(f"TIME OF THE FITNESS FUNCTION IN CROSSOVER: {time.time() - fitness_calc_time_start}")
 
-
-            if self.calc_scheme == 'type1':
+            if self.calc_scheme == 'type1' and self.surrogate:
                 if surrogate_iteration:
                     self.surrogate_calculation(new_generation)
                 elif not surrogate_iteration and SPEEDUP:
                     new_generation = estimate_fitness(new_generation)
                     self.save_params(new_generation)
-            elif self.calc_scheme == 'type2':
+            elif self.calc_scheme == 'type2' and self.surrogate:
                 new_generation = self._calculate_uncertain_res(new_generation)
 
         return new_generation
@@ -483,14 +482,14 @@ class GA:
                 self.evaluations_counter += 1
 
             fitness_calc_time_start = time.time()
-            if not SPEEDUP:
+            if not SPEEDUP or not self.surrogate:
                 population = estimate_fitness(population)
                 self.save_params(population)
             logger.info(f"TIME OF THE FITNESS FUNCTION IN MUTATION: {time.time() - fitness_calc_time_start}")
 
-            if surrogate_iteration:
+            if surrogate_iteration and self.surrogate:
                 self.surrogate_calculation(population)
-            elif not surrogate_iteration and SPEEDUP:
+            elif not surrogate_iteration and SPEEDUP and self.surrogate:
                 population = estimate_fitness(population)
                 self.save_params(population)
 
