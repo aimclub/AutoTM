@@ -90,7 +90,7 @@ else:
 @click.option('--svr-c', type=float)
 @click.option('--svr-epsilon', type=float)
 @click.option('--svr-max-iter', type=int)
-@click.option('--calc-scheme', type=str, default='default')
+@click.option('--calc-scheme', type=str, default='type1')
 def run_algorithm(dataset, log_file, exp_id, surrogate_name,
                   rf_n_estimators, rf_criterion, rf_max_depth, rf_min_samples_split,
                   rf_min_samples_leaf, rf_min_weight_fraction_leaf, rf_max_features, rf_oob_score, rf_n_jobs,

@@ -487,11 +487,14 @@ class GA:
                 self.save_params(population)
             logger.info(f"TIME OF THE FITNESS FUNCTION IN MUTATION: {time.time() - fitness_calc_time_start}")
 
-            if surrogate_iteration and self.surrogate:
-                self.surrogate_calculation(population)
-            elif not surrogate_iteration and SPEEDUP and self.surrogate:
-                population = estimate_fitness(population)
-                self.save_params(population)
+            if self.calc_scheme == 'type1' and self.surrogate:
+                if surrogate_iteration and self.surrogate:
+                    self.surrogate_calculation(population)
+                elif not surrogate_iteration and SPEEDUP and self.surrogate:
+                    population = estimate_fitness(population)
+                    self.save_params(population)
+            elif self.calc_scheme == 'type2' and self.surrogate:
+                population = self._calculate_uncertain_res(population)
 
             ###
             logger.info("MUTATION IS OVER")
