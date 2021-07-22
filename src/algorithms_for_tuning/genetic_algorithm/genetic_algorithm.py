@@ -25,7 +25,7 @@ else:
 with open(filepath, "r") as file:
     config = yaml.load(file, Loader=Loader)
 
-glob_algo_params = config["gaWithSurrogateAlgoParams"]
+glob_algo_params = config["gaAlgoParams"]
 NUM_FITNESS_EVALUATIONS = glob_algo_params['numEvals']
 
 
@@ -72,7 +72,7 @@ def run_algorithm(dataset,
            best_proc=best_proc,
            alpha=cross_alpha,
            exp_id=exp_id)
-    best_value = g.run(verbose=True, alg_args=" ".join(sys.argv))
+    best_value = g.run(verbose=True)
     print(best_value * (-1))
 
 
