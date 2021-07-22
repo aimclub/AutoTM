@@ -222,11 +222,14 @@ class GA:
                                                      exp_id=self.exp_id,
                                                      alg_id=ALG_ID))
         population_with_fitness = estimate_fitness(list_of_individuals)
+        self.save_params(population_with_fitness)
+        if self.surrogate is not None and self.calc_scheme == 'type2':
+            self.surrogate.fit(np.array(self.all_params), np.array(self.all_fitness))
+            logger.info("Surrogate is initialized!")
         return population_with_fitness
 
     def _calculate_uncertain_res(self, generation, proc=0.3):
         X = np.array([individ.params for individ in generation])
-        # y = np.array([individ.fitness_value for individ in generation])
         certanty = get_prediction_uncertanty(self.surrogate.surrogate, X)
         recalculate_num = int(np.floor(len(certanty) * proc))
         logger.info('Certanty values: ', certanty)
