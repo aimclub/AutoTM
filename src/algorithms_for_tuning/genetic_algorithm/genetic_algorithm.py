@@ -1,21 +1,32 @@
 #!/usr/bin/env python3
+import os
 import logging
 import sys
 from logging import config
 import warnings
+import yaml
+from yaml import Loader
 
 import click
 import uuid
 
 from ga import GA
-from ga import config as cfg
 from algorithms_for_tuning.utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
 
 logger = logging.getLogger("GA")
 
-NUM_FITNESS_EVALUATIONS = cfg['gaAlgoParams']['numEvals']
+if "FITNESS_CONFIG_PATH" in os.environ:
+    filepath = os.environ["FITNESS_CONFIG_PATH"]
+else:
+    filepath = "../../algorithms_for_tuning/ga_with_surrogate/config.yaml"
+
+with open(filepath, "r") as file:
+    config = yaml.load(file, Loader=Loader)
+
+glob_algo_params = config["gaWithSurrogateAlgoParams"]
+NUM_FITNESS_EVALUATIONS = glob_algo_params['numEvals']
 
 
 @click.command(context_settings=dict(allow_extra_args=True))
