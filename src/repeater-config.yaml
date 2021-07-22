@@ -123,15 +123,17 @@ configurations:
     cmd: "/app/irace_config/ga_with_surrogate_gpr_config/run.sh"
     args: "--log-file /var/log/tm-alg-sur-gpr.txt --exp-id 26
            --surrogate-name GPR --gpr-kernel RBF
-           --gpr-alpha 0.0000000001 --gpr-normalize-y 0"
+           --gpr-alpha 0.0000000001 --gpr-normalize-y 0
+           --calc-scheme type2"
     workdir: "/app/irace_config/ga_with_surrogate_gpr_config"
     repetitions: 30
 
-  - name: "dt_best_solution_2"
-    cmd: "/app/irace_config/ga_with_surrogate_dt_config/run.sh"
-    args: "--log-file /var/log/tm-alg-sur-dt.txt --exp-id 25
-           --surrogate-name decision-tree-regressor --dt-criterion mse
-           --dt-splitter best --dt-max-depth 0 --dt-min-samples-split 2
-           --dt-min-samples-leaf 1 --dt-max-features auto --dt-ccp-alpha 0.0"
-    workdir: "/app/irace_config/ga_with_surrogate_dt_config"
-    repetitions: 30
+#  - name: "dt_best_solution_2"
+#    cmd: "/app/irace_config/ga_with_surrogate_dt_config/run.sh"
+#    args: "--log-file /var/log/tm-alg-sur-dt.txt --exp-id 25
+#           --surrogate-name decision-tree-regressor --dt-criterion mse
+#           --dt-splitter best --dt-max-depth 0 --dt-min-samples-split 2
+#           --dt-min-samples-leaf 1 --dt-max-features auto --dt-ccp-alpha 0.0
+#           --calc-scheme type2"
+#    workdir: "/app/irace_config/ga_with_surrogate_dt_config"
+#    repetitions: 30
