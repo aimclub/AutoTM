@@ -363,14 +363,16 @@ class GA:
             logger.info(f"ize of the new generation is {len(new_generation)}")
             logger.info(f"TIME OF THE FITNESS FUNCTION IN CROSSOVER: {time.time() - fitness_calc_time_start}")
 
-            if self.calc_scheme == 'type1' and self.surrogate:
-                if surrogate_iteration:
-                    self.surrogate_calculation(new_generation)
-                elif not surrogate_iteration and SPEEDUP:
-                    new_generation = estimate_fitness(new_generation)
+            if self.surrogate:
+                if self.calc_scheme == 'type1':
+                    if surrogate_iteration:
+                        self.surrogate_calculation(new_generation)
+                    elif not surrogate_iteration and SPEEDUP:
+                        new_generation = estimate_fitness(new_generation)
+                        self.save_params(new_generation)
+                elif self.calc_scheme == 'type2':
+                    new_generation = self._calculate_uncertain_res(new_generation)
                     self.save_params(new_generation)
-            elif self.calc_scheme == 'type2' and self.surrogate:
-                new_generation = self._calculate_uncertain_res(new_generation)
 
         return new_generation
 
@@ -495,6 +497,7 @@ class GA:
                     self.save_params(population)
             elif self.calc_scheme == 'type2' and self.surrogate:
                 population = self._calculate_uncertain_res(population)
+                self.save_params(population)
 
             ###
             logger.info("MUTATION IS OVER")
@@ -513,8 +516,11 @@ class GA:
             if (current_fitness > high_fitness) or (ii == 0):
                 high_fitness = current_fitness
 
-            if not surrogate_iteration and self.surrogate:
-                self.surrogate.fit(np.array(self.all_params), np.array(self.all_fitness))
+            if self.surrogate:
+                if self.calc_scheme == 'type1' and not surrogate_iteration:
+                    self.surrogate.fit(np.array(self.all_params), np.array(self.all_fitness))
+                elif self.calc_scheme == 'type2':
+                    self.surrogate.fit(np.array(self.all_params), np.array(self.all_fitness))
 
             bparams = ''.join([str(i) for i in population[0].params])
             logger.info(f"TERMINATION IS TRIGGERED."
