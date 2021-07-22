@@ -510,7 +510,7 @@ class GA:
             if (current_fitness > high_fitness) or (ii == 0):
                 high_fitness = current_fitness
 
-            if not surrogate_iteration:
+            if not surrogate_iteration and self.surrogate:
                 self.surrogate.fit(np.array(self.all_params), np.array(self.all_fitness))
 
             bparams = ''.join([str(i) for i in population[0].params])
