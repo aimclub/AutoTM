@@ -28,6 +28,7 @@ with open(filepath, "r") as file:
 glob_algo_params = config["gaAlgoParams"]
 NUM_FITNESS_EVALUATIONS = glob_algo_params['numEvals']
 
+NUM_FITNESS_EVALUATIONS = 150
 
 @click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--dataset', required=True, help='dataset name in the config')
