@@ -16,7 +16,7 @@ import copy
 import random
 
 # TODO: fix this path back to algorithms_for_tuning.utils import make_log_config_dict
-from src.algorithms_for_tuning.utils import make_log_config_dict
+from algorithms_for_tuning.utils import make_log_config_dict
 from kube_fitness.tasks import IndividualDTO, TqdmToLogger
 
 warnings.filterwarnings("ignore")
