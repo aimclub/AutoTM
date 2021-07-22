@@ -126,7 +126,6 @@ class Surrogate:
         elif self.name == "SVR":
             self.surrogate = SVR(**self.kwargs)
 
-
     def fit(self, X, y):
         logger.debug(f"X: {X}, y: {y}")
         self.create()
@@ -144,12 +143,25 @@ class Surrogate:
         return m
 
 
+def get_prediction_uncertanty(model, X, percentile=90):
+    interval_len = []
+    for x in range(len(X)):
+        preds = []
+        for pred in model.estimators_:
+            prediction = pred.predict(np.array(X[x]).reshape(1, -1))
+            preds.append(prediction[0])
+        err_down = np.percentile(preds, (100 - percentile) / 2.)
+        err_up = np.percentile(preds, 100 - (100 - percentile) / 2.)
+        interval_len.append(err_up - err_down)
+    return interval_len
+
+
 class GA:
     def __init__(self, dataset, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
                  selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations=200,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
-                 calc_scheme='default', **kwargs):
+                 calc_scheme='type1', **kwargs):
         self.dataset = dataset
 
         if crossover_type == 'blend_crossover':
@@ -175,6 +187,7 @@ class GA:
         else:
             self.surrogate = None
         self.exp_id = exp_id
+        self.calc_scheme = calc_scheme
 
     @staticmethod
     def init_individ(high_decor=1e5,
@@ -210,6 +223,39 @@ class GA:
                                                      alg_id=ALG_ID))
         population_with_fitness = estimate_fitness(list_of_individuals)
         return population_with_fitness
+
+    def _calculate_uncertain_res(self, generation, proc=0.3):
+        X = np.array([individ.params for individ in generation])
+        # y = np.array([individ.fitness_value for individ in generation])
+        certanty = get_prediction_uncertanty(self.surrogate.surrogate, X)
+        recalculate_num = int(np.floor(len(certanty) * proc))
+        logger.info('Certanty values: ', certanty)
+
+        certanty, X = (list(t) for t in zip(*sorted(zip(certanty, X.tolist()), reverse=True)))  # check
+        calculated = []
+        for params in X[:recalculate_num]:
+            calculated.append(IndividualDTO(id=str(uuid.uuid4()),
+                                            params=[float(i) for i in params],
+                                            dataset=self.dataset,
+                                            exp_id=self.exp_id,
+                                            alg_id=ALG_ID
+                                            ))
+
+        calculated = estimate_fitness(calculated)
+
+        self.all_params += [individ.params for individ in calculated]
+        self.all_fitness += [individ.fitness_value for individ in calculated]
+
+        pred_y = self.surrogate.predict(X[recalculate_num:])
+        for ix, params in enumerate(X[recalculate_num:]):
+            calculated.append(IndividualDTO(id=str(uuid.uuid4()),
+                                            params=params,
+                                            dataset=self.dataset,
+                                            fitness_value=pred_y[ix],
+                                            exp_id=self.exp_id,
+                                            alg_id=ALG_ID
+                                            ))
+        return calculated
 
     def save_params(self, population):
         params_and_f = [(copy.deepcopy(individ.params), individ.fitness_value) for individ in
@@ -317,11 +363,15 @@ class GA:
             logger.info(f"ize of the new generation is {len(new_generation)}")
             logger.info(f"TIME OF THE FITNESS FUNCTION IN CROSSOVER: {time.time() - fitness_calc_time_start}")
 
-            if surrogate_iteration:
-                self.surrogate_calculation(new_generation)
-            elif not surrogate_iteration and SPEEDUP:
-                new_generation = estimate_fitness(new_generation)
-                self.save_params(new_generation)
+
+            if self.calc_scheme == 'type1':
+                if surrogate_iteration:
+                    self.surrogate_calculation(new_generation)
+                elif not surrogate_iteration and SPEEDUP:
+                    new_generation = estimate_fitness(new_generation)
+                    self.save_params(new_generation)
+            elif self.calc_scheme == 'type2':
+                new_generation = self._calculate_uncertain_res(new_generation)
 
         return new_generation
 
