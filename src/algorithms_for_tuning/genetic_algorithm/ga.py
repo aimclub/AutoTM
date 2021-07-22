@@ -240,7 +240,7 @@ class GA:
         X = np.array([individ.params for individ in generation])
         certanty = get_prediction_uncertanty(self.surrogate.surrogate, X, self.surrogate.name)
         recalculate_num = int(np.floor(len(certanty) * proc))
-        logger.info('Certanty values: ', certanty)
+        logger.info(f'Certanty values: {certanty}')
 
         certanty, X = (list(t) for t in zip(*sorted(zip(certanty, X.tolist()), reverse=True)))  # check
         calculated = []
@@ -314,7 +314,7 @@ class GA:
             y_val = clean_params_and_f[1]
             r_2, mse, rmse = self.surrogate.score(X_val, y_val)
             logger.info(f"Real values: {list(y_val)}")
-            logger.info(f"Predicted values: list(y_pred)")
+            logger.info(f"Predicted values: {list(y_pred)}")
             logger.info(f"R^2: {r_2}, MSE: {mse}, RMSE: {rmse}")
         for ix, individ in enumerate(population):
             individ.fitness_value = y_pred[ix]
