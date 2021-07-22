@@ -149,7 +149,7 @@ class GA:
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
                  selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations=200,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
-                 **kwargs):
+                 calc_scheme='default', **kwargs):
         self.dataset = dataset
 
         if crossover_type == 'blend_crossover':

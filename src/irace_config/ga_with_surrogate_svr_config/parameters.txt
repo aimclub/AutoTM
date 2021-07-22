@@ -35,3 +35,4 @@ svr_gamma                    "--svr-gamma "                      c  ("auto", "sc
 svr_coef0                    "--svr-coef0 "                      c  (0.0, 0.1, 1)  | svr_kernel %in% c("poly", "sigmoid")
 svr_c                        "--svr-c "                          c  (1.0, 1.5, 2, 2.5)
 svr_epsilon                  "--svr-epsilon "                    c  (0.1, 0.2, 0.3, 0.4, 0.5)
+svr_max_iter                 "--svr-max-iter"                    c  (200, 300, 400)
