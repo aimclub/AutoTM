@@ -33,6 +33,7 @@ NUM_FITNESS_EVALUATIONS = 150
 @click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--dataset', required=True, help='dataset name in the config')
 @click.option('--num-individuals', default=10, help='number of individuals in generation')
+@click.option('--num-iterations', default=400, help='number of iterations to make')
 @click.option('--mutation-type', default="combined",
               help='mutation type can have value from (mutation_one_param, combined, psm, positioning_mutation)')
 @click.option('--crossover-type', default="blend_crossover",
@@ -47,6 +48,7 @@ NUM_FITNESS_EVALUATIONS = 150
 @click.option('--exp-id', required=True, type=int, help='mlflow experiment id')
 def run_algorithm(dataset,
                   num_individuals,
+                  num_iterations,
                   mutation_type, crossover_type, selection_type,
                   elem_cross_prob, cross_alpha,
                   best_proc, log_file, exp_id):
@@ -64,7 +66,7 @@ def run_algorithm(dataset,
 
     g = GA(dataset=dataset,
            num_individuals=num_individuals,
-           num_iterations=400,
+           num_iterations=num_iterations,
            mutation_type=mutation_type,
            crossover_type=crossover_type,
            selection_type=selection_type,
