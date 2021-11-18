@@ -43,3 +43,11 @@ It all can be done with a single special command:
     ```
     ./bin/start-irace.sh
    ```
+
+To start just an instance of GA working with remote kube-distributed-fitness:
+```
+   KUBE_NAMESPACE=<your namespace> ./bin/recreate-autotm-job.sh 
+```
+To execute the last command, there should exist a deployed kube-distributed-fitness app 
+with appropriate available datasets ('./bin/fitnessctl prodcfg' command).
+Also, remember about 'src/algorithms_for_tuning/genetic_algorithm/config.yaml'. 'testMode' should be False in this file. 
