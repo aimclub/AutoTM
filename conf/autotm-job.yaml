@@ -1,0 +1,39 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: autotm
+spec:
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+    spec:
+      volumes:
+        - name: varlog
+          emptyDir: { }
+      containers:
+      - name: autom-job
+        image: node2.bdcl:5000/autotm-job:latest
+        imagePullPolicy: Always
+        args: ["--dataset", "first_dataset",
+               "--num-individuals", "5",
+               "--num-iterations", "2",
+               "--exp-id", "0"]
+        env:
+          - name: CELERY_BROKER_URL
+            value: "amqp://guest:guest@rabbitmq-service:5672"
+          - name: CELERY_RESULT_BACKEND
+            value: "redis://redis:6379/1"
+        volumeMounts:
+          - name: varlog
+            mountPath: /var/log/
+#      - name: alglog
+#        image: busybox
+#        imagePullPolicy: IfNotPresent
+#        args: [ /bin/sh, -c, 'sleep 15 && tail -n+1 -f /var/log/repeater.log' ]
+#        volumeMounts:
+#          - name: varlog
+#            mountPath: /var/log
+      restartPolicy: Never
+  backoffLimit: 0
