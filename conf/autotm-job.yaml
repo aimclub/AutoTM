@@ -23,6 +23,12 @@ spec:
         args: ["--dataset", "first_dataset",
                "--num-individuals", "5",
                "--num-iterations", "2",
+               "--mutation-type", "psm",
+               "--crossover-type", "blend_crossover",
+               "--selection-type", "fitness_prop",
+               "--cross-alpha", "0.5046",
+               "--best-proc", "0.4439",
+               "--log-file", "/var/log/tm-alg-ga.txt",
                "--exp-id", "0"]
         env:
           - name: CELERY_BROKER_URL
