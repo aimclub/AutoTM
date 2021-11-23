@@ -169,7 +169,7 @@ class GA:
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
                  selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations=200,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
-                 calc_scheme='type1', **kwargs):
+                 calc_scheme='type1', topic_count: Optional[int] = None, **kwargs):
         self.dataset = dataset
 
         if crossover_type == 'blend_crossover':
@@ -196,6 +196,7 @@ class GA:
             self.surrogate = None
         self.exp_id = exp_id
         self.calc_scheme = calc_scheme
+        self.topic_count = topic_count
 
     @staticmethod
     def init_individ(high_decor=1e5,
@@ -228,7 +229,8 @@ class GA:
                                                      dataset=self.dataset,
                                                      params=self.init_individ(),
                                                      exp_id=self.exp_id,
-                                                     alg_id=ALG_ID))
+                                                     alg_id=ALG_ID,
+                                                     topic_count=self.topic_count))
         population_with_fitness = estimate_fitness(list_of_individuals)
         self.save_params(population_with_fitness)
         if self.surrogate is not None and self.calc_scheme == 'type2':
@@ -249,7 +251,8 @@ class GA:
                                             params=[float(i) for i in params],
                                             dataset=self.dataset,
                                             exp_id=self.exp_id,
-                                            alg_id=ALG_ID
+                                            alg_id=ALG_ID,
+                                            topic_count=self.topic_count
                                             ))
 
         calculated = estimate_fitness(calculated)
@@ -264,7 +267,8 @@ class GA:
                                             dataset=self.dataset,
                                             fitness_value=pred_y[ix],
                                             exp_id=self.exp_id,
-                                            alg_id=ALG_ID
+                                            alg_id=ALG_ID,
+                                            topic_count=self.topic_count
                                             ))
         return calculated
 
@@ -342,12 +346,14 @@ class GA:
                                                     dataset=self.dataset,
                                                     params=child_1,
                                                     exp_id=self.exp_id,
-                                                    alg_id=ALG_ID))
+                                                    alg_id=ALG_ID,
+                                                    topic_count=self.topic_count))
                 new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
                                                     dataset=self.dataset,
                                                     params=child_2,
                                                     exp_id=self.exp_id,
-                                                    alg_id=ALG_ID))
+                                                    alg_id=ALG_ID,
+                                                    topic_count=self.topic_count))
                 self.evaluations_counter += 2
             else:
                 child_1 = self.crossover(parent_1=parent_1,
@@ -359,7 +365,8 @@ class GA:
                                                     dataset=self.dataset,
                                                     params=child_1,
                                                     exp_id=self.exp_id,
-                                                    alg_id=ALG_ID))
+                                                    alg_id=ALG_ID,
+                                                    topic_count=self.topic_count))
 
                 self.evaluations_counter += 1
 
@@ -491,7 +498,8 @@ class GA:
                                                   dataset=self.dataset,
                                                   params=[float(i) for i in params],
                                                   exp_id=self.exp_id,
-                                                  alg_id=ALG_ID)
+                                                  alg_id=ALG_ID,
+                                                  topic_count=self.topic_count)
                 self.evaluations_counter += 1
 
             fitness_calc_time_start = time.time()
