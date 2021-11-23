@@ -33,7 +33,7 @@ def make_log_config_dict(filename: str = "/var/log/tm-alg.txt", uid: Optional[st
         },
         'handlers': {
             'default': {
-                'level': 'ERROR',
+                'level': 'DEBUG',
                 'formatter': 'standard',
                 'class': 'logging.StreamHandler',
                 'stream': 'ext://sys.stderr',
