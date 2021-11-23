@@ -46,12 +46,13 @@ NUM_FITNESS_EVALUATIONS = 150
 @click.option('--log-file', default="/var/log/tm-alg.log",
               help='a log file to write logs of the algorithm execution to')
 @click.option('--exp-id', required=True, type=int, help='mlflow experiment id')
+@click.option('--topic-count', required=False, type=int, help='desired count of MAIN topics')
 def run_algorithm(dataset,
                   num_individuals,
                   num_iterations,
                   mutation_type, crossover_type, selection_type,
                   elem_cross_prob, cross_alpha,
-                  best_proc, log_file, exp_id):
+                  best_proc, log_file, exp_id, topic_count):
     logger.debug(f"Command line: {sys.argv}")
 
     run_uid = str(uuid.uuid4())
@@ -76,7 +77,8 @@ def run_algorithm(dataset,
            num_fitness_evaluations=NUM_FITNESS_EVALUATIONS,
            best_proc=best_proc,
            alpha=cross_alpha,
-           exp_id=exp_id)
+           exp_id=exp_id,
+           topic_count=topic_count)
     best_value = g.run(verbose=True)
     print(best_value * (-1))
 

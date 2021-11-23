@@ -29,7 +29,8 @@ spec:
                "--cross-alpha", "0.5046",
                "--best-proc", "0.4439",
                "--log-file", "/var/log/tm-alg-ga.txt",
-               "--exp-id", "0"]
+               "--exp-id", "0",
+               "--topic-count", "27"]
         env:
           - name: CELERY_BROKER_URL
             value: "amqp://guest:guest@rabbitmq-service:5672"
