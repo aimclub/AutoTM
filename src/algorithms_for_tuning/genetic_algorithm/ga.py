@@ -167,7 +167,7 @@ def get_prediction_uncertanty(model, X, surrogate_name, percentile=90):
 class GA:
     def __init__(self, dataset, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
-                 selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations=200,
+                 selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations: Optional[int] = 200,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
                  calc_scheme='type1', topic_count: Optional[int] = None, **kwargs):
         self.dataset = dataset
@@ -405,7 +405,8 @@ class GA:
         logger.info(f"Starting experiment: {ftime}")
 
         logger.info(f"ALGORITHM PARAMS  number of individuals {self.num_individuals}; "
-                    f"number of fitness evals {self.num_fitness_evaluations}; "
+                    f"number of fitness evals "
+                    f"{self.num_fitness_evaluations if self.num_fitness_evaluations else 'unlimited'}; "
                     f"crossover prob {self.elem_cross_prob}")
 
         # population initialization
@@ -443,7 +444,7 @@ class GA:
 
             logger.info("CROSSOVER IS OVER")
 
-            if self.evaluations_counter >= self.num_fitness_evaluations:
+            if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 bparams = ''.join([str(i) for i in population[0].params])
                 logger.info(f"TERMINATION IS TRIGGERED."
                             f"THE BEST FITNESS {population[0].fitness_value}."
@@ -523,7 +524,7 @@ class GA:
 
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
-            if self.evaluations_counter >= self.num_fitness_evaluations:
+            if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 bparams = ''.join([str(i) for i in population[0].params])
                 logger.info(f"TERMINATION IS TRIGGERED."
                             f"THE BEST FITNESS {population[0].fitness_value}."

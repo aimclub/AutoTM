@@ -34,6 +34,9 @@ NUM_FITNESS_EVALUATIONS = 150
 @click.option('--dataset', required=True, help='dataset name in the config')
 @click.option('--num-individuals', default=10, help='number of individuals in generation')
 @click.option('--num-iterations', default=400, help='number of iterations to make')
+@click.option('--num-fitness-evaluations', required=False, type=int, default=None,
+              help='Max number of possible fitness estimations. This setting may lead to premature algorithm stopping '
+                   'even if there is more generations to go' )
 @click.option('--mutation-type', default="combined",
               help='mutation type can have value from (mutation_one_param, combined, psm, positioning_mutation)')
 @click.option('--crossover-type', default="blend_crossover",
@@ -50,6 +53,7 @@ NUM_FITNESS_EVALUATIONS = 150
 def run_algorithm(dataset,
                   num_individuals,
                   num_iterations,
+                  num_fitness_evaluations,
                   mutation_type, crossover_type, selection_type,
                   elem_cross_prob, cross_alpha,
                   best_proc, log_file, exp_id, topic_count):
@@ -74,7 +78,7 @@ def run_algorithm(dataset,
            crossover_type=crossover_type,
            selection_type=selection_type,
            elem_cross_prob=elem_cross_prob,
-           num_fitness_evaluations=NUM_FITNESS_EVALUATIONS,
+           num_fitness_evaluations=num_fitness_evaluations,
            best_proc=best_proc,
            alpha=cross_alpha,
            exp_id=exp_id,
