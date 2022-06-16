@@ -133,6 +133,7 @@ src/algorithms_for_tuning/genetic_algorithm/resources/*
 algorithms_for_tuning/genetic_algorithm/logs/*
 algorithms_for_tuning/genetic_algorithm/bigartm.*
 logs
+new_logs
 resources
 *.whl
 surrogate_logs/*
