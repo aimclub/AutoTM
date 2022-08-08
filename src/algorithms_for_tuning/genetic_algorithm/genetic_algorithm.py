@@ -20,7 +20,7 @@ logger = logging.getLogger("GA")
 if "FITNESS_CONFIG_PATH" in os.environ:
     filepath = os.environ["FITNESS_CONFIG_PATH"]
 else:
-    filepath = "../../algorithms_for_tuning/ga_with_surrogate/config.yaml"
+    filepath = "../../algorithms_for_tuning/genetic_algorithm/config.yaml"
 
 with open(filepath, "r") as file:
     config = yaml.load(file, Loader=Loader)
@@ -75,7 +75,7 @@ def run_algorithm(dataset,
            num_individuals=num_individuals,
            num_iterations=num_iterations,
            mutation_type=mutation_type,
-           crossover_type=crossover_type,
+           crossover_typ=crossover_type,
            selection_type=selection_type,
            elem_cross_prob=elem_cross_prob,
            num_fitness_evaluations=num_fitness_evaluations,

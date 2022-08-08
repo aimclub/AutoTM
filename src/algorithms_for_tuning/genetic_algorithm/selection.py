@@ -2,6 +2,7 @@ import operator
 import numpy as np
 import random
 
+
 # TODO: roulette wheel selection, stochastic universal sampling and tournament selection
 
 def yield_matching_pairs(pairs, population):
@@ -70,8 +71,10 @@ def selection_rank_based(population, best_proc, children_num):
     else:
         return yield_matching_pairs(round((len(population) * (1 - best_proc))), population)
 
+
 def stochastic_universal_sampling():
     raise NotImplementedError
+
 
 def selection(selection_type='fitness_prop'):
     if selection_type == 'fitness_prop':
