@@ -21,7 +21,7 @@ def crossover_pmx(parent_1, parent_2, **kwargs):
 def crossover_one_point(parent_1, parent_2, **kwargs):
     elem_cross_prob = kwargs['elem_cross_prob']
     for i in range(len(parent_1)):
-        if i not in [12, 13, 14]:
+        if i not in [12, 13, 14]: # TODO: check why this is needed
             if random.random() < elem_cross_prob:
                 dop = parent_1[i]
                 parent_1[i] = parent_2[i]

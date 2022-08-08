@@ -27,6 +27,7 @@ from yaml import Loader
 from algorithms_for_tuning.genetic_algorithm.crossover import crossover
 from algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from algorithms_for_tuning.genetic_algorithm.selection import selection
+from algorithms_for_tuning.individuals import Individual, make_individual
 
 ALG_ID = "ga"
 SPEEDUP = True
@@ -46,19 +47,30 @@ with open(filepath, "r") as file:
 
 if not config['testMode']:
     from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
-    from kube_fitness.tasks import parallel_fitness as estimate_fitness
-    from kube_fitness.tasks import log_best_solution
+    from kube_fitness.tasks import parallel_fitness
+    from kube_fitness.tasks import log_best_solution as lbs
+
+    def estimate_fitness(population: List[Individual],
+                         use_tqdm: bool = False,
+                         tqdm_check_period: int = 2) -> List[Individual]:
+
+        population_dtos = [p.dto for p in population]
+        results_dto = parallel_fitness(population_dtos, use_tqdm, tqdm_check_period)
+        results = [make_individual(dto=dto) for dto in results_dto]
+
+        return results
+
+    def log_best_solution(individual: Individual, alg_args: Optional[str] = None):
+        lbs(individual.dto, alg_args)
 else:
     from tqdm import tqdm
-
 
     def prepare_fitness_estimator():
         pass
 
-
-    def estimate_fitness(population: List[IndividualDTO],
+    def estimate_fitness(population: List[Individual],
                          use_tqdm: bool = False,
-                         tqdm_check_period: int = 2) -> List[IndividualDTO]:
+                         tqdm_check_period: int = 2) -> List[Individual]:
         results = []
 
         tqdm_out = TqdmToLogger(logger, level=logging.INFO)
@@ -70,7 +82,7 @@ else:
         return results
 
 
-    def log_best_solution(individual: IndividualDTO, alg_args):
+    def log_best_solution(individual: Individual, alg_args: Optional[str] = None):
         pass
 
 
@@ -225,12 +237,9 @@ class GA:
     def init_population(self):
         list_of_individuals = []
         for i in range(self.num_individuals):
-            list_of_individuals.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                     dataset=self.dataset,
-                                                     params=self.init_individ(),
-                                                     exp_id=self.exp_id,
-                                                     alg_id=ALG_ID,
-                                                     topic_count=self.topic_count))
+            dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=self.init_individ(),
+                                exp_id=self.exp_id, alg_id=ALG_ID, topic_count=self.topic_count)
+            list_of_individuals.append(make_individual(dto=dto))
         population_with_fitness = estimate_fitness(list_of_individuals)
         self.save_params(population_with_fitness)
         if self.surrogate is not None and self.calc_scheme == 'type2':
@@ -247,13 +256,9 @@ class GA:
         certanty, X = (list(t) for t in zip(*sorted(zip(certanty, X.tolist()), reverse=True)))  # check
         calculated = []
         for params in X[:recalculate_num]:
-            calculated.append(IndividualDTO(id=str(uuid.uuid4()),
-                                            params=[float(i) for i in params],
-                                            dataset=self.dataset,
-                                            exp_id=self.exp_id,
-                                            alg_id=ALG_ID,
-                                            topic_count=self.topic_count
-                                            ))
+            dto = IndividualDTO(id=str(uuid.uuid4()), params=[float(i) for i in params], dataset=self.dataset,
+                                exp_id=self.exp_id, alg_id=ALG_ID, topic_count=self.topic_count)
+            calculated.append(make_individual(dto=dto))
 
         calculated = estimate_fitness(calculated)
 
@@ -262,14 +267,10 @@ class GA:
 
         pred_y = self.surrogate.predict(X[recalculate_num:])
         for ix, params in enumerate(X[recalculate_num:]):
-            calculated.append(IndividualDTO(id=str(uuid.uuid4()),
-                                            params=params,
-                                            dataset=self.dataset,
-                                            fitness_value=pred_y[ix],
-                                            exp_id=self.exp_id,
-                                            alg_id=ALG_ID,
-                                            topic_count=self.topic_count
-                                            ))
+            dto = IndividualDTO(id=str(uuid.uuid4()), params=params, dataset=self.dataset,
+                                fitness_value=pred_y[ix], exp_id=self.exp_id, alg_id=ALG_ID,
+                                topic_count=self.topic_count)
+            calculated.append(make_individual(dto=dto))
         return calculated
 
     def save_params(self, population):
@@ -342,18 +343,15 @@ class GA:
                                                   elem_cross_prob=self.elem_cross_prob,
                                                   alpha=self.alpha)
 
-                new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                    dataset=self.dataset,
-                                                    params=child_1,
-                                                    exp_id=self.exp_id,
-                                                    alg_id=ALG_ID,
-                                                    topic_count=self.topic_count))
-                new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                    dataset=self.dataset,
-                                                    params=child_2,
-                                                    exp_id=self.exp_id,
-                                                    alg_id=ALG_ID,
-                                                    topic_count=self.topic_count))
+                child1_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_1,
+                                           exp_id=self.exp_id,
+                                           alg_id=ALG_ID, topic_count=self.topic_count)
+                child2_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_2,
+                                           exp_id=self.exp_id,
+                                           alg_id=ALG_ID, topic_count=self.topic_count)
+
+                new_generation.append(make_individual(dto=child1_dto))
+                new_generation.append(make_individual(dto=child2_dto))
                 self.evaluations_counter += 2
             else:
                 child_1 = self.crossover(parent_1=parent_1,
@@ -361,12 +359,10 @@ class GA:
                                          elem_cross_prob=self.elem_cross_prob,
                                          alpha=self.alpha
                                          )
-                new_generation.append(IndividualDTO(id=str(uuid.uuid4()),
-                                                    dataset=self.dataset,
-                                                    params=child_1,
-                                                    exp_id=self.exp_id,
-                                                    alg_id=ALG_ID,
-                                                    topic_count=self.topic_count))
+                child1_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_1,
+                                           exp_id=self.exp_id,
+                                           alg_id=ALG_ID, topic_count=self.topic_count)
+                new_generation.append(make_individual(dto=child1_dto))
 
                 self.evaluations_counter += 1
 
@@ -495,12 +491,9 @@ class GA:
                 if random.random() <= population[i].params[12]:
                     params = self.mutation(copy.deepcopy(population[i].params),
                                            elem_mutation_prob=copy.deepcopy(population[i].params[13]))
-                    population[i] = IndividualDTO(id=str(uuid.uuid4()),
-                                                  dataset=self.dataset,
-                                                  params=[float(i) for i in params],
-                                                  exp_id=self.exp_id,
-                                                  alg_id=ALG_ID,
-                                                  topic_count=self.topic_count)
+                    dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=[float(i) for i in params],
+                                        exp_id=self.exp_id, alg_id=ALG_ID, topic_count=self.topic_count)
+                    population[i] = make_individual(dto=dto)
                 self.evaluations_counter += 1
 
             fitness_calc_time_start = time.time()
