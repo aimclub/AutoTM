@@ -9,6 +9,7 @@ It all can be done with a single special command:
 ```
 ./bin/recreate-irace.sh
 ```
+0. Ports 
 
 1. It is assumed that kube-fitness is already deployed on the cluster 
    in the right namespace.

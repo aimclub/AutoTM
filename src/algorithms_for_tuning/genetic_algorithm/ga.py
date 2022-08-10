@@ -61,7 +61,7 @@ if not config['testMode']:
         return results
 
     def log_best_solution(individual: Individual, alg_args: Optional[str] = None):
-        lbs(individual.dto, alg_args)
+        lbs(individual.dto, alg_args=alg_args)
 else:
     from tqdm import tqdm
 

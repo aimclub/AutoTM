@@ -22,14 +22,14 @@ spec:
         imagePullPolicy: Always
         args: ["--dataset", "clickhouse_issues",
                "--num-individuals", "11",
-               "--num-iterations", "20",
+               "--num-iterations", "22",
                "--mutation-type", "psm",
                "--crossover-type", "blend_crossover",
                "--selection-type", "fitness_prop",
                "--cross-alpha", "0.5046",
                "--best-proc", "0.4439",
                "--log-file", "/var/log/tm-alg-ga-clickhouse.txt",
-               "--exp-id", "27",
+               "--exp-id", "29",
                "--topic-count", "50"]
         env:
           - name: CELERY_BROKER_URL

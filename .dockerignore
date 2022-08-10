@@ -1,2 +1,4 @@
 ./Notebooks
 ./src/algorithms_for_tuning/genetic_algorithm/resources/
+./venv
+./src/irace_config/ga_test
