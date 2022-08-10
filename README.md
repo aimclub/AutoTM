@@ -9,7 +9,11 @@ It all can be done with a single special command:
 ```
 ./bin/recreate-irace.sh
 ```
-0. Ports 
+0. Ports info (in case of local head):
+   ```
+   kubectl port-forward service/redis 6379:6379
+   kubectl port-forward service/rabbitmq-service 5672:5672
+   ```
 
 1. It is assumed that kube-fitness is already deployed on the cluster 
    in the right namespace.
@@ -39,10 +43,18 @@ It all can be done with a single special command:
     ```
     ./bin/stop-irace.sh
    ```
+   in case of running without irace stop the previous autotm job:
+   ```
+   ./bin/stop-autotm-job.sh
+   ```
    
 7. Start a new instance of irace runner:
     ```
     ./bin/start-irace.sh
+   ```
+   in case of running without irace start new autotm job:
+   ```
+   ./bin/start-autotm-job.sh
    ```
 
 To start just an instance of GA working with remote kube-distributed-fitness:
