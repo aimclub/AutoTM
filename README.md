@@ -9,6 +9,9 @@ It all can be done with a single special command:
 ```
 ./bin/recreate-irace.sh
 ```
+
+-1. Create the needed config `conf` folder
+
 0. Ports info (in case of local head):
    ```
    kubectl port-forward service/redis 6379:6379
