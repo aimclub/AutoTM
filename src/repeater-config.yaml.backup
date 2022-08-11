@@ -1,0 +1,139 @@
+---
+datasets:
+  - 20newsgroups
+  - ads_data
+  - amazon_food
+  - hotel-reviews
+  - lenta_ru
+
+configurations:
+  - name: "ga_best_solution_1"
+    cmd: "/app/irace_config/ga_test/run.sh"
+    args: "--num-individuals 11 --mutation-type psm --crossover-type blend_crossover
+           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
+           --log-file /var/log/tm-alg-ga.txt --exp-id 5"
+    workdir: "/app/irace_config/ga_test"
+    repetitions: 60
+
+#  - name: "abc_best_solution_1"
+#    cmd: "/app/irace_config/abc_config/run.sh"
+#    args: "--num-individuals 21 --max-num-trials 9
+#           --init-method latin_hypercube --log-file /var/log/tm-alg-abc.txt
+#           --exp-id 6"
+#    workdir: "/app/irace_config/abc_config"
+#    repetitions: 30
+#  - name: "bo_best_solution_1"
+#    cmd: "/app/irace_config/bo_config/run.sh"
+#    args: "--log-file /var/log/tm-alg.txt --exp-id 7"
+#    workdir: "/app/irace_config/bo_config"
+#    repetitions: 30
+
+#  - name: "mlp_default_solution"
+#    cmd: "/app/irace_config/ga_with_surrogate_mlp_config/run.sh"
+#    args: "--log-file /var/log/tm-alg-sur-mlp.txt --exp-id 12
+#           --surrogate-name mlp-regressor --br-n-estimators 5
+#           --br-n-jobs 1 --mlp-activation tanh --mlp-hidden-layer-sizes_1 10
+#           --mlp-hidden-layer-sizes_2 20 --mlp-hidden-layer-sizes_3 10 --mlp-solver lbfgs
+#           --mlp-alpha 0.0001 --mlp-learning-rate constant --mlp-max-iter 200
+#           --mlp-momentum 0.9 --mlp-early-stopping 0"
+#    workdir: "/app/irace_config/ga_with_surrogate_mlp_config"
+#    repetitions: 30
+
+#  - name: "rf_default_solution"
+#    cmd: "/app/irace_config/ga_with_surrogate_rf_config/run.sh"
+#    args: "--log-file /var/log/tm-alg-sur-rf.txt --exp-id 13
+#           --surrogate-name random-forest-regressor --rf-n-estimators 100
+#           --rf-criterion mse --rf-max-depth None --rf-min-samples-split 2
+#           --rf-min-samples-leaf 1 --rf-min-weight-fraction-leaf 0.0
+#           --rf-max-features auto --rf-oob-score False --rf-n-jobs 1"
+#    workdir: "/app/irace_config/ga_with_surrogate_rf_config"
+#    repetitions: 30
+#
+#  - name: "gpr_default_solution"
+#    cmd: "/app/irace_config/ga_with_surrogate_gpr_config/run.sh"
+#    args: "--log-file /var/log/tm-alg-sur-gpr.txt --exp-id 14
+#           --surrogate-name GPR --gpr-kernel RBF
+#           --gpr-alpha 0.0000000001 --gpr-normalize-y 0"
+#    workdir: "/app/irace_config/ga_with_surrogate_gpr_config"
+#    repetitions: 30
+#
+#  - name: "dt_default_solution"
+#    cmd: "/app/irace_config/ga_with_surrogate_dt_config/run.sh"
+#    args: "--log-file /var/log/tm-alg-sur-dt.txt --exp-id 15
+#           --surrogate-name decision-tree-regressor --dt-criterion mse
+#           --dt-splitter best --dt-max-depth 0 --dt-min-samples-split 2
+#           --dt-min-samples-leaf 1 --dt-max-features auto --dt-ccp-alpha 0.0"
+#    workdir: "/app/irace_config/ga_with_surrogate_dt_config"
+#    repetitions: 30
+
+#  - name: "mlp_best_solution"
+#    cmd: "/app/irace_config/ga_with_surrogate_mlp_config/run.sh"
+#    args: "--log-file /var/log/tm-alg-sur-mlp.txt --exp-id 17
+#           --surrogate-name mlp-regressor --br-n-estimators 13
+#           --br-n-jobs 1 --mlp-activation tanh --mlp-hidden-layer-sizes_1 15
+#           --mlp-hidden-layer-sizes_2 11 --mlp-hidden-layer-sizes_3 20
+#           --mlp-solver adam --mlp-alpha 0.00001 --mlp-learning-rate adaptive
+#           --mlp-max-iter 100 --mlp-momentum 0.9 --mlp-early-stopping 1"
+#    workdir: "/app/irace_config/ga_with_surrogate_mlp_config"
+#    repetitions: 30
+#
+#  - name: "gpr_best_solution"
+#    cmd: "/app/irace_config/ga_with_surrogate_gpr_config/run.sh"
+#    args: "--log-file /var/log/tm-alg-sur-mlp.txt --exp-id 19
+#           --surrogate-name GPR --gpr-kernel RBF
+#           --gpr-alpha 0.000000001 --gpr-normalize-y 1"
+#    workdir: "/app/irace_config/ga_with_surrogate_gpr_config"
+#    repetitions: 30
+
+  - name: "de_best_solution"
+    cmd: "/app/irace_config/de_config/run.sh"
+    args: "--strategy rand2bin --popsize 2 --tol 0.0489
+           --mutation 1.223 --recombination 0.9404
+           --init latinhypercube --atol 0.6488
+           --log-file /var/log/tm-alg-de.txt --exp-id 24"
+    workdir: "/app/irace_config/de_config"
+    repetitions: 30
+
+#  - name: "rf_best_solution"
+#    cmd: "/app/irace_config/ga_with_surrogate_rf_config/run.sh"
+#    args: "--surrogate-name random-forest-regressor --rf-n-estimators 115
+#           --rf-criterion mae --rf-max-depth 10 --rf-min-samples-split 0.05
+#           --rf-min-samples-leaf 0.1 --rf-min-weight-fraction-leaf 0.0936
+#           --rf-max-features log2 --rf-oob-score True --rf-n-jobs 1
+#           --log-file /var/log/tm-alg.txt --exp-id 18"
+#    workdir: "/app/irace_config/ga_with_surrogate_rf_config"
+#    repetitions: 30
+#
+#  - name: "svr_default_solution"
+#    cmd: "/app/irace_config/ga_with_surrogate_svr_config/run.sh"
+#    args: "--surrogate-name SVR  --log-file /var/log/tm-alg-sur-svr.txt --exp-id 21
+#           --svr-kernel rbf --svr-gamma scale --svr-c 1.0 --svr-epsilon 0.1"
+#    workdir: "/app/irace_config/ga_with_surrogate_svr_config"
+#    repetitions: 30
+
+  - name: "svr_best_solution"
+    cmd: "/app/irace_config/ga_with_surrogate_svr_config/run.sh"
+    args: "--surrogate-name SVR --log-file /var/log/tm-alg-sur-svr.txt --exp-id 23
+           --svr-kernel sigmoid --svr-gamma auto --svr-coef0 0.1 --svr-c 2
+           --svr-epsilon 0.1 --svr-max-iter 400"
+    workdir: "/app/irace_config/ga_with_surrogate_svr_config"
+    repetitions: 30
+
+  - name: "gpr_best_solution_2"
+    cmd: "/app/irace_config/ga_with_surrogate_gpr_config/run.sh"
+    args: "--log-file /var/log/tm-alg-sur-gpr.txt --exp-id 26
+           --surrogate-name GPR --gpr-kernel RBF
+           --gpr-alpha 0.0000000001 --gpr-normalize-y 0
+           --calc-scheme type2"
+    workdir: "/app/irace_config/ga_with_surrogate_gpr_config"
+    repetitions: 30
+
+#  - name: "dt_best_solution_2"
+#    cmd: "/app/irace_config/ga_with_surrogate_dt_config/run.sh"
+#    args: "--log-file /var/log/tm-alg-sur-dt.txt --exp-id 25
+#           --surrogate-name decision-tree-regressor --dt-criterion mse
+#           --dt-splitter best --dt-max-depth 0 --dt-min-samples-split 2
+#           --dt-min-samples-leaf 1 --dt-max-features auto --dt-ccp-alpha 0.0
+#           --calc-scheme type2"
+#    workdir: "/app/irace_config/ga_with_surrogate_dt_config"
+#    repetitions: 30

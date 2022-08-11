@@ -179,7 +179,8 @@ def get_prediction_uncertanty(model, X, surrogate_name, percentile=90):
 class GA:
     def __init__(self, dataset, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
-                 selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations: Optional[int] = 200,
+                 selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations: Optional[int] = 500,
+                 early_stopping_iterations: Optional[int] = 5,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
                  calc_scheme='type1', topic_count: Optional[int] = None, **kwargs):
         self.dataset = dataset
@@ -198,6 +199,7 @@ class GA:
         self.alpha = alpha
         self.evaluations_counter = 0
         self.num_fitness_evaluations = num_fitness_evaluations
+        self.early_stopping_iterations = early_stopping_iterations
         self.best_proc = best_proc
         self.current_surrogate = None
         self.all_params = []
@@ -402,7 +404,9 @@ class GA:
 
         logger.info(f"ALGORITHM PARAMS  number of individuals {self.num_individuals}; "
                     f"number of fitness evals "
-                    f"{self.num_fitness_evaluations if self.num_fitness_evaluations else 'unlimited'}; "
+                    f"{self.num_fitness_evaluations if self.num_fitness_evaluations else 'unlimited'}; ",
+                    f"number of early stopping iterations "
+                    f"{self.early_stopping_iterations if self.early_stopping_iterations else 'unlimited'}; ",
                     f"crossover prob {self.elem_cross_prob}")
 
         # population initialization
@@ -415,6 +419,8 @@ class GA:
         x, y = [], []
         high_fitness = 0
         surrogate_iteration = False
+        best_val_so_far = -10
+        early_stopping_counter = 0
 
         for ii in range(self.num_iterations):
 
@@ -447,6 +453,7 @@ class GA:
                             f"THE BEST PARAMS {bparams}.")
                 # return population[0].fitness_value
                 break
+
 
             del pairs_generator
             gc.collect()
@@ -534,6 +541,19 @@ class GA:
                     self.surrogate.fit(np.array(self.all_params), np.array(self.all_fitness))
                 elif self.calc_scheme == 'type2':
                     self.surrogate.fit(np.array(self.all_params), np.array(self.all_fitness))
+
+            if self.early_stopping_iterations:
+                if population[0].fitness_value > best_val_so_far:
+                    best_val_so_far = population[0].fitness_value
+                    early_stopping_counter = 0
+                else:
+                    early_stopping_counter += 1
+                    if early_stopping_counter == self.early_stopping_iterations:
+                        bparams = ''.join([str(i) for i in population[0].params])
+                        logger.info(f"TERMINATION IS TRIGGERED: EARLY STOPPING."
+                                    f"THE BEST FITNESS {population[0].fitness_value}."
+                                    f"THE BEST PARAMS {bparams}.")
+                        break
 
             bparams = ''.join([str(i) for i in population[0].params])
             logger.info(f"TERMINATION IS TRIGGERED."
