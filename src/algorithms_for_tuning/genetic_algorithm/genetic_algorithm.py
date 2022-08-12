@@ -30,6 +30,7 @@ NUM_FITNESS_EVALUATIONS = glob_algo_params['numEvals']
 
 NUM_FITNESS_EVALUATIONS = 150
 
+
 @click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--dataset', required=True, help='dataset name in the config')
 @click.option('--num-individuals', default=10, help='number of individuals in generation')
@@ -50,16 +51,18 @@ NUM_FITNESS_EVALUATIONS = 150
               help='a log file to write logs of the algorithm execution to')
 @click.option('--exp-id', required=True, type=int, help='mlflow experiment id')
 @click.option('--topic-count', required=False, type=int, help='desired count of MAIN topics')
+@click.option('--tag', required=False, type=str, help='desired count of MAIN topics')
 def run_algorithm(dataset,
                   num_individuals,
                   num_iterations,
                   num_fitness_evaluations,
                   mutation_type, crossover_type, selection_type,
                   elem_cross_prob, cross_alpha,
-                  best_proc, log_file, exp_id, topic_count):
+                  best_proc, log_file, exp_id, topic_count, tag):
     logger.debug(f"Command line: {sys.argv}")
 
     run_uid = str(uuid.uuid4())
+    tag = tag if tag is not None else str(run_uid)
     logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
     logging.config.dictConfig(logging_config)
 
@@ -82,7 +85,8 @@ def run_algorithm(dataset,
            best_proc=best_proc,
            alpha=cross_alpha,
            exp_id=exp_id,
-           topic_count=topic_count)
+           topic_count=topic_count,
+           tag=tag)
     best_value = g.run(verbose=True)
     print(best_value * (-1))
 

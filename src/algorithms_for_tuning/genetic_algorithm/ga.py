@@ -182,7 +182,7 @@ class GA:
                  selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations: Optional[int] = 500,
                  early_stopping_iterations: Optional[int] = 5,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
-                 calc_scheme='type1', topic_count: Optional[int] = None, **kwargs):
+                 calc_scheme='type1', topic_count: Optional[int] = None, tag: Optional[str] = None, **kwargs):
         self.dataset = dataset
 
         if crossover_type == 'blend_crossover':
@@ -211,6 +211,7 @@ class GA:
         self.exp_id = exp_id
         self.calc_scheme = calc_scheme
         self.topic_count = topic_count
+        self.tag = tag
 
     @staticmethod
     def init_individ(high_decor=1e5,
@@ -240,7 +241,8 @@ class GA:
         list_of_individuals = []
         for i in range(self.num_individuals):
             dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=self.init_individ(),
-                                exp_id=self.exp_id, alg_id=ALG_ID, topic_count=self.topic_count)
+                                exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
+                                topic_count=self.topic_count, tag=self.tag)
             list_of_individuals.append(make_individual(dto=dto))
         population_with_fitness = estimate_fitness(list_of_individuals)
         self.save_params(population_with_fitness)
@@ -249,7 +251,7 @@ class GA:
             logger.info("Surrogate is initialized!")
         return population_with_fitness
 
-    def _calculate_uncertain_res(self, generation, proc=0.3):
+    def _calculate_uncertain_res(self, generation, iteration_num: int, proc=0.3):
         X = np.array([individ.params for individ in generation])
         certanty = get_prediction_uncertanty(self.surrogate.surrogate, X, self.surrogate.name)
         recalculate_num = int(np.floor(len(certanty) * proc))
@@ -259,7 +261,8 @@ class GA:
         calculated = []
         for params in X[:recalculate_num]:
             dto = IndividualDTO(id=str(uuid.uuid4()), params=[float(i) for i in params], dataset=self.dataset,
-                                exp_id=self.exp_id, alg_id=ALG_ID, topic_count=self.topic_count)
+                                exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=iteration_num,
+                                topic_count=self.topic_count, tag=self.tag)
             calculated.append(make_individual(dto=dto))
 
         calculated = estimate_fitness(calculated)
@@ -271,7 +274,7 @@ class GA:
         for ix, params in enumerate(X[recalculate_num:]):
             dto = IndividualDTO(id=str(uuid.uuid4()), params=params, dataset=self.dataset,
                                 fitness_value=pred_y[ix], exp_id=self.exp_id, alg_id=ALG_ID,
-                                topic_count=self.topic_count)
+                                topic_count=self.topic_count, tag=self.tag)
             calculated.append(make_individual(dto=dto))
         return calculated
 
@@ -327,7 +330,7 @@ class GA:
             individ.fitness_value = y_pred[ix]
         return population
 
-    def run_crossover(self, pairs_generator, surrogate_iteration):
+    def run_crossover(self, pairs_generator, surrogate_iteration, iteration_num: int):
         new_generation = []
 
         for i, j in pairs_generator:
@@ -347,10 +350,12 @@ class GA:
 
                 child1_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_1,
                                            exp_id=self.exp_id,
-                                           alg_id=ALG_ID, topic_count=self.topic_count)
+                                           alg_id=ALG_ID, iteration_id=iteration_num,
+                                           topic_count=self.topic_count, tag=self.tag)
                 child2_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_2,
                                            exp_id=self.exp_id,
-                                           alg_id=ALG_ID, topic_count=self.topic_count)
+                                           alg_id=ALG_ID, iteration_id=iteration_num,
+                                           topic_count=self.topic_count, tag=self.tag)
 
                 new_generation.append(make_individual(dto=child1_dto))
                 new_generation.append(make_individual(dto=child2_dto))
@@ -363,7 +368,8 @@ class GA:
                                          )
                 child1_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_1,
                                            exp_id=self.exp_id,
-                                           alg_id=ALG_ID, topic_count=self.topic_count)
+                                           alg_id=ALG_ID, iteration_id=iteration_num,
+                                           topic_count=self.topic_count, tag=self.tag)
                 new_generation.append(make_individual(dto=child1_dto))
 
                 self.evaluations_counter += 1
@@ -387,7 +393,7 @@ class GA:
                         new_generation = estimate_fitness(new_generation)
                         self.save_params(new_generation)
                 elif self.calc_scheme == 'type2':
-                    new_generation = self._calculate_uncertain_res(new_generation)
+                    new_generation = self._calculate_uncertain_res(new_generation, iteration_num=iteration_num)
                     self.save_params(new_generation)
 
         return new_generation
@@ -404,9 +410,9 @@ class GA:
 
         logger.info(f"ALGORITHM PARAMS  number of individuals {self.num_individuals}; "
                     f"number of fitness evals "
-                    f"{self.num_fitness_evaluations if self.num_fitness_evaluations else 'unlimited'}; ",
+                    f"{self.num_fitness_evaluations if self.num_fitness_evaluations else 'unlimited'}; "
                     f"number of early stopping iterations "
-                    f"{self.early_stopping_iterations if self.early_stopping_iterations else 'unlimited'}; ",
+                    f"{self.early_stopping_iterations if self.early_stopping_iterations else 'unlimited'}; "
                     f"crossover prob {self.elem_cross_prob}")
 
         # population initialization
@@ -439,7 +445,7 @@ class GA:
             logger.info(f"PAIRS ARE CREATED")
 
             # Crossover
-            new_generation = self.run_crossover(pairs_generator, surrogate_iteration)
+            new_generation = self.run_crossover(pairs_generator, surrogate_iteration, iteration_num=ii)
 
             new_generation.sort(key=operator.attrgetter('fitness_value'), reverse=True)
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
@@ -499,9 +505,13 @@ class GA:
                     params = self.mutation(copy.deepcopy(population[i].params),
                                            elem_mutation_prob=copy.deepcopy(population[i].params[13]))
                     dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=[float(i) for i in params],
-                                        exp_id=self.exp_id, alg_id=ALG_ID, topic_count=self.topic_count)
+                                        exp_id=self.exp_id, alg_id=ALG_ID, topic_count=self.topic_count, tag=self.tag)
                     population[i] = make_individual(dto=dto)
                 self.evaluations_counter += 1
+
+            # after the mutation we obtain a new population that needs to be evaluated
+            for p in population:
+                p.dto.iteration_id = ii
 
             fitness_calc_time_start = time.time()
             if not SPEEDUP or not self.surrogate:
@@ -516,7 +526,7 @@ class GA:
                     population = estimate_fitness(population)
                     self.save_params(population)
             elif self.calc_scheme == 'type2' and self.surrogate:
-                population = self._calculate_uncertain_res(population)
+                population = self._calculate_uncertain_res(population, iteration_num=ii)
                 self.save_params(population)
 
             ###
