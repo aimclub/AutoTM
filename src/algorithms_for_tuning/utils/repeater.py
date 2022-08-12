@@ -6,6 +6,7 @@ import os
 import random
 import shutil
 import sys
+import uuid
 from asyncio import Future
 from asyncio.tasks import FIRST_COMPLETED, ALL_COMPLETED
 from logging import config
@@ -70,11 +71,13 @@ class Repeater:
         for d in done:
             if d.exception():
                 logger.error("Found error in coroutines of processes.", exc_info=d.exception())
-                raise d.exception()
+                # raise d.exception()
 
-    def __init__(self, cfg: dict, checkpoint_path: Optional[str]):
+    def __init__(self, cfg: dict, checkpoint_path: Optional[str], run_tag: Optional[str] = None):
         self.cfg = cfg
         self.checkpoint_path = checkpoint_path
+        self.run_tag = run_tag if run_tag is not None else str(uuid.uuid4())
+        logger.info(f"Running with RUN TAG: {self.run_tag}")
 
     def _load_and_prepare_checkpoint(self, previous_checkpoint_path: Optional[str]) -> Set[str]:
         logger.info(f"Trying to load a checkpoint if possible. Previous checkpoint path: {previous_checkpoint_path}")
@@ -107,7 +110,7 @@ class Repeater:
         for dataset in datasets:
             for alg_cfg in alg_configs:
                 cmd, args, workdir, repetitions = alg_cfg["cmd"], alg_cfg["args"], alg_cfg["workdir"], alg_cfg["repetitions"]
-                args = ["--dataset", dataset] + args.split(" ")
+                args = ["--dataset", dataset, "--tag", self.run_tag] + args.split(" ")
                 for i in range(repetitions):
                     record = self._get_checkpoint_record(i, cmd, args)
                     if record in checkpoint:
@@ -193,11 +196,14 @@ def find_checkpoints(checkpoint_dir: str, checkpoint_prefix: str) -> Tuple[str, 
               required=False, help='a max number of parallel processes running at the same moment', type=int)
 @click.option('--log-file', default="/var/log/repeator.log",
               help='a log file to write logs of the algorithm execution to')
+@click.option('--tag', required=False, type=str,
+              help='a custom tag string to denote the current set of experiments')
 def main(yaml_config: str,
          checkpoint_dir: Optional[str],
          checkpoint_prefix: Optional[str],
          parallel: Optional[int],
-         log_file):
+         log_file: str,
+         tag: Optional[str]):
     logging.config.dictConfig(get_logging_config(log_file))
 
     logger.info(f"Starting repeater with arguments: {sys.argv}")
@@ -207,7 +213,7 @@ def main(yaml_config: str,
     previous_checkpoint_file, checkpoint_file = \
         find_checkpoints(checkpoint_dir, checkpoint_prefix) if checkpoint_dir else (None, None)
 
-    r = Repeater(cfg, checkpoint_file)
+    r = Repeater(cfg, checkpoint_file, run_tag=tag)
     asyncio.run(r.run_repetitions(previous_checkpoint_file, max_parallel_processes=parallel))
     logger.info("Repeater has finished.")
 
