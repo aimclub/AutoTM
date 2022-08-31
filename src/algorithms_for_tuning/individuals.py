@@ -5,6 +5,9 @@ from typing import List
 from kube_fitness.metrics import AVG_COHERENCE_SCORE
 from kube_fitness.schemas import IndividualDTO
 
+SPARSITY_PHI = 'sparsity_phi'
+SPARSITY_THETA = 'sparsity_theta'
+
 
 class Individual(ABC):
     @property
@@ -32,8 +35,15 @@ class RegularFitnessIndividual(Individual):
         return self._dto
 
     @property
-    def fitness_value(self) -> float:
+    def fitness_value_prev(self) -> float:
         return self.dto.fitness_value[AVG_COHERENCE_SCORE]
+
+    @property
+    def fitness_value(self) -> float:
+        alpha = 0.8
+        if 0.2 <= self.dto.fitness_value[SPARSITY_THETA] <= 0.8:
+            alpha = 1
+        return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE]
 
     @property
     def params(self) -> List:
