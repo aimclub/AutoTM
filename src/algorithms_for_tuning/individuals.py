@@ -26,7 +26,7 @@ class Individual(ABC):
         ...
 
 
-class RegularFitnessIndividual(Individual):
+class BaseIndividual(Individual, ABC):
     def __init__(self, dto: IndividualDTO):
         self._dto = dto
 
@@ -35,9 +35,17 @@ class RegularFitnessIndividual(Individual):
         return self._dto
 
     @property
-    def fitness_value_prev(self) -> float:
+    def params(self) -> List:
+        return self.dto.params
+
+
+class RegularFitnessIndividual(BaseIndividual):
+    @property
+    def fitness_value(self) -> float:
         return self.dto.fitness_value[AVG_COHERENCE_SCORE]
 
+
+class SparsityScalerBasedFitnessIndividual(BaseIndividual):
     @property
     def fitness_value(self) -> float:
         alpha = 0.8
@@ -45,10 +53,8 @@ class RegularFitnessIndividual(Individual):
             alpha = 1
         return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE]
 
-    @property
-    def params(self) -> List:
-        return self.dto.params
-
 
 def make_individual(dto: IndividualDTO) -> Individual:
-    return RegularFitnessIndividual(dto=dto)
+    # TODO: choose fitness by ENV var
+    # return RegularFitnessIndividual(dto=dto)
+    return SparsityScalerBasedFitnessIndividual(dto=dto)
