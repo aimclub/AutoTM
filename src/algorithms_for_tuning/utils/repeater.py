@@ -8,7 +8,8 @@ import shutil
 import sys
 import uuid
 from asyncio import Future
-from asyncio.tasks import FIRST_COMPLETED, ALL_COMPLETED
+from asyncio.tasks import FIRST_COMPLETED
+from dataclasses import dataclass
 from logging import config
 from typing import List, Tuple, Iterable, Set
 from typing import Optional
@@ -61,6 +62,16 @@ def get_logging_config(logfile: str):
 logger = logging.getLogger("REPEATER")
 
 
+@dataclass(frozen=True)
+class RepetitionRun:
+    uid: uuid.UUID
+    repetition_attempt: int
+    cmd: str
+    workdir: str
+    args: List[str]
+    logfile: str
+
+
 class Repeater:
     @staticmethod
     def _get_checkpoint_record(rep_num, cmd: str, args: List[str]) -> str:
@@ -73,11 +84,19 @@ class Repeater:
                 logger.error("Found error in coroutines of processes.", exc_info=d.exception())
                 # raise d.exception()
 
-    def __init__(self, cfg: dict, checkpoint_path: Optional[str], run_tag: Optional[str] = None):
+    def __init__(self,
+                 cfg: dict,
+                 checkpoint_path: Optional[str],
+                 shared_log_dir: str,
+                 run_tag: Optional[str] = None):
         self.cfg = cfg
         self.checkpoint_path = checkpoint_path
+        self.shared_log_dir = os.path.join(shared_log_dir, f'run-{datetime.datetime.now().strftime("%y-%m-%d-%H-%M")}')
         self.run_tag = run_tag if run_tag is not None else str(uuid.uuid4())
         logger.info(f"Running with RUN TAG: {self.run_tag}")
+
+    def _prepare_log_dir(self):
+        os.makedirs(self.shared_log_dir, exist_ok=True)
 
     def _load_and_prepare_checkpoint(self, previous_checkpoint_path: Optional[str]) -> Set[str]:
         logger.info(f"Trying to load a checkpoint if possible. Previous checkpoint path: {previous_checkpoint_path}")
@@ -99,49 +118,55 @@ class Repeater:
 
         return checkpoint
 
-    def _prepare_configurations(self, previous_checkpoint_path: Optional[str]) \
-            -> Iterable[Tuple[int, str, str, List[str]]]:
+    def _prepare_configurations(self, previous_checkpoint_path: Optional[str]) -> Iterable[RepetitionRun]:
         logger.info("Preparing the list of configurations for the run")
         datasets: List[str] = self.cfg["datasets"]
         alg_configs: List[dict] = self.cfg["configurations"]
+
+        self._prepare_log_dir()
 
         checkpoint = self._load_and_prepare_checkpoint(previous_checkpoint_path)
 
         for dataset in datasets:
             for alg_cfg in alg_configs:
-                cmd, args, workdir, repetitions = alg_cfg["cmd"], alg_cfg["args"], alg_cfg["workdir"], alg_cfg["repetitions"]
-                args = ["--dataset", dataset, "--tag", self.run_tag] + args.split(" ")
+                cmd, args = alg_cfg["cmd"], alg_cfg["args"]
+                workdir, repetitions = alg_cfg["workdir"], alg_cfg["repetitions"]
                 for i in range(repetitions):
+                    run_uid = uuid.uuid4()
+                    log_file_path = os.path.join(self.shared_log_dir, f"run-log-{run_uid}.log")
+                    args = ["--dataset", dataset, "--tag", self.run_tag, "--log-file", log_file_path, *args.split(" ")]
                     record = self._get_checkpoint_record(i, cmd, args)
                     if record in checkpoint:
                         logger.info(f"Found configuration '{record}' in checkpoint. Skipping.")
                     else:
-                        yield i, cmd, workdir, args
+                        yield RepetitionRun(run_uid, i, cmd, workdir, args, log_file_path)
 
     def _save_to_checkpoint(self, rep_num, cmd: str, args: List[str]) -> None:
         if self.checkpoint_path:
             with open(self.checkpoint_path, "a") as f:
                 f.write(self._get_checkpoint_record(rep_num, cmd, args) + "\n")
 
-    async def _execute_run(self, rep_num: int, cmd: str, workdir: str, args: List[str]) -> None:
-        proc = await asyncio.create_subprocess_exec(cmd, *args,
-                                                    stdout=sys.stdout, stderr=sys.stdout, cwd=workdir)
+    async def _execute_run(self, rep_run: RepetitionRun) -> None:
+        logger.info(f"Starting process with uid {rep_run.uid}, cmd {rep_run.cmd} and args {rep_run.args}")
+        proc = await asyncio.create_subprocess_exec(rep_run.cmd, *rep_run.args,
+                                                    stdout=sys.stdout, stderr=sys.stdout, cwd=rep_run.workdir)
         ret_code = await proc.wait()
 
         if ret_code != 0:
-            msg = f"Return code {ret_code} != 0 for run (repetition {rep_num}) with cmd '{cmd}' and args '{args}'"
+            msg = f"Return code {ret_code} != 0 for run (repetition {rep_run.repetition_attempt}) " \
+                  f"with cmd '{rep_run.cmd}' and args '{rep_run.args}'"
             logger.error(msg)
             raise Exception(msg)
         else:
-            logger.info(f"Successful run with cmd '{cmd}' and args '{args}'")
-            self._save_to_checkpoint(rep_num, cmd, args)
+            logger.info(f"Successful run with cmd '{rep_run.cmd}' and args '{rep_run.args}'")
+            self._save_to_checkpoint(rep_run.repetition_attempt, rep_run.cmd, rep_run.args)
 
     async def run_repetitions(self, previous_checkpoint_path, max_parallel_processes: Optional[int] = None):
         logger.info("Starting the run")
         configurations = list(self._prepare_configurations(previous_checkpoint_path))
         configurations = random.sample(configurations, len(configurations))
         # processes = (self._execute_run(rep_num, cmd, workdir, args) for rep_num, cmd, workdir, args in configurations)
-        processes = [self._execute_run(rep_num, cmd, workdir, args) for rep_num, cmd, workdir, args in configurations]
+        processes = [self._execute_run(rep_run) for rep_run in configurations]
         logger.info(f"Initial number of configurations to calculate: {len(configurations)}")
 
         if len(configurations) == 0:
@@ -152,7 +177,7 @@ class Repeater:
             logger.info(f"Max count of parallel processes are restricted to {max_parallel_processes}")
 
             total_done_count = 0
-            run_slots: List[Future]  = [asyncio.create_task(p) for p in processes[:max_parallel_processes]]
+            run_slots: List[Future] = [asyncio.create_task(p) for p in processes[:max_parallel_processes]]
             processes = processes[max_parallel_processes:] if len(processes) > max_parallel_processes else []
             while len(run_slots) > 0:
                 done, pending = await asyncio.wait(run_slots, return_when=FIRST_COMPLETED)
@@ -190,6 +215,8 @@ def find_checkpoints(checkpoint_dir: str, checkpoint_prefix: str) -> Tuple[str, 
 @click.command(context_settings=dict(allow_extra_args=True))
 @click.option('--config', 'yaml_config', required=True, help='a path to the config file', type=str)
 @click.option('--checkpoint-dir', required=False, help='a path to the directory where checkpoints is stored', type=str)
+@click.option('--runs-log-dir',
+              default="/var/log", help='a path to the directory where logs of all runs will be stored', type=str)
 @click.option('--checkpoint-prefix',
               required=False, default="repeater-checkpoint", help='a prefix to be used in checkpoint files', type=str)
 @click.option('--parallel',
@@ -200,6 +227,7 @@ def find_checkpoints(checkpoint_dir: str, checkpoint_prefix: str) -> Tuple[str, 
               help='a custom tag string to denote the current set of experiments')
 def main(yaml_config: str,
          checkpoint_dir: Optional[str],
+         runs_log_dir: str,
          checkpoint_prefix: Optional[str],
          parallel: Optional[int],
          log_file: str,
@@ -213,7 +241,7 @@ def main(yaml_config: str,
     previous_checkpoint_file, checkpoint_file = \
         find_checkpoints(checkpoint_dir, checkpoint_prefix) if checkpoint_dir else (None, None)
 
-    r = Repeater(cfg, checkpoint_file, run_tag=tag)
+    r = Repeater(cfg, checkpoint_file, shared_log_dir=runs_log_dir, run_tag=tag)
     asyncio.run(r.run_repetitions(previous_checkpoint_file, max_parallel_processes=parallel))
     logger.info("Repeater has finished.")
 
