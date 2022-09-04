@@ -1,18 +1,16 @@
 import copy
 import gc
 import logging
-import math
 import operator
-import os
 import random
 import sys
 import time
 import uuid
 import warnings
-from typing import List, Optional
+from typing import Optional
 
+import math
 import numpy as np
-import yaml
 from sklearn.ensemble import BaggingRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -20,70 +18,22 @@ from sklearn.gaussian_process.kernels import RBF, Matern, WhiteKernel, \
     ConstantKernel, ExpSineSquared, RationalQuadratic
 from sklearn.metrics import mean_squared_error
 from sklearn.neural_network import MLPRegressor
-from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import SVR
-from yaml import Loader
+from sklearn.tree import DecisionTreeRegressor
 
 from algorithms_for_tuning.genetic_algorithm.crossover import crossover
 from algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from algorithms_for_tuning.genetic_algorithm.selection import selection
-from algorithms_for_tuning.individuals import Individual, make_individual
+from algorithms_for_tuning.individuals import make_individual
+from kube_fitness.tasks import IndividualDTO
+
+from algorithms_for_tuning.utils.fitness_estimator import estimate_fitness, prepare_fitness_estimator, log_best_solution
 
 ALG_ID = "ga"
 SPEEDUP = True
 
 warnings.filterwarnings("ignore")
 logger = logging.getLogger("GA_algo")
-
-from kube_fitness.tasks import IndividualDTO, TqdmToLogger
-
-if "FITNESS_CONFIG_PATH" in os.environ:
-    filepath = os.environ["FITNESS_CONFIG_PATH"]
-else:
-    filepath = "../../algorithms_for_tuning/genetic_algorithm/config.yaml"
-
-with open(filepath, "r") as file:
-    config = yaml.load(file, Loader=Loader)
-
-if not config['testMode']:
-    from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
-    from kube_fitness.tasks import parallel_fitness
-    from kube_fitness.tasks import log_best_solution as lbs
-
-    def estimate_fitness(population: List[Individual],
-                         use_tqdm: bool = False,
-                         tqdm_check_period: int = 2) -> List[Individual]:
-
-        population_dtos = [p.dto for p in population]
-        results_dto = parallel_fitness(population_dtos, use_tqdm, tqdm_check_period)
-        results = [make_individual(dto=dto) for dto in results_dto]
-
-        return results
-
-    def log_best_solution(individual: Individual, alg_args: Optional[str] = None):
-        lbs(individual.dto, alg_args=alg_args)
-else:
-    from tqdm import tqdm
-
-    def prepare_fitness_estimator():
-        pass
-
-    def estimate_fitness(population: List[Individual],
-                         use_tqdm: bool = False,
-                         tqdm_check_period: int = 2) -> List[Individual]:
-        results = []
-
-        tqdm_out = TqdmToLogger(logger, level=logging.INFO)
-        for p in tqdm(population, file=tqdm_out):
-            individual = copy.deepcopy(p)
-            individual.fitness_value = random.random()
-            results.append(individual)
-
-        return results
-
-
-    def log_best_solution(individual: Individual, alg_args: Optional[str] = None):
-        pass
 
 
 class Surrogate:
@@ -454,7 +404,7 @@ class GA:
 
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 bparams = ''.join([str(i) for i in population[0].params])
-                logger.info(f"TERMINATION IS TRIGGERED."
+                logger.info(f"TERMINATION IS TRIGGERED: EVAL NUM."
                             f"THE BEST FITNESS {population[0].fitness_value}."
                             f"THE BEST PARAMS {bparams}.")
                 # return population[0].fitness_value
@@ -536,7 +486,7 @@ class GA:
 
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 bparams = ''.join([str(i) for i in population[0].params])
-                logger.info(f"TERMINATION IS TRIGGERED."
+                logger.info(f"TERMINATION IS TRIGGERED: EVAL NUM (2)."
                             f"THE BEST FITNESS {population[0].fitness_value}."
                             f"THE BEST PARAMS {bparams}.")
                 # return population[0].fitness_value
@@ -566,9 +516,6 @@ class GA:
                         break
 
             bparams = ''.join([str(i) for i in population[0].params])
-            logger.info(f"TERMINATION IS TRIGGERED."
-                        f"THE BEST FITNESS {population[0].fitness_value}."
-                        f"THE BEST PARAMS {bparams}.")
             x.append(ii)
             y.append(population[0].fitness_value)
             logger.info(f"Population len {len(population)}. "
