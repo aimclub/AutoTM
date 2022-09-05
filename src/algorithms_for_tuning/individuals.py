@@ -48,6 +48,12 @@ class RegularFitnessIndividual(BaseIndividual):
 class SparsityScalerBasedFitnessIndividual(BaseIndividual):
     @property
     def fitness_value(self) -> float:
+        # it is a handling of the situation when a fitness-worker wasn't able to correctly calculate this indvidual
+        # due to some error in the proceess
+        # and thus the fitness value doesn't have any metrics except dummy AVG_COHERENCE_SCORE equal to zero
+        if self.dto.fitness_value[AVG_COHERENCE_SCORE] < 0.00000001:
+            return 0.0
+
         alpha = 0.8
         if 0.2 <= self.dto.fitness_value[SPARSITY_THETA] <= 0.8:
             alpha = 1
