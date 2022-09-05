@@ -7,7 +7,7 @@ import random
 import shutil
 import sys
 import uuid
-from asyncio import Future
+from asyncio import Future, subprocess
 from asyncio.tasks import FIRST_COMPLETED
 from dataclasses import dataclass
 from logging import config
@@ -70,6 +70,7 @@ class RepetitionRun:
     workdir: str
     args: List[str]
     logfile: str
+    stdout_logfile: str
 
 
 class Repeater:
@@ -80,9 +81,10 @@ class Repeater:
     @staticmethod
     def _check_for_exceptions(done: Set[Future]) -> None:
         for d in done:
-            if d.exception():
-                logger.error("Found error in coroutines of processes.", exc_info=d.exception())
-                # raise d.exception()
+            try:
+                d.result()
+            except Exception as ex:
+                logger.exception(f"Found error in coroutines of processes: {ex}")
 
     def __init__(self,
                  cfg: dict,
@@ -131,15 +133,18 @@ class Repeater:
             for alg_cfg in alg_configs:
                 cmd, args = alg_cfg["cmd"], alg_cfg["args"]
                 workdir, repetitions = alg_cfg["workdir"], alg_cfg["repetitions"]
+                workdir = os.path.abspath(workdir)
                 for i in range(repetitions):
                     run_uid = uuid.uuid4()
                     log_file_path = os.path.join(self.shared_log_dir, f"run-log-{run_uid}.log")
-                    args = ["--dataset", dataset, "--tag", self.run_tag, "--log-file", log_file_path, *args.split(" ")]
-                    record = self._get_checkpoint_record(i, cmd, args)
+                    stdout_logfile_path = os.path.join(self.shared_log_dir, f"stdout-stderr-run-log-{run_uid}.log")
+                    cmd_args = ["--dataset", dataset, "--tag", self.run_tag,
+                                "--log-file", log_file_path, *args.split(" ")]
+                    record = self._get_checkpoint_record(i, cmd, cmd_args)
                     if record in checkpoint:
                         logger.info(f"Found configuration '{record}' in checkpoint. Skipping.")
                     else:
-                        yield RepetitionRun(run_uid, i, cmd, workdir, args, log_file_path)
+                        yield RepetitionRun(run_uid, i, cmd, workdir, cmd_args, log_file_path, stdout_logfile_path)
 
     def _save_to_checkpoint(self, rep_num, cmd: str, args: List[str]) -> None:
         if self.checkpoint_path:
@@ -148,17 +153,20 @@ class Repeater:
 
     async def _execute_run(self, rep_run: RepetitionRun) -> None:
         logger.info(f"Starting process with uid {rep_run.uid}, cmd {rep_run.cmd} and args {rep_run.args}")
-        proc = await asyncio.create_subprocess_exec(rep_run.cmd, *rep_run.args,
-                                                    stdout=sys.stdout, stderr=sys.stdout, cwd=rep_run.workdir)
-        ret_code = await proc.wait()
+
+        with open(rep_run.stdout_logfile, "w") as f:
+            proc = await asyncio.create_subprocess_exec(rep_run.cmd, *rep_run.args,
+                                                        stdout=f, stderr=subprocess.STDOUT, cwd=rep_run.workdir)
+            ret_code = await proc.wait()
 
         if ret_code != 0:
-            msg = f"Return code {ret_code} != 0 for run (repetition {rep_run.repetition_attempt}) " \
+            msg = f"Return code {ret_code} != 0 for run with uid {rep_run.uid} " \
+                  f"(repetition {rep_run.repetition_attempt}) " \
                   f"with cmd '{rep_run.cmd}' and args '{rep_run.args}'"
             logger.error(msg)
             raise Exception(msg)
         else:
-            logger.info(f"Successful run with cmd '{rep_run.cmd}' and args '{rep_run.args}'")
+            logger.info(f"Successful run (uid {rep_run.uid}) with cmd '{rep_run.cmd}' and args '{rep_run.args}'")
             self._save_to_checkpoint(rep_run.repetition_attempt, rep_run.cmd, rep_run.args)
 
     async def run_repetitions(self, previous_checkpoint_path, max_parallel_processes: Optional[int] = None):
