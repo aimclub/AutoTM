@@ -11,7 +11,7 @@ from asyncio import Future, subprocess
 from asyncio.tasks import FIRST_COMPLETED
 from dataclasses import dataclass
 from logging import config
-from typing import List, Tuple, Iterable, Set
+from typing import List, Tuple, Iterable, Set, Union
 from typing import Optional
 
 import click
@@ -68,15 +68,33 @@ class RepetitionRun:
     repetition_attempt: int
     cmd: str
     workdir: str
-    args: List[str]
+    volatile_args: List[str]
+    idempotent_args: List[str]
     logfile: str
     stdout_logfile: str
+
+    @property
+    def args(self) -> List[str]:
+        return [*self.volatile_args, *self.idempotent_args]
 
 
 class Repeater:
     @staticmethod
-    def _get_checkpoint_record(rep_num, cmd: str, args: List[str]) -> str:
-        return f"{rep_num}\t{cmd}\t{' '.join(args)}\t{FULL_RECORD_SYMBOL}"
+    def _get_checkpoint_record(rep_run: RepetitionRun) -> str:
+        return f"VOLATILE: {rep_run.volatile_args}\t" \
+               f"IDEMPOTENT: {rep_run.repetition_attempt}" \
+               f"\t{rep_run.cmd}\t{' '.join(rep_run.idempotent_args)}\t{FULL_RECORD_SYMBOL}"
+
+    @staticmethod
+    def _get_idempotent_checkpoint_record(rep_run: Union[RepetitionRun, str]) -> str:
+        if isinstance(rep_run, RepetitionRun):
+            record = Repeater._get_checkpoint_record(rep_run)
+        else:
+            record = rep_run
+
+        i = record.index("IDEMPOTENT:")
+
+        return record[i:]
 
     @staticmethod
     def _check_for_exceptions(done: Set[Future]) -> None:
@@ -114,7 +132,10 @@ class Repeater:
         if os.path.exists(self.checkpoint_path):
             logger.info(f"Loading checkpoint data from {self.checkpoint_path}")
             with open(self.checkpoint_path, "r") as f:
-                checkpoint = set(line.strip() for line in f.readlines() if line.strip().endswith(FULL_RECORD_SYMBOL))
+                checkpoint = set(
+                    self._get_idempotent_checkpoint_record(line.strip())
+                    for line in f.readlines() if line.strip().endswith(FULL_RECORD_SYMBOL)
+                )
         else:
             checkpoint = set()
 
@@ -138,18 +159,23 @@ class Repeater:
                     run_uid = uuid.uuid4()
                     log_file_path = os.path.join(self.shared_log_dir, f"run-log-{run_uid}.log")
                     stdout_logfile_path = os.path.join(self.shared_log_dir, f"stdout-stderr-run-log-{run_uid}.log")
-                    cmd_args = ["--dataset", dataset, "--tag", self.run_tag,
-                                "--log-file", log_file_path, *args.split(" ")]
-                    record = self._get_checkpoint_record(i, cmd, cmd_args)
+                    volatile_cmd_args = ["--tag", self.run_tag, "--log-file", log_file_path]
+                    idempotent_cmd_args = ["--dataset", dataset, *args.split(" ")]
+
+                    rep_run = RepetitionRun(run_uid, i, cmd, workdir,
+                                            volatile_cmd_args, idempotent_cmd_args, log_file_path, stdout_logfile_path)
+
+                    record = self._get_idempotent_checkpoint_record(rep_run)
+
                     if record in checkpoint:
                         logger.info(f"Found configuration '{record}' in checkpoint. Skipping.")
                     else:
-                        yield RepetitionRun(run_uid, i, cmd, workdir, cmd_args, log_file_path, stdout_logfile_path)
+                        yield rep_run
 
-    def _save_to_checkpoint(self, rep_num, cmd: str, args: List[str]) -> None:
+    def _save_to_checkpoint(self, rep_run: RepetitionRun) -> None:
         if self.checkpoint_path:
             with open(self.checkpoint_path, "a") as f:
-                f.write(self._get_checkpoint_record(rep_num, cmd, args) + "\n")
+                f.write(self._get_checkpoint_record(rep_run) + "\n")
 
     async def _execute_run(self, rep_run: RepetitionRun) -> None:
         logger.info(f"Starting process with uid {rep_run.uid}, cmd {rep_run.cmd} and args {rep_run.args}")
@@ -167,7 +193,7 @@ class Repeater:
             raise Exception(msg)
         else:
             logger.info(f"Successful run (uid {rep_run.uid}) with cmd '{rep_run.cmd}' and args '{rep_run.args}'")
-            self._save_to_checkpoint(rep_run.repetition_attempt, rep_run.cmd, rep_run.args)
+            self._save_to_checkpoint(rep_run)
 
     async def run_repetitions(self, previous_checkpoint_path, max_parallel_processes: Optional[int] = None):
         logger.info("Starting the run")

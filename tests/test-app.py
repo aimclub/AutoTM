@@ -8,4 +8,4 @@ with open("test-population.pickle", "rb") as f:
 individual = pop[0]
 
 prepare_fitness_estimator()
-estimate_fitness([individual])
+estimate_fitness(pop)
