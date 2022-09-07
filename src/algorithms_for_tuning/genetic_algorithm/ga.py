@@ -303,6 +303,7 @@ class GA:
         for i in [5, 6, 8, 9]:
             params[i] = self._check_param(params[i], (self.low_spm, self.high_spm))
         for i in [1, 4, 7, 10, 11]:
+            params[i] = float(int(params[i]))
             params[i] = self._check_param(params[i], (self.low_n, self.high_n))
         for i in [12, 13, 14]:
             params[i] = self._check_param(params[i], (self.low_prob, self.high_prob))
