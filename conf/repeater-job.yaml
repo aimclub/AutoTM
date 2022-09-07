@@ -21,6 +21,7 @@ spec:
         imagePullPolicy: Always
         args: ["--config", "repeater-config.yaml",
                "--checkpoint-dir", "/var/lib/repeater/",
+               "--runs-log-dir", "/var/lib/repeater/logs",
                "--parallel", "20"]
         env:
           - name: CELERY_BROKER_URL
