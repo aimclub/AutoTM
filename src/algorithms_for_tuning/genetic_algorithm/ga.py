@@ -139,10 +139,10 @@ class GA:
                  calc_scheme='type1', topic_count: Optional[int] = None, tag: Optional[str] = None, **kwargs):
         self.dataset = dataset
 
-        if crossover_type == 'blend_crossover':
-            self.crossover_children = 1
-        else:
-            self.crossover_children = 2
+        # if crossover_type == 'blend_crossover':
+        #     self.crossover_children = 1
+        # else:
+        self.crossover_children = 2
 
         self.num_individuals = num_individuals
         self.num_iterations = num_iterations
@@ -168,19 +168,25 @@ class GA:
         self.tag = tag
         # params
         self.high_decor = 1e4
-        self.high_n = 8
+        self.high_n = 12
         self.high_spb = 1e2
         self.low_spm = 1e2
+        self.low_decor = 0
+        self.low_n = 0
+        self.low_spb = 1e-3
+        self.high_spm = -1e-3
+        self.low_prob = 0
+        self.high_prob = 1
 
     def init_individ(self):
-        val_decor = np.random.uniform(low=0, high=self.high_decor, size=1)[0]
-        var_n = np.random.randint(low=0, high=self.high_n, size=5)
-        var_sm = np.random.uniform(low=1e-3, high=self.high_spb, size=2)
-        var_sp = np.random.uniform(low=self.low_spm, high=-1e-3, size=4)
-        ext_mutation_prob = np.random.uniform(low=0, high=1, size=1)[0]
-        ext_elem_mutation_prob = np.random.uniform(low=0, high=1, size=1)[0]
-        ext_mutation_selector = np.random.uniform(low=0, high=1, size=1)[0]
-        val_decor_2 = np.random.uniform(low=0, high=self.high_decor, size=1)[0]
+        val_decor = np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[0]
+        var_n = np.random.randint(low=self.low_n, high=self.high_n, size=5)
+        var_sm = np.random.uniform(low=self.low_spb, high=self.high_spb, size=2)
+        var_sp = np.random.uniform(low=self.low_spm, high=self.high_spm, size=4)
+        ext_mutation_prob = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
+        ext_elem_mutation_prob = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
+        ext_mutation_selector = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
+        val_decor_2 = np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[0]
         params = [
             val_decor, var_n[0],
             var_sm[0], var_sm[1], var_n[1],
@@ -286,6 +292,24 @@ class GA:
             individ.fitness_value = y_pred[ix]
         return population
 
+    def _check_param(self, param, bounds):
+        param = min(param, bounds[1])
+        param = max(param, bounds[0])
+        return param
+
+    def check_params_bounds(self, params):
+        for i in [2, 3]:
+            params[i] = self._check_param(params[i], (self.low_spb, self.high_spb))
+        for i in [5, 6, 8, 9]:
+            params[i] = self._check_param(params[i], (self.low_spm, self.high_spm))
+        for i in [1, 4, 7, 10, 11]:
+            params[i] = self._check_param(params[i], (self.low_n, self.high_n))
+        for i in [12, 13, 14]:
+            params[i] = self._check_param(params[i], (self.low_prob, self.high_prob))
+        for i in [0, 15]:
+            params[i] = self._check_param(params[i], (self.low_decor, self.high_decor))
+        return params
+
     def run_crossover(self, pairs_generator, surrogate_iteration, iteration_num: int):
         new_generation = []
 
@@ -303,6 +327,9 @@ class GA:
                                                   parent_2=parent_2,
                                                   elem_cross_prob=self.elem_cross_prob,
                                                   alpha=self.alpha)
+
+                child_1 = self.check_params_bounds(child_1)
+                child_2 = self.check_params_bounds(child_2)
 
                 child1_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_1,
                                            exp_id=self.exp_id,
@@ -322,6 +349,9 @@ class GA:
                                          elem_cross_prob=self.elem_cross_prob,
                                          alpha=self.alpha
                                          )
+
+                child_1 = self.check_params_bounds(child_1)
+
                 child1_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_1,
                                            exp_id=self.exp_id,
                                            alg_id=ALG_ID, iteration_id=iteration_num,
@@ -416,7 +446,6 @@ class GA:
                 # return population[0].fitness_value
                 break
 
-
             del pairs_generator
             gc.collect()
 
@@ -446,20 +475,22 @@ class GA:
                 pass
 
             # mutation params 12, 13
+            # TODO: check this code
             for i in range(1, len(population)):
                 if random.random() <= population[i].params[12]:
                     for idx in range(3):
                         if random.random() < population[i].params[13]:
                             if idx == 0:
                                 population[i].params[12] = np.random.uniform(low=0, high=1, size=1)[0]
-                            elif idx == 2:
+                            elif idx == 1:
                                 population[i].params[13] = np.random.uniform(low=0, high=1, size=1)[0]
-                            elif idx == 3:
+                            elif idx == 2:
                                 population[i].params[13] = np.random.uniform(low=0, high=1, size=1)[0]
 
                 if random.random() <= population[i].params[12]:
                     params = self.mutation(copy.deepcopy(population[i].params),
                                            elem_mutation_prob=copy.deepcopy(population[i].params[13]))
+                    params = self.check_params_bounds(params)
                     dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=[float(i) for i in params],
                                         exp_id=self.exp_id, alg_id=ALG_ID, topic_count=self.topic_count, tag=self.tag)
                     population[i] = make_individual(dto=dto)
