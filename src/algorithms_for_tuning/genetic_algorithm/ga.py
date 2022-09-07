@@ -50,6 +50,7 @@ if not config['testMode']:
     from kube_fitness.tasks import parallel_fitness
     from kube_fitness.tasks import log_best_solution as lbs
 
+
     def estimate_fitness(population: List[Individual],
                          use_tqdm: bool = False,
                          tqdm_check_period: int = 2) -> List[Individual]:
@@ -60,13 +61,16 @@ if not config['testMode']:
 
         return results
 
+
     def log_best_solution(individual: Individual, alg_args: Optional[str] = None):
         lbs(individual.dto, alg_args=alg_args)
 else:
     from tqdm import tqdm
 
+
     def prepare_fitness_estimator():
         pass
+
 
     def estimate_fitness(population: List[Individual],
                          use_tqdm: bool = False,
@@ -212,19 +216,21 @@ class GA:
         self.calc_scheme = calc_scheme
         self.topic_count = topic_count
         self.tag = tag
+        # params
+        self.high_decor = 1e4
+        self.high_n = 8
+        self.high_spb = 1e2
+        self.low_spm = 1e2
 
-    @staticmethod
-    def init_individ(high_decor=1e5,
-                     high_n=8, high_spb=1e2,
-                     low_spm=-1e2):
-        val_decor = np.random.uniform(low=0, high=high_decor, size=1)[0]
-        var_n = np.random.randint(low=0, high=high_n, size=5)
-        var_sm = np.random.uniform(low=1e-3, high=high_spb, size=2)
-        var_sp = np.random.uniform(low=low_spm, high=-1e-3, size=4)
+    def init_individ(self):
+        val_decor = np.random.uniform(low=0, high=self.high_decor, size=1)[0]
+        var_n = np.random.randint(low=0, high=self.high_n, size=5)
+        var_sm = np.random.uniform(low=1e-3, high=self.high_spb, size=2)
+        var_sp = np.random.uniform(low=self.low_spm, high=-1e-3, size=4)
         ext_mutation_prob = np.random.uniform(low=0, high=1, size=1)[0]
         ext_elem_mutation_prob = np.random.uniform(low=0, high=1, size=1)[0]
         ext_mutation_selector = np.random.uniform(low=0, high=1, size=1)[0]
-        val_decor_2 = np.random.uniform(low=0, high=high_decor, size=1)[0]
+        val_decor_2 = np.random.uniform(low=0, high=self.high_decor, size=1)[0]
         params = [
             val_decor, var_n[0],
             var_sm[0], var_sm[1], var_n[1],
@@ -459,7 +465,6 @@ class GA:
                             f"THE BEST PARAMS {bparams}.")
                 # return population[0].fitness_value
                 break
-
 
             del pairs_generator
             gc.collect()
