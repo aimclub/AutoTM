@@ -180,7 +180,7 @@ class GA:
         self.low_prob = 0
         self.high_prob = 1
 
-    def init_individ(self):
+    def init_individ(self, base_model=False):
         val_decor = np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[0]
         var_n = np.random.randint(low=self.low_n, high=self.high_n, size=4)
         var_back = np.random.randint(low=self.low_back, high=self.high_back, size=1)[0]
@@ -199,15 +199,23 @@ class GA:
             ext_mutation_prob, ext_elem_mutation_prob, ext_mutation_selector,
             val_decor_2
         ]
+        if base_model:
+            for i in [0, 4, 7, 10, 11, 15]:
+                params[i] = 0
         params = [float(i) for i in params]
         return params
 
     def init_population(self):
         list_of_individuals = []
         for i in range(self.num_individuals):
-            dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=self.init_individ(),
-                                exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
-                                topic_count=self.topic_count, tag=self.tag)
+            if i == 0:
+                dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=self.init_individ(base_model=True),
+                                    exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
+                                    topic_count=self.topic_count, tag=self.tag)
+            else:
+                dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=self.init_individ(),
+                                    exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
+                                    topic_count=self.topic_count, tag=self.tag)
             # TODO: improve heuristic on search space
             list_of_individuals.append(make_individual(dto=dto))
         population_with_fitness = estimate_fitness(list_of_individuals)
