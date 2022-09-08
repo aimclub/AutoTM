@@ -1,6 +1,7 @@
 import random
 import numpy as np
 
+
 def mutation_one_param(individ, high_decor=1e5,
                        high_n=8, high_spb=1e2,
                        low_spm=-1e2, elem_mutation_prob=0.1
@@ -59,23 +60,30 @@ def mutation_combined(individ, elem_mutation_prob=0.1):
     pass
 
 
-def mutation_psm(individ, elem_mutation_prob=0.1):
+def mutation_psm(individ, elem_mutation_prob):
     for i in range(len(individ)):
         if random.random() < elem_mutation_prob:
             if i == 0:
-                individ[i] = np.random.uniform(low=1, high=100, size=1)[0]
-            elif i in [1, 4, 7]:
-                j = np.random.choice([1, 4, 7])
+                individ[i] = individ[15]
+            elif i == 15:
+                individ[i] = individ[0]
+            elif i in [1, 4, 7, 10]:
+                j = np.random.choice([1, 4, 7, 10])
                 tmp = individ[i]
                 individ[i] = individ[j]
                 individ[j] = tmp
-            elif i in [2, 5]:
-                j = np.random.choice([2, 5])
+            elif i in [2, 3]:
+                j = np.random.choice([2, 3])
                 tmp = individ[i]
                 individ[i] = individ[j]
                 individ[j] = tmp
-            elif i in [3, 6]:
-                j = np.random.choice([2, 5])
+            # elif i in [12, 13, 14]:
+            #     j = np.random.choice([12, 13, 14])
+            #     tmp = individ[i]
+            #     individ[i] = individ[j]
+            #     individ[j] = tmp
+            elif i in [5, 6, 8, 9]:
+                j = np.random.choice([5, 6, 8, 9])
                 tmp = individ[i]
                 individ[i] = individ[j]
                 individ[j] = tmp
