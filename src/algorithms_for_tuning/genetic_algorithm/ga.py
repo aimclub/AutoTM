@@ -167,20 +167,23 @@ class GA:
         self.topic_count = topic_count
         self.tag = tag
         # params
-        self.high_decor = 1e4
-        self.high_n = 12
-        self.high_spb = 1e2
-        self.low_spm = 1e2
+        self.high_decor = 1e5  # TODO: check param
         self.low_decor = 0
         self.low_n = 0
+        self.high_n = 30  # TODO: check param
+        self.low_back = 0
+        self.high_back = 5
+        self.high_spb = 1e2  # TODO: check param
         self.low_spb = 1e-3
+        self.low_spm = 1e2
         self.high_spm = -1e-3
         self.low_prob = 0
         self.high_prob = 1
 
     def init_individ(self):
         val_decor = np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[0]
-        var_n = np.random.randint(low=self.low_n, high=self.high_n, size=5)
+        var_n = np.random.randint(low=self.low_n, high=self.high_n, size=4)
+        var_back = np.random.randint(low=self.low_back, high=self.high_back, size=1)[0]
         var_sm = np.random.uniform(low=self.low_spb, high=self.high_spb, size=2)
         var_sp = np.random.uniform(low=self.low_spm, high=self.high_spm, size=4)
         ext_mutation_prob = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
@@ -192,7 +195,7 @@ class GA:
             var_sm[0], var_sm[1], var_n[1],
             var_sp[0], var_sp[1], var_n[2],
             var_sp[2], var_sp[3], var_n[3],
-            var_n[4],
+            var_back,
             ext_mutation_prob, ext_elem_mutation_prob, ext_mutation_selector,
             val_decor_2
         ]
@@ -205,6 +208,7 @@ class GA:
             dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=self.init_individ(),
                                 exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
                                 topic_count=self.topic_count, tag=self.tag)
+            # TODO: improve heuristic on search space
             list_of_individuals.append(make_individual(dto=dto))
         population_with_fitness = estimate_fitness(list_of_individuals)
         self.save_params(population_with_fitness)
@@ -302,9 +306,12 @@ class GA:
             params[i] = self._check_param(params[i], (self.low_spb, self.high_spb))
         for i in [5, 6, 8, 9]:
             params[i] = self._check_param(params[i], (self.low_spm, self.high_spm))
-        for i in [1, 4, 7, 10, 11]:
+        for i in [1, 4, 7, 10]:
             params[i] = float(int(params[i]))
             params[i] = self._check_param(params[i], (self.low_n, self.high_n))
+        for i in [11]:
+            params[i] = float(int(params[i]))
+            params[i] = self._check_param(params[i], (self.low_back, self.high_back))
         for i in [12, 13, 14]:
             params[i] = self._check_param(params[i], (self.low_prob, self.high_prob))
         for i in [0, 15]:
@@ -478,24 +485,35 @@ class GA:
             # mutation params 12, 13
             # TODO: check this code
             for i in range(1, len(population)):
-                if random.random() <= population[i].params[12]:
-                    for idx in range(3):
-                        if random.random() < population[i].params[13]:
-                            if idx == 0:
-                                population[i].params[12] = np.random.uniform(low=0, high=1, size=1)[0]
-                            elif idx == 1:
-                                population[i].params[13] = np.random.uniform(low=0, high=1, size=1)[0]
-                            elif idx == 2:
-                                population[i].params[13] = np.random.uniform(low=0, high=1, size=1)[0]
+
+            #     if random.random() <= population[i].params[12]:
+            #         for idx in range(3):
+            #             if random.random() < population[i].params[13]:
+            #                 if idx == 0:
+            #                     population[i].params[12] = np.random.uniform(low=self.low_prob,
+            #                                                                  high=self.high_prob, size=1)[0]
+            #                 elif idx == 1:
+            #                     population[i].params[13] = np.random.uniform(low=self.low_prob,
+            #                                                                  high=self.high_prob, size=1)[0]
+            #                 elif idx == 2:
+            #                     population[i].params[13] = np.random.uniform(low=self.low_prob,
+            #                                                                  high=self.high_prob, size=1)[0]
 
                 if random.random() <= population[i].params[12]:
                     params = self.mutation(copy.deepcopy(population[i].params),
                                            elem_mutation_prob=copy.deepcopy(population[i].params[13]))
+
+                    fix_value_13 = population[i].params[13]
+                    for ix in [12, 13, 14]:
+                        if random.random() < fix_value_13:
+                            population[i].params[12] = np.random.uniform(low=self.low_prob,
+                                                                         high=self.high_prob, size=1)[0]
                     params = self.check_params_bounds(params)
                     dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=[float(i) for i in params],
                                         exp_id=self.exp_id, alg_id=ALG_ID, topic_count=self.topic_count, tag=self.tag)
                     population[i] = make_individual(dto=dto)
                 self.evaluations_counter += 1
+
 
             # after the mutation we obtain a new population that needs to be evaluated
             for p in population:
