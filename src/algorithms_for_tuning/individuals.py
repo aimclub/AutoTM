@@ -7,7 +7,7 @@ from kube_fitness.schemas import IndividualDTO
 
 SPARSITY_PHI = 'sparsity_phi'
 SPARSITY_THETA = 'sparsity_theta'
-SWITCHP_SCORE = 'avg_switchp'
+SWITCHP_SCORE = 'switchP'
 
 class Individual(ABC):
     @property
@@ -57,7 +57,10 @@ class SparsityScalerBasedFitnessIndividual(BaseIndividual):
         alpha = 0.8
         if 0.2 <= self.dto.fitness_value[SPARSITY_THETA] <= 0.8:
             alpha = 1
-        return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE] + self.dto.fitness_value[SWITCHP_SCORE]
+        if SWITCHP_SCORE in self.dto.fitness_value:
+            return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE] + self.dto.fitness_value[SWITCHP_SCORE]
+        else:
+            return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE]
 
 
 def make_individual(dto: IndividualDTO) -> Individual:
