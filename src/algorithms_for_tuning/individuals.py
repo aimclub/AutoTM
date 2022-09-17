@@ -57,11 +57,11 @@ class SparsityScalerBasedFitnessIndividual(BaseIndividual):
         alpha = 0.7
         if 0.2 <= self.dto.fitness_value[SPARSITY_THETA] <= 0.8:
             alpha = 1
-        if SWITCHP_SCORE in self.dto.fitness_value:
-            return alpha * (self.dto.fitness_value[AVG_COHERENCE_SCORE] + self.dto.fitness_value[SWITCHP_SCORE])
-        else:
-            return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE]
-        # return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE]
+        # if SWITCHP_SCORE in self.dto.fitness_value:
+        #     return alpha * (self.dto.fitness_value[AVG_COHERENCE_SCORE] + self.dto.fitness_value[SWITCHP_SCORE])
+        # else:
+        #     return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE]
+        return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE]
 
 def make_individual(dto: IndividualDTO) -> Individual:
     # TODO: choose fitness by ENV var
