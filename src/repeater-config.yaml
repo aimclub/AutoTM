@@ -1,50 +1,50 @@
 ---
 datasets:
 #  - books_stroyitelstvo_2030
-  - 20newsgroups #75
+#  - 20newsgroups #75
 #  - clickhouse_issues
 #  - banners
   - amazon_food
-#  - hotel-reviews
-  - lenta_ru #25
+  - hotel-reviews
+#  - lenta_ru #25
 
 configurations:
   - name: "ga_10"
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 28 --tag fitness_v8_unlim_iterations --topic-count 10"
+           --exp-id 28 --tag fitness_v16_unlim_iterations --topic-count 10"
     workdir: "/app"
-    repetitions: 1
+    repetitions: 5
 
   - name: "ga_25"
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 28 --tag fitness_v8_unlim_iterations --topic-count 25"
+           --exp-id 28 --tag fitness_v17_unlim_iterations --topic-count 25"
     workdir: "/app"
-    repetitions: 1
+    repetitions: 5
 
   - name: "ga_50"
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 28 --tag fitness_v8_unlim_iterations --topic-count 50"
+           --exp-id 28 --tag fitness_v17_unlim_iterations --topic-count 50"
     workdir: "/app"
-    repetitions: 1
+    repetitions: 5
 
   - name: "ga_75"
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 28 --tag fitness_v8_unlim_iterations --topic-count 75"
+           --exp-id 28 --tag fitness_v17_unlim_iterations --topic-count 75"
     workdir: "/app"
-    repetitions: 1
+    repetitions: 5
 
   - name: "ga_100"
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 28 --tag fitness_v8_unlim_iterations --topic-count 100"
+           --exp-id 28 --tag fitness_v17_unlim_iterations --topic-count 100"
     workdir: "/app"
-    repetitions: 1
+    repetitions: 5
