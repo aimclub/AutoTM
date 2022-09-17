@@ -509,7 +509,13 @@ class GA:
 
                 if random.random() <= population[i].params[12]:
                     params = self.mutation(copy.deepcopy(population[i].params),
-                                           elem_mutation_prob=copy.deepcopy(population[i].params[13]))
+                                           elem_mutation_prob=copy.deepcopy(population[i].params[13]),
+                                           low_spb=self.low_spb, high_spb=self.high_spb,
+                                           low_spm=self.low_spm, high_spm=self.high_spm,
+                                           low_n=self.low_n, high_n=self.high_n,
+                                           low_back=self.low_back, high_back=self.high_back,
+                                           low_decor=self.low_decor, high_decor=self.high_decor
+                                           )
 
                     fix_value_13 = population[i].params[13]
                     for ix in [12, 13, 14]:
