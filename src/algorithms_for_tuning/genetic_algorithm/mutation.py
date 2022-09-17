@@ -2,26 +2,29 @@ import random
 import numpy as np
 
 
-def mutation_one_param(individ, high_decor=1e5,
-                       high_n=8, high_spb=1e2,
-                       low_spm=-1e2, elem_mutation_prob=0.1
+def mutation_one_param(individ, low_spb, high_spb,
+                       low_spm, high_spm,
+                       low_n, high_n,
+                       low_back, high_back,
+                       low_decor, high_decor,
+                       elem_mutation_prob=0.1
                        ):
     for i in range(len(individ)):
         if random.random() <= elem_mutation_prob:
-            if i in [0]:
-                individ[i] = np.random.uniform(low=0, high=high_decor, size=1)[0]
-            if i in [15]:
-                individ[i] = np.random.uniform(low=0, high=1, size=1)[0]
-            if i in [1, 4, 7, 10, 11]:
-                individ[i] = np.random.randint(low=0, high=high_n, size=1)[0]
             if i in [2, 3]:
-                individ[i] = np.random.uniform(low=1e-3, high=high_spb, size=1)[0]
-            if i in [5, 6, 8, 9]:
-                individ[i] = np.random.uniform(low=low_spm, high=-1e-3, size=1)[0]
+                individ[i] = np.random.uniform(low=low_spb, high=high_spb, size=1)[0]
+            for i in [5, 6, 8, 9]:
+                individ[i] = np.random.uniform(low=low_spm, high=high_spm, size=1)[0]
+            for i in [1, 4, 7, 10]:
+                individ[i] = float(np.random.randint(low=low_n, high=high_n, size=1)[0])
+            for i in [11]:
+                individ[i] = float(np.random.randint(low=low_back, high=high_back, size=1)[0])
+            for i in [0, 15]:
+                individ[i] = np.random.uniform(low=low_decor, high=high_decor, size=1)[0]
     return individ
 
 
-def positioning_mutation(individ, elem_mutation_prob=0.1):
+def positioning_mutation(individ, elem_mutation_prob=0.1, **kwargs):
     for i in range(len(individ)):
         set_1 = set([i])
         if random.random() <= elem_mutation_prob:
@@ -52,7 +55,7 @@ def positioning_mutation(individ, elem_mutation_prob=0.1):
         return individ
 
 
-def mutation_combined(individ, elem_mutation_prob=0.1):
+def mutation_combined(individ, elem_mutation_prob=0.1, **kwargs):
     if random.random() <= individ[14]:  # TODO: check 14th position
         return mutation_one_param(individ, elem_mutation_prob)
     else:
@@ -60,7 +63,7 @@ def mutation_combined(individ, elem_mutation_prob=0.1):
     pass
 
 
-def mutation_psm(individ, elem_mutation_prob):
+def mutation_psm(individ, elem_mutation_prob, **kwargs):
     for i in range(len(individ)):
         if random.random() < elem_mutation_prob:
             if i == 0:
