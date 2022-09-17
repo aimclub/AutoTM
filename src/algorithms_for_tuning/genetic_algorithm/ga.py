@@ -134,7 +134,7 @@ class GA:
     def __init__(self, dataset, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
                  selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations: Optional[int] = 500,
-                 early_stopping_iterations: Optional[int] = 5,
+                 early_stopping_iterations: Optional[int] = 10,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
                  calc_scheme='type1', topic_count: Optional[int] = None, tag: Optional[str] = None, **kwargs):
         self.dataset = dataset
