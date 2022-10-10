@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+import os
+import pickle
 from typing import List
+import numpy as np
 
 from kube_fitness.metrics import AVG_COHERENCE_SCORE
 from kube_fitness.schemas import IndividualDTO
@@ -8,6 +11,24 @@ from kube_fitness.schemas import IndividualDTO
 SPARSITY_PHI = 'sparsity_phi'
 SPARSITY_THETA = 'sparsity_theta'
 SWITCHP_SCORE = 'switchP'
+DF_NAMES = {
+    '20ng': 0,
+    'lentaru': 1,
+    'amazon_food': 2
+}
+
+METRICS_COLS = [
+    'avg_coherence_score', 'perplexityScore', 'backgroundTokensRatioScore', 'avg_switchp',
+    'coherence_10', 'coherence_15', 'coherence_20', 'coherence_25',
+    'coherence_30', 'coherence_35', 'coherence_40', 'coherence_45',
+    'coherence_50', 'coherence_55', 'contrast', 'purity', 'kernelSize',
+    'sparsity_phi', 'sparsity_theta', 'topic_significance_uni',
+    'topic_significance_vacuous', 'topic_significance_back',
+    'npmi_15', 'npmi_25', 'npmi_50'
+]
+
+PATH_TO_LEARNED_SCORING = './scoring_func'
+
 
 class Individual(ABC):
     @property
@@ -45,6 +66,38 @@ class RegularFitnessIndividual(BaseIndividual):
         return self.dto.fitness_value[AVG_COHERENCE_SCORE]
 
 
+class LearnedModel:
+    def __init__(self, save_path, dataset_name):
+        dataset_id = DF_NAMES[dataset_name]
+        general_save_path = os.path.join(save_path, 'general')
+        native_save_path = os.path.join(save_path, 'native')
+        with open(os.path.join(general_save_path, f'general_automl_{dataset_id}.pickle'), 'rb') as f:
+            self.general_model = pickle.load(f)
+        self.native_model = []
+        for i in range(5):
+            with open(os.path.join(native_save_path, f'native_automl_{dataset_id}_fold_{i}.pickle'), 'rb') as f:
+                self.native_model.append(pickle.load(f))
+
+    def general_predict(self, df):
+        y = self.general_model.predict(df[METRICS_COLS])
+        return y
+
+    def native_predict(self, df):
+        y = []
+        for k, nm in enumerate(self.native_model):
+            y.append(nm.predict(df[METRICS_COLS]))
+        y = np.array(y)
+        return np.mean(y, axis=0)
+
+
+class LearnedScorerFitnessIndividual(BaseIndividual):
+    @property
+    def fitness_value(self) -> float:
+        dataset_name = self.dto.dataset  # TODO: check namings
+        m = LearnedModel(save_path=PATH_TO_LEARNED_SCORING, dataset_name=dataset_name)
+        # TODO: predict from metrics df
+
+
 class SparsityScalerBasedFitnessIndividual(BaseIndividual):
     @property
     def fitness_value(self) -> float:
@@ -62,6 +115,7 @@ class SparsityScalerBasedFitnessIndividual(BaseIndividual):
         # else:
         #     return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE]
         return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE]
+
 
 def make_individual(dto: IndividualDTO) -> Individual:
     # TODO: choose fitness by ENV var
