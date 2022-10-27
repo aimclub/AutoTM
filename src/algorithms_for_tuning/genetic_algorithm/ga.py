@@ -133,17 +133,17 @@ def get_prediction_uncertanty(model, X, surrogate_name, percentile=90):
 class GA:
     def __init__(self, dataset, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
-                 selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations: Optional[int] = 500,
+                 selection_type='fitness_prop', elem_cross_prob=0.2,
+                 num_fitness_evaluations: Optional[int] = 500,
                  early_stopping_iterations: Optional[int] = 25,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
                  calc_scheme='type1', topic_count: Optional[int] = None, tag: Optional[str] = None, **kwargs):
-        self.dataset = dataset
 
+        self.dataset = dataset
         # if crossover_type == 'blend_crossover':
         #     self.crossover_children = 1
         # else:
         self.crossover_children = 2
-
         self.num_individuals = num_individuals
         self.num_iterations = num_iterations
         self.mutation = mutation(mutation_type)
@@ -430,6 +430,8 @@ class GA:
         best_val_so_far = -10
         early_stopping_counter = 0
 
+        run_id = str(uuid.uuid4())
+
         for ii in range(self.num_iterations):
             iteration_start_time = time.time()
 
@@ -458,6 +460,9 @@ class GA:
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 bparams = ''.join([str(i) for i in population[0].params])
                 logger.info(f"TERMINATION IS TRIGGERED: EVAL NUM."
+                            f"DATASET {self.dataset}."
+                            f"TOPICS NUM {self.topic_count}."
+                            f"RUN ID {run_id}."
                             f"THE BEST FITNESS {population[0].fitness_value}."
                             f"THE BEST PARAMS {bparams}."
                             f"ITERATION TIME {time.time() - iteration_start_time}.")
@@ -561,6 +566,9 @@ class GA:
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 bparams = ''.join([str(i) for i in population[0].params])
                 logger.info(f"TERMINATION IS TRIGGERED: EVAL NUM (2)."
+                            f"DATASET {self.dataset}."
+                            f"TOPICS NUM {self.topic_count}."
+                            f"RUN ID {run_id}."
                             f"THE BEST FITNESS {population[0].fitness_value}."
                             f"THE BEST PARAMS {bparams}."
                             f"ITERATION TIME {time.time() - iteration_start_time}.")
@@ -586,6 +594,9 @@ class GA:
                     if early_stopping_counter == self.early_stopping_iterations:
                         bparams = ''.join([str(i) for i in population[0].params])
                         logger.info(f"TERMINATION IS TRIGGERED: EARLY STOPPING."
+                                    f"DATASET {self.dataset}."
+                                    f"TOPICS NUM {self.topic_count}."
+                                    f"RUN ID {run_id}."
                                     f"THE BEST FITNESS {population[0].fitness_value}."
                                     f"THE BEST PARAMS {bparams}."
                                     f"ITERATION TIME {time.time() - iteration_start_time}.")
@@ -596,7 +607,10 @@ class GA:
             y.append(population[0].fitness_value)
             logger.info(f"Population len {len(population)}. "
                         f"Best params so far: {population[0].params}, with fitness: {population[0].fitness_value}." 
-                        f"ITERATION TIME: {time.time() - iteration_start_time}")
+                        f"ITERATION TIME: {time.time() - iteration_start_time}"
+                        f"DATASET {self.dataset}."
+                        f"TOPICS NUM {self.topic_count}."
+                        f"RUN ID {run_id}.")
 
         logger.info(f"Y: {y}")
 
