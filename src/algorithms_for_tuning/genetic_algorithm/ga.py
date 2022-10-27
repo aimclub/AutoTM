@@ -134,7 +134,7 @@ class GA:
     def __init__(self, dataset, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
                  selection_type='fitness_prop', elem_cross_prob=0.2, num_fitness_evaluations: Optional[int] = 500,
-                 early_stopping_iterations: Optional[int] = 10,
+                 early_stopping_iterations: Optional[int] = 25,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
                  calc_scheme='type1', topic_count: Optional[int] = None, tag: Optional[str] = None, **kwargs):
         self.dataset = dataset
@@ -431,6 +431,7 @@ class GA:
         early_stopping_counter = 0
 
         for ii in range(self.num_iterations):
+            iteration_start_time = time.time()
 
             logger.info(f"ENTERING GENERATION {ii}")
 
@@ -458,7 +459,8 @@ class GA:
                 bparams = ''.join([str(i) for i in population[0].params])
                 logger.info(f"TERMINATION IS TRIGGERED: EVAL NUM."
                             f"THE BEST FITNESS {population[0].fitness_value}."
-                            f"THE BEST PARAMS {bparams}.")
+                            f"THE BEST PARAMS {bparams}."
+                            f"ITERATION TIME {time.time() - iteration_start_time}.")
                 # return population[0].fitness_value
                 break
 
@@ -523,8 +525,10 @@ class GA:
                             population[i].params[12] = np.random.uniform(low=self.low_prob,
                                                                          high=self.high_prob, size=1)[0]
                     params = self.check_params_bounds(params)
-                    dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=[float(i) for i in params],
-                                        exp_id=self.exp_id, alg_id=ALG_ID, topic_count=self.topic_count, tag=self.tag)
+                    dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset,
+                                        params=[float(i) for i in params],
+                                        exp_id=self.exp_id, alg_id=ALG_ID,
+                                        topic_count=self.topic_count, tag=self.tag)
                     population[i] = make_individual(dto=dto)
                 self.evaluations_counter += 1
 
@@ -558,7 +562,8 @@ class GA:
                 bparams = ''.join([str(i) for i in population[0].params])
                 logger.info(f"TERMINATION IS TRIGGERED: EVAL NUM (2)."
                             f"THE BEST FITNESS {population[0].fitness_value}."
-                            f"THE BEST PARAMS {bparams}.")
+                            f"THE BEST PARAMS {bparams}."
+                            f"ITERATION TIME {time.time() - iteration_start_time}.")
                 # return population[0].fitness_value
                 break
 
@@ -582,14 +587,16 @@ class GA:
                         bparams = ''.join([str(i) for i in population[0].params])
                         logger.info(f"TERMINATION IS TRIGGERED: EARLY STOPPING."
                                     f"THE BEST FITNESS {population[0].fitness_value}."
-                                    f"THE BEST PARAMS {bparams}.")
+                                    f"THE BEST PARAMS {bparams}."
+                                    f"ITERATION TIME {time.time() - iteration_start_time}.")
                         break
 
             bparams = ''.join([str(i) for i in population[0].params])
             x.append(ii)
             y.append(population[0].fitness_value)
             logger.info(f"Population len {len(population)}. "
-                        f"Best params so far: {population[0].params}, with fitness: {population[0].fitness_value}.")
+                        f"Best params so far: {population[0].params}, with fitness: {population[0].fitness_value}." 
+                        f"ITERATION TIME: {time.time() - iteration_start_time}")
 
         logger.info(f"Y: {y}")
 
