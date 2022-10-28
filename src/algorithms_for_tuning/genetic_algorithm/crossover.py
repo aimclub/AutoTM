@@ -34,7 +34,7 @@ def crossover_blend(parent_1, parent_2, **kwargs):
     child_1 = []
     child_2 = []
     u = random.random()
-    gamma = (1. + 2. * alpha) * u - alpha  # fixed
+    gamma = (1. - 2. * alpha) * u - alpha  # fixed (1. + 2. * alpha) * u - alpha
     for i in range(len(parent_1)):
         child_1.append((1. - gamma) * parent_1[i] + gamma * parent_2[i])
         child_2.append(gamma * parent_1[i] + (1. - gamma) * parent_2[i])
