@@ -63,7 +63,7 @@ def mutation_combined(individ, elem_mutation_prob=0.1, **kwargs):
     pass
 
 
-def mutation_psm(individ, elem_mutation_prob, **kwargs):
+def mutation_psm_new(individ, elem_mutation_prob, **kwargs):
     for i in range(len(individ)):
         if random.random() < elem_mutation_prob:
             if i == 0:
@@ -87,6 +87,29 @@ def mutation_psm(individ, elem_mutation_prob, **kwargs):
             #     individ[j] = tmp
             elif i in [5, 6, 8, 9]:
                 j = np.random.choice([5, 6, 8, 9])
+                tmp = individ[i]
+                individ[i] = individ[j]
+                individ[j] = tmp
+    return individ
+
+
+def mutation_psm(individ, elem_mutation_prob=0.1, **kwargs):
+    for i in range(len(individ)):
+        if random.random() < elem_mutation_prob:
+            if i == 0:
+                individ[i] = np.random.uniform(low=1, high=100, size=1)[0]
+            elif i in [1, 4, 7]:
+                j = np.random.choice([1, 4, 7])
+                tmp = individ[i]
+                individ[i] = individ[j]
+                individ[j] = tmp
+            elif i in [2, 5]:
+                j = np.random.choice([2, 5])
+                tmp = individ[i]
+                individ[i] = individ[j]
+                individ[j] = tmp
+            elif i in [3, 6]:
+                j = np.random.choice([2, 5])
                 tmp = individ[i]
                 individ[i] = individ[j]
                 individ[j] = tmp

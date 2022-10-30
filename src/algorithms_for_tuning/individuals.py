@@ -119,5 +119,5 @@ class SparsityScalerBasedFitnessIndividual(BaseIndividual):
 
 def make_individual(dto: IndividualDTO) -> Individual:
     # TODO: choose fitness by ENV var
-    # return RegularFitnessIndividual(dto=dto)
-    return SparsityScalerBasedFitnessIndividual(dto=dto)
+    return RegularFitnessIndividual(dto=dto)
+    # return SparsityScalerBasedFitnessIndividual(dto=dto)
