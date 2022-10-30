@@ -149,7 +149,7 @@ class GA:
         # if crossover_type == 'blend_crossover':
         #     self.crossover_children = 1
         # else:
-        self.crossover_children = 2
+        # self.crossover_children = 2
         self.num_individuals = num_individuals
         self.num_iterations = num_iterations
         self.mutation = mutation(mutation_type)
