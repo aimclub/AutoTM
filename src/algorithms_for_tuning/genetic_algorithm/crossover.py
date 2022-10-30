@@ -29,12 +29,12 @@ def crossover_one_point(parent_1, parent_2, **kwargs):
     return parent_1, parent_2
 
 
-def crossover_blend(parent_1, parent_2, **kwargs):
+def crossover_blend_new(parent_1, parent_2, **kwargs):
     alpha = kwargs['alpha']
     child_1 = []
     child_2 = []
     u = random.random()
-    gamma = (1. - 2. * alpha) * u - alpha  # fixed (1. + 2. * alpha) * u - alpha
+    gamma = (1. + 2. * alpha) * u - alpha  # fixed (1. + 2. * alpha) * u - alpha
     for i in range(len(parent_1)):
         child_1.append((1. - gamma) * parent_1[i] + gamma * parent_2[i])
         child_2.append(gamma * parent_1[i] + (1. - gamma) * parent_2[i])
@@ -52,6 +52,20 @@ def crossover_blend(parent_1, parent_2, **kwargs):
     # else:
     #     child_2[12:15] = parent_2[12:15]
     return child_1, child_2
+
+
+def crossover_blend(parent_1, parent_2, **kwargs):
+    alpha = kwargs['alpha']
+    child = []
+    u = random.random()
+    gamma = (1 - 2 * alpha) * u - alpha
+    for i in range(len(parent_1)):
+        child.append((1 - gamma) * parent_1[i] + gamma * parent_2[i])
+    if random.random() > 0.5:
+        child[12:15] = parent_1[12:15]
+    else:
+        child[12:15] = parent_2[12:15]
+    return child
 
 
 def crossover(crossover_type='crossover_one_point'):

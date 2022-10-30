@@ -13,7 +13,7 @@ configurations:
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --num-iterations 500 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 31 --tag full_fitness_500_old_cross --topic-count 10"
+           --exp-id 31 --tag full_fitness_500_old --topic-count 10"
     workdir: "/app"
     repetitions: 5
 
@@ -21,7 +21,7 @@ configurations:
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --num-iterations 500 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 31 --tag full_fitness_500_old_cross --topic-count 25"
+           --exp-id 31 --tag full_fitness_500_old --topic-count 25"
     workdir: "/app"
     repetitions: 5
 
@@ -29,7 +29,7 @@ configurations:
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --num-iterations 500 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 31 --tag full_fitness_500_old_cross --topic-count 50"
+           --exp-id 31 --tag full_fitness_500_old --topic-count 50"
     workdir: "/app"
     repetitions: 5
 
@@ -37,7 +37,7 @@ configurations:
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --num-iterations 500 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 31 --tag full_fitness_500_old_cross --topic-count 75"
+           --exp-id 31 --tag full_fitness_500_old --topic-count 75"
     workdir: "/app"
     repetitions: 5
 
@@ -45,6 +45,6 @@ configurations:
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --num-iterations 500 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 31 --tag full_fitness_500_old_cross --topic-count 100"
+           --exp-id 31 --tag full_fitness_500_old --topic-count 100"
     workdir: "/app"
     repetitions: 5
