@@ -140,6 +140,12 @@ class GA:
                  calc_scheme='type1', topic_count: Optional[int] = None, tag: Optional[str] = None, **kwargs):
 
         self.dataset = dataset
+
+        if crossover_type == 'blend_crossover':
+            self.crossover_children = 1
+        else:
+            self.crossover_children = 2
+
         # if crossover_type == 'blend_crossover':
         #     self.crossover_children = 1
         # else:
