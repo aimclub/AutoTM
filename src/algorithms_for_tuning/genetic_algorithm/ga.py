@@ -161,7 +161,6 @@ class GA:
         self.num_fitness_evaluations = num_fitness_evaluations
         self.early_stopping_iterations = early_stopping_iterations
         self.best_proc = best_proc
-        self.current_surrogate = None
         self.all_params = []
         self.all_fitness = []
         if surrogate_name:

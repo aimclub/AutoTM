@@ -1,7 +1,7 @@
 testMode: True
 
 gaWithSurrogateAlgoParams:
-  numEvals: 150
+  numEvals: 1500
   numIndividuals: 11
   mutationType: psm
   crossoverType: blend_crossover
