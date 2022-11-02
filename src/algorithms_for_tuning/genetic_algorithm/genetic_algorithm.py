@@ -52,13 +52,18 @@ NUM_FITNESS_EVALUATIONS = 150
 @click.option('--exp-id', required=True, type=int, help='mlflow experiment id')
 @click.option('--topic-count', required=False, type=int, help='desired count of MAIN topics')
 @click.option('--tag', required=False, type=str, help='desired count of MAIN topics')
+@click.option('--surrogate-name', required=False, type=str, help='surrogate name')
+@click.option('--gpr-kernel', required=False, type=str, help='kernel name for gpr')
+@click.option('--gpr-alpha', required=False, type=float, help='alpha for gpr')
+@click.option('--gpr-normalize-y', required=False, type=float, help='y normalization for gpr')
 def run_algorithm(dataset,
                   num_individuals,
                   num_iterations,
                   num_fitness_evaluations,
                   mutation_type, crossover_type, selection_type,
                   elem_cross_prob, cross_alpha,
-                  best_proc, log_file, exp_id, topic_count, tag):
+                  best_proc, log_file, exp_id, topic_count, tag,
+                  surrogate_name, gpr_kernel, gpr_alpha, gpr_normalize_y):
     logger.debug(f"Command line: {sys.argv}")
 
     run_uid = str(uuid.uuid4())
@@ -86,7 +91,12 @@ def run_algorithm(dataset,
            alpha=cross_alpha,
            exp_id=exp_id,
            topic_count=topic_count,
-           tag=tag)
+           tag=tag,
+           surrogate_name=surrogate_name,
+           gpr_kernel=gpr_kernel,
+           gpr_alpha=gpr_alpha,
+           normalize_y=gpr_normalize_y
+           )
     best_value = g.run(verbose=True)
     print(best_value * (-1))
 
