@@ -39,6 +39,36 @@ SPEEDUP = True
 warnings.filterwarnings("ignore")
 logger = logging.getLogger("GA_algo")
 
+# TODO: Add fitness type
+def set_surrogate_fitness(value, fitness_type='avg_coherence_score'):
+    npmis = {f"npmi_50": None,
+             f"npmi_15": None,
+             f"npmi_25": None,
+             f"npmi_50_list": None}
+    scores_dict = {
+        fitness_type: value,
+        'perplexityScore': None,
+        'backgroundTokensRatioScore': None,
+        'contrast': None,
+        'purity': None,
+        'kernelSize': None,
+        'npmi_50_list': [None],  # npmi_values_50_list,
+        'npmi_50': None,
+        'sparsity_phi': None,
+        'sparsity_theta': None,
+        'topic_significance_uni': None,
+        'topic_significance_vacuous': None,
+        'topic_significance_back': None,
+        'switchP_list': [None],
+        'switchP': None,
+        'all_topics': None,
+        # **coherence_scores,
+        **npmis
+    }
+    return scores_dict
+
+
+
 
 class Surrogate:
     def __init__(self, surrogate_name, **kwargs):
@@ -306,7 +336,7 @@ class GA:
             logger.info(f"Predicted values: {list(y_pred)}")
             logger.info(f"R^2: {r_2}, MSE: {mse}, RMSE: {rmse}")
         for ix, individ in enumerate(population):
-            individ.dto.fitness_value = y_pred[ix]
+            individ.dto.fitness_value = set_surrogate_fitness(y_pred[ix])
         return population
 
     def _check_param(self, param, bounds):
