@@ -13,7 +13,7 @@ configurations:
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --num-iterations 500 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 33 --tag surrogate_fitness_500_v2 --topic-count 10 --surrogate-name GPR 
+           --exp-id 34 --tag surrogate_fitness_500_v3 --topic-count 10 --surrogate-name GPR 
            --gpr-kernel RBF --gpr-alpha 0.000000001 --gpr-normalize-y 1"
     workdir: "/app"
     repetitions: 5
@@ -30,7 +30,7 @@ configurations:
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --num-iterations 500 --mutation-type psm --crossover-type blend_crossover
          --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-         --exp-id 33 --tag surrogate_fitness_500_v2 --topic-count 25 --surrogate-name GPR 
+         --exp-id 34 --tag surrogate_fitness_500_v3 --topic-count 25 --surrogate-name GPR 
            --gpr-kernel RBF --gpr-alpha 0.000000001 --gpr-normalize-y 1"
     workdir: "/app"
     repetitions: 5
@@ -39,7 +39,7 @@ configurations:
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --num-iterations 500 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 33 --tag surrogate_fitness_500_v2 --topic-count 50 --surrogate-name GPR 
+           --exp-id 34 --tag surrogate_fitness_500_v3 --topic-count 50 --surrogate-name GPR 
            --gpr-kernel RBF --gpr-alpha 0.000000001 --gpr-normalize-y 1"
     workdir: "/app"
     repetitions: 5
@@ -48,7 +48,7 @@ configurations:
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --num-iterations 500 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 33 --tag surrogate_fitness_500_v2 --topic-count 75 --surrogate-name GPR 
+           --exp-id 34 --tag surrogate_fitness_500_v3 --topic-count 75 --surrogate-name GPR 
            --gpr-kernel RBF --gpr-alpha 0.000000001 --gpr-normalize-y 1"
     workdir: "/app"
     repetitions: 5
@@ -57,7 +57,7 @@ configurations:
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --num-iterations 500 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 33 --tag surrogate_fitness_500_v2 --topic-count 100 --surrogate-name GPR 
+           --exp-id 34 --tag surrogate_fitness_500_v3 --topic-count 100 --surrogate-name GPR 
            --gpr-kernel RBF --gpr-alpha 0.000000001 --gpr-normalize-y 1"
     workdir: "/app"
     repetitions: 5
