@@ -306,7 +306,7 @@ class GA:
             logger.info(f"Predicted values: {list(y_pred)}")
             logger.info(f"R^2: {r_2}, MSE: {mse}, RMSE: {rmse}")
         for ix, individ in enumerate(population):
-            individ.fitness_value = y_pred[ix]
+            individ.dto.fitness_value = y_pred[ix]
         return population
 
     def _check_param(self, param, bounds):
