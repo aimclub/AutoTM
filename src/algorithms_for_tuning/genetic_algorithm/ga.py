@@ -282,7 +282,7 @@ class GA:
         pred_y = self.surrogate.predict(X[recalculate_num:])
         for ix, params in enumerate(X[recalculate_num:]):
             dto = IndividualDTO(id=str(uuid.uuid4()), params=params, dataset=self.dataset,
-                                fitness_value=pred_y[ix], exp_id=self.exp_id, alg_id=ALG_ID,
+                                fitness_value=set_surrogate_fitness(pred_y[ix]), exp_id=self.exp_id, alg_id=ALG_ID,
                                 topic_count=self.topic_count, tag=self.tag)
             calculated.append(make_individual(dto=dto))
         return calculated
