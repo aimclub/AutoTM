@@ -276,8 +276,8 @@ class GA:
 
         calculated = estimate_fitness(calculated)
 
-        self.all_params += [individ.params for individ in calculated]
-        self.all_fitness += [individ.fitness_value for individ in calculated]
+        self.all_params += [individ.dto.params for individ in calculated]
+        self.all_fitness += [individ.dto.fitness_value for individ in calculated]
 
         pred_y = self.surrogate.predict(X[recalculate_num:])
         for ix, params in enumerate(X[recalculate_num:]):
