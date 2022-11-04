@@ -167,7 +167,7 @@ class GA:
                  num_fitness_evaluations: Optional[int] = 500,
                  early_stopping_iterations: Optional[int] = 500,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
-                 calc_scheme='type1', topic_count: Optional[int] = None, tag: Optional[str] = None, **kwargs):
+                 calc_scheme='type2', topic_count: Optional[int] = None, tag: Optional[str] = None, **kwargs):
 
         self.dataset = dataset
 
@@ -261,7 +261,7 @@ class GA:
         return population_with_fitness
 
     def _calculate_uncertain_res(self, generation, iteration_num: int, proc=0.3):
-        X = np.array([individ.params for individ in generation])
+        X = np.array([individ.dto.params for individ in generation])
         certanty = get_prediction_uncertanty(self.surrogate.surrogate, X, self.surrogate.name)
         recalculate_num = int(np.floor(len(certanty) * proc))
         logger.info(f'Certanty values: {certanty}')
