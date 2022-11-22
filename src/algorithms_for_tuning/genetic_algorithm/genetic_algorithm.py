@@ -37,7 +37,7 @@ NUM_FITNESS_EVALUATIONS = 150
 @click.option('--num-iterations', default=400, help='number of iterations to make')
 @click.option('--num-fitness-evaluations', required=False, type=int, default=None,
               help='Max number of possible fitness estimations. This setting may lead to premature algorithm stopping '
-                   'even if there is more generations to go' )
+                   'even if there is more generations to go')
 @click.option('--mutation-type', default="combined",
               help='mutation type can have value from (mutation_one_param, combined, psm, positioning_mutation)')
 @click.option('--crossover-type', default="blend_crossover",
