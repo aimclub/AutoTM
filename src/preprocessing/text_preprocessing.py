@@ -6,6 +6,7 @@ import pandas as pd
 from sklearn.datasets import fetch_20newsgroups
 import pymystem3
 from nltk.corpus import stopwords, wordnet
+import multiprocessing as mp
 from nltk.stem.snowball import SnowballStemmer
 
 import matplotlib
@@ -19,13 +20,17 @@ import plotly
 from urllib.parse import urlparse
 import pickle
 import numpy as np
-import re
 import html
 import nltk
 import re
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
+
+import spacy
 from spacy.language import Language
+from spacy_langdetect import LanguageDetector
+
+from nltk.stem import WordNetLemmatizer
 
 stop = stopwords.words("russian") + [' '] + stopwords.words("english")
 
@@ -35,11 +40,19 @@ r_vk_ids = re.compile(r'(id{1}[0-9]*)')
 r_num = re.compile(r'([0-9]+)')
 r_white_space = re.compile(r'\s{2,}')
 r_words = re.compile(r'\W+')
+r_pat = re.compile(r'[aA-zZ]')
 
 # check url pattern work
 url_pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
 
 m = pymystem3.Mystem()
+en_lemmatizer = WordNetLemmatizer()
+
+
+# class preprocessor:
+#     def __init__(self, lang):
+#         pass
+
 
 @Language.factory('language_detector')
 def language_detector(nlp, name):
@@ -48,6 +61,7 @@ def language_detector(nlp, name):
 
 nlp_model = spacy.load("en_core_web_sm")
 nlp_model.add_pipe('language_detector', last=True)
+
 
 def new_html(text: str) -> str:
     text = r_html.sub("", text)
@@ -70,7 +84,11 @@ def get_lemma(word: str) -> str:
         return lemma
 
 
-def lemmatize_text(text: str, language: str = 'ru') -> str:  # change language to en for english datasets
+def tokens_num(text):
+    return len(text.split(' '))
+
+
+def lemmatize_text(text: str, language: str = 'ru') -> str:
     try:
         text = new_html(text)
     except:
@@ -97,6 +115,16 @@ def lemmatize_text(text: str, language: str = 'ru') -> str:  # change language t
     return text
 
 
+def get_wordnet_pos(word):
+    """Map POS tag to first character lemmatize() accepts"""
+    tag = nltk.pos_tag([word])[0][1][0].lower()
+    tag_dict = {"a": wordnet.ADJ,
+                "n": wordnet.NOUN,
+                "v": wordnet.VERB,
+                "r": wordnet.ADV}
+    return tag_dict.get(tag, wordnet.NOUN)
+
+
 def lemmatize_text_en(text):
     stop = stopwords.words('english')
     doc = nlp_model(text)
@@ -106,6 +134,7 @@ def lemmatize_text_en(text):
     text = text.lower()  # added
     text = process_punkt(text)
     try:
+        # TODO: check this
         text_token = CountVectorizer().build_tokenizer()(text)
     except:
         return ' '
@@ -117,7 +146,7 @@ def lemmatize_text_en(text):
     return ' '.join(text_stem)
 
 
-def process_dataset(fname, col_to_process, save_path, lang='ru'):
+def process_dataset(fname: str, col_to_process: str, save_path, lang='ru'):
     data = pd.read_csv(fname)
     if lang == 'ru':
         data['processed_text'] = data[col_to_process].progress_apply(lemmatize_text)

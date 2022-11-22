@@ -1,8 +1,11 @@
 # AutoTM
+
 Automatic parameters selection for topic models (ARTM approach) using evolutionary algorithms. 
-AutoTM provides tools to tune topic models.
+AutoTM provides necessary tools to preprocess english and russian text datasets and tune topic models.
 
 ## Installation
+
+The functionality of topic models training is available only for linux distributions.
 
 ## Quickstart
 
