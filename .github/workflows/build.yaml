@@ -1,9 +1,7 @@
 name: build
 run-name: ${{ github.repository }} installation test
 
-on:
-  push:
-    branches: [$autotm-base]
+on: [push]
 
 jobs:
   build:
