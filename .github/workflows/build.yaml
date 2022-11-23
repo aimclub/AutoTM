@@ -1,11 +1,12 @@
 name: build
 run-name: ${{ github.repository }} installation test
+
 on:
   push:
-    branches [$autotm-base]
+    branches: [$autotm-base]
 
 jobs:
-  Explore-GitHub-Actions:
+  build:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
