@@ -1,6 +1,6 @@
 import pickle
 
-from algorithms_for_tuning.utils.fitness_estimator import prepare_fitness_estimator, estimate_fitness
+from algorithms_for_tuning import prepare_fitness_estimator, estimate_fitness
 
 with open("test-population.pickle", "rb") as f:
     pop = pickle.load(f)

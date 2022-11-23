@@ -20,7 +20,8 @@ def vocab_preparation(VOCAB_PATH, DICTIONARY_PATH):
                     elems = re.split(', ', line)
                     vocab_file.write(' '.join(elems[:2]) + '\n')
 
-def calculate_cooc_dicts():
+def calculate_cooc_dicts(window=10):
+    with open()
     raise NotImplementedError
 
 def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH, cooc_file_path_tf, cooc_file_path_df,

@@ -27,7 +27,7 @@ logger = logging.getLogger("DE")
 if "FITNESS_CONFIG_PATH" in os.environ:
     filepath = os.environ["FITNESS_CONFIG_PATH"]
 else:
-    filepath = "../../algorithms_for_tuning/de_algorithm/config.yaml"
+    filepath = "config.yaml"
 
 with open(filepath, "r") as file:
     config = yaml.load(file, Loader=Loader)
