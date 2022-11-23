@@ -23,7 +23,7 @@ def test_mode_from_config() -> bool:
     if "FITNESS_CONFIG_PATH" in os.environ:
         filepath = os.environ["FITNESS_CONFIG_PATH"]
     else:
-        filepath = "../../algorithms_for_tuning/genetic_algorithm/config.yaml"
+        filepath = "../genetic_algorithm/config.yaml"
 
     if os.path.exists(filepath):
         with open(filepath, "r") as file:

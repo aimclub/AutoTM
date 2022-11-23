@@ -24,7 +24,7 @@ logger = logging.getLogger("GA_surrogate")
 if "FITNESS_CONFIG_PATH" in os.environ:
     filepath = os.environ["FITNESS_CONFIG_PATH"]
 else:
-    filepath = "../../algorithms_for_tuning/ga_with_surrogate/config.yaml"
+    filepath = "config.yaml"
 
 with open(filepath, "r") as file:
     config = yaml.load(file, Loader=Loader)

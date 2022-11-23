@@ -128,7 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-src/algorithms_for_tuning/genetic_algorithm/resources/*
+src/autotm/algorithms_for_tuning/genetic_algorithm/resources/*
 .idea
 algorithms_for_tuning/genetic_algorithm/logs/*
 algorithms_for_tuning/genetic_algorithm/bigartm.*
