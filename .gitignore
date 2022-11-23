@@ -141,3 +141,4 @@ surrogate_logs/*
 *.pickle
 /Notebooks/
 /logs/
+/bin/
