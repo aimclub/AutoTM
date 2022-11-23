@@ -139,3 +139,5 @@ resources
 surrogate_logs/*
 *.orig
 *.pickle
+/Notebooks/
+/logs/
