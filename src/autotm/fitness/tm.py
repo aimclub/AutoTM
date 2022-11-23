@@ -16,7 +16,7 @@ from gensim.models.coherencemodel import CoherenceModel
 from tqdm import tqdm
 
 from kube_fitness.metrics import MetricsScores, AVG_COHERENCE_SCORE, TimeMeasurements
-from kube_fitness.utils import log_exec_timer
+from autotm.utils import log_exec_timer
 
 
 
@@ -112,7 +112,7 @@ class Dataset:
 
     def load_dataset(self):
         """
-        Partially loads this dataset files creating supplementary data structures and entities like artm.BatchVectorizer
+        Partially loads this dataset files creating supplementary data_generator structures and entities like artm.BatchVectorizer
         """
         logger.info("Loading dataset entities")
 
@@ -566,7 +566,7 @@ class TopicModel:
     #     for line in f:
     #         total_tokens += (sum([int(elem.split(':')[1]) for elem in line.split()[1:]]))
 
-    # data = pd.read_csv(os.path.join('/mnt/ess_storage/DN_1/storage/home/khodorchenko/GOTM',
+    # data_generator = pd.read_csv(os.path.join('/mnt/ess_storage/DN_1/storage/home/khodorchenko/GOTM',
     #                                 'datasets', 'books_stroyitelstvo_2030_fundament_sample',
     #                                 'dataset.csv'))
 
@@ -575,7 +575,7 @@ class TopicModel:
     # DATASET_PATH_FNAME = 'books_stroyitelstvo_2030_fundament_sample'
     #
     # e_run = ExpS()
-    # fitness = e_run.run_GA(MAIN_PATH, DATA_PATH_FNAME, DATASET_PATH_FNAME, texts=data['processed_text'].tolist())
+    # fitness = e_run.run_GA(MAIN_PATH, DATA_PATH_FNAME, DATASET_PATH_FNAME, texts=data_generator['processed_text'].tolist())
 
     def metrics_get_avg_coherence_score(self, for_individ_fitness=False) -> MetricsScores:
         coherences_main, coherences_back = self.__return_all_tokens_coherence(self.model, s=self.S, b=self.B)
