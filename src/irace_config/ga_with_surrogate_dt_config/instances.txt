@@ -1,5 +1,0 @@
---dataset 20newsgroups
---dataset ads_data
---dataset amazon_food
---dataset hotel-reviews
---dataset lenta_ru
