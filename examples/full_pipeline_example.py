@@ -10,7 +10,7 @@ PATH_TO_DATASET = '../data/sample_corpora/sample_dataset_lenta.csv'
 SAVE_PATH = '../data/processed_sample_corpora' # place where all the artifacts will be stored
 
 dataset = pd.read_csv(PATH_TO_DATASET)
-lang = 'ru'
+lang = 'ru' # available languages: ru, en
 col_to_process = 'text'
 min_tokens_num = 3
 
@@ -21,5 +21,5 @@ if __name__ == '__main__':
     prepare_all_artifacts(SAVE_PATH)
 
     print('Stage 2: Tuning the topic model')
-    # run_algorithm
-    # run_algorithm()
+
+    topics = run_algorithm(SAVE_PATH)
