@@ -3,6 +3,8 @@ import artm
 import pandas as pd
 import re
 import multiprocessing as mp
+from src.autotm.utils import parallelize_dataframe
+import itertools
 
 
 def get_words_dict(text, stop_list):
@@ -20,6 +22,11 @@ def vocab_preparation(VOCAB_PATH, DICTIONARY_PATH):
                 for line in dictionary_file:
                     elems = re.split(', ', line)
                     vocab_file.write(' '.join(elems[:2]) + '\n')
+
+def _calculate_cooc_dict_parallel(df):
+    cooc_df_dict = {} # format (tuple): cooc
+    for text in df['processed_text'].tolist():
+        document_cooc_df_dict = {}
 
 
 def calculate_cooc_dicts(dataset_path, window=10):

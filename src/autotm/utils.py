@@ -8,6 +8,14 @@ from multiprocessing import Pool
 import multiprocessing as mp
 from functools import partial
 
+from typing import Dict, Any
+
+MetricsScores = Dict[str, Any]
+
+TimeMeasurements = Dict[str, float]
+
+AVG_COHERENCE_SCORE = "avg_coherence_score"
+
 logger = logging.getLogger(__name__)
 
 
