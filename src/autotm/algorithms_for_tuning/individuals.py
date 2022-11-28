@@ -6,7 +6,7 @@ from typing import List
 import numpy as np
 
 from src.autotm.utils import AVG_COHERENCE_SCORE
-from kube_fitness.schemas import IndividualDTO
+from autotm.schemas import IndividualDTO
 
 SPARSITY_PHI = 'sparsity_phi'
 SPARSITY_THETA = 'sparsity_theta'

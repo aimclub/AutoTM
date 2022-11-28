@@ -13,8 +13,8 @@ import mlflow
 from pymongo import MongoClient
 
 from src.autotm.utils import TimeMeasurements
-from kube_fitness.schemas import IndividualDTO, fitness_to_json
-from kube_fitness.tm import TopicModel
+from autotm.schemas import IndividualDTO, fitness_to_json
+from autotm.fitness.tm import TopicModel
 
 
 logger = logging.getLogger()

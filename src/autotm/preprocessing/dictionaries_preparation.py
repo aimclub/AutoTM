@@ -3,8 +3,9 @@ import artm
 import pandas as pd
 import re
 import multiprocessing as mp
-from src.autotm.utils import parallelize_dataframe
+from autotm.utils import parallelize_dataframe
 import itertools
+from collections import Counter
 
 
 def get_words_dict(text, stop_list):
@@ -23,16 +24,28 @@ def vocab_preparation(VOCAB_PATH, DICTIONARY_PATH):
                     elems = re.split(', ', line)
                     vocab_file.write(' '.join(elems[:2]) + '\n')
 
-def _calculate_cooc_dict_parallel(df):
-    cooc_df_dict = {} # format (tuple): cooc
+
+def _calculate_cooc_dict(df, window=10):
+    cooc_df_dict = {}  # format dict{(tuple): cooc}
     for text in df['processed_text'].tolist():
         document_cooc_df_dict = {}
+        splitted = text.split()
+        for i in range(0, len(splitted) - window):
+            for comb in itertools.combinations(splitted[i:i + window], 2):
+                if comb in document_cooc_df_dict:
+                    continue
+                else:
+                    document_cooc_df_dict[comb] += 1
+                    document_cooc_df_dict[(comb[1], comb[0])] += 1
+        cooc_df_dict = dict(Counter(document_cooc_df_dict) + Counter(cooc_df_dict))
+    return cooc_df_dict
 
 
-def calculate_cooc_dicts(dataset_path, window=10):
+def calculate_cooc_dicts(dataset_path, window=10, n_cores=-1):
     data = pd.read_csv(dataset_path)
-
+    parallelize_dataframe(data, _calculate_cooc_dict, n_cores, window=window)
     raise NotImplementedError
+
 
 def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
                          cooc_file_path_tf, cooc_file_path_df,
