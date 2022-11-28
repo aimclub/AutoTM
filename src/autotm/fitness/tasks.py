@@ -5,21 +5,24 @@ import uuid
 from multiprocessing.process import current_process
 from typing import List, Optional, Union
 
-from billiard.exceptions import SoftTimeLimitExceeded
 from tqdm import tqdm
 
-from kube_fitness.params_logging_utils import log_params_and_artifacts, log_stats, model_files
-from kube_fitness.schemas import IndividualDTO, fitness_to_json, fitness_from_json
-from kube_fitness.tm import fit_tm_of_individual
-from kube_fitness.utils import TqdmToLogger
+from autotm.params_logging_utils import log_params_and_artifacts, log_stats, model_files
+from autotm.schemas import IndividualDTO, fitness_to_json, fitness_from_json
+from autotm.fitness.tm import fit_tm_of_individual
+from autotm.utils import TqdmToLogger
 
+logger = logging.getLogger("root")
+
+
+# task_logger = get_task_logger(__name__)
 
 def do_fitness_calculating(individual: str,
                            log_artifact_and_parameters: bool = False,
                            log_run_stats: bool = False,
                            alg_args: Optional[str] = None) -> str:
     individual: IndividualDTO = IndividualDTO.parse_raw(individual)
-    task_logger.info(f"Calculating fitness for an individual with id {individual.id}: \n{individual}")
+    # task_logger.info(f"Calculating fitness for an individual with id {individual.id}: \n{individual}")
 
     with fit_tm_of_individual(
             dataset=individual.dataset,
@@ -43,7 +46,7 @@ def do_fitness_calculating(individual: str,
 
 # @shared_task(time_limit=25*60, soft_time_limit=20*60, autoretry_for=(Exception,),
 # retry_kwargs={'max_retries': 3, 'countdown': 5})
-@shared_task(bind=True, time_limit=25*60, soft_time_limit=20*60)
+# @shared_task(bind=True, time_limit=25*60, soft_time_limit=20*60)
 def calculate_fitness(self: Task,
                       individual: str,
                       log_artifact_and_parameters: bool = False,
@@ -149,4 +152,3 @@ def log_best_solution(individual: IndividualDTO,
         r = result
 
     return r
-

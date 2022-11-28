@@ -1,30 +1,10 @@
 import os
-import re
-import pickle
-from tqdm import tqdm
 import pandas as pd
-from sklearn.datasets import fetch_20newsgroups
 import pymystem3
 from nltk.corpus import stopwords, wordnet
-from src.autotm.utils import parallelize_dataframe
-
-from nltk.stem.snowball import SnowballStemmer
-
-import matplotlib
-from matplotlib import pyplot as plt
-import seaborn
-
-import plotly.offline as offline
-import plotly.graph_objs as go
-from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
-import plotly
-from urllib.parse import urlparse
-import pickle
-import numpy as np
-import html
+from autotm.utils import parallelize_dataframe
 import nltk
 import re
-from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 
 import spacy
@@ -166,7 +146,6 @@ def process_dataset(fname: str, col_to_process: str, save_path: str,
     '''
     save_path = os.path.join(save_path, 'processed_dataset.csv')
     data = pd.read_csv(fname)
-    # lemmatize_text(data, lang=lang, col_to_process=col_to_process)
     data = parallelize_dataframe(data, lemmatize_text, n_cores, lang=lang, col_to_process=col_to_process)
     data['tokens_len'] = data['processed_text'].apply(tokens_num)
     data = data[data['tokens_len'] > min_tokens_count]

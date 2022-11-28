@@ -10,10 +10,10 @@ from functools import partial
 
 from typing import Dict, Any
 
+from collections import Counter
+
 MetricsScores = Dict[str, Any]
-
 TimeMeasurements = Dict[str, float]
-
 AVG_COHERENCE_SCORE = "avg_coherence_score"
 
 logger = logging.getLogger(__name__)
@@ -58,7 +58,11 @@ class log_exec_timer:
         return self._duration
 
 
-def parallelize_dataframe(df: pd.DataFrame, func, n_cores, **kwargs):
+def merge_dicts(dicts):
+    full_dict = {}
+
+
+def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type='df', **kwargs):
     '''
 
     :param df: Dataframe to process.
@@ -72,7 +76,11 @@ def parallelize_dataframe(df: pd.DataFrame, func, n_cores, **kwargs):
     df_split = np.array_split(df, n_cores)
     pool = Pool(n_cores)
     func_with_args = partial(func, **kwargs)
-    df = pd.concat(pool.map(func_with_args, df_split))
+    result = pool.map(func_with_args, df_split)
+    if return_type == 'df':
+        df = pd.concat(pool.map(func_with_args, df_split))
+    else:
+        df = pd.concat(pool.map(func_with_args, df_split))
     pool.close()
     pool.join()
     return df
