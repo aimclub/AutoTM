@@ -29,7 +29,7 @@ from src.autotm.algorithms_for_tuning.genetic_algorithm.crossover import crossov
 from src.autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from src.autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
 from src.autotm.algorithms_for_tuning.individuals import make_individual
-from src.autotm.fitness.tm import IndividualDTO
+from src.autotm.algorithms_for_tuning.individuals import IndividualDTO
 
 from algorithms_for_tuning.utils.fitness_estimator import estimate_fitness, prepare_fitness_estimator, log_best_solution
 
