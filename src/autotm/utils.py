@@ -60,6 +60,9 @@ class log_exec_timer:
 
 def merge_dicts(dicts):
     full_dict = {}
+    for d in dicts:
+        full_dict = dict(Counter(full_dict) + Counter(d))
+    return full_dict
 
 
 def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type='df', **kwargs):
@@ -68,6 +71,7 @@ def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type='df', **k
     :param df: Dataframe to process.
     :param func: Function to be applied in parallel mode on data chunks
     :param n_cores: Amount of cores to parallelize on. In case of -1 takes all the available cores.
+    :param return_type:
     :param kwargs: Additional parameters of the function, which is applied in parallel mode.
     :return: pd.DataFrame
     '''

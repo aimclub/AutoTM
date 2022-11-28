@@ -1,5 +1,4 @@
 import logging
-import os
 import time
 import uuid
 from multiprocessing.process import current_process
@@ -8,7 +7,7 @@ from typing import List, Optional, Union
 from tqdm import tqdm
 
 from autotm.params_logging_utils import log_params_and_artifacts, log_stats, model_files
-from autotm.schemas import IndividualDTO, fitness_to_json, fitness_from_json
+from autotm.schemas import IndividualDTO
 from autotm.fitness.tm import fit_tm_of_individual
 from autotm.utils import TqdmToLogger
 
@@ -39,16 +38,12 @@ def do_fitness_calculating(individual: str,
             if log_run_stats:
                 log_stats(tm, tm_files, individual, time_metrics, alg_args)
 
-    task_logger.info(f"Fitness has been calculated for {individual.id}: {individual.fitness_value}")
+    # task_logger.info(f"Fitness has been calculated for {individual.id}: {individual.fitness_value}")
 
     return individual.json()
 
 
-# @shared_task(time_limit=25*60, soft_time_limit=20*60, autoretry_for=(Exception,),
-# retry_kwargs={'max_retries': 3, 'countdown': 5})
-# @shared_task(bind=True, time_limit=25*60, soft_time_limit=20*60)
-def calculate_fitness(self: Task,
-                      individual: str,
+def calculate_fitness(individual: str,
                       log_artifact_and_parameters: bool = False,
                       log_run_stats: bool = False,
                       alg_args: Optional[str] = None) -> str:
@@ -59,12 +54,8 @@ def calculate_fitness(self: Task,
 
     try:
         return do_fitness_calculating(individual, log_artifact_and_parameters, log_run_stats, alg_args)
-    except TimeLimitExceeded as ex:
-        logger.error("Encountered hard time limit!")
-    except SoftTimeLimitExceeded as ex:
-        raise Exception(f"Soft time limit encountered") from ex
-    except Exception:
-        self.retry(max_retries=3, countdown=5)
+    except:
+        raise Exception(f"Soft time limit encountered")
 
 
 def parallel_fitness(population: List[IndividualDTO],
