@@ -8,7 +8,9 @@ AutoTM provides necessary tools to preprocess english and russian text datasets 
 
 ## Installation
 
-The functionality of topic models training is available only for linux distributions.
+! Note: The functionality of topic models training is available only for linux distributions.
+
+```pip install -r requirements.txt```
 
 ## Quickstart
 
@@ -16,7 +18,7 @@ The notebook with an example is available in ```examples``` folder.
 
 ## Distributed version
 
-Distributed version to run experiments on kubernetes is available in ```autotm-distributed``` brunch.
+Distributed version to run experiments on kubernetes is available in ```autotm-distributed``` brunch. Still this version is in development stage and will be transfered to separate repository.
 
 ## Citation
 

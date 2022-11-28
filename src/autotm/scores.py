@@ -1,4 +1,6 @@
 import numpy as np
+
+
 # additional scores to calculate
 
 # Topic Significance
@@ -17,7 +19,7 @@ def ts_uniform(topic_word_dist):
 # Vacuous Semantic Distribution (W-Vacuous)
 def ts_vacuous(doc_topic_dist, topic_word_dist, total_tokens):
     n_words = topic_word_dist.shape[0]
-#     n_tokens = np.sum([len(text) for text in texts])
+    #     n_tokens = np.sum([len(text) for text in texts])
     p_k = np.sum(doc_topic_dist, axis=1) / total_tokens
     w_vacauous = np.sum(topic_word_dist * np.tile(p_k, (n_words, 1)), axis=1)
     vacauous_distances_kl = [kl_divergence(p, w_vacauous) for p in topic_word_dist.T]
