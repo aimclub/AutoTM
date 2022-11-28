@@ -87,7 +87,7 @@ class Dataset:
         """
         texts_df_path = self._make_path(self._texts_path)
         df = pd.read_csv(texts_df_path)
-        return df['processed_text'].tolist()
+        return df['processed_text.txt'].tolist()
 
     @property
     def total_tokens(self) -> int:
@@ -575,7 +575,7 @@ class TopicModel:
     # DATASET_PATH_FNAME = 'books_stroyitelstvo_2030_fundament_sample'
     #
     # e_run = ExpS()
-    # fitness = e_run.run_GA(MAIN_PATH, DATA_PATH_FNAME, DATASET_PATH_FNAME, texts=data_generator['processed_text'].tolist())
+    # fitness = e_run.run_GA(MAIN_PATH, DATA_PATH_FNAME, DATASET_PATH_FNAME, texts=data_generator['processed_text.txt'].tolist())
 
     def metrics_get_avg_coherence_score(self, for_individ_fitness=False) -> MetricsScores:
         coherences_main, coherences_back = self.__return_all_tokens_coherence(self.model, s=self.S, b=self.B)

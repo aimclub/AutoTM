@@ -2,6 +2,7 @@ import os
 import artm
 import pandas as pd
 import re
+import multiprocessing as mp
 
 
 def get_words_dict(text, stop_list):
@@ -9,6 +10,7 @@ def get_words_dict(text, stop_list):
     words = sorted(set(all_words) - stop_list)
 
     return {w: all_words.count(w) for w in words}
+
 
 def vocab_preparation(VOCAB_PATH, DICTIONARY_PATH):
     if not os.path.exists(VOCAB_PATH):
@@ -20,12 +22,31 @@ def vocab_preparation(VOCAB_PATH, DICTIONARY_PATH):
                     elems = re.split(', ', line)
                     vocab_file.write(' '.join(elems[:2]) + '\n')
 
+
 def calculate_cooc_dicts(window=10):
     with open()
-    raise NotImplementedError
+        raise NotImplementedError
 
-def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH, cooc_file_path_tf, cooc_file_path_df,
-                         ppmi_dict_tf, ppmi_dict_df):
+
+def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
+                         cooc_file_path_tf, cooc_file_path_df,
+                         ppmi_dict_tf, ppmi_dict_df, cooc_min_tf=0,
+                         cooc_min_df=0, cooc_window=10, n_jobs=-1):
+    '''
+    :param BATCHES_DIR:
+    :param WV_PATH:
+    :param VOCAB_PATH:
+    :param COOC_DICTIONARY_PATH:
+    :param cooc_file_path_tf:
+    :param cooc_file_path_df:
+    :param ppmi_dict_tf:
+    :param ppmi_dict_df:
+    :param cooc_min_tf:
+    :param cooc_min_df:
+    :param cooc_window: size of the window where to search for the cooccurrences
+    :return:
+    '''
+
     ! bigartm - c $WV_PATH - v $VOCAB_PATH - -cooc - window
     10 - -write - cooc - tf $cooc_file_path_tf - -write - cooc - df $cooc_file_path_df - -write - ppmi - tf $ppmi_dict_tf - -write - ppmi - df $ppmi_dict_df
 
@@ -45,7 +66,8 @@ def return_string_part(name_type, text):
 
     return " |" + name_type + ' ' + ' '.join(['{}:{}'.format(k, v) for k, v in tokens_dict.items()])
 
-def prepare_voc(batches_dir, vw_path, data_path, column_name='processed_text'):
+
+def prepare_voc(batches_dir, vw_path, data_path, column_name='processed_text.txt'):
     print('Starting...')
     with open(vw_path, 'w', encoding='utf8') as ofile:
         num_parts = 0
@@ -73,7 +95,8 @@ def prepare_voc(batches_dir, vw_path, data_path, column_name='processed_text'):
 
     print(' batches {} \n vocabulary {} \n are ready'.format(batches_dir, vw_path))
 
-def prepare_batch_vectorizer(batches_dir, vw_path, data_path, column_name='processed_text'):
+
+def prepare_batch_vectorizer(batches_dir, vw_path, data_path, column_name='processed_text.txt'):
     #     if not glob.glob(os.path.join(batches_dir, "*")):
     prepare_voc(batches_dir, vw_path, data_path, column_name=column_name)
     batch_vectorizer = artm.BatchVectorizer(data_path=vw_path,

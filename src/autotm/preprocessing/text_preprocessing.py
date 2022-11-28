@@ -6,7 +6,8 @@ import pandas as pd
 from sklearn.datasets import fetch_20newsgroups
 import pymystem3
 from nltk.corpus import stopwords, wordnet
-import multiprocessing as mp
+from src.autotm.utils import parallelize_dataframe
+
 from nltk.stem.snowball import SnowballStemmer
 
 import matplotlib
@@ -48,12 +49,6 @@ url_pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%
 m = pymystem3.Mystem()
 en_lemmatizer = WordNetLemmatizer()
 
-
-# class preprocessor:
-#     def __init__(self, lang):
-#         pass
-
-
 @Language.factory('language_detector')
 def language_detector(nlp, name):
     return LanguageDetector()
@@ -88,14 +83,17 @@ def tokens_num(text):
     return len(text.split(' '))
 
 
-def lemmatize_text(text: str, language: str = 'ru') -> str:
+def lemmatize_text(df, lang: str):
+    if lang=='ru':
+        df[].apply()
+
+def lemmatize_text_ru(text: str) -> str:
     try:
         text = new_html(text)
     except:
         return ''
     text = text.lower()
     text = process_punkt(text)
-    #     if language == 'ru':
     #         text = re.findall(r_rus, text)
     #         text = ' '.join(text)
     try:
@@ -103,11 +101,8 @@ def lemmatize_text(text: str, language: str = 'ru') -> str:
     except:
         return ''
     tokens = (x for x in tokens if len(x) >= 3 and not x.isdigit())
-    if language == 'ru':
-        text = ' '.join(tokens)
-        tokens = m.lemmatize(text)
-    else:
-        tokens = [get_lemma(token) for token in tokens]
+    text = ' '.join(tokens)
+    tokens = m.lemmatize(text)
     tokens = (x for x in tokens if len(x) > 3)
     tokens = (x for x in tokens if x not in stop)
     tokens = (x for x in tokens if x.isalpha())
@@ -146,13 +141,14 @@ def lemmatize_text_en(text):
     return ' '.join(text_stem)
 
 
-def process_dataset(fname: str, col_to_process: str, save_path, lang='ru'):
+def process_dataset(fname: str, col_to_process: str, save_path, lang='ru', min_tokens_count=3):
     data = pd.read_csv(fname)
     if lang == 'ru':
+        data = parallelize_dataframe(data, lemmatize_text)
         data['processed_text'] = data[col_to_process].progress_apply(lemmatize_text)
     else:
         data['processed_text'] = data[col_to_process].progress_apply(lemmatize_text_en)
     data['tokens_len'] = data['processed_text'].apply(tokens_num)
-    data = data[data['tokens_len'] > 3]
+    data = data[data['tokens_len'] > min_tokens_count]
     data.to_csv(save_path, index=None)
     print('Saved to {}'.format(save_path))
