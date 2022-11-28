@@ -5,7 +5,7 @@ import pickle
 from typing import List
 import numpy as np
 
-from kube_fitness.metrics import AVG_COHERENCE_SCORE
+from src.autotm.utils import AVG_COHERENCE_SCORE
 from kube_fitness.schemas import IndividualDTO
 
 SPARSITY_PHI = 'sparsity_phi'
