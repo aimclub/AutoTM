@@ -16,8 +16,7 @@ from gensim.models.coherencemodel import CoherenceModel
 from tqdm import tqdm
 
 from kube_fitness.metrics import MetricsScores, AVG_COHERENCE_SCORE, TimeMeasurements
-from autotm.utils import log_exec_timer
-
+from src.autotm.utils import log_exec_timer
 
 
 logger = logging.getLogger()

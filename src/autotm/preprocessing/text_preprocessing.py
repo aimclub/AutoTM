@@ -49,6 +49,7 @@ url_pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%
 m = pymystem3.Mystem()
 en_lemmatizer = WordNetLemmatizer()
 
+
 @Language.factory('language_detector')
 def language_detector(nlp, name):
     return LanguageDetector()
@@ -82,10 +83,6 @@ def get_lemma(word: str) -> str:
 def tokens_num(text):
     return len(text.split(' '))
 
-
-def lemmatize_text(df, lang: str):
-    if lang=='ru':
-        df[].apply()
 
 def lemmatize_text_ru(text: str) -> str:
     try:
@@ -141,13 +138,36 @@ def lemmatize_text_en(text):
     return ' '.join(text_stem)
 
 
-def process_dataset(fname: str, col_to_process: str, save_path, lang='ru', min_tokens_count=3):
-    data = pd.read_csv(fname)
+def lemmatize_text(df, **kwargs):
+    # print(kwargs)
+    lang = kwargs['lang']
+    col_to_process = kwargs['col_to_process']
     if lang == 'ru':
-        data = parallelize_dataframe(data, lemmatize_text)
-        data['processed_text'] = data[col_to_process].progress_apply(lemmatize_text)
+        df['processed_text'] = df[col_to_process].apply(lemmatize_text_ru)
+    elif lang == 'en':
+        df['processed_text'] = df[col_to_process].apply(lemmatize_text_en)
     else:
-        data['processed_text'] = data[col_to_process].progress_apply(lemmatize_text_en)
+        print(f'The language {lang} is not known')
+        raise NameError
+    return df
+
+
+def process_dataset(fname: str, col_to_process: str, save_path: str,
+                    lang: str = 'ru', min_tokens_count: int = 3, n_cores: int = -1):
+    '''
+
+    :param fname: Path to the dataset to process.
+    :param col_to_process: The name of text column to be processed.
+    :param save_path: Path where to store all the artifacts.
+    :param lang: Language of the data (ru/en).
+    :param min_tokens_count: Minimal amount of tokens to consider the further processing and topic modeling (3 by default).
+    :param n_cores: Amount of cores for parallelization.
+    :return:
+    '''
+    save_path = os.path.join(save_path, 'processed_dataset.csv')
+    data = pd.read_csv(fname)
+    # lemmatize_text(data, lang=lang, col_to_process=col_to_process)
+    data = parallelize_dataframe(data, lemmatize_text, n_cores, lang=lang, col_to_process=col_to_process)
     data['tokens_len'] = data['processed_text'].apply(tokens_num)
     data = data[data['tokens_len'] > min_tokens_count]
     data.to_csv(save_path, index=None)

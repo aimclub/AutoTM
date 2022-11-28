@@ -25,11 +25,11 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import SVR
 from yaml import Loader
 
-from algorithms_for_tuning.genetic_algorithm.crossover import crossover
-from algorithms_for_tuning.genetic_algorithm.mutation import mutation
-from algorithms_for_tuning.genetic_algorithm.selection import selection
-from algorithms_for_tuning.individuals import make_individual
-from kube_fitness.tasks import IndividualDTO
+from src.autotm.algorithms_for_tuning.genetic_algorithm.crossover import crossover
+from src.autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
+from src.autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
+from src.autotm.algorithms_for_tuning.individuals import make_individual
+from src.autotm.fitness.tm import IndividualDTO
 
 from algorithms_for_tuning.utils.fitness_estimator import estimate_fitness, prepare_fitness_estimator, log_best_solution
 

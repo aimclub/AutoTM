@@ -8,7 +8,6 @@ import multiprocessing as mp
 def get_words_dict(text, stop_list):
     all_words = text
     words = sorted(set(all_words) - stop_list)
-
     return {w: all_words.count(w) for w in words}
 
 
@@ -23,18 +22,18 @@ def vocab_preparation(VOCAB_PATH, DICTIONARY_PATH):
                     vocab_file.write(' '.join(elems[:2]) + '\n')
 
 
-def calculate_cooc_dicts(window=10):
-    with open()
-        raise NotImplementedError
+def calculate_cooc_dicts(dataset_path, window=10):
+    data = pd.read_csv(dataset_path)
 
+    raise NotImplementedError
 
 def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
                          cooc_file_path_tf, cooc_file_path_df,
                          ppmi_dict_tf, ppmi_dict_df, cooc_min_tf=0,
                          cooc_min_df=0, cooc_window=10, n_jobs=-1):
     '''
-    :param BATCHES_DIR:
-    :param WV_PATH:
+    :param BATCHES_DIR: path where to store batches
+    :param WV_PATH: path where to store data in Vowpal Wabbit format (https://github.com/VowpalWabbit/vowpal_wabbit/wiki/Input-format)
     :param VOCAB_PATH:
     :param COOC_DICTIONARY_PATH:
     :param cooc_file_path_tf:
@@ -96,8 +95,7 @@ def prepare_voc(batches_dir, vw_path, data_path, column_name='processed_text.txt
     print(' batches {} \n vocabulary {} \n are ready'.format(batches_dir, vw_path))
 
 
-def prepare_batch_vectorizer(batches_dir, vw_path, data_path, column_name='processed_text.txt'):
-    #     if not glob.glob(os.path.join(batches_dir, "*")):
+def prepare_batch_vectorizer(batches_dir: str, vw_path: str, data_path: str, column_name: str = 'processed_text'):
     prepare_voc(batches_dir, vw_path, data_path, column_name=column_name)
     batch_vectorizer = artm.BatchVectorizer(data_path=vw_path,
                                             data_format="vowpal_wabbit",
@@ -109,10 +107,20 @@ def prepare_batch_vectorizer(batches_dir, vw_path, data_path, column_name='proce
     return batch_vectorizer
 
 
-def prepare_all(BATCHES_DIR, WV_PATH, DOCUMENTS_TO_BATCH_PATH, DICTIONARY_PATH,
-                VOCAB_PATH, COOC_DICTIONARY_PATH, cooc_file_path_tf,
-                cooc_file_path_df, ppmi_dict_tf, ppmi_dict_df):
-    # TODO: check why batch vectorizer is returning (unused further)
+def prepare_all_artifacts(save_path: str):
+    BATCHES_DIR = os.path.join(save_path, 'batches')
+    WV_PATH = os.path.join(save_path, 'test_set_data_voc.txt')
+    COOC_DICTIONARY_PATH = os.path.join(save_path, 'cooc_dictionary.txt')
+    DICTIONARY_PATH = os.path.join(save_path, 'dictionary.txt')
+    VOCAB_PATH = os.path.join(save_path, 'vocab.txt')
+    cooc_file_path_df = os.path.join(save_path, 'cooc_df.txt')
+    cooc_file_path_tf = os.path.join(save_path, 'cooc_tf.txt')
+    ppmi_dict_df = os.path.join(save_path, 'ppmi_df.txt')
+    ppmi_dict_tf = os.path.join(save_path, 'ppmi_tf.txt')
+    MUTUAL_INFO_DICT_PATH = os.path.join(save_path, 'mutual_info_dict.pkl')
+    DOCUMENTS_TO_BATCH_PATH = os.path.join(save_path, 'processed_dataset.csv')
+
+    # TODO: check why batch vectorizer is returned (unused further)
     batch_vectorizer = prepare_batch_vectorizer(BATCHES_DIR, WV_PATH, DOCUMENTS_TO_BATCH_PATH)
 
     my_dictionary = artm.Dictionary()
