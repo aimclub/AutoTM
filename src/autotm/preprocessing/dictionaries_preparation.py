@@ -47,15 +47,23 @@ def calculate_cooc_dicts(dataset_path, window=10, n_cores=-1):
     return cooc_df_dict
 
 
+def convert_to_vw_format(cooc_dict):
+    rows = []
+    for item in sorted(cooc_dict.items(), key=lambda key: key[0]):
+        rows.append(f'{item[0]}:')
+        raise NotImplementedError
+
+
 def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
+                         path_to_dataset,
                          cooc_file_path_tf, cooc_file_path_df,
                          ppmi_dict_tf, ppmi_dict_df, cooc_min_tf=0,
                          cooc_min_df=0, cooc_window=10, n_jobs=-1):
     '''
-    :param BATCHES_DIR: path where to store batches
     :param WV_PATH: path where to store data in Vowpal Wabbit format (https://github.com/VowpalWabbit/vowpal_wabbit/wiki/Input-format)
     :param VOCAB_PATH:
     :param COOC_DICTIONARY_PATH:
+    :param path_to_dataset: path to folder
     :param cooc_file_path_tf:
     :param cooc_file_path_df:
     :param ppmi_dict_tf:
@@ -66,7 +74,9 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
     :return:
     '''
 
-    calculate_cooc_dicts()
+    path_to_dataset = os.path.join(path_to_dataset, '')
+
+    calculate_cooc_dicts(path_to_dataset)
 
     ! bigartm - c $WV_PATH - v $VOCAB_PATH - -cooc - window
     10 - -write - cooc - tf $cooc_file_path_tf - -write - cooc - df $cooc_file_path_df - -write - ppmi - tf $ppmi_dict_tf - -write - ppmi - df $ppmi_dict_df
