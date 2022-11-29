@@ -15,10 +15,10 @@ from billiard.exceptions import SoftTimeLimitExceeded
 from gensim.models.coherencemodel import CoherenceModel
 from tqdm import tqdm
 
-from src.autotm.fitness.external_scores import (kl_divergence, ts_bground, ts_uniform,
+from autotm.fitness.external_scores import (ts_bground, ts_uniform,
                                                 ts_vacuous, switchp)
 from kube_fitness.metrics import MetricsScores, AVG_COHERENCE_SCORE, TimeMeasurements
-from src.autotm.utils import log_exec_timer
+from autotm.utils import log_exec_timer
 
 
 logger = logging.getLogger()

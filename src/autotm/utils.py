@@ -80,11 +80,10 @@ def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type='df', **k
     df_split = np.array_split(df, n_cores)
     pool = Pool(n_cores)
     func_with_args = partial(func, **kwargs)
-    result = pool.map(func_with_args, df_split)
     if return_type == 'df':
-        df = pd.concat(pool.map(func_with_args, df_split))
-    else:
-        df = pd.concat(pool.map(func_with_args, df_split))
+        res = pd.concat(pool.map(func_with_args, df_split))
+    elif return_type == 'dict':
+        res = merge_dicts(pool.map(func_with_args, df_split))
     pool.close()
     pool.join()
-    return df
+    return res

@@ -25,7 +25,7 @@ def vocab_preparation(VOCAB_PATH, DICTIONARY_PATH):
                     vocab_file.write(' '.join(elems[:2]) + '\n')
 
 
-def _calculate_cooc_dict(df, window=10):
+def _calculate_cooc_df_dict(df, window=10):
     cooc_df_dict = {}  # format dict{(tuple): cooc}
     for text in df['processed_text'].tolist():
         document_cooc_df_dict = {}
@@ -43,8 +43,8 @@ def _calculate_cooc_dict(df, window=10):
 
 def calculate_cooc_dicts(dataset_path, window=10, n_cores=-1):
     data = pd.read_csv(dataset_path)
-    parallelize_dataframe(data, _calculate_cooc_dict, n_cores, window=window)
-    raise NotImplementedError
+    cooc_df_dict = parallelize_dataframe(data, _calculate_cooc_df_dict, n_cores, return_type='dict', window=window)
+    return cooc_df_dict
 
 
 def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
@@ -65,6 +65,8 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
     :param cooc_window: size of the window where to search for the cooccurrences
     :return:
     '''
+
+    calculate_cooc_dicts()
 
     ! bigartm - c $WV_PATH - v $VOCAB_PATH - -cooc - window
     10 - -write - cooc - tf $cooc_file_path_tf - -write - cooc - df $cooc_file_path_df - -write - ppmi - tf $ppmi_dict_tf - -write - ppmi - df $ppmi_dict_df
