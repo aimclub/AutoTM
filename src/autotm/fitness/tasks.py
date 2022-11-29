@@ -47,18 +47,13 @@ def calculate_fitness(individual: str,
                       log_artifact_and_parameters: bool = False,
                       log_run_stats: bool = False,
                       alg_args: Optional[str] = None) -> str:
-    # A hack to solve the problem 'AssertionError: daemonic processes are not allowed to have children'
-    # see the discussion: https://github.com/celery/celery/issues/1709
-    # noinspection PyUnresolvedReferences
-    current_process()._config['daemon'] = False
-
     try:
         return do_fitness_calculating(individual, log_artifact_and_parameters, log_run_stats, alg_args)
     except:
-        raise Exception(f"Soft time limit encountered")
+        raise Exception(f"Some exception")
 
 
-def parallel_fitness(population: List[IndividualDTO],
+def estimate_fitness(population: List[IndividualDTO],
                      use_tqdm: bool = False,
                      tqdm_check_period: int = 2) -> List[IndividualDTO]:
     ids = [ind.id for ind in population]
@@ -68,15 +63,18 @@ def parallel_fitness(population: List[IndividualDTO],
     logger.info("Calculating fitness...")
     logger.info(f"Sending individuals to be calculated with uids: {[p.id for p in population]}")
 
-    fitness_tasks = [
-        calculate_fitness.signature(
-            # (fitness_to_json(individual), False, True),
-            (individual.json(), False, True),
-            options={"queue": "fitness_tasks"}
-        ) for individual in population
-    ]
+    for individual in population:
 
-    g: GroupResult = group(*fitness_tasks).apply_async()
+
+    # fitness_tasks = [
+    #     calculate_fitness.signature(
+    #         # (fitness_to_json(individual), False, True),
+    #         (individual.json(), False, True),
+    #         options={"queue": "fitness_tasks"}
+    #     ) for individual in population
+    # ]
+
+    # g: GroupResult = group(*fitness_tasks).apply_async()
 
     logger.info(f"Corresponding celery tasks ids: {[child.id for child in g.children]}")
 
