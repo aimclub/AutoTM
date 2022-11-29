@@ -15,17 +15,11 @@ from billiard.exceptions import SoftTimeLimitExceeded
 from gensim.models.coherencemodel import CoherenceModel
 from tqdm import tqdm
 
-from autotm.fitness.external_scores import (ts_bground, ts_uniform,
-                                                ts_vacuous, switchp)
-from kube_fitness.metrics import MetricsScores, AVG_COHERENCE_SCORE, TimeMeasurements
-from autotm.utils import log_exec_timer
-
+from autotm.fitness.external_scores import (ts_bground, ts_uniform, ts_vacuous, switchp)
+from autotm.utils import MetricsScores, AVG_COHERENCE_SCORE, TimeMeasurements, log_exec_timer
 
 logger = logging.getLogger()
 logging.basicConfig(level="INFO")
-
-
-# additional scores to calculate
 
 
 class Dataset:
@@ -694,7 +688,7 @@ class TopicModel:
             'contrast': contrast,
             'purity': purity,
             'kernelSize': kernel_size,
-            'npmi_50_list':  npmis['npmi_50_list'], # npmi_values_50_list,
+            'npmi_50_list': npmis['npmi_50_list'],  # npmi_values_50_list,
             'npmi_50': npmis['npmi_50'],
             'sparsity_phi': sparsity_phi,
             'sparsity_theta': sparsity_theta,

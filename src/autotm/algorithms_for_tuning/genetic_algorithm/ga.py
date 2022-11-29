@@ -25,19 +25,20 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import SVR
 from yaml import Loader
 
-from src.autotm.algorithms_for_tuning.genetic_algorithm.crossover import crossover
-from src.autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
-from src.autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
-from src.autotm.algorithms_for_tuning.individuals import make_individual
-from src.autotm.algorithms_for_tuning.individuals import IndividualDTO
+from autotm.algorithms_for_tuning.genetic_algorithm.crossover import crossover
+from autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
+from autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
+from autotm.algorithms_for_tuning.individuals import make_individual
+from autotm.algorithms_for_tuning.individuals import IndividualDTO
 
-from algorithms_for_tuning.utils.fitness_estimator import estimate_fitness, prepare_fitness_estimator, log_best_solution
+from autotm.fitness.tasks import estimate_fitness, log_best_solution
 
 ALG_ID = "ga"
 SPEEDUP = True
 
 warnings.filterwarnings("ignore")
 logger = logging.getLogger("GA_algo")
+
 
 # TODO: Add fitness type
 def set_surrogate_fitness(value, fitness_type='avg_coherence_score'):
@@ -66,8 +67,6 @@ def set_surrogate_fitness(value, fitness_type='avg_coherence_score'):
         **npmis
     }
     return scores_dict
-
-
 
 
 class Surrogate:
@@ -244,7 +243,8 @@ class GA:
         list_of_individuals = []
         for i in range(self.num_individuals):
             if i == 0:
-                dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=self.init_individ(base_model=True),
+                dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset,
+                                    params=self.init_individ(base_model=True),
                                     exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
                                     topic_count=self.topic_count, tag=self.tag)
             else:
@@ -436,7 +436,6 @@ class GA:
         return new_generation
 
     def run(self, verbose=False):
-        prepare_fitness_estimator()
 
         self.evaluations_counter = 0
         ftime = str(int(time.time()))
@@ -536,18 +535,18 @@ class GA:
             # TODO: check this code
             for i in range(1, len(population)):
 
-            #     if random.random() <= population[i].params[12]:
-            #         for idx in range(3):
-            #             if random.random() < population[i].params[13]:
-            #                 if idx == 0:
-            #                     population[i].params[12] = np.random.uniform(low=self.low_prob,
-            #                                                                  high=self.high_prob, size=1)[0]
-            #                 elif idx == 1:
-            #                     population[i].params[13] = np.random.uniform(low=self.low_prob,
-            #                                                                  high=self.high_prob, size=1)[0]
-            #                 elif idx == 2:
-            #                     population[i].params[13] = np.random.uniform(low=self.low_prob,
-            #                                                                  high=self.high_prob, size=1)[0]
+                #     if random.random() <= population[i].params[12]:
+                #         for idx in range(3):
+                #             if random.random() < population[i].params[13]:
+                #                 if idx == 0:
+                #                     population[i].params[12] = np.random.uniform(low=self.low_prob,
+                #                                                                  high=self.high_prob, size=1)[0]
+                #                 elif idx == 1:
+                #                     population[i].params[13] = np.random.uniform(low=self.low_prob,
+                #                                                                  high=self.high_prob, size=1)[0]
+                #                 elif idx == 2:
+                #                     population[i].params[13] = np.random.uniform(low=self.low_prob,
+                #                                                                  high=self.high_prob, size=1)[0]
 
                 if random.random() <= population[i].params[12]:
                     params = self.mutation(copy.deepcopy(population[i].params),
@@ -571,7 +570,6 @@ class GA:
                                         topic_count=self.topic_count, tag=self.tag)
                     population[i] = make_individual(dto=dto)
                 self.evaluations_counter += 1
-
 
             # after the mutation we obtain a new population that needs to be evaluated
             for p in population:
@@ -641,7 +639,7 @@ class GA:
             x.append(ii)
             y.append(population[0].fitness_value)
             logger.info(f"Population len {len(population)}. "
-                        f"Best params so far: {population[0].params}, with fitness: {population[0].fitness_value}." 
+                        f"Best params so far: {population[0].params}, with fitness: {population[0].fitness_value}."
                         f"ITERATION TIME: {time.time() - iteration_start_time}"
                         f"DATASET {self.dataset}."
                         f"TOPICS NUM {self.topic_count}."
