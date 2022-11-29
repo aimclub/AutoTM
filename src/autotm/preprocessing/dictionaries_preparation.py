@@ -36,29 +36,33 @@ def _calculate_cooc_df_dict(df, window=10):
                     continue
                 else:
                     document_cooc_df_dict[comb] += 1
-                    document_cooc_df_dict[(comb[1], comb[0])] += 1
+                    # document_cooc_df_dict[(comb[1], comb[0])] += 1
         cooc_df_dict = dict(Counter(document_cooc_df_dict) + Counter(cooc_df_dict))
     return cooc_df_dict
 
 
-def calculate_cooc_dicts(dataset_path, window=10, n_cores=-1):
-    data = pd.read_csv(dataset_path)
+def calculate_cooc_dicts(data, window=10, n_cores=-1):
     cooc_df_dict = parallelize_dataframe(data, _calculate_cooc_df_dict, n_cores, return_type='dict', window=window)
     return cooc_df_dict
 
 
-def convert_to_vw_format(cooc_dict):
+def convert_to_vw_format(cooc_dict, vocab_words):
     rows = []
+    data_dict = {}
     for item in sorted(cooc_dict.items(), key=lambda key: key[0]):
+        if item[0] in data_dict:
+            data_dict[item[0]]
         rows.append(f'{item[0]}:')
         raise NotImplementedError
 
+def calculate_ppmi(cooc_dict):
+    raise NotImplementedError
 
 def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
                          path_to_dataset,
                          cooc_file_path_tf, cooc_file_path_df,
                          ppmi_dict_tf, ppmi_dict_df, cooc_min_tf=0,
-                         cooc_min_df=0, cooc_window=10, n_jobs=-1):
+                         cooc_min_df=0, cooc_window=10, n_cores=-1):
     '''
     :param WV_PATH: path where to store data in Vowpal Wabbit format (https://github.com/VowpalWabbit/vowpal_wabbit/wiki/Input-format)
     :param VOCAB_PATH:
@@ -74,12 +78,23 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
     :return:
     '''
 
-    path_to_dataset = os.path.join(path_to_dataset, '')
+    path_to_dataset = os.path.join(path_to_dataset, 'processed_dataset.csv')
 
-    calculate_cooc_dicts(path_to_dataset)
+    # rewrite this part in case of several modalities
+    vocab_words = []
+    with open(VOCAB_PATH) as vpath:
+        for line in vpath:
+            splitted_line = line.split()
+            if len(splitted_line) > 2:
+                raise Exception('There are more than 2 modalities!')
+            vocab_words.append(splitted_line[0].strip())
+    print(vocab_words[0])
 
-    ! bigartm - c $WV_PATH - v $VOCAB_PATH - -cooc - window
-    10 - -write - cooc - tf $cooc_file_path_tf - -write - cooc - df $cooc_file_path_df - -write - ppmi - tf $ppmi_dict_tf - -write - ppmi - df $ppmi_dict_df
+    data = pd.read_csv(path_to_dataset)
+    calculate_cooc_dicts(data, n_cores=n_cores)
+
+    # ! bigartm - c $WV_PATH - v $VOCAB_PATH - -cooc - window
+    # 10 - -write - cooc - tf $cooc_file_path_tf - -write - cooc - df $cooc_file_path_df - -write - ppmi - tf $ppmi_dict_tf - -write - ppmi - df $ppmi_dict_df
 
     cooc_dict = artm.Dictionary()
     cooc_dict.gather(
