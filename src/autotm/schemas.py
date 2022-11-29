@@ -1,9 +1,6 @@
 import copy
 import json
-from dataclasses import dataclass
-from typing import List, Optional, Dict, Any
-
-from dataclasses_json import dataclass_json
+from typing import List, Optional
 from pydantic import BaseModel
 
 from src.autotm.utils import MetricsScores
@@ -12,14 +9,11 @@ PARAM_NAMES = [
     'val_decor', 'var_n_0', 'var_sm_0', 'var_sm_1', 'var_n_1',
     'var_sp_0', 'var_sp_1', 'var_n_2',
     'var_sp_2', 'var_sp_3', "var_n_3",
-    'var_n_4',
-    'ext_mutation_prob', 'ext_elem_mutation_prob', 'ext_mutation_selector',
-    'val_decor_2'
+    'var_n_4', 'ext_mutation_prob', 'ext_elem_mutation_prob',
+    'ext_mutation_selector', 'val_decor_2'
 ]
 
 
-# @dataclass_json
-# @dataclass
 class IndividualDTO(BaseModel):
     id: str
     params: List[object]

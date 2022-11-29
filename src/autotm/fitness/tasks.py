@@ -63,57 +63,16 @@ def estimate_fitness(population: List[IndividualDTO],
     logger.info("Calculating fitness...")
     logger.info(f"Sending individuals to be calculated with uids: {[p.id for p in population]}")
 
-    for individual in population:
-
-
-    # fitness_tasks = [
-    #     calculate_fitness.signature(
-    #         # (fitness_to_json(individual), False, True),
-    #         (individual.json(), False, True),
-    #         options={"queue": "fitness_tasks"}
-    #     ) for individual in population
-    # ]
-
-    # g: GroupResult = group(*fitness_tasks).apply_async()
-
-    logger.info(f"Corresponding celery tasks ids: {[child.id for child in g.children]}")
+    population = [calculate_fitness(individual) for individual in population]
 
     tqdm_out = TqdmToLogger(logger, level=logging.INFO)
 
-    if use_tqdm:
-        # TODO: add timeout here
-        with tqdm(total=len(fitness_tasks), file=tqdm_out) as pbar:
-            while True:
-                cc = g.completed_count()
-                # logger.debug(f"Completed task count : {cc}")
-                pbar.update(cc - pbar.n)
-
-                # logger.debug(f"is ready {g.ready()} or failed {g.failed()}")
-
-                if g.ready() or g.failed():
-                    break
-
-                # TODO: make it into parameter
-                time.sleep(tqdm_check_period)
-
-    # TODO: ugly workround to solve indefinite hanging g.get(), see pages below for additional info
-    # https://stackoverflow.com/questions/63860955/celery-async-result-get-hangs-waiting-for-result-even-after-celery-worker-has
-    # https://stackoverflow.com/questions/49006182/celery-redis-get-hangs-indefinitely-after-running-smoothly-for-70-hours
-    logger.info("Getting results")
-    # TODO: this is commented because of https://github.com/celery/celery/pull/7040
-    # waiting_delay = int(os.environ.get('AUTOTM_KUBE_FITNESS_WAITING_DELAY', '90'))
-    # while not g.ready():
-    #     logger.info(f"Results are not ready. Waiting for the next {waiting_delay} seconds...")
-    #     time.sleep(waiting_delay)
-    # logger.info("Results are ready, trying ot obtain them...")
-    # results = g.get()
-    results = g.get()
     logger.info("The results have been obtained")
 
     # restoring the order in the resulting population according to the initial population
     # results_by_id = {ind.id: ind for ind in (fitness_from_json(r) for r in results)}
-    results_by_id = {ind.id: ind for ind in (IndividualDTO.parse_raw(r) for r in results)}
-    return [results_by_id[ind.id] for ind in population]
+    # results_by_id = {ind.id: ind for ind in (IndividualDTO.parse_raw(r) for r in results)}
+    return population
 
 
 def log_best_solution(individual: IndividualDTO,
