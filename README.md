@@ -11,6 +11,7 @@ AutoTM provides necessary tools to preprocess english and russian text datasets 
 ! Note: The functionality of topic models training is available only for linux distributions.
 
 ```pip install -r requirements.txt```
+```python -m spacy download en_core_web_sm```
 
 ## Quickstart
 
