@@ -68,10 +68,6 @@ def estimate_fitness(population: List[IndividualDTO],
     tqdm_out = TqdmToLogger(logger, level=logging.INFO)
 
     logger.info("The results have been obtained")
-
-    # restoring the order in the resulting population according to the initial population
-    # results_by_id = {ind.id: ind for ind in (fitness_from_json(r) for r in results)}
-    # results_by_id = {ind.id: ind for ind in (IndividualDTO.parse_raw(r) for r in results)}
     return population
 
 
