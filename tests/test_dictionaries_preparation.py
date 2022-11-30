@@ -9,12 +9,9 @@ from unittest.mock import patch, MagicMock
 import pandas as pd
 
 import pytest
-import requests
-from requests import exceptions
 
 DATASET_TINY = pd.DataFrame({'processed_text': ['this is text for testing purposes',
                                                 'test the testing test to test the test']})
-
 
 @pytest.fixture()
 def tiny_dataset_(tmpdir):

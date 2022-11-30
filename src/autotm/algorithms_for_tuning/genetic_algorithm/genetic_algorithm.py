@@ -60,10 +60,33 @@ def run_algorithm(dataset: str,
                   best_proc: float = 0.4,
                   log_file: str = "/var/log/tm-alg.log",
                   tag: str = "v0",
-                  surrogate_name: str = None, # fix
+                  surrogate_name: str = None,  # fix
                   gpr_kernel: str = None,
                   gpr_alpha: float = None,
                   gpr_normalize_y: float = None):
+    '''
+
+    :param dataset: Dataset name that is being processed. The name will be used to store results.
+    :param data_path: Path to all the artifacts obtained after
+    :param exp_id:
+    :param topic_count:
+    :param num_individuals:
+    :param num_iterations:
+    :param num_fitness_evaluations:
+    :param mutation_type:
+    :param crossover_type:
+    :param selection_type:
+    :param elem_cross_prob:
+    :param cross_alpha:
+    :param best_proc:
+    :param log_file:
+    :param tag:
+    :param surrogate_name:
+    :param gpr_kernel:
+    :param gpr_alpha:
+    :param gpr_normalize_y:
+    :return:
+    '''
     logger.debug(f"Command line: {sys.argv}")
 
     run_uid = str(uuid.uuid4())
@@ -100,7 +123,6 @@ def run_algorithm(dataset: str,
            )
     best_value = g.run(verbose=True)
     print(best_value * (-1))
-
 
 
 if __name__ == "__main__":
