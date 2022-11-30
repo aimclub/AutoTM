@@ -167,9 +167,12 @@ class TopicModelFactory:
 
         return dataset
 
-    def __init__(self, dataset_name: str, fitness_name: str, params: list,
+    def __init__(self, dataset_name: str, data_path: str,
+                 fitness_name: str, params: list,
                  topic_count: Optional[int] = None, forced_update: bool = False):
+        print(dataset_name)
         self.dataset_name = dataset_name
+        self.data_path = data_path
         self.fitness_name = fitness_name
         self.params = params
         self.topic_count = topic_count
@@ -212,6 +215,7 @@ def type_check(res):
 
 @contextmanager
 def fit_tm_of_individual(dataset: str,
+                         data_path: str,
                          params: list,
                          fitness_name: str = "default",
                          topic_count: Optional[int] = None,
@@ -221,7 +225,7 @@ def fit_tm_of_individual(dataset: str,
 
     start = time.time()
 
-    with TopicModelFactory(dataset, fitness_name, params, topic_count, force_dataset_settings_checkout) as tm:
+    with TopicModelFactory(dataset, data_path, fitness_name, params, topic_count, force_dataset_settings_checkout) as tm:
         try:
             with log_exec_timer("TM Training") as train_timer:
                 tm.train()
@@ -248,11 +252,12 @@ def fit_tm_of_individual(dataset: str,
 
 
 def calculate_fitness_of_individual(dataset: str,
+                                    data_path: str,
                                     params: list,
                                     fitness_name: str = "default",
                                     topic_count: Optional[int] = None,
                                     force_dataset_settings_checkout: bool = False) -> MetricsScores:
-    with fit_tm_of_individual(dataset, params, fitness_name, topic_count, force_dataset_settings_checkout) as result:
+    with fit_tm_of_individual(dataset, data_path, params, fitness_name, topic_count, force_dataset_settings_checkout) as result:
         time_metrics, fitness, tm = result
 
     return fitness

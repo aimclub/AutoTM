@@ -160,7 +160,7 @@ def get_prediction_uncertanty(model, X, surrogate_name, percentile=90):
 
 
 class GA:
-    def __init__(self, dataset, num_individuals, num_iterations,
+    def __init__(self, dataset, data_path, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
                  selection_type='fitness_prop', elem_cross_prob=0.2,
                  num_fitness_evaluations: Optional[int] = 500,
@@ -179,6 +179,7 @@ class GA:
         #     self.crossover_children = 1
         # else:
         # self.crossover_children = 2
+        self.data_path = data_path
         self.num_individuals = num_individuals
         self.num_iterations = num_iterations
         self.mutation = mutation(mutation_type)
@@ -243,12 +244,13 @@ class GA:
         list_of_individuals = []
         for i in range(self.num_individuals):
             if i == 0:
-                dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset,
+                dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
+                                    dataset=self.dataset,
                                     params=self.init_individ(base_model=True),
                                     exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
                                     topic_count=self.topic_count, tag=self.tag)
             else:
-                dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=self.init_individ(),
+                dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path, dataset=self.dataset, params=self.init_individ(),
                                     exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
                                     topic_count=self.topic_count, tag=self.tag)
             # TODO: improve heuristic on search space
