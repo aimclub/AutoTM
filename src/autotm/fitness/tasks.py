@@ -73,26 +73,11 @@ def estimate_fitness(population: List[IndividualDTO],
 
 def log_best_solution(individual: IndividualDTO,
                       wait_for_result_timeout: Optional[float] = None,
-                      alg_args: Optional[str] = None) \
-        -> Union[IndividualDTO, AsyncResult]:
-    # ind = fitness_to_json(individual)
+                      alg_args: Optional[str] = None):
+
     ind = individual.json()
     logger.info(f"Sending a best individual to be logged: {ind}")
-    task: Task = calculate_fitness.signature(
-        (ind, True, True, alg_args),
-        options={"queue": "fitness_tasks"}
-    )
 
-    result: AsyncResult = task.apply_async()
-    logger.debug(f"Started a task for best individual logging with id: {result.task_id}")
+    logger.debug(f"Started a task for best individual logging with id: {individual.id}")
 
-    if wait_for_result_timeout:
-        # it may block forever
-        timeout = wait_for_result_timeout if wait_for_result_timeout > 0 else None
-        r = result.get(timeout=timeout)
-        # r = fitness_from_json(r)
-        r = IndividualDTO.parse_raw(r)
-    else:
-        r = result
-
-    return r
+    return ind
