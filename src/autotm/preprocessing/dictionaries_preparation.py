@@ -36,7 +36,6 @@ def _calculate_cooc_df_dict(df, window=10):
                     continue
                 else:
                     document_cooc_df_dict[comb] = 1
-                    # document_cooc_df_dict[(comb[1], comb[0])] += 1
         cooc_df_dict = dict(Counter(document_cooc_df_dict) + Counter(cooc_df_dict))
     return cooc_df_dict
 
@@ -49,18 +48,24 @@ def calculate_cooc_dicts(data, window=10, n_cores=-1):
 def convert_to_vw_format(cooc_dict, vocab_words, vw_path):
     data_dict = {}
     for item in sorted(cooc_dict.items(), key=lambda key: key[0]):
-        if item[0] in data_dict:
+        if item[0][0] in data_dict:
             data_dict[item[0][0]].append(f'{item[0][1]}:{item[1]}')
         else:
             data_dict[item[0][0]] = [f'{item[0][1]}:{item[1]}']
     print(data_dict)
+    print(vocab_words)
     with open(vw_path, "w") as fopen:
         for word in vocab_words:
-            fopen.write(f'{word}' + ' '.join(data_dict[word]))
+            try:
+                fopen.write(f'{word}' + ' ' + ' '.join(data_dict[word]) + '\n')
+            except:
+                pass
     print(f'{vw_path} is ready!')
+
 
 def calculate_ppmi(cooc_dict):
     raise NotImplementedError
+
 
 def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
                          path_to_dataset,
@@ -90,9 +95,9 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
             if len(splitted_line) > 2:
                 raise Exception('There are more than 2 modalities!')
             vocab_words.append(splitted_line[0].strip())
-    print(vocab_words[0])
 
     data = pd.read_csv(path_to_dataset)
+    docs_count = data.shape[0]
     cooc_df_dict = calculate_cooc_dicts(data, n_cores=n_cores)
     convert_to_vw_format(cooc_df_dict, vocab_words, cooc_file_path_df)
 
