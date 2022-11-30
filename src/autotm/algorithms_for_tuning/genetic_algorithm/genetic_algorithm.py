@@ -21,7 +21,7 @@ NUM_FITNESS_EVALUATIONS = 150
 
 
 @click.command(context_settings=dict(allow_extra_args=True))
-@click.option('--dataset', required=True, help='dataset name in the config')
+@click.option('--dataset', default='default', help='dataset name in the config')
 @click.option('--num-individuals', default=11, help='number of individuals in generation')
 @click.option('--num-iterations', default=400, help='number of iterations to make')
 @click.option('--num-fitness-evaluations', required=False, type=int, default=None,
