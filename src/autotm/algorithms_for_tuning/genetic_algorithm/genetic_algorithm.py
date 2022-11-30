@@ -11,7 +11,7 @@ import click
 import uuid
 
 from autotm.algorithms_for_tuning.genetic_algorithm.ga import GA
-from autotm.algorithms_for_tuning.utils import make_log_config_dict
+from autotm.utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
 
