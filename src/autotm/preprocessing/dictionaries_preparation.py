@@ -7,6 +7,8 @@ from autotm.utils import parallelize_dataframe
 import itertools
 from collections import Counter
 
+RESERVED_TUPLE = ('_SERVICE_', 'total_pairs_count')
+
 
 def get_words_dict(text, stop_list):
     all_words = text
@@ -41,7 +43,8 @@ def _calculate_cooc_df_dict(data: list, window: int = 10) -> dict:
 
 
 def _calculate_cooc_tf_dict(data: list, window: int = 10) -> dict:
-    cooc_tf_dict = {}  # format dict{(tuple): cooc}
+    local_pairs_count = 0
+    cooc_tf_dict = {RESERVED_TUPLE: 0}  # format dict{(tuple): cooc}
     for text in data:
         document_cooc_tf_dict = {}
         splitted = text.split()
@@ -51,15 +54,22 @@ def _calculate_cooc_tf_dict(data: list, window: int = 10) -> dict:
                     document_cooc_tf_dict[comb] += 1
                 else:
                     document_cooc_tf_dict[comb] = 1
+                cooc_tf_dict[RESERVED_TUPLE] += 2
         cooc_tf_dict = dict(Counter(document_cooc_tf_dict) + Counter(cooc_tf_dict))
     return cooc_tf_dict
     # local_num_of_pairs += 2
     # pass
 
 
-def calculate_ppmi(cooc_dict, n):
+def calculate_ppmi(cooc_dict_path, n):
     print('Calculating pPMI...')
-    raise NotImplementedError
+    ppmi_dict = {}
+    with open(cooc_dict_path) as fopen:
+        for line in fopen:
+            splitted_line = line.split()
+            ppmi_dict[splitted_line[0]] = [f'{word.split(":")[0].strip()}:{int(word.split(":")[1]) / n}' for word in
+                                           splitted_line[1:]]
+    return ppmi_dict
 
 
 # TODO: rewrite to storing in rb tree
@@ -77,9 +87,22 @@ def calculate_cooc_dicts(df, window=10, n_cores=-1):
     return cooc_df_dict, cooc_tf_dict
 
 
+def write_vw_dict(res_dict, vocab_words, fpath):
+    with open(fpath, 'w') as fopen:
+        for word in vocab_words:
+            try:
+                fopen.write(f'{word}' + ' ' + ' '.join(res_dict[word]) + '\n')
+            except:
+                # print(f'The word {word} is not found')
+                pass
+    print(f'{fpath} is ready!')
+
+
 def convert_to_vw_format_and_save(cooc_dict, vocab_words, vw_path):
     data_dict = {}
     for item in sorted(cooc_dict.items(), key=lambda key: key[0]):
+        if item == RESERVED_TUPLE:
+            continue
         word_1 = item[0][0]
         word_2 = item[0][1]
         if vocab_words.index(item[0][0]) > vocab_words.index(item[0][1]):
@@ -89,14 +112,7 @@ def convert_to_vw_format_and_save(cooc_dict, vocab_words, vw_path):
             data_dict[item[0][0]].append(f'{item[0][1]}:{item[1]}')
         else:
             data_dict[item[0][0]] = [f'{item[0][1]}:{item[1]}']
-    with open(vw_path, "w") as fopen:
-        for word in vocab_words:
-            try:
-                fopen.write(f'{word}' + ' ' + ' '.join(data_dict[word]) + '\n')
-            except:
-                # print(f'The word {word} is not found')
-                pass
-    print(f'{vw_path} is ready!')
+    write_vw_dict(data_dict, vocab_words, vw_path)
 
 
 def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
@@ -113,8 +129,8 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
     :param cooc_file_path_df:
     :param ppmi_dict_tf:
     :param ppmi_dict_df:
-    :param cooc_min_tf:
-    :param cooc_min_df:
+    :param cooc_min_tf: Minimal number of documents to cooc in pairs to store the results
+    :param cooc_min_df: Minimal number of documents to docs to cooc to store the results
     :param cooc_window: size of the window where to search for the cooccurrences
     :return:
     '''
@@ -130,9 +146,23 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
 
     data = pd.read_csv(path_to_dataset)
     docs_count = data.shape[0]
+
     cooc_df_dict, cooc_tf_dict = calculate_cooc_dicts(data, n_cores=n_cores)
+
+    pairs_count = cooc_tf_dict[RESERVED_TUPLE]
+
+    # print(docs_count, pairs_count)
+
+    del cooc_tf_dict[RESERVED_TUPLE]
+
     convert_to_vw_format_and_save(cooc_df_dict, vocab_words, cooc_file_path_df)
     convert_to_vw_format_and_save(cooc_tf_dict, vocab_words, cooc_file_path_tf)
+
+    ppmi_df = calculate_ppmi(cooc_file_path_df, docs_count)
+    ppmi_tf = calculate_ppmi(cooc_file_path_tf, pairs_count)
+
+    write_vw_dict(ppmi_tf, vocab_words, ppmi_dict_tf)
+    write_vw_dict(ppmi_df, vocab_words, ppmi_dict_df)
 
     # ! bigartm - c $WV_PATH - v $VOCAB_PATH - -cooc - window
     # 10 - -write - cooc - tf $cooc_file_path_tf - -write - cooc - df $cooc_file_path_df - -write - ppmi - tf $ppmi_dict_tf - -write - ppmi - df $ppmi_dict_df
