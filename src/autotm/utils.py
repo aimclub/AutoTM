@@ -63,6 +63,7 @@ def merge_dicts(dicts):
     full_dict = {}
     for d in dicts:
         full_dict = dict(Counter(full_dict) + Counter(d))
+        print(full_dict)
     return full_dict
 
 
