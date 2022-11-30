@@ -35,7 +35,7 @@ def _calculate_cooc_df_dict(df, window=10):
                 if comb in document_cooc_df_dict:
                     continue
                 else:
-                    document_cooc_df_dict[comb] += 1
+                    document_cooc_df_dict[comb] = 1
                     # document_cooc_df_dict[(comb[1], comb[0])] += 1
         cooc_df_dict = dict(Counter(document_cooc_df_dict) + Counter(cooc_df_dict))
     return cooc_df_dict
@@ -46,14 +46,18 @@ def calculate_cooc_dicts(data, window=10, n_cores=-1):
     return cooc_df_dict
 
 
-def convert_to_vw_format(cooc_dict, vocab_words):
-    rows = []
+def convert_to_vw_format(cooc_dict, vocab_words, vw_path):
     data_dict = {}
     for item in sorted(cooc_dict.items(), key=lambda key: key[0]):
         if item[0] in data_dict:
-            data_dict[item[0]]
-        rows.append(f'{item[0]}:')
-        raise NotImplementedError
+            data_dict[item[0][0]].append(f'{item[0][1]}:{item[1]}')
+        else:
+            data_dict[item[0][0]] = [f'{item[0][1]}:{item[1]}']
+    print(data_dict)
+    with open(vw_path, "w") as fopen:
+        for word in vocab_words:
+            fopen.write(f'{word}' + ' '.join(data_dict[word]))
+    print(f'{vw_path} is ready!')
 
 def calculate_ppmi(cooc_dict):
     raise NotImplementedError
@@ -78,8 +82,6 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
     :return:
     '''
 
-    path_to_dataset = os.path.join(path_to_dataset, 'processed_dataset.csv')
-
     # rewrite this part in case of several modalities
     vocab_words = []
     with open(VOCAB_PATH) as vpath:
@@ -91,7 +93,8 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
     print(vocab_words[0])
 
     data = pd.read_csv(path_to_dataset)
-    calculate_cooc_dicts(data, n_cores=n_cores)
+    cooc_df_dict = calculate_cooc_dicts(data, n_cores=n_cores)
+    convert_to_vw_format(cooc_df_dict, vocab_words, cooc_file_path_df)
 
     # ! bigartm - c $WV_PATH - v $VOCAB_PATH - -cooc - window
     # 10 - -write - cooc - tf $cooc_file_path_tf - -write - cooc - df $cooc_file_path_df - -write - ppmi - tf $ppmi_dict_tf - -write - ppmi - df $ppmi_dict_df
@@ -155,6 +158,7 @@ def prepare_batch_vectorizer(batches_dir: str, vw_path: str, data_path: str, col
 
 
 def prepare_all_artifacts(save_path: str):
+    DATASET_PATH = os.path.join(save_path, 'processed_dataset.csv')
     BATCHES_DIR = os.path.join(save_path, 'batches')
     WV_PATH = os.path.join(save_path, 'test_set_data_voc.txt')
     COOC_DICTIONARY_PATH = os.path.join(save_path, 'cooc_dictionary.txt')
@@ -177,6 +181,8 @@ def prepare_all_artifacts(save_path: str):
 
     vocab_preparation(VOCAB_PATH, DICTIONARY_PATH)
     prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH,
-                         COOC_DICTIONARY_PATH, cooc_file_path_tf,
+                         COOC_DICTIONARY_PATH,
+                         DATASET_PATH,
+                         cooc_file_path_tf,
                          cooc_file_path_df, ppmi_dict_tf,
                          ppmi_dict_df)
