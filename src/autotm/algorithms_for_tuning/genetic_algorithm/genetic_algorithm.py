@@ -46,6 +46,7 @@ NUM_FITNESS_EVALUATIONS = 150
 # @click.option('--gpr-alpha', required=False, type=float, help='alpha for gpr')
 # @click.option('--gpr-normalize-y', required=False, type=float, help='y normalization for gpr')
 def run_algorithm(dataset: str,
+                  data_path: str,
                   exp_id: int,
                   topic_count: int,
                   num_individuals: int = 11,
@@ -79,6 +80,7 @@ def run_algorithm(dataset: str,
         cross_alpha = float(cross_alpha)
 
     g = GA(dataset=dataset,
+           data_path=data_path,
            num_individuals=num_individuals,
            num_iterations=num_iterations,
            mutation_type=mutation_type,

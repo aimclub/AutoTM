@@ -24,4 +24,8 @@ if __name__ == '__main__':
     print('Stage 2: Tuning the topic model')
 
     # SAVE_PATH,
-    topics = run_algorithm(exp_id=1, dataset='test', topic_count=10, log_file='./log_file_test.txt')
+    topics = run_algorithm(data_path=SAVE_PATH,
+                           exp_id=1,
+                           dataset='test',
+                           topic_count=10,
+                           log_file='./log_file_test.txt')

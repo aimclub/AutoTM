@@ -26,6 +26,7 @@ def do_fitness_calculating(individual: str,
 
     with fit_tm_of_individual(
             dataset=individual.dataset,
+            data_path=individual.data_path,
             params=individual.params,
             fitness_name=individual.fitness_name,
             topic_count=individual.topic_count,
@@ -63,7 +64,7 @@ def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
     logger.info("Calculating fitness...")
     # logger.info(f"Sending individuals to be calculated with uids: {[p.id for p in population]}")
 
-    population = [calculate_fitness(fitness_to_json(individual)) for individual in population]
+    population = [calculate_fitness(fitness_to_json(individual.dto)) for individual in population]
 
     tqdm_out = TqdmToLogger(logger, level=logging.INFO)
 

@@ -16,6 +16,7 @@ PARAM_NAMES = [
 
 class IndividualDTO(BaseModel):
     id: str
+    data_path: str
     params: List[object]
     fitness_name: str = "default"
     dataset: str = "default"
