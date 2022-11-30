@@ -17,17 +17,6 @@ warnings.filterwarnings("ignore")
 
 logger = logging.getLogger("GA")
 
-if "FITNESS_CONFIG_PATH" in os.environ:
-    filepath = os.environ["FITNESS_CONFIG_PATH"]
-else:
-    filepath = "config.yaml"
-
-with open(filepath, "r") as file:
-    config = yaml.load(file, Loader=Loader)
-
-glob_algo_params = config["gaAlgoParams"]
-NUM_FITNESS_EVALUATIONS = glob_algo_params['numEvals']
-
 NUM_FITNESS_EVALUATIONS = 150
 
 
