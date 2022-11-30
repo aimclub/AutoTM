@@ -63,7 +63,6 @@ def merge_dicts(dicts):
     full_dict = {}
     for d in dicts:
         full_dict = dict(Counter(full_dict) + Counter(d))
-        print(full_dict)
     return full_dict
 
 
@@ -78,7 +77,7 @@ def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type='df', **k
     :return: pd.DataFrame
     '''
     if n_cores == -1:
-        n_cores = mp.cpu_count()
+        n_cores = mp.cpu_count() - 1
     df_split = np.array_split(df, n_cores)
     pool = Pool(n_cores)
     func_with_args = partial(func, **kwargs)

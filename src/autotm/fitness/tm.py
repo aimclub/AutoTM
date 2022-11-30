@@ -391,31 +391,6 @@ class TopicModel:
         logging.info(f"Calculated coefficient: {coeff}")
         return coeff
 
-    # set of text-based metrics
-    # new
-    # def calculate_switchp(self, n: int, texts: List[str]):
-    #     """
-    #     n: number of tokens in corpora
-    #     texts: processed texts in string format
-    #
-    #     Ref:
-    #     Automatic and Human Evaluation of Local Topic Quality
-    #     https://aclanthology.org/P19-1076.pdf
-    #     """
-    #     theta = self.model.get_theta()
-    #     phi = self.model.get_phi()
-    #     phi_transposed = phi.T
-    #     phi_transposed
-    #     for text in texts:
-    #         for token in text.split():
-    #             if token in
-    #
-    #     return 1 / (n - 1) * np.sum()
-
-    # new
-    # def calculate_(self):
-    #     raise NotImplementedError
-
     def dispose(self):
         """
         Disposes the model instance and removes the model from the object making it reusable again
@@ -537,40 +512,6 @@ class TopicModel:
             for i, topic in tqdm(enumerate(inexisting_topics)):
                 coh_vals['coherence_{}'.format(num_tokens)][topic] = 0
         return coh_vals
-
-    # DATA_PATH = os.path.join(MAIN_PATH, DATA_PATH_FNAME)
-    # EXPERIMENTS_PATH = os.path.join(MAIN_PATH, 'experiments')
-    # DATASET_PATH = os.path.join(DATA_PATH, DATASET_PATH_FNAME)
-    # BATCHES_DIR = os.path.join(DATASET_PATH, 'batches')
-    # WV_PATH = os.path.join(DATASET_PATH, 'test_set_data_voc.txt')  # wv.txt
-    # COOC_DICTIONARY_PATH = os.path.join(DATASET_PATH, 'cooc_dictionary.txt')
-    # DICTIONARY_PATH = os.path.join(DATASET_PATH, 'dictionary.txt')
-    # MUTUAL_INFO_DICT_PATH = os.path.join(DATASET_PATH, 'mutual_info_dict.pkl')
-    # VOCAB_PATH = os.path.join(DATASET_PATH, 'vocab.txt')
-    # cooc_file_path_df = os.path.join(DATASET_PATH, 'cooc_df.txt')
-    # cooc_file_path_tf = os.path.join(DATASET_PATH, 'cooc_tf.txt')
-    # ppmi_dict_df = os.path.join(DATASET_PATH, 'ppmi_df.txt')
-    # ppmi_dict_tf = os.path.join(DATASET_PATH, 'ppmi_tf.txt')
-    #
-    # LOGS_PATH = '/mnt/ess_storage/DN_1/storage/home/khodorchenko/GOTM/logs/ga_baseline/local_run'
-    #
-    # scores = []
-    #
-    # total_tokens = 0
-    # with open(WV_PATH) as f:
-    #     for line in f:
-    #         total_tokens += (sum([int(elem.split(':')[1]) for elem in line.split()[1:]]))
-
-    # data_generator = pd.read_csv(os.path.join('/mnt/ess_storage/DN_1/storage/home/khodorchenko/GOTM',
-    #                                 'datasets', 'books_stroyitelstvo_2030_fundament_sample',
-    #                                 'dataset.csv'))
-
-    # MAIN_PATH = '/mnt/ess_storage/DN_1/storage/home/khodorchenko/GOTM'
-    # DATA_PATH_FNAME = 'datasets'
-    # DATASET_PATH_FNAME = 'books_stroyitelstvo_2030_fundament_sample'
-    #
-    # e_run = ExpS()
-    # fitness = e_run.run_GA(MAIN_PATH, DATA_PATH_FNAME, DATASET_PATH_FNAME, texts=data_generator['processed_text.txt'].tolist())
 
     def metrics_get_avg_coherence_score(self, for_individ_fitness=False) -> MetricsScores:
         coherences_main, coherences_back = self.__return_all_tokens_coherence(self.model, s=self.S, b=self.B)

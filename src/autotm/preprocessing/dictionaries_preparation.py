@@ -25,9 +25,9 @@ def vocab_preparation(VOCAB_PATH, DICTIONARY_PATH):
                     vocab_file.write(' '.join(elems[:2]) + '\n')
 
 
-def _calculate_cooc_df_dict(df, window=10):
+def _calculate_cooc_df_dict(data: list, window: int = 10) -> dict:
     cooc_df_dict = {}  # format dict{(tuple): cooc}
-    for text in df['processed_text'].tolist():
+    for text in data:
         document_cooc_df_dict = {}
         splitted = text.split()
         for i in range(0, len(splitted) - window):
@@ -40,31 +40,63 @@ def _calculate_cooc_df_dict(df, window=10):
     return cooc_df_dict
 
 
-def calculate_cooc_dicts(data, window=10, n_cores=-1):
+def _calculate_cooc_tf_dict(data: list, window: int = 10) -> dict:
+    cooc_tf_dict = {}  # format dict{(tuple): cooc}
+    for text in data:
+        document_cooc_tf_dict = {}
+        splitted = text.split()
+        for i in range(0, len(splitted) - window):
+            for comb in itertools.combinations(splitted[i:i + window], 2):
+                if comb in document_cooc_tf_dict:
+                    document_cooc_tf_dict[comb] += 1
+                else:
+                    document_cooc_tf_dict[comb] = 1
+        cooc_tf_dict = dict(Counter(document_cooc_tf_dict) + Counter(cooc_tf_dict))
+    return cooc_tf_dict
+    # local_num_of_pairs += 2
+    # pass
+
+
+def calculate_ppmi(cooc_dict, n):
+    print('Calculating pPMI...')
+    raise NotImplementedError
+
+
+# TODO: rewrite to storing in rb tree
+def calculate_cooc_dicts(df, window=10, n_cores=-1):
+    '''
+
+    :param df: dataframe with 'processed_text'  column
+    :param window: The size of window to collect cooccurrences in
+    :param n_cores: available cores for parallel processing. Default: -1 (all)
+    :return:
+    '''
+    data = df['processed_text'].tolist()
     cooc_df_dict = parallelize_dataframe(data, _calculate_cooc_df_dict, n_cores, return_type='dict', window=window)
-    return cooc_df_dict
+    cooc_tf_dict = parallelize_dataframe(data, _calculate_cooc_tf_dict, n_cores, return_type='dict', window=window)
+    return cooc_df_dict, cooc_tf_dict
 
 
-def convert_to_vw_format(cooc_dict, vocab_words, vw_path):
+def convert_to_vw_format_and_save(cooc_dict, vocab_words, vw_path):
     data_dict = {}
     for item in sorted(cooc_dict.items(), key=lambda key: key[0]):
+        word_1 = item[0][0]
+        word_2 = item[0][1]
+        if vocab_words.index(item[0][0]) > vocab_words.index(item[0][1]):
+            word_2 = item[0][0]
+            word_1 = item[0][1]
         if item[0][0] in data_dict:
             data_dict[item[0][0]].append(f'{item[0][1]}:{item[1]}')
         else:
             data_dict[item[0][0]] = [f'{item[0][1]}:{item[1]}']
-    print(data_dict)
-    print(vocab_words)
     with open(vw_path, "w") as fopen:
         for word in vocab_words:
             try:
                 fopen.write(f'{word}' + ' ' + ' '.join(data_dict[word]) + '\n')
             except:
+                # print(f'The word {word} is not found')
                 pass
     print(f'{vw_path} is ready!')
-
-
-def calculate_ppmi(cooc_dict):
-    raise NotImplementedError
 
 
 def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
@@ -98,8 +130,9 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
 
     data = pd.read_csv(path_to_dataset)
     docs_count = data.shape[0]
-    cooc_df_dict = calculate_cooc_dicts(data, n_cores=n_cores)
-    convert_to_vw_format(cooc_df_dict, vocab_words, cooc_file_path_df)
+    cooc_df_dict, cooc_tf_dict = calculate_cooc_dicts(data, n_cores=n_cores)
+    convert_to_vw_format_and_save(cooc_df_dict, vocab_words, cooc_file_path_df)
+    convert_to_vw_format_and_save(cooc_tf_dict, vocab_words, cooc_file_path_tf)
 
     # ! bigartm - c $WV_PATH - v $VOCAB_PATH - -cooc - window
     # 10 - -write - cooc - tf $cooc_file_path_tf - -write - cooc - df $cooc_file_path_df - -write - ppmi - tf $ppmi_dict_tf - -write - ppmi - df $ppmi_dict_df
