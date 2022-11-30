@@ -3,13 +3,14 @@ import time
 import uuid
 from multiprocessing.process import current_process
 from typing import List, Optional, Union
+import json
 
 from tqdm import tqdm
 
 from autotm.params_logging_utils import log_params_and_artifacts, log_stats, model_files
-from autotm.schemas import IndividualDTO
 from autotm.fitness.tm import fit_tm_of_individual
 from autotm.utils import TqdmToLogger
+from autotm.schemas import IndividualDTO, fitness_to_json, fitness_from_json
 
 logger = logging.getLogger("root")
 
@@ -47,23 +48,22 @@ def calculate_fitness(individual: str,
                       log_artifact_and_parameters: bool = False,
                       log_run_stats: bool = False,
                       alg_args: Optional[str] = None) -> str:
+    do_fitness_calculating(individual, log_artifact_and_parameters, log_run_stats, alg_args)
     try:
         return do_fitness_calculating(individual, log_artifact_and_parameters, log_run_stats, alg_args)
     except:
         raise Exception(f"Some exception")
 
 
-def estimate_fitness(population: List[IndividualDTO],
-                     use_tqdm: bool = False,
-                     tqdm_check_period: int = 2) -> List[IndividualDTO]:
-    ids = [ind.id for ind in population]
-    assert len(set(ids)) == len(population), \
-        f"There are individuals with duplicate ids: {ids}"
+def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
+    # ids = [ind.id for ind in population]
+    # assert len(set(ids)) == len(population), \
+    #     f"There are individuals with duplicate ids: {ids}"
 
     logger.info("Calculating fitness...")
-    logger.info(f"Sending individuals to be calculated with uids: {[p.id for p in population]}")
+    # logger.info(f"Sending individuals to be calculated with uids: {[p.id for p in population]}")
 
-    population = [calculate_fitness(individual) for individual in population]
+    population = [calculate_fitness(fitness_to_json(individual)) for individual in population]
 
     tqdm_out = TqdmToLogger(logger, level=logging.INFO)
 
