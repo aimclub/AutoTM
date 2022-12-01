@@ -5,7 +5,7 @@ import pickle
 from typing import List
 import numpy as np
 
-from src.autotm.utils import AVG_COHERENCE_SCORE
+from autotm.utils import AVG_COHERENCE_SCORE
 from autotm.schemas import IndividualDTO
 
 SPARSITY_PHI = 'sparsity_phi'
