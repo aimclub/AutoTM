@@ -7,8 +7,6 @@ from autotm.preprocessing.text_preprocessing import process_dataset
 from autotm.preprocessing.dictionaries_preparation import prepare_all_artifacts
 from autotm.algorithms_for_tuning.genetic_algorithm.genetic_algorithm import run_algorithm
 
-sys.path.insert(0, '../src/autotm')
-
 PATH_TO_DATASET = '../data/sample_corpora/sample_dataset_lenta.csv'
 SAVE_PATH = '../data/processed_sample_corpora'  # place where all the artifacts will be stored
 

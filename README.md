@@ -14,6 +14,8 @@ AutoTM provides necessary tools to preprocess english and russian text datasets 
 
 ```python -m spacy download en_core_web_sm```
 
+```export PYTHONPATH="${PYTHONPATH}:/path/to/src"```
+
 ## Quickstart
 
 The notebook with an example is available in ```examples``` folder.

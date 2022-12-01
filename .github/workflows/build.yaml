@@ -26,6 +26,12 @@ jobs:
             python -m pip install flake8 pytest
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             python -m spacy download en_core_web_sm
+      - name: set pythonpath
+        run: |
+          echo "PYTHONPATH=src" >> $GITHUB_ENV
+      - name: Run test code
+        working-directory: src
+        run: python ../examples/full_pipeline_example.py
       - name: Lint with flake8
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
