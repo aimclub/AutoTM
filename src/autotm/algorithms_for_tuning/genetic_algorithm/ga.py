@@ -655,6 +655,6 @@ class GA:
 
         best_individual = population[0]
         ind = log_best_solution(best_individual, alg_args=' '.join(sys.argv))
-        logger.info(f"Logged the best solution. Obtained fitness is {ind.fitness_value[AVG_COHERENCE_SCORE]}")
+        # logger.info(f"Logged the best solution. Obtained fitness is {ind.fitness_value[AVG_COHERENCE_SCORE]}")
 
         return best_individual

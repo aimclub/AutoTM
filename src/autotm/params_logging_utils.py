@@ -95,7 +95,8 @@ def log_params_and_artifacts(tm: TopicModel,
                              alg_args: Optional[str]):
     logger.info("Logging params and artifacts to mlflow")
 
-    with mlflow.start_run(run_name=f"fitness-{individual.dataset}-{uuid.uuid4()}"): # experiment_id=individual.exp_id
+    experiment_id = mlflow.create_experiment(f'experiment_{individual.exp_id}')
+    with mlflow.start_run(run_name=f"fitness-{individual.dataset}-{uuid.uuid4()}", experiment_id=experiment_id):
         params = {
             "uid": tm.uid,
             "dataset": individual.dataset,
