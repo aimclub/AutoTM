@@ -169,7 +169,6 @@ class TopicModelFactory:
     def __init__(self, dataset_name: str, data_path: str,
                  fitness_name: str, params: list,
                  topic_count: Optional[int] = None, forced_update: bool = False):
-        print(dataset_name)
         self.dataset_name = dataset_name
         self.data_path = data_path
         self.fitness_name = fitness_name

@@ -59,7 +59,7 @@ def fitness_from_json(obj):
     obj = json.loads(obj)
     return IndividualDTO(
         id=obj["id"],
-        data_path=obj['data_path'],
+        data_path=obj["data_path"],
         params=obj["params"],
         exp_id=int(obj["exp_id"]) if obj["exp_id"] else None,
         alg_id=obj["alg_id"] if obj["alg_id"] else None,
