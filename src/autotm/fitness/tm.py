@@ -82,7 +82,7 @@ class Dataset:
         """
         texts_df_path = self._make_path(self._texts_path)
         df = pd.read_csv(texts_df_path)
-        return df['processed_text.txt'].tolist()
+        return df['processed_text'].tolist()
 
     @property
     def total_tokens(self) -> int:
