@@ -66,7 +66,7 @@ def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
 def log_best_solution(individual: IndividualDTO,
                       wait_for_result_timeout: Optional[float] = None,
                       alg_args: Optional[str] = None):
-    ind = individual.json()
+    ind = fitness_to_json(individual.dto)
     logger.info(f"Sending a best individual to be logged: {ind}")
     logger.debug(f"Started a task for best individual logging with id: {individual.id}")
     # TODO: write logging

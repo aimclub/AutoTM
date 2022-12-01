@@ -26,6 +26,8 @@ from autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
 from autotm.algorithms_for_tuning.individuals import make_individual, IndividualDTO
 
+from autotm.utils import AVG_COHERENCE_SCORE
+
 from autotm.fitness.tasks import estimate_fitness, log_best_solution
 
 ALG_ID = "ga"
@@ -640,7 +642,6 @@ class GA:
                                     f"ITERATION TIME {time.time() - iteration_start_time}.")
                         break
 
-            bparams = ''.join([str(i) for i in population[0].params])
             x.append(ii)
             y.append(population[0].fitness_value)
             logger.info(f"Population len {len(population)}. "
@@ -653,6 +654,7 @@ class GA:
         logger.info(f"Y: {y}")
 
         best_individual = population[0]
-        log_best_solution(best_individual, alg_args=' '.join(sys.argv))
+        ind = log_best_solution(best_individual, alg_args=' '.join(sys.argv))
+        logger.info(f"Logged the best solution. Obtained fitness is {ind.fitness_value[AVG_COHERENCE_SCORE]}")
 
-        return best_individual.fitness_value
+        return best_individual
