@@ -250,7 +250,8 @@ class GA:
                                     exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
                                     topic_count=self.topic_count, tag=self.tag)
             else:
-                dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path, dataset=self.dataset, params=self.init_individ(),
+                dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
+                                    dataset=self.dataset, params=self.init_individ(),
                                     exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
                                     topic_count=self.topic_count, tag=self.tag)
             # TODO: improve heuristic on search space
@@ -271,7 +272,8 @@ class GA:
         certanty, X = (list(t) for t in zip(*sorted(zip(certanty, X.tolist()), reverse=True)))  # check
         calculated = []
         for params in X[:recalculate_num]:
-            dto = IndividualDTO(id=str(uuid.uuid4()), params=[float(i) for i in params], dataset=self.dataset,
+            dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
+                                params=[float(i) for i in params], dataset=self.dataset,
                                 exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=iteration_num,
                                 topic_count=self.topic_count, tag=self.tag)
             calculated.append(make_individual(dto=dto))
@@ -283,7 +285,8 @@ class GA:
 
         pred_y = self.surrogate.predict(X[recalculate_num:])
         for ix, params in enumerate(X[recalculate_num:]):
-            dto = IndividualDTO(id=str(uuid.uuid4()), params=params, dataset=self.dataset,
+            dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
+                                params=params, dataset=self.dataset,
                                 fitness_value=set_surrogate_fitness(pred_y[ix]), exp_id=self.exp_id, alg_id=ALG_ID,
                                 topic_count=self.topic_count, tag=self.tag)
             calculated.append(make_individual(dto=dto))
@@ -384,11 +387,13 @@ class GA:
                 child_1 = self.check_params_bounds(child_1)
                 child_2 = self.check_params_bounds(child_2)
 
-                child1_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_1,
+                child1_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
+                                           dataset=self.dataset, params=child_1,
                                            exp_id=self.exp_id,
                                            alg_id=ALG_ID, iteration_id=iteration_num,
                                            topic_count=self.topic_count, tag=self.tag)
-                child2_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_2,
+                child2_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
+                                           dataset=self.dataset, params=child_2,
                                            exp_id=self.exp_id,
                                            alg_id=ALG_ID, iteration_id=iteration_num,
                                            topic_count=self.topic_count, tag=self.tag)
@@ -405,7 +410,8 @@ class GA:
 
                 child_1 = self.check_params_bounds(child_1)
 
-                child1_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_1,
+                child1_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
+                                           dataset=self.dataset, params=child_1,
                                            exp_id=self.exp_id,
                                            alg_id=ALG_ID, iteration_id=iteration_num,
                                            topic_count=self.topic_count, tag=self.tag)
@@ -566,7 +572,8 @@ class GA:
                             population[i].params[12] = np.random.uniform(low=self.low_prob,
                                                                          high=self.high_prob, size=1)[0]
                     params = self.check_params_bounds(params)
-                    dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset,
+                    dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
+                                        dataset=self.dataset,
                                         params=[float(i) for i in params],
                                         exp_id=self.exp_id, alg_id=ALG_ID,
                                         topic_count=self.topic_count, tag=self.tag)
