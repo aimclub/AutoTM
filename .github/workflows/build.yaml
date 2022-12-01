@@ -31,6 +31,7 @@ jobs:
         run: |
           echo "PYTHONPATH=." >> $GITHUB_ENV
       - name: Run test code
+        working-directory: src
         run: python ../examples/full_pipeline_example.py
       - name: Lint with flake8
         run: |
