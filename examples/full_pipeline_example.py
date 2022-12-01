@@ -29,4 +29,6 @@ if __name__ == '__main__':
                            exp_id=1,
                            dataset='test',
                            topic_count=3,
-                           log_file='./log_file_test.txt')
+                           log_file='./log_file_test.txt',
+                           num_iterations=2
+                           )
