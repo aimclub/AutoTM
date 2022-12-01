@@ -23,13 +23,11 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import SVR
-from yaml import Loader
 
 from autotm.algorithms_for_tuning.genetic_algorithm.crossover import crossover
 from autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
-from autotm.algorithms_for_tuning.individuals import make_individual
-from autotm.algorithms_for_tuning.individuals import IndividualDTO
+from autotm.algorithms_for_tuning.individuals import make_individual, IndividualDTO
 
 from autotm.fitness.tasks import estimate_fitness, log_best_solution
 
