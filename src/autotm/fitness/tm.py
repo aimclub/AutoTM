@@ -195,9 +195,8 @@ class TopicModelFactory:
         if self.fitness_name == "default":
             logging.info(f"Using TM model: {TopicModel} according "
                          f"to fitness name: {self.fitness_name}, topics count: {self.topic_count}")
-            dataset = self.init_dataset()
             self.tm = TopicModel(uid, self.experiments_path, self.topic_count, self.num_processors, 
-                                 self.dataset_name, self.params)
+                                 dataset, self.params)
         else:
             raise Exception(
                 f"Unknown fitness name: {self.fitness_name}. Only the following ones are known: {['default']}")
