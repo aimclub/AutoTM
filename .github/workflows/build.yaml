@@ -26,7 +26,9 @@ jobs:
             python -m pip install flake8 pytest
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             python -m spacy download en_core_web_sm
-      - name: Run test code
-        working-directory: src
-        run: python ../examples/full_pipeline_example.py
+      - name: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+#      - name: Run test example
+#        working-directory: src
+#        run: python ../examples/full_pipeline_example.py
       - run: echo "🍏 This job's status is ${{ job.status }}."
