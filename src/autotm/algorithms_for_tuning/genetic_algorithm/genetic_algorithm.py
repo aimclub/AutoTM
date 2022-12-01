@@ -66,12 +66,12 @@ def run_algorithm(dataset: str,
                   gpr_normalize_y: float = None):
     '''
 
-    :param dataset: Dataset name that is being processed. The name will be used to store results.
+    :param dataset: Dataset name that is being processed. The name will be used to store results
     :param data_path: Path to all the artifacts obtained after
-    :param exp_id:
-    :param topic_count:
-    :param num_individuals:
-    :param num_iterations:
+    :param exp_id: Mlflow experiment id
+    :param topic_count: desired count of SPECIFIC topics (in optimization process BACK topics are also produced, thus the total amount of topics can be more than topic_count)
+    :param num_individuals: Number of individuals in generation
+    :param num_iterations: Number of iterations to make
     :param num_fitness_evaluations:
     :param mutation_type:
     :param crossover_type:
