@@ -57,18 +57,10 @@ def calculate_fitness(individual: str,
 
 
 def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
-    # ids = [ind.id for ind in population]
-    # assert len(set(ids)) == len(population), \
-    #     f"There are individuals with duplicate ids: {ids}"
-
     logger.info("Calculating fitness...")
-    # logger.info(f"Sending individuals to be calculated with uids: {[p.id for p in population]}")
-
     population = [calculate_fitness(fitness_to_json(individual.dto)) for individual in population]
-
-    tqdm_out = TqdmToLogger(logger, level=logging.INFO)
-
-    logger.info("The results have been obtained")
+    # tqdm_out = TqdmToLogger(logger, level=logging.INFO)
+    logger.info("The fitness results have been obtained")
     return population
 
 
