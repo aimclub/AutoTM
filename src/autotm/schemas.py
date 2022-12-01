@@ -41,6 +41,7 @@ class IndividualDTO(BaseModel):
 def fitness_to_json(obj: IndividualDTO):
     return json.dumps({
         "id": obj.id,
+        "data_path": obj.data_path,
         "params": obj.params,
         "exp_id": obj.exp_id,
         "alg_id": obj.alg_id,
@@ -58,6 +59,7 @@ def fitness_from_json(obj):
     obj = json.loads(obj)
     return IndividualDTO(
         id=obj["id"],
+        data_path=obj['data_path'],
         params=obj["params"],
         exp_id=int(obj["exp_id"]) if obj["exp_id"] else None,
         alg_id=obj["alg_id"] if obj["alg_id"] else None,
