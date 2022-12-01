@@ -164,7 +164,6 @@ class TopicModelFactory:
         assert 'base_path' in settings and 'topic_count' in settings
         dataset = Dataset(base_path=settings['base_path'], topic_count=settings['topic_count'])
         dataset.load_dataset()
-
         return dataset
 
     def __init__(self, dataset_name: str, data_path: str,
@@ -180,20 +179,25 @@ class TopicModelFactory:
         self.tm = None
 
     def __enter__(self) -> 'TopicModel':
-        if self.dataset_name not in self.cached_dataset_settings:
-            raise Exception(f"No settings for dataset {self.dataset_name}")
+        # if self.dataset_name not in self.cached_dataset_settings:
+        #     raise Exception(f"No settings for dataset {self.dataset_name}")
 
-        dataset = self.cached_dataset_settings[self.dataset_name]
-        t_count = self.topic_count if self.topic_count else dataset.topic_count
+        # dataset = self.cached_dataset_settings[self.dataset_name]
+        # t_count = self.topic_count if self.topic_count else dataset.topic_count
+        #
+        # logging.debug(f"Using the following settings: \n{dataset.base_path}")
 
-        logging.debug(f"Using the following settings: \n{dataset.base_path}")
+        dataset = Dataset(base_path=self.data_path, topic_count=self.topic_count)
+        dataset.load_dataset()
 
         uid = uuid.uuid4()
 
         if self.fitness_name == "default":
             logging.info(f"Using TM model: {TopicModel} according "
-                         f"to fitness name: {self.fitness_name}, topics count: {t_count}")
-            self.tm = TopicModel(uid, self.experiments_path, t_count, self.num_processors, dataset, self.params)
+                         f"to fitness name: {self.fitness_name}, topics count: {self.topic_count}")
+            dataset = self.init_dataset()
+            self.tm = TopicModel(uid, self.experiments_path, self.topic_count, self.num_processors, 
+                                 self.dataset_name, self.params)
         else:
             raise Exception(
                 f"Unknown fitness name: {self.fitness_name}. Only the following ones are known: {['default']}")
