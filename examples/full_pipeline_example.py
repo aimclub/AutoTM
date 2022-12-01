@@ -32,3 +32,5 @@ if __name__ == '__main__':
                            log_file='./log_file_test.txt',
                            num_iterations=2
                            )
+
+    # results of the run are stored in ./mlruns folder, experiment id is 'experiment_<exp_id>'
