@@ -70,7 +70,6 @@ def log_best_solution(individual: IndividualDTO,
 
     ind = individual.json()
     logger.info(f"Sending a best individual to be logged: {ind}")
-
     logger.debug(f"Started a task for best individual logging with id: {individual.id}")
-
+    # TODO: write logging
     return ind
