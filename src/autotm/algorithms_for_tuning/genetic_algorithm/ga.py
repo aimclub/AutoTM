@@ -3,7 +3,6 @@ import gc
 import logging
 import math
 import operator
-import os
 import random
 import sys
 import time
@@ -12,7 +11,6 @@ import warnings
 from typing import Optional
 
 import numpy as np
-import yaml
 from sklearn.ensemble import BaggingRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -20,7 +18,6 @@ from sklearn.gaussian_process.kernels import RBF, Matern, WhiteKernel, \
     ConstantKernel, ExpSineSquared, RationalQuadratic
 from sklearn.metrics import mean_squared_error
 from sklearn.neural_network import MLPRegressor
-from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.svm import SVR
 
