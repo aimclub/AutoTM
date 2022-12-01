@@ -25,7 +25,7 @@ if __name__ == '__main__':
     print('Stage 2: Tuning the topic model')
 
     # exp_id and dataset_name will be needed further to store results in mlflow
-    topics = run_algorithm(data_path=SAVE_PATH,
+    best_result = run_algorithm(data_path=SAVE_PATH,
                            exp_id=1,
                            dataset='test',
                            topic_count=3,
