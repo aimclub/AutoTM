@@ -4,6 +4,7 @@ import pymystem3
 from nltk.corpus import stopwords, wordnet
 from autotm.utils import parallelize_dataframe
 import nltk
+nltk.download('stopwords')
 import re
 from sklearn.feature_extraction.text import CountVectorizer
 
