@@ -60,9 +60,12 @@ def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
     # assert len(set(ids)) == len(population), \
     #     f"There are individuals with duplicate ids: {ids}"
     logger.info("Calculating fitness...")
-    population = [IndividualDTO.parse_raw(calculate_fitness(individual.json())) for individual in population]
+    population_with_fitness = []
+    for individual in population:
+        individual.dto = IndividualDTO.parse_raw(calculate_fitness(fitness_to_json(individual.dto)))
+        population_with_fitness.append(individual)
     logger.info("The fitness results have been obtained")
-    return population
+    return population_with_fitness
 
 
 def log_best_solution(individual: IndividualDTO,
