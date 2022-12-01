@@ -33,7 +33,7 @@ class Dataset:
     _ppmi_dict_df_path: str = 'ppmi_df.txt'
     _ppmi_dict_tf_path: str = 'ppmi_tf.txt'
     _mutual_info_dict_path: str = 'mutual_info_dict.pkl'
-    _texts_path: str = 'dataset_processed.csv'
+    _texts_path: str = 'processed_dataset.csv'
     _labels_path = "labels.pkl"
 
     def __init__(self, base_path: str, topic_count: int):
