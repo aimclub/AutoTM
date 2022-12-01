@@ -1,16 +1,10 @@
 import logging
-import time
-import uuid
-from multiprocessing.process import current_process
 from typing import List, Optional, Union
-import json
-
-from tqdm import tqdm
 
 from autotm.params_logging_utils import log_params_and_artifacts, log_stats, model_files
 from autotm.fitness.tm import fit_tm_of_individual
-from autotm.utils import TqdmToLogger
 from autotm.schemas import IndividualDTO, fitness_to_json, fitness_from_json
+from autotm.algorithms_for_tuning.individuals import make_individual
 
 logger = logging.getLogger("root")
 
@@ -64,8 +58,7 @@ def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
     for individual in population:
         json_individ = fitness_to_json(individual.dto)
         individ_with_fitness = calculate_fitness(json_individ)
-        individual.dto = fitness_from_json(individ_with_fitness)
-        population_with_fitness.append(individual)
+        population_with_fitness.append(make_individual(fitness_from_json(individ_with_fitness)))
     logger.info("The fitness results have been obtained")
     return population_with_fitness
 
