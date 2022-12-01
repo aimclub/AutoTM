@@ -27,8 +27,8 @@ jobs:
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             python -m spacy download en_core_web_sm
       - name: set pythonpath
+        working-directory: src
         run: |
-          working-directory: src
           echo "PYTHONPATH=." >> $GITHUB_ENV
       - name: Run test code
         run: python ../examples/full_pipeline_example.py
