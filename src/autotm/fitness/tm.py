@@ -407,7 +407,7 @@ class TopicModel:
         self.model.dispose()
         self.model = None
 
-        log_files = [file for file in os.listdir("") if file.startswith("bigartm.")]
+        log_files = [file for file in os.listdir(".") if file.startswith("bigartm.")]
         logging.info(f"Deleting bigartm logs: {log_files}")
         for file in log_files:
             os.remove(file)
