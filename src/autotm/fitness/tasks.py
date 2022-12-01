@@ -58,7 +58,7 @@ def calculate_fitness(individual: str,
 
 def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
     logger.info("Calculating fitness...")
-    population = [calculate_fitness(fitness_to_json(individual.dto)) for individual in population]
+    population = [fitness_from_json(calculate_fitness(fitness_to_json(individual.dto))) for individual in population]
     # tqdm_out = TqdmToLogger(logger, level=logging.INFO)
     logger.info("The fitness results have been obtained")
     return population
