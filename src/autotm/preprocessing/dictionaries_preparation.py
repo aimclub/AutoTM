@@ -1,5 +1,6 @@
 import os
 import artm
+import pickle
 import pandas as pd
 import re
 import multiprocessing as mp
@@ -224,6 +225,18 @@ def prepare_batch_vectorizer(batches_dir: str, vw_path: str, data_path: str, col
 
     return batch_vectorizer
 
+def mutual_info_dict_preparation(fname):
+    tokens_dict = {}
+
+    with open(fname) as handle:
+        for ix, line in enumerate(handle):
+            list_of_words = line.strip().split()
+            word_1 = list_of_words[0]
+            for word_val in list_of_words[1:]:
+                word_2, value = word_val.split(':')
+                tokens_dict['{}_{}'.format(word_1, word_2)] = float(value)
+                tokens_dict['{}_{}'.format(word_2, word_1)] = float(value)
+    return tokens_dict
 
 def prepare_all_artifacts(save_path: str):
     DATASET_PATH = os.path.join(save_path, 'processed_dataset.csv')
@@ -254,3 +267,7 @@ def prepare_all_artifacts(save_path: str):
                          cooc_file_path_tf,
                          cooc_file_path_df, ppmi_dict_tf,
                          ppmi_dict_df)
+
+    mutual_info_dict = mutual_info_dict_preparation(ppmi_dict_tf)
+    with open(MUTUAL_INFO_DICT_PATH, 'wb') as handle:
+        pickle.dump(mutual_info_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
