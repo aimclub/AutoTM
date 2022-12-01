@@ -68,6 +68,5 @@ def log_best_solution(individual: IndividualDTO,
                       alg_args: Optional[str] = None):
     ind = fitness_to_json(individual.dto)
     logger.info(f"Sending a best individual to be logged: {ind}")
-    logger.debug(f"Started a task for best individual logging with id: {individual.id}")
     # TODO: write logging
     return ind
