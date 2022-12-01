@@ -12,7 +12,7 @@ import gridfs
 import mlflow
 from pymongo import MongoClient
 
-from src.autotm.utils import TimeMeasurements
+from autotm.utils import TimeMeasurements
 from autotm.schemas import IndividualDTO, fitness_to_json
 from autotm.fitness.tm import TopicModel
 
