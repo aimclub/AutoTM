@@ -3,7 +3,7 @@ import json
 from typing import List, Optional
 from pydantic import BaseModel
 
-from src.autotm.utils import MetricsScores
+from autotm.utils import MetricsScores
 
 PARAM_NAMES = [
     'val_decor', 'var_n_0', 'var_sm_0', 'var_sm_1', 'var_n_1',
