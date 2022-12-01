@@ -49,7 +49,6 @@ def calculate_fitness(individual: str,
                       log_artifact_and_parameters: bool = False,
                       log_run_stats: bool = False,
                       alg_args: Optional[str] = None) -> str:
-    do_fitness_calculating(individual, log_artifact_and_parameters, log_run_stats, alg_args)
     try:
         return do_fitness_calculating(individual, log_artifact_and_parameters, log_run_stats, alg_args)
     except:
@@ -57,9 +56,11 @@ def calculate_fitness(individual: str,
 
 
 def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
+    ids = [ind.id for ind in population]
+    assert len(set(ids)) == len(population), \
+        f"There are individuals with duplicate ids: {ids}"
     logger.info("Calculating fitness...")
-    population = [fitness_from_json(calculate_fitness(fitness_to_json(individual.dto))) for individual in population]
-    # tqdm_out = TqdmToLogger(logger, level=logging.INFO)
+    population = [IndividualDTO.parse_raw(calculate_fitness(individual.json())) for individual in population]
     logger.info("The fitness results have been obtained")
     return population
 
@@ -67,7 +68,6 @@ def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
 def log_best_solution(individual: IndividualDTO,
                       wait_for_result_timeout: Optional[float] = None,
                       alg_args: Optional[str] = None):
-
     ind = individual.json()
     logger.info(f"Sending a best individual to be logged: {ind}")
     logger.debug(f"Started a task for best individual logging with id: {individual.id}")
