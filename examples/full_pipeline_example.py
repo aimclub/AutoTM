@@ -2,6 +2,7 @@
 import os
 import pandas as pd
 import sys
+from autotm.infer import process_experiment
 
 from autotm.preprocessing.text_preprocessing import process_dataset
 from autotm.preprocessing.dictionaries_preparation import prepare_all_artifacts
@@ -14,6 +15,7 @@ dataset = pd.read_csv(PATH_TO_DATASET)
 col_to_process = 'text'
 lang = 'ru'  # available languages: ru, en
 min_tokens_num = 3 # the minimal amount of tokens after processing to save the result
+exp_id = 2
 
 if __name__ == '__main__':
     print('Stage 1: Dataset preparation')
@@ -26,7 +28,7 @@ if __name__ == '__main__':
 
     # exp_id and dataset_name will be needed further to store results in mlflow
     best_result = run_algorithm(data_path=SAVE_PATH,
-                           exp_id=1,
+                           exp_id=exp_id,
                            dataset='test',
                            topic_count=3,
                            log_file='./log_file_test.txt',

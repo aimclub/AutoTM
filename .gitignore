@@ -142,3 +142,4 @@ surrogate_logs/*
 /Notebooks/
 /logs/
 /bin/
+/examples/mlruns/
