@@ -1,0 +1,4 @@
+artifact_location: file:///home/js/PycharmProjects/AutoTM/examples/mlruns/1
+experiment_id: '1'
+lifecycle_stage: active
+name: experiment_1
