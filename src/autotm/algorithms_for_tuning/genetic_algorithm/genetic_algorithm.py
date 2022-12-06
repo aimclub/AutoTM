@@ -19,7 +19,24 @@ logger = logging.getLogger("GA")
 
 NUM_FITNESS_EVALUATIONS = 150
 
-
+# @click.option('--mutation-type', default="combined",
+#               help='mutation type can have value from (mutation_one_param, combined, psm, positioning_mutation)')
+# @click.option('--crossover-type', default="blend_crossover",
+#               help='crossover type can have value from (crossover_pmx, crossover_one_point, blend_crossover)')
+# @click.option('--selection-type', default="fitness_prop",
+#               help='selection type can have value from (fitness_prop, rank_based)')
+# @click.option('--elem-cross-prob', default=None, help='crossover probability')
+# @click.option('--cross-alpha', default=None, help='alpha for blend crossover')
+# @click.option('--best-proc', default=0.4, help='number of best parents to propagate')
+# @click.option('--log-file', default="/var/log/tm-alg.log",
+#               help='a log file to write logs of the algorithm execution to')
+# @click.option('--exp-id', required=True, type=int, help='mlflow experiment id')
+# @click.option('--topic-count', required=False, type=int, help='desired count of MAIN topics')
+# @click.option('--tag', required=False, type=str, help='desired count of MAIN topics')
+# @click.option('--surrogate-name', required=False, type=str, help='surrogate name')
+# @click.option('--gpr-kernel', required=False, type=str, help='kernel name for gpr')
+# @click.option('--gpr-alpha', required=False, type=float, help='alpha for gpr')
+# @click.option('--gpr-normalize-y', required=False, type=float, help='y normalization for gpr')
 def run_algorithm(dataset: str,
                   data_path: str,
                   exp_id: int,
@@ -49,17 +66,17 @@ def run_algorithm(dataset: str,
     :param num_iterations: Number of iterations to make
     :param num_fitness_evaluations: Max number of possible fitness estimations. This setting may lead to premature algorithm stopping even if there is more generations to go
     :param mutation_type: Mutation type can have value from (mutation_one_param, combined, psm, positioning_mutation)
-    :param crossover_type: Crossover type can have value from (crossover_pmx, crossover_one_point, blend_crossover)
-    :param selection_type: Selection type can have value from (fitness_prop, rank_based)
-    :param elem_cross_prob: Сrossover probability for each of the elements
-    :param cross_alpha: Alpha parameter for blend crossover
-    :param best_proc: Number of best parents to propagate
-    :param log_file: A log file to write logs of the algorithm execution to
-    :param tag: Service tag for massive experiments to store the models with tags
-    :param surrogate_name: Name of the surrogate model
-    :param gpr_kernel: Kernel name for gpr surrogate
-    :param gpr_alpha: Alpha parameter for gpr
-    :param gpr_normalize_y: y normalization parameter for gpr
+    :param crossover_type:
+    :param selection_type:
+    :param elem_cross_prob:
+    :param cross_alpha:
+    :param best_proc:
+    :param log_file:
+    :param tag:
+    :param surrogate_name:
+    :param gpr_kernel:
+    :param gpr_alpha:
+    :param gpr_normalize_y:
     :return:
     '''
     logger.debug(f"Command line: {sys.argv}")
