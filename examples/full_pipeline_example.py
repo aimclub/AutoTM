@@ -7,10 +7,10 @@ from autotm.preprocessing.text_preprocessing import process_dataset
 from autotm.preprocessing.dictionaries_preparation import prepare_all_artifacts
 from autotm.algorithms_for_tuning.genetic_algorithm.genetic_algorithm import run_algorithm
 
-PATH_TO_DATASET = '../data/sample_corpora/sample_dataset_lenta.csv'
+PATH_TO_DATASET = '../data/sample_corpora/sample_dataset_lenta.csv' # dataset with corpora to be processed
 SAVE_PATH = '../data/processed_sample_corpora'  # place where all the artifacts will be stored
 
-dataset = pd.read_csv(PATH_TO_DATASET) # dataset with corpora to be processed
+dataset = pd.read_csv(PATH_TO_DATASET)
 col_to_process = 'text'
 lang = 'ru'  # available languages: ru, en
 min_tokens_num = 3 # the minimal amount of tokens after processing to save the result
@@ -34,3 +34,6 @@ if __name__ == '__main__':
                            )
 
     # results of the run are stored in ./mlruns folder, experiment id is 'experiment_<exp_id>'
+
+    print('Step 3: Looking at results and making inference')
+    # usage and inference

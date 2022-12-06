@@ -19,14 +19,6 @@ logger = logging.getLogger("GA")
 
 NUM_FITNESS_EVALUATIONS = 150
 
-
-# @click.command(context_settings=dict(allow_extra_args=True))
-# @click.option('--dataset', default='default', help='dataset name in the config')
-# @click.option('--num-individuals', default=11, help='number of individuals in generation')
-# @click.option('--num-iterations', default=400, help='number of iterations to make')
-# @click.option('--num-fitness-evaluations', required=False, type=int, default=None,
-#               help='Max number of possible fitness estimations. This setting may lead to premature algorithm stopping '
-#                    'even if there is more generations to go')
 # @click.option('--mutation-type', default="combined",
 #               help='mutation type can have value from (mutation_one_param, combined, psm, positioning_mutation)')
 # @click.option('--crossover-type', default="blend_crossover",
@@ -72,8 +64,8 @@ def run_algorithm(dataset: str,
     :param topic_count: desired count of SPECIFIC topics (in optimization process BACK topics are also produced, thus the total amount of topics can be more than topic_count)
     :param num_individuals: Number of individuals in generation
     :param num_iterations: Number of iterations to make
-    :param num_fitness_evaluations:
-    :param mutation_type:
+    :param num_fitness_evaluations: Max number of possible fitness estimations. This setting may lead to premature algorithm stopping even if there is more generations to go
+    :param mutation_type: Mutation type can have value from (mutation_one_param, combined, psm, positioning_mutation)
     :param crossover_type:
     :param selection_type:
     :param elem_cross_prob:

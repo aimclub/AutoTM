@@ -144,7 +144,7 @@ def process_dataset(fname: str, col_to_process: str, save_path: str,
     :param n_cores: Amount of cores for parallelization.
     :return:
     '''
-    save_path = os.path.join(save_path, 'processed_dataset.csv')
+    save_path = os.path.join(save_path, 'ppp.csv')
     data = pd.read_csv(fname)
     data = parallelize_dataframe(data, lemmatize_text, n_cores, lang=lang, col_to_process=col_to_process)
     data['tokens_len'] = data['processed_text'].apply(tokens_num)

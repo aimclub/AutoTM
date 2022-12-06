@@ -22,5 +22,5 @@ spacy_langdetect==0.1.2
 gensim~=4.1.2
 pandas~=1.4.3
 billiard~=3.6.4.0
-pydantic~=1.10.2
+pydantic==1.10.2
 protobuf==3.20.*
