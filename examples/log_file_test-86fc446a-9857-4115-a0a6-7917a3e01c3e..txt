@@ -1,0 +1,35 @@
+2022-12-06 18:28:48,068 - GA - INFO - Starting a new run of algorithm. Args: []
+2022-12-06 18:28:48,068 - GA_algo - INFO - Starting experiment: 1670340528
+2022-12-06 18:28:48,068 - GA_algo - INFO - ALGORITHM PARAMS  number of individuals 11; number of fitness evals unlimited; number of early stopping iterations 500; crossover prob None
+2022-12-06 18:28:48,069 - root - INFO - Calculating fitness...
+2022-12-06 18:28:59,033 - root - INFO - The fitness results have been obtained
+2022-12-06 18:28:59,033 - GA_algo - INFO - POPULATION IS CREATED
+2022-12-06 18:28:59,033 - GA_algo - INFO - ENTERING GENERATION 0
+2022-12-06 18:28:59,034 - GA_algo - INFO - PAIRS ARE CREATED
+2022-12-06 18:28:59,036 - GA_algo - INFO - CURRENT COUNTER: 34
+2022-12-06 18:28:59,036 - root - INFO - Calculating fitness...
+2022-12-06 18:29:08,245 - root - INFO - The fitness results have been obtained
+2022-12-06 18:29:08,245 - GA_algo - INFO - ize of the new generation is 23
+2022-12-06 18:29:08,245 - GA_algo - INFO - TIME OF THE FITNESS FUNCTION IN CROSSOVER: 9.209371328353882
+2022-12-06 18:29:08,245 - GA_algo - INFO - CROSSOVER IS OVER
+2022-12-06 18:29:08,353 - root - INFO - Calculating fitness...
+2022-12-06 18:29:12,686 - root - INFO - The fitness results have been obtained
+2022-12-06 18:29:12,686 - GA_algo - INFO - TIME OF THE FITNESS FUNCTION IN MUTATION: 4.333446025848389
+2022-12-06 18:29:12,686 - GA_algo - INFO - MUTATION IS OVER
+2022-12-06 18:29:12,686 - GA_algo - INFO - Population len 11. Best params so far: [0, 5.0, 100.0, 31.730009214105912, 0, 100.0, 100.0, 0, 100.0, 100.0, 0, 0, 0.08335605992085138, 0.5185626814734452, 0.8085914276797511, 0], with fitness: 8.119075220791711e-06.ITERATION TIME: 13.653015613555908DATASET test.TOPICS NUM 3.RUN ID 50ee5a9f-ac08-48d9-acde-4bd83e22bdab.
+2022-12-06 18:29:12,686 - GA_algo - INFO - ENTERING GENERATION 1
+2022-12-06 18:29:12,687 - GA_algo - INFO - PAIRS ARE CREATED
+2022-12-06 18:29:12,687 - GA_algo - INFO - CURRENT COUNTER: 53
+2022-12-06 18:29:12,687 - root - INFO - Calculating fitness...
+2022-12-06 18:29:14,924 - root - INFO - The fitness results have been obtained
+2022-12-06 18:29:14,925 - GA_algo - INFO - ize of the new generation is 9
+2022-12-06 18:29:14,925 - GA_algo - INFO - TIME OF THE FITNESS FUNCTION IN CROSSOVER: 2.2372820377349854
+2022-12-06 18:29:14,925 - GA_algo - INFO - CROSSOVER IS OVER
+2022-12-06 18:29:15,027 - root - INFO - Calculating fitness...
+2022-12-06 18:29:16,979 - root - INFO - The fitness results have been obtained
+2022-12-06 18:29:16,979 - GA_algo - INFO - TIME OF THE FITNESS FUNCTION IN MUTATION: 1.9516828060150146
+2022-12-06 18:29:16,979 - GA_algo - INFO - MUTATION IS OVER
+2022-12-06 18:29:16,979 - GA_algo - INFO - Population len 11. Best params so far: [91.83170683085328, 0.0, 42.05880287990836, 100.0, 0.0, 100.0, 100.0, 3.0, 100.0, 100.0, 0.0, 0.0, 0.31640694360234356, 0.6956345223122047, 0.4019904506454999, 0.0], with fitness: 8.269468902182693e-06.ITERATION TIME: 4.2926084995269775DATASET test.TOPICS NUM 3.RUN ID 50ee5a9f-ac08-48d9-acde-4bd83e22bdab.
+2022-12-06 18:29:16,979 - GA_algo - INFO - Y: [8.119075220791711e-06, 8.269468902182693e-06]
+2022-12-06 18:29:16,979 - root - INFO - Sending a best individual to be logged
+2022-12-06 18:29:17,236 - GA_algo - INFO - Logged the best solution. Obtained fitness is 8.269468902182693e-06
