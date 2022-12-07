@@ -2,7 +2,7 @@
 import os
 import pandas as pd
 import sys
-from autotm.infer import get_experiment_path
+from autotm.infer import get_experiment_path, get_artifacts
 
 from autotm.preprocessing.text_preprocessing import process_dataset
 from autotm.preprocessing.dictionaries_preparation import prepare_all_artifacts
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     #                 lang, min_tokens_count=min_tokens_num)
     #
     # prepare_all_artifacts(SAVE_PATH)
-    #
+    #s
     # print('Stage 2: Tuning the topic model')
     #
     # # exp_id and dataset_name will be needed further to store results in mlflow
@@ -40,6 +40,11 @@ if __name__ == '__main__':
     # print('Step 3: Looking at results and making inference')
     # # usage and inference
 
-    TEST_RUN_NAME = 'fitness-test-b6e5a3f4-7289-4e28-aff5-bc8b97229175'
+    TEST_RUN_NAME = 'fitness-test-b6e5a3f4-7289-4e28-aff5-bc8b97229175'  # run_name is
     MLFLOW_PATH = './mlruns/'
-    get_experiment_path(MLFLOW_PATH, exp_id, TEST_RUN_NAME)
+    processed_dataset = pd.read_csv(
+        os.path.join(SAVE_PATH, 'processed_dataset.csv'))  # here the processed dataset is needed
+    artifacts_path = get_experiment_path(MLFLOW_PATH, exp_id, TEST_RUN_NAME)
+    if artifacts_path:
+        phi_matrix, theta_matrix, topics = get_artifacts(artifacts_path)
+        print(phi_matrix, theta_matrix, topics)
