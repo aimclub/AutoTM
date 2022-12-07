@@ -1,5 +1,8 @@
 import os
 import yaml
+import json
+
+import pandas as pd
 
 PATH_TO_RUN_NAME = 'tags/mlflow.runName'
 PATH_TO_EXPERIMENT_ID = ''
@@ -21,9 +24,24 @@ def get_experiment_path(mlflow_path, exp_id, run_name):
     return None
 
 
-def get_most_probable_topics_from_theta():
+def get_artifacts(artifacts_path):
+    phi_folders = os.listdir(os.path.join(artifacts_path, 'phi.csv'))
+    theta_folders = os.listdir(os.path.join(artifacts_path, 'theta.csv'))
+    phi_matrix = pd.read_csv(os.path.join(artifacts_path, 'phi.csv', phi_folders[0]))
+    theta_matrix = pd.read_csv(os.path.join(artifacts_path, 'theta.csv', theta_folders[0]))
+    with open(os.path.join(artifacts_path, 'topics.json')) as f:
+        topics = json.load(f)
+    return phi_matrix, theta_matrix, topics
+
+
+# def _get_phi_dict_format(df):
+#
+
+def get_most_probable_topics_from_theta(df, theta_df):
+
+    theta_df
     pass
 
 
-def get_most_probable_words_from_phi():
+def get_most_probable_words_from_phi(df, phi_df):
     pass
