@@ -4,6 +4,7 @@ import json
 
 import pandas as pd
 import artm
+from autotm.preprocessing.dictionaries_preparation import prepare_batch_vectorizer
 
 PATH_TO_RUN_NAME = 'tags/mlflow.runName'
 PATH_TO_EXPERIMENT_ID = ''
@@ -94,17 +95,15 @@ def get_most_probable_words_from_phi(df, phi_df):
 class topicsExtractor:
 
     def __init__(self, model_path):
-        # TODO: add models with regularizers
         self.__tm_model_path = model_path
         self.model = self.__load_model()
         self.__tmp_batches_path = './tmp/tmp_batches/'
         self.__tmp_dict_path = './tmp/tmp_dict/'
+        self.topics_dict = self.model.score_tracker['TopTokensScore'].last_tokens
 
-    # TODO: IMPLEMENT ME !
     def info(self):
         pass
 
-    # TODO: IMPLEMENT ME TOO !
     def return_topics(self):
         pass
 
@@ -113,27 +112,17 @@ class topicsExtractor:
 
     def get_prob_mixture(self, data_path, TMP_BATCHES_PATH='./tmp/tmp_batches/',
                          TMP_DICT_PATH='./tmp/tmp_dict/', OUTPUT_DIR='./out',
-                         text_column_name='text',
-                         input_format='csv'):
+                         text_column_name='processed_text',
+                         input_format='csv', top_n=2):
 
-        #         model_name_path = os.path.join(OUTPUT_DIR, model_name)
-        #         data_path = os.path.join(model_name_path, dataset_name)
+        for tmp_batch in os.listdir(TMP_BATCHES_PATH):
+            os.remove(os.path.join(TMP_BATCHES_PATH, tmp_batch))
 
-        os.makedirs(TMP_BATCHES_PATH)
-        os.makedirs(TMP_DICT_PATH)
-
-        #         try:
-        #             os.mkdir(model_name_path)
-        #         except FileExistsError:
-        #             print('The model output folder is already created!')
-
-        #         try:
-        #             os.mkdir(data_path)
-        #         except FileExistsError:
-        #             print('The dataset output folder is already created!')
-
-        for tmp_batch in os.listdir(self.__tmp_batches_path):
-            os.remove(os.path.join(self.__tmp_batches_path, tmp_batch))
+        try:
+            os.makedirs(TMP_BATCHES_PATH)
+            os.makedirs(TMP_DICT_PATH)
+        except:
+            print('folders already exist')
 
         if input_format == 'csv':
             posts = pd.read_csv(data_path)
@@ -143,25 +132,21 @@ class topicsExtractor:
         posts = posts[~posts[text_column_name].isna()]
         posts = posts.reset_index(drop=True)
         # posts = posts.dropna()
-        # add clearing if needed
 
         texts = posts[text_column_name].tolist()
 
-        with open(os.path.join(TMP_DICT_PATH, 'tmp_wv.txt'), 'w') as ofile:
-            for text in texts:
-                result = return_string_part('text', text)
-                ofile.write(result + '\n')
-
         print('LEN {}'.format(len(texts)))
 
-        batch_vectorizer_test = artm.BatchVectorizer(data_path=os.path.join(TMP_DICT_PATH, 'tmp_wv.txt'),
-                                                     data_format="vowpal_wabbit",
-                                                     target_folder=TMP_BATCHES_PATH,
-                                                     batch_size=100)
+        batch_vectorizer_test = prepare_batch_vectorizer(batches_dir=TMP_DICT_PATH,
+                                                         vw_path='./tmp/tmp_wv.txt',
+                                                         data_path=data_path,
+                                                         column_name=text_column_name)
 
-        theta_test = model.transform(batch_vectorizer=batch_vectorizer_test)
+        theta_test = self.model.transform(batch_vectorizer=batch_vectorizer_test)
         theta_test_trans = theta_test.T
-        theta_test_trans = theta_test_trans.join(posts)
-        theta_test_trans.to_csv(os.path.join(OUTPUT_DIR, 'part_{}.csv'.format(ix)))
+        theta_test_trans['top_topics'] = theta_test_trans.apply(lambda x: ', '.join(x.nlargest(top_n).index.tolist()),
+                                                                axis=1).tolist()
+        theta_test_trans = theta_test_trans.join(posts[[text_column_name]])
+        theta_test_trans.to_csv(os.path.join(OUTPUT_DIR, 'data_with_theta.csv'), index=None)
 
         print('All is saved to {} !'.format(OUTPUT_DIR))
