@@ -3,7 +3,8 @@ import pandas as pd
 from autotm.infer import TopicsExtractor
 from autotm.preprocessing.text_preprocessing import process_dataset
 
-path_to_trained_model = 'path_to_trained_model'
+
+path_to_trained_model = 'path_to_trained_model' # path to folder with n_wt.bin, score_tracker.bin, etc
 path_to_dataset = 'path_to_your_dataset'
 save_processed_dataset_path = 'path_to_save_processed_df'
 col_to_process = 'text'
@@ -25,6 +26,8 @@ def main():
 
     # column 'top_topics' contains two most probable topics in the document
     data_with_theta = pd.read_csv(os.path.join(out_fpath, 'data_with_theta.csv'))
+
+    # Note: it is also possible to cluster the embeddings to find interesting and meaningful combinations of topics
 
     # looking at topics
     for i in extractor.topics_dict:
