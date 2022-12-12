@@ -115,14 +115,14 @@ class TopicsExtractor:
                          text_column_name='processed_text',
                          input_format='csv', top_n=2):
 
-        for tmp_batch in os.listdir(TMP_BATCHES_PATH):
-            os.remove(os.path.join(TMP_BATCHES_PATH, tmp_batch))
-
         try:
             os.makedirs(TMP_BATCHES_PATH)
             os.makedirs(TMP_DICT_PATH)
         except:
             print('folders already exist')
+
+        for tmp_batch in os.listdir(TMP_BATCHES_PATH):
+            os.remove(os.path.join(TMP_BATCHES_PATH, tmp_batch))
 
         if input_format == 'csv':
             posts = pd.read_csv(data_path)
@@ -145,8 +145,9 @@ class TopicsExtractor:
         theta_test = self.model.transform(batch_vectorizer=batch_vectorizer_test)
         theta_test_trans = theta_test.T
         main_topics = [i for i in list(theta_test_trans) if i.startswith('main')]
-        theta_test_trans['top_topics'] = theta_test_trans[main_topics].apply(lambda x: ', '.join(x.nlargest(top_n).index.tolist()),
-                                                                axis=1).tolist()
+        theta_test_trans['top_topics'] = theta_test_trans[main_topics].apply(
+            lambda x: ', '.join(x.nlargest(top_n).index.tolist()),
+            axis=1).tolist()
         theta_test_trans = theta_test_trans.join(posts[[text_column_name]])
         theta_test_trans.to_csv(os.path.join(OUTPUT_DIR, 'data_with_theta.csv'), index=None)
 
