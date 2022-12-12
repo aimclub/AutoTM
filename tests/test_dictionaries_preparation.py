@@ -10,14 +10,15 @@ import pandas as pd
 
 import pytest
 
-DATASET_TINY = pd.DataFrame({'processed_text': ['this is text for testing purposes',
-                                                'test the testing test to test the test']})
+DATASET_PROCESSED_TINY = pd.DataFrame({'processed_text': ['this is text for testing purposes',
+                                                          'test the testing test to test the test',
+                                                          'the text is a good example of']})
 
 @pytest.fixture()
 def tiny_dataset_(tmpdir):
-    dataset_fio = tmpdir.join("dataset.txt")
-    dataset_fio.write(DATASET_TINY)
-    return dataset_fio
+    dataset_processed = tmpdir.join("dataset.txt")
+    dataset_processed.write(DATASET_PROCESSED_TINY)
+    return dataset_processed
 
 
 def test_cooc_df_build():
