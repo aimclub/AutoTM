@@ -92,7 +92,7 @@ def get_most_probable_words_from_phi(df, phi_df):
     raise NotImplementedError
 
 
-class topicsExtractor:
+class TopicsExtractor:
 
     def __init__(self, model_path):
         self.__tm_model_path = model_path
@@ -144,7 +144,8 @@ class topicsExtractor:
 
         theta_test = self.model.transform(batch_vectorizer=batch_vectorizer_test)
         theta_test_trans = theta_test.T
-        theta_test_trans['top_topics'] = theta_test_trans.apply(lambda x: ', '.join(x.nlargest(top_n).index.tolist()),
+        main_topics = [i for i in list(theta_test_trans) if i.startswith('main')]
+        theta_test_trans['top_topics'] = theta_test_trans[main_topics].apply(lambda x: ', '.join(x.nlargest(top_n).index.tolist()),
                                                                 axis=1).tolist()
         theta_test_trans = theta_test_trans.join(posts[[text_column_name]])
         theta_test_trans.to_csv(os.path.join(OUTPUT_DIR, 'data_with_theta.csv'), index=None)
