@@ -3,6 +3,7 @@ import yaml
 import json
 
 import pandas as pd
+import artm
 
 PATH_TO_RUN_NAME = 'tags/mlflow.runName'
 PATH_TO_EXPERIMENT_ID = ''
@@ -87,4 +88,80 @@ def get_top_words_from_topic_in_text(df: pd.DataFrame, topics: dict, top_w: int 
 
 
 def get_most_probable_words_from_phi(df, phi_df):
-    pass
+    raise NotImplementedError
+
+
+class topicsExtractor:
+
+    def __init__(self, model_path):
+        # TODO: add models with regularizers
+        self.__tm_model_path = model_path
+        self.model = self.__load_model()
+        self.__tmp_batches_path = './tmp/tmp_batches/'
+        self.__tmp_dict_path = './tmp/tmp_dict/'
+
+    # TODO: IMPLEMENT ME !
+    def info(self):
+        pass
+
+    # TODO: IMPLEMENT ME TOO !
+    def return_topics(self):
+        pass
+
+    def __load_model(self):
+        return artm.load_artm_model(self.__tm_model_path)
+
+    def get_prob_mixture(self, data_path, TMP_BATCHES_PATH='./tmp/tmp_batches/',
+                         TMP_DICT_PATH='./tmp/tmp_dict/', OUTPUT_DIR='./out',
+                         text_column_name='text',
+                         input_format='csv'):
+
+        #         model_name_path = os.path.join(OUTPUT_DIR, model_name)
+        #         data_path = os.path.join(model_name_path, dataset_name)
+
+        os.makedirs(TMP_BATCHES_PATH)
+        os.makedirs(TMP_DICT_PATH)
+
+        #         try:
+        #             os.mkdir(model_name_path)
+        #         except FileExistsError:
+        #             print('The model output folder is already created!')
+
+        #         try:
+        #             os.mkdir(data_path)
+        #         except FileExistsError:
+        #             print('The dataset output folder is already created!')
+
+        for tmp_batch in os.listdir(self.__tmp_batches_path):
+            os.remove(os.path.join(self.__tmp_batches_path, tmp_batch))
+
+        if input_format == 'csv':
+            posts = pd.read_csv(data_path)
+        else:
+            posts = pd.read_parquet(data_path)
+
+        posts = posts[~posts[text_column_name].isna()]
+        posts = posts.reset_index(drop=True)
+        # posts = posts.dropna()
+        # add clearing if needed
+
+        texts = posts[text_column_name].tolist()
+
+        with open(os.path.join(TMP_DICT_PATH, 'tmp_wv.txt'), 'w') as ofile:
+            for text in texts:
+                result = return_string_part('text', text)
+                ofile.write(result + '\n')
+
+        print('LEN {}'.format(len(texts)))
+
+        batch_vectorizer_test = artm.BatchVectorizer(data_path=os.path.join(TMP_DICT_PATH, 'tmp_wv.txt'),
+                                                     data_format="vowpal_wabbit",
+                                                     target_folder=TMP_BATCHES_PATH,
+                                                     batch_size=100)
+
+        theta_test = model.transform(batch_vectorizer=batch_vectorizer_test)
+        theta_test_trans = theta_test.T
+        theta_test_trans = theta_test_trans.join(posts)
+        theta_test_trans.to_csv(os.path.join(OUTPUT_DIR, 'part_{}.csv'.format(ix)))
+
+        print('All is saved to {} !'.format(OUTPUT_DIR))
