@@ -131,7 +131,6 @@ class TopicsExtractor:
 
         posts = posts[~posts[text_column_name].isna()]
         posts = posts.reset_index(drop=True)
-        # posts = posts.dropna()
 
         texts = posts[text_column_name].tolist()
 
