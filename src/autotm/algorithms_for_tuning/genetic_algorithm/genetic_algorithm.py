@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import os
 import logging
 import sys
 from logging import config
@@ -7,7 +6,6 @@ import warnings
 import yaml
 from yaml import Loader
 
-import click
 import uuid
 
 from autotm.algorithms_for_tuning.genetic_algorithm.ga import GA

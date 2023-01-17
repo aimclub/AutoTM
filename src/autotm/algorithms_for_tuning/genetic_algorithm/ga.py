@@ -206,9 +206,13 @@ class GA:
         self.low_back = 0
         self.high_back = 5
         self.high_spb = 1e2  # TODO: check param
-        self.low_spb = 1e-3
+        self.low_spb = 0 # 1e-3
         self.low_spm = 1e2
         self.high_spm = -1e-3
+
+        self.low_sp_phi = -1e-3
+        self.high_sp_phi = 1e3
+
         self.low_prob = 0
         self.high_prob = 1
 
