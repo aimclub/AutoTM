@@ -1,9 +1,9 @@
 import os
 import artm
+import math
 import pickle
 import pandas as pd
 import re
-import multiprocessing as mp
 from autotm.utils import parallelize_dataframe
 import itertools
 from collections import Counter
@@ -28,23 +28,39 @@ def vocab_preparation(VOCAB_PATH, DICTIONARY_PATH):
                     vocab_file.write(' '.join(elems[:2]) + '\n')
 
 
+def _calculate_token_count():
+    raise NotImplementedError
+
+
+def _add_word_to_dict(word, w_dict):
+    if word in w_dict:
+        w_dict[word] += 1
+    else:
+        w_dict[word] = 1
+    return w_dict
+
+
 def _calculate_cooc_df_dict(data: list, window: int = 10) -> dict:
     cooc_df_dict = {}  # format dict{(tuple): cooc}
+    term_freq_dict = {}
     for text in data:
         document_cooc_df_dict = {}
         splitted = text.split()
         for i in range(0, len(splitted) - window):
-            for comb in itertools.combinations(splitted[i:i + window], 2):
+            for comb in itertools.combinations(splitted[i:i + window], 2):  # speed up
                 if comb in document_cooc_df_dict:
                     continue
                 else:
                     document_cooc_df_dict[comb] = 1
+                    term_freq_dict = _add_word_to_dict(comb[0], term_freq_dict)
+                    term_freq_dict = _add_word_to_dict(comb[1], term_freq_dict)
         cooc_df_dict = dict(Counter(document_cooc_df_dict) + Counter(cooc_df_dict))
-    return cooc_df_dict
+    return cooc_df_dict, term_freq_dict
 
 
 def _calculate_cooc_tf_dict(data: list, window: int = 10) -> dict:
-    local_pairs_count = 0
+    # local_pairs_count = 0
+    term_freq_dict = {}
     cooc_tf_dict = {RESERVED_TUPLE: 0}  # format dict{(tuple): cooc}
     for text in data:
         document_cooc_tf_dict = {}
@@ -55,21 +71,26 @@ def _calculate_cooc_tf_dict(data: list, window: int = 10) -> dict:
                     document_cooc_tf_dict[comb] += 1
                 else:
                     document_cooc_tf_dict[comb] = 1
+
+                term_freq_dict = _add_word_to_dict(comb[0], term_freq_dict)
+                term_freq_dict = _add_word_to_dict(comb[1], term_freq_dict)
+
                 cooc_tf_dict[RESERVED_TUPLE] += 2
         cooc_tf_dict = dict(Counter(document_cooc_tf_dict) + Counter(cooc_tf_dict))
-    return cooc_tf_dict
+    return cooc_tf_dict, term_freq_dict
     # local_num_of_pairs += 2
     # pass
 
 
-def calculate_ppmi(cooc_dict_path, n):
+def calculate_ppmi(cooc_dict_path, n, term_freq_dict):
     print('Calculating pPMI...')
     ppmi_dict = {}
     with open(cooc_dict_path) as fopen:
         for line in fopen:
             splitted_line = line.split()
-            ppmi_dict[splitted_line[0]] = [f'{word.split(":")[0].strip()}:{int(word.split(":")[1]) / n}' for word in
-                                           splitted_line[1:]]
+            ppmi_dict[splitted_line[0]] = [
+                f'{word.split(":")[0].strip()}:{max(math.log2((int(word.split(":")[1]) / n) / (term_freq_dict[word.split(":")[0].strip()] * term_freq_dict[splitted_line[0]])), 0)}'
+                for word in splitted_line[1:]]
     return ppmi_dict
 
 
@@ -80,7 +101,7 @@ def calculate_cooc_dicts(df, window=10, n_cores=-1):
     :param df: dataframe with 'processed_text'  column
     :param window: The size of window to collect cooccurrences in
     :param n_cores: available cores for parallel processing. Default: -1 (all)
-    :return:
+    :return: cooc_df and cooc_tf dictionaries
     '''
     data = df['processed_text'].tolist()
     cooc_df_dict = parallelize_dataframe(data, _calculate_cooc_df_dict, n_cores, return_type='dict', window=window)
@@ -100,8 +121,12 @@ def write_vw_dict(res_dict, vocab_words, fpath):
 
 
 def convert_to_vw_format_and_save(cooc_dict, vocab_words, vw_path):
+    if isinstance(cooc_dict, tuple):
+        t_cooc_dict = cooc_dict[0]
+    else:
+        t_cooc_dict = cooc_dict
     data_dict = {}
-    for item in sorted(cooc_dict.items(), key=lambda key: key[0]):
+    for item in sorted(t_cooc_dict.items(), key=lambda key: key[0]):
         if item == RESERVED_TUPLE:
             continue
         word_1 = item[0][0]
@@ -123,7 +148,7 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
                          cooc_min_df=0, cooc_window=10, n_cores=-1):
     '''
     :param WV_PATH: path where to store data in Vowpal Wabbit format (https://github.com/VowpalWabbit/vowpal_wabbit/wiki/Input-format)
-    :param VOCAB_PATH:
+    :param VOCAB_PATH: path where the full dictionary is listed
     :param COOC_DICTIONARY_PATH:
     :param path_to_dataset: path to folder
     :param cooc_file_path_tf:
@@ -136,7 +161,7 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
     :return:
     '''
 
-    # rewrite this part in case of several modalities
+    # TODO: rewrite this part in case of several modalities
     vocab_words = []
     with open(VOCAB_PATH) as vpath:
         for line in vpath:
@@ -148,7 +173,10 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
     data = pd.read_csv(path_to_dataset)
     docs_count = data.shape[0]
 
-    cooc_df_dict, cooc_tf_dict = calculate_cooc_dicts(data, n_cores=n_cores)
+    df_dicts, tf_dicts = calculate_cooc_dicts(data, n_cores=n_cores, window=cooc_window)
+
+    cooc_df_dict, cooc_df_term_dict = df_dicts[0], df_dicts[1]
+    cooc_tf_dict, cooc_tf_term_dict = tf_dicts[0], tf_dicts[1]
 
     pairs_count = cooc_tf_dict[RESERVED_TUPLE]
 
@@ -159,8 +187,8 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
     convert_to_vw_format_and_save(cooc_df_dict, vocab_words, cooc_file_path_df)
     convert_to_vw_format_and_save(cooc_tf_dict, vocab_words, cooc_file_path_tf)
 
-    ppmi_df = calculate_ppmi(cooc_file_path_df, docs_count)
-    ppmi_tf = calculate_ppmi(cooc_file_path_tf, pairs_count)
+    ppmi_df = calculate_ppmi(cooc_file_path_df, docs_count, cooc_df_term_dict)
+    ppmi_tf = calculate_ppmi(cooc_file_path_tf, pairs_count, cooc_tf_term_dict)
 
     write_vw_dict(ppmi_tf, vocab_words, ppmi_dict_tf)
     write_vw_dict(ppmi_df, vocab_words, ppmi_dict_df)
@@ -225,6 +253,7 @@ def prepare_batch_vectorizer(batches_dir: str, vw_path: str, data_path: str, col
 
     return batch_vectorizer
 
+
 def mutual_info_dict_preparation(fname):
     tokens_dict = {}
 
@@ -237,6 +266,7 @@ def mutual_info_dict_preparation(fname):
                 tokens_dict['{}_{}'.format(word_1, word_2)] = float(value)
                 tokens_dict['{}_{}'.format(word_2, word_1)] = float(value)
     return tokens_dict
+
 
 def prepare_all_artifacts(save_path: str):
     DATASET_PATH = os.path.join(save_path, 'ppp.csv')

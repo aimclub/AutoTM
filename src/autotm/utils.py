@@ -72,19 +72,29 @@ def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type='df', **k
     :param df: Dataframe to process.
     :param func: Function to be applied in parallel mode on data chunks
     :param n_cores: Amount of cores to parallelize on. In case of -1 takes all the available cores.
-    :param return_type:
+    :param return_type: datatype returned by func: 'df' or 'dict'
     :param kwargs: Additional parameters of the function, which is applied in parallel mode.
     :return: pd.DataFrame
     '''
     if n_cores == -1:
         n_cores = mp.cpu_count() - 1
     df_split = np.array_split(df, n_cores)
+
     pool = Pool(n_cores)
     func_with_args = partial(func, **kwargs)
+    map_res = pool.map(func_with_args, df_split)
     if return_type == 'df':
-        res = pd.concat(pool.map(func_with_args, df_split))
+        if isinstance(map_res[0], pd.DataFrame):
+            res = pd.concat(map_res)
+        elif isinstance(map_res[0], tuple):
+            zipped_elems = list(zip(*map_res))
+            res = (pd.concat(zipped_elems[0]), pd.concat(zipped_elems[1]))
     elif return_type == 'dict':
-        res = merge_dicts(pool.map(func_with_args, df_split))
+        if isinstance(map_res[0], dict):
+            res = merge_dicts(map_res)
+        elif isinstance(map_res[0], tuple):
+            zipped_elems = list(zip(*map_res))
+            res = (merge_dicts(zipped_elems[0]), merge_dicts(zipped_elems[1]))
     pool.close()
     pool.join()
     return res
