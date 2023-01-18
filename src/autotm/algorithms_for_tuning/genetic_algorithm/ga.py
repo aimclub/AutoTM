@@ -206,13 +206,11 @@ class GA:
         self.low_back = 0
         self.high_back = 5
         self.high_spb = 1e2  # TODO: check param
-        self.low_spb = 0 # 1e-3
-        self.low_spm = 1e2
-        self.high_spm = -1e-3
-
-        self.low_sp_phi = -1e-3
+        self.low_spb = 0  # 1e-3
+        self.low_spm = -1e-3
+        self.high_spm = 1e2
+        self.low_sp_phi = -1e3
         self.high_sp_phi = 1e3
-
         self.low_prob = 0
         self.high_prob = 1
 
@@ -221,7 +219,7 @@ class GA:
         var_n = np.random.randint(low=self.low_n, high=self.high_n, size=4)
         var_back = np.random.randint(low=self.low_back, high=self.high_back, size=1)[0]
         var_sm = np.random.uniform(low=self.low_spb, high=self.high_spb, size=2)
-        var_sp = np.random.uniform(low=self.low_spm, high=self.high_spm, size=4)
+        var_sp = np.random.uniform(low=self.low_sp_phi, high=self.high_sp_phi, size=4)
         ext_mutation_prob = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
         ext_elem_mutation_prob = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
         ext_mutation_selector = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
@@ -352,18 +350,33 @@ class GA:
         return param
 
     def check_params_bounds(self, params):
+        # params = [
+        #     val_decor, var_n[0],
+        #     var_sm[0], var_sm[1], var_n[1],
+        #     var_sp[0], var_sp[1], var_n[2],
+        #     var_sp[2], var_sp[3], var_n[3],
+        #     var_back,
+        #     ext_mutation_prob, ext_elem_mutation_prob, ext_mutation_selector,
+        #     val_decor_2
+        # ]
+        # smooth
         for i in [2, 3]:
             params[i] = self._check_param(params[i], (self.low_spb, self.high_spb))
+        # sparce
         for i in [5, 6, 8, 9]:
-            params[i] = self._check_param(params[i], (self.low_spm, self.high_spm))
+            params[i] = self._check_param(params[i], (self.low_sp_phi, self.high_sp_phi))
+        # iterations
         for i in [1, 4, 7, 10]:
             params[i] = float(int(params[i]))
             params[i] = self._check_param(params[i], (self.low_n, self.high_n))
+        # back
         for i in [11]:
             params[i] = float(int(params[i]))
             params[i] = self._check_param(params[i], (self.low_back, self.high_back))
+        # mutation
         for i in [12, 13, 14]:
             params[i] = self._check_param(params[i], (self.low_prob, self.high_prob))
+        # decorrelation
         for i in [0, 15]:
             params[i] = self._check_param(params[i], (self.low_decor, self.high_decor))
         return params
