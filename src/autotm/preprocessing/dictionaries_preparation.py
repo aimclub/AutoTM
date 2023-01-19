@@ -11,6 +11,8 @@ from collections import Counter
 RESERVED_TUPLE = ('_SERVICE_', 'total_pairs_count')
 
 
+# TODO: add inter-text coherence metrics (SemantiC, TopLen and FoCon)
+
 def get_words_dict(text, stop_list):
     all_words = text
     words = sorted(set(all_words) - stop_list)
@@ -48,6 +50,7 @@ def _calculate_cooc_df_dict(data: list, window: int = 10) -> dict:
         splitted = text.split()
         for i in range(0, len(splitted) - window):
             for comb in itertools.combinations(splitted[i:i + window], 2):  # speed up
+                comb = tuple(sorted(comb))  # adding comb sorting
                 if comb in document_cooc_df_dict:
                     continue
                 else:
@@ -59,7 +62,6 @@ def _calculate_cooc_df_dict(data: list, window: int = 10) -> dict:
 
 
 def _calculate_cooc_tf_dict(data: list, window: int = 10) -> dict:
-    # local_pairs_count = 0
     term_freq_dict = {}
     cooc_tf_dict = {RESERVED_TUPLE: 0}  # format dict{(tuple): cooc}
     for text in data:
@@ -89,7 +91,7 @@ def calculate_ppmi(cooc_dict_path, n, term_freq_dict):
         for line in fopen:
             splitted_line = line.split()
             ppmi_dict[splitted_line[0]] = [
-                f'{word.split(":")[0].strip()}:{max(math.log2((int(word.split(":")[1]) / n) / (term_freq_dict[word.split(":")[0].strip()] * term_freq_dict[splitted_line[0]])), 0)}'
+                f'{word.split(":")[0].strip()}:{max(math.log2((int(word.split(":")[1]) / n) / (term_freq_dict[word.split(":")[0].strip()] / n * term_freq_dict[splitted_line[0]] / n)), 0)}'
                 for word in splitted_line[1:]]
     return ppmi_dict
 
@@ -129,7 +131,7 @@ def convert_to_vw_format_and_save(cooc_dict, vocab_words, vw_path):
     for item in sorted(t_cooc_dict.items(), key=lambda key: key[0]):
         if item == RESERVED_TUPLE:
             continue
-        word_1 = item[0][0]
+        word_1 = item[0][0]  # TODO: check this
         word_2 = item[0][1]
         if vocab_words.index(item[0][0]) > vocab_words.index(item[0][1]):
             word_2 = item[0][0]
@@ -149,12 +151,12 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
     '''
     :param WV_PATH: path where to store data in Vowpal Wabbit format (https://github.com/VowpalWabbit/vowpal_wabbit/wiki/Input-format)
     :param VOCAB_PATH: path where the full dictionary is listed
-    :param COOC_DICTIONARY_PATH:
-    :param path_to_dataset: path to folder
-    :param cooc_file_path_tf:
-    :param cooc_file_path_df:
-    :param ppmi_dict_tf:
-    :param ppmi_dict_df:
+    :param COOC_DICTIONARY_PATH: path to cooccurrence dictionary
+    :param path_to_dataset: path to folder with dataset
+    :param cooc_file_path_tf: path to tf coocurrances
+    :param cooc_file_path_df: path to df coocurrances
+    :param ppmi_dict_tf: path to ppmi tf dict
+    :param ppmi_dict_df: path to ppmi df dict
     :param cooc_min_tf: Minimal number of documents to cooc in pairs to store the results
     :param cooc_min_df: Minimal number of documents to docs to cooc to store the results
     :param cooc_window: size of the window where to search for the cooccurrences
