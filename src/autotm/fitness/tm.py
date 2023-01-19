@@ -305,6 +305,12 @@ class TopicModel:
 
         self.__set_model_scores()
 
+    def _early_stopping(self):
+        coherences_main, coherences_back = self.__return_all_tokens_coherence(self.model, s=self.S, b=self.B)
+        if len(coherences_main) < self.S or not any(coherences_main):
+            return True
+        return False
+
     def train(self):
         if self.model is None:
             print('Initialise the model first!')
@@ -316,6 +322,11 @@ class TopicModel:
                                                                     topic_names=self.back, tau=self.decor_2))
         self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n1)
 
+        if self.n1 > 0:
+            if self._early_stopping():
+                print('Early stopping is triggered')
+                return
+
         #         if ((self.n2 != 0) and (self.B != 0)):
         if self.B != 0:
             self.model.regularizers.add(artm.SmoothSparseThetaRegularizer(name='SmoothPhi',
@@ -324,6 +335,11 @@ class TopicModel:
                                                                           topic_names=self.back, tau=self.stb))
             self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n2)
 
+        if self.n1 + self.n2 > 0:
+            if self._early_stopping():
+                print('Early stopping is triggered')
+                return
+
         if self.n3 != 0:
             self.model.regularizers.add(artm.SmoothSparseThetaRegularizer(name='SparsePhi',
                                                                           topic_names=self.specific, tau=self.sp1))
@@ -331,10 +347,20 @@ class TopicModel:
                                                                           topic_names=self.specific, tau=self.st1))
             self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n3)
 
+        if self.n1 + self.n2 + self.n3 > 0:
+            if self._early_stopping():
+                print('Early stopping is triggered')
+                return
+
         if self.n4 != 0:
             self.model.regularizers['SparsePhi'].tau = self.sp2
             self.model.regularizers['SparseTheta'].tau = self.st2
             self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n4)
+
+        if self.n1 + self.n2 + self.n3 > 0:
+            if self._early_stopping():
+                print('Early stopping is triggered')
+                return
 
         print('Training is complete')
 
@@ -370,7 +396,7 @@ class TopicModel:
     def _get_avg_coherence_score(self, for_individ_fitness=False):
         coherences_main, coherences_back = self.__return_all_tokens_coherence(self.model, s=self.S, b=self.B)
         if for_individ_fitness:
-            print('COMPONENTS: ', np.mean(list(coherences_main.values())), np.min(list(coherences_main.values())))
+            # print('COMPONENTS: ', np.mean(list(coherences_main.values())), np.min(list(coherences_main.values())))
             return np.mean(list(coherences_main.values())) + np.min(list(coherences_main.values()))
         return np.mean(list(coherences_main.values()))
 
@@ -565,7 +591,6 @@ class TopicModel:
         topics_dict = self.model.score_tracker['TopTokensScore'].last_tokens
 
         specific_topics = [topic for topic in topic_names if topic.startswith('main')]
-        print(specific_topics)
 
         all_topics_flag = False
         if len(specific_topics) == self.S:
