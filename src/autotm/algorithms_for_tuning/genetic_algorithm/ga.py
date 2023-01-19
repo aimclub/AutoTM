@@ -198,21 +198,30 @@ class GA:
         self.calc_scheme = calc_scheme
         self.topic_count = topic_count
         self.tag = tag
-        # params
-        self.high_decor = 1e5  # TODO: check param
-        self.low_decor = 0
-        self.low_n = 0
-        self.high_n = 30  # TODO: check param
-        self.low_back = 0
-        self.high_back = 5
-        self.high_spb = 1e2  # TODO: check param
-        self.low_spb = 0  # 1e-3
-        self.low_spm = -1e-3
-        self.high_spm = 1e2
-        self.low_sp_phi = -1e3
-        self.high_sp_phi = 1e3
-        self.low_prob = 0
-        self.high_prob = 1
+        # hyperparams
+        self.set_regularizer_limits()
+
+    def set_regularizer_limits(self, low_decor=0, high_decor=1e5,
+                               low_n=0, high_n=30,
+                               low_back=0, high_back=5,
+                               low_spb=0, high_spb=1e2,
+                               low_spm=-1e-3, high_spm=1e2,
+                               low_sp_phi=-1e3, high_sp_phi=1e3,
+                               low_prob=0, high_prob=1):
+        self.high_decor = high_decor
+        self.low_decor = low_decor
+        self.low_n = low_n
+        self.high_n = high_n
+        self.low_back = low_back
+        self.high_back = high_back
+        self.high_spb = high_spb
+        self.low_spb = low_spb
+        self.low_spm = low_spm
+        self.high_spm = high_spm
+        self.low_sp_phi = low_sp_phi
+        self.high_sp_phi = high_sp_phi
+        self.low_prob = low_prob
+        self.high_prob = high_prob
 
     def init_individ(self, base_model=False):
         val_decor = np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[0]

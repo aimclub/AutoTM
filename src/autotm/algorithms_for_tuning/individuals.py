@@ -3,6 +3,7 @@ import os
 import pickle
 from typing import List
 import numpy as np
+import pandas as pd
 
 from autotm.utils import AVG_COHERENCE_SCORE
 from autotm.schemas import IndividualDTO
@@ -77,11 +78,11 @@ class LearnedModel:
             with open(os.path.join(native_save_path, f'native_automl_{dataset_id}_fold_{i}.pickle'), 'rb') as f:
                 self.native_model.append(pickle.load(f))
 
-    def general_predict(self, df):
+    def general_predict(self, df: pd.DataFrame):
         y = self.general_model.predict(df[METRICS_COLS])
         return y
 
-    def native_predict(self, df):
+    def native_predict(self, df: pd.DataFrame):
         y = []
         for k, nm in enumerate(self.native_model):
             y.append(nm.predict(df[METRICS_COLS]))
