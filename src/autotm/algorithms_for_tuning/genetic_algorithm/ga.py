@@ -11,6 +11,7 @@ import warnings
 from typing import Optional
 
 import numpy as np
+from sklearn.svm import SVR
 from sklearn.ensemble import BaggingRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -19,14 +20,14 @@ from sklearn.gaussian_process.kernels import RBF, Matern, WhiteKernel, \
 from sklearn.metrics import mean_squared_error
 from sklearn.neural_network import MLPRegressor
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.svm import SVR
 
-from autotm.algorithms_for_tuning.genetic_algorithm.crossover import crossover
 from autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
+from autotm.algorithms_for_tuning.genetic_algorithm.crossover import crossover
 from autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
 from autotm.algorithms_for_tuning.individuals import make_individual, IndividualDTO
 
 from autotm.utils import AVG_COHERENCE_SCORE
+from autotm.visualization.dynamic_tracker import MetricsCollector
 
 from autotm.fitness.tasks import estimate_fitness, log_best_solution
 
@@ -163,7 +164,30 @@ class GA:
                  num_fitness_evaluations: Optional[int] = 500,
                  early_stopping_iterations: Optional[int] = 500,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
-                 calc_scheme='type2', topic_count: Optional[int] = None, tag: Optional[str] = None, **kwargs):
+                 calc_scheme='type2', topic_count: Optional[int] = None, fitness_obj_type='single_objective',
+                 tag: Optional[str] = None, **kwargs):
+        """
+
+        :param dataset: dataset name
+        :param data_path:
+        :param num_individuals:
+        :param num_iterations:
+        :param mutation_type:
+        :param crossover_type:
+        :param selection_type:
+        :param elem_cross_prob:
+        :param num_fitness_evaluations:
+        :param early_stopping_iterations:
+        :param best_proc:
+        :param alpha:
+        :param exp_id:
+        :param surrogate_name:
+        :param calc_scheme:
+        :param topic_count:
+        :param fitness_obj_type:
+        :param tag:
+        :param kwargs:
+        """
 
         self.dataset = dataset
 
@@ -187,6 +211,7 @@ class GA:
         self.evaluations_counter = 0
         self.num_fitness_evaluations = num_fitness_evaluations
         self.early_stopping_iterations = early_stopping_iterations
+        self.fitness_obj_type = fitness_obj_type
         self.best_proc = best_proc
         self.all_params = []
         self.all_fitness = []
@@ -200,6 +225,8 @@ class GA:
         self.tag = tag
         # hyperparams
         self.set_regularizer_limits()
+        self.metric_collector = MetricsCollector(dataset=self.dataset,
+                                                 n_specific_topics=topic_count)
 
     def set_regularizer_limits(self, low_decor=0, high_decor=1e5,
                                low_n=0, high_n=30,
