@@ -175,6 +175,7 @@ class TopicModelFactory:
         self.params = params
         self.topic_count = topic_count
         self.forced_update = forced_update
+        self._custom_scores = []
         self.tm = None
 
     def __enter__(self) -> 'TopicModel':
