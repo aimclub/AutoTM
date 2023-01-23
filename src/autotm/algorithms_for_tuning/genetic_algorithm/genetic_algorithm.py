@@ -5,6 +5,7 @@ from logging import config
 import warnings
 import yaml
 from yaml import Loader
+from typing import Union
 
 import uuid
 
@@ -20,7 +21,7 @@ NUM_FITNESS_EVALUATIONS = 150
 
 def run_algorithm(dataset: str,
                   data_path: str,
-                  exp_id: int,
+                  exp_id: Union[int, str],
                   topic_count: int,
                   num_individuals: int = 11,
                   num_iterations: int = 400,

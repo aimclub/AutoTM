@@ -1,4 +1,4 @@
-name: 99773934-432b-4a49-8a20-b6f2664a6c76 num_items: 100
+name: 2421a586-4a35-417e-8c72-e01e81ee54c1 num_items: 100
 token, class_id, token_value, token_tf, token_df
 череда, @default_class, 8.280202018795535e-05, 1.0, 1.0
 ценообразование, @default_class, 8.280202018795535e-05, 1.0, 1.0

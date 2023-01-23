@@ -17,6 +17,7 @@ from tqdm import tqdm
 
 from autotm.fitness.external_scores import (ts_bground, ts_uniform, ts_vacuous, switchp)
 from autotm.utils import MetricsScores, AVG_COHERENCE_SCORE, TimeMeasurements, log_exec_timer
+from autotm.batch_vect_utils import SampleBatchVectorizer
 
 logger = logging.getLogger()
 logging.basicConfig(level="INFO")
@@ -33,7 +34,7 @@ class Dataset:
     _ppmi_dict_df_path: str = 'ppmi_df.txt'
     _ppmi_dict_tf_path: str = 'ppmi_tf.txt'
     _mutual_info_dict_path: str = 'mutual_info_dict.pkl'
-    _texts_path: str = 'ppp.csv'
+    _texts_path: str = 'dataset_processed.csv'
     _labels_path = "labels.pkl"
 
     def __init__(self, base_path: str, topic_count: int):
@@ -74,6 +75,11 @@ class Dataset:
     def mutual_info_dict(self) -> Dict:
         assert self._mutual_info_dict
         return self._mutual_info_dict
+
+    @property
+    def sample_batches(self) -> SampleBatchVectorizer:
+        batches_dir_path = self._make_path(self._batches_path)
+        return SampleBatchVectorizer(data_path=batches_dir_path, data_format='batches')
 
     @property
     def texts(self) -> List[str]:
@@ -314,7 +320,7 @@ class TopicModel:
             return True
         return False
 
-    def train(self):
+    def train(self, option='online'):
         if self.model is None:
             print('Initialise the model first!')
             return
@@ -323,7 +329,10 @@ class TopicModel:
                                                                     topic_names=self.specific, tau=self.decor))
         self.model.regularizers.add(artm.DecorrelatorPhiRegularizer(name='decorr_2',
                                                                     topic_names=self.back, tau=self.decor_2))
-        self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n1)
+        if option == 'offline':
+            self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n1)
+        elif option == 'online':
+            self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n1)
 
         if self.n1 > 0:
             if self._early_stopping():
@@ -336,7 +345,10 @@ class TopicModel:
                                                                           topic_names=self.back, tau=self.spb))
             self.model.regularizers.add(artm.SmoothSparseThetaRegularizer(name='SmoothTheta',
                                                                           topic_names=self.back, tau=self.stb))
-            self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n2)
+            if option == 'offline':
+                self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n2)
+            elif option == 'online':
+                self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n2)
 
         if self.n1 + self.n2 > 0:
             if self._early_stopping():
@@ -348,7 +360,10 @@ class TopicModel:
                                                                           topic_names=self.specific, tau=self.sp1))
             self.model.regularizers.add(artm.SmoothSparseThetaRegularizer(name='SparseTheta',
                                                                           topic_names=self.specific, tau=self.st1))
-            self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n3)
+            if option == 'offline':
+                self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n3)
+            elif option == 'online':
+                self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n3)
 
         if self.n1 + self.n2 + self.n3 > 0:
             if self._early_stopping():
@@ -358,7 +373,10 @@ class TopicModel:
         if self.n4 != 0:
             self.model.regularizers['SparsePhi'].tau = self.sp2
             self.model.regularizers['SparseTheta'].tau = self.st2
-            self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n4)
+            if option == 'offline':
+                self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n4)
+            elif option == 'online':
+                self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n4)
 
         if self.n1 + self.n2 + self.n3 > 0:
             if self._early_stopping():
@@ -366,14 +384,6 @@ class TopicModel:
                 return
 
         print('Training is complete')
-
-    # TODO:
-    def train_online(self):
-        raise NotImplementedError
-
-    # TODO: sampling batches for online training
-    def _sample_batches(self):
-        raise NotImplementedError
 
     def decor_train(self):
         if self.model is None:
