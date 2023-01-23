@@ -1,6 +1,7 @@
 # input example_data padas df with 'text' column
 import os
 import pandas as pd
+import time
 import sys
 from autotm.infer import (get_experiment_path, get_artifacts, get_most_probable_topics_from_theta,
                           get_top_words_from_topic_in_text)
@@ -12,26 +13,34 @@ from autotm.algorithms_for_tuning.genetic_algorithm.genetic_algorithm import run
 PATH_TO_DATASET = '../data/sample_corpora/sample_dataset_lenta.csv'  # dataset with corpora to be processed
 SAVE_PATH = '../data/processed_sample_corpora'  # place where all the artifacts will be stored
 
+DATA_PATH = '../data/experiment_datasets/20newsgroups_sample'
+
+PATH_TO_DATASET = os.path.join(DATA_PATH, 'dataset_processed.csv')  # dataset with corpora to be processed
+SAVE_PATH = DATA_PATH # place where all the artifacts will be stored
+
+
 dataset = pd.read_csv(PATH_TO_DATASET)
 col_to_process = 'text'
+dataset_name = 'sample_lenta'
 lang = 'ru'  # available languages: ru, en
 min_tokens_num = 3  # the minimal amount of tokens after processing to save the result
-exp_id = 1  # do not forget to change the experiment id for each run (will be fixed later)
-num_iterations = 15
+num_iterations = 3
 topic_count = 5
+exp_id = int(time.time())
+print(exp_id)
 
 if __name__ == '__main__':
     print('Stage 1: Dataset preparation')
-    process_dataset(PATH_TO_DATASET, col_to_process, SAVE_PATH,
-                    lang, min_tokens_count=min_tokens_num)
-
-    prepare_all_artifacts(SAVE_PATH)
+    # process_dataset(PATH_TO_DATASET, col_to_process, SAVE_PATH,
+    #                 lang, min_tokens_count=min_tokens_num)
+    #
+    # prepare_all_artifacts(SAVE_PATH)
     print('Stage 2: Tuning the topic model')
 
     # exp_id and dataset_name will be needed further to store results in mlflow
     best_result = run_algorithm(data_path=SAVE_PATH,
-                                exp_id=exp_id,
                                 dataset='test',
+                                exp_id=exp_id,
                                 topic_count=topic_count,
                                 log_file='./log_file_test.txt',
                                 num_iterations=num_iterations
