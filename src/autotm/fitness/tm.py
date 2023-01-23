@@ -335,6 +335,7 @@ class TopicModel:
         elif option == 'online_v1':
             self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n1)
         elif option == 'online_v2':
+            self.model.num_document_passes = self.n1
             self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
                                   update_every=self.num_processors)
 
@@ -354,6 +355,7 @@ class TopicModel:
             elif option == 'online_v1':
                 self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n2)
             elif option == 'online_v2':
+                self.model.num_document_passes = self.n2
                 self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
                                       update_every=self.num_processors)
 
@@ -372,6 +374,7 @@ class TopicModel:
             elif option == 'online':
                 self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n3)
             elif option == 'online_v2':
+                self.model.num_document_passes = self.n3
                 self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
                                       update_every=self.num_processors)
 
@@ -388,6 +391,7 @@ class TopicModel:
             elif option == 'online_v1':
                 self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n4)
             elif option == 'online_v2':
+                self.model.num_document_passes = self.n4
                 self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
                                       update_every=self.num_processors)
 
