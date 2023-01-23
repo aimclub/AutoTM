@@ -17,7 +17,7 @@ col_to_process = 'text'
 lang = 'ru'  # available languages: ru, en
 min_tokens_num = 3  # the minimal amount of tokens after processing to save the result
 exp_id = 1  # do not forget to change the experiment id for each run (will be fixed later)
-num_iterations = 5
+num_iterations = 15
 topic_count = 5
 
 if __name__ == '__main__':

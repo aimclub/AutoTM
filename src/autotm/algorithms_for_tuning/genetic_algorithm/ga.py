@@ -292,6 +292,7 @@ class GA:
             # TODO: improve heuristic on search space
             list_of_individuals.append(make_individual(dto=dto))
         population_with_fitness = estimate_fitness(list_of_individuals)
+
         self.save_params(population_with_fitness)
         if self.surrogate is not None and self.calc_scheme == 'type2':
             self.surrogate.fit(np.array(self.all_params), np.array(self.all_fitness))
@@ -386,15 +387,6 @@ class GA:
         return param
 
     def check_params_bounds(self, params):
-        # params = [
-        #     val_decor, var_n[0],
-        #     var_sm[0], var_sm[1], var_n[1],
-        #     var_sp[0], var_sp[1], var_n[2],
-        #     var_sp[2], var_sp[3], var_n[3],
-        #     var_back,
-        #     ext_mutation_prob, ext_elem_mutation_prob, ext_mutation_selector,
-        #     val_decor_2
-        # ]
         # smooth
         for i in [2, 3]:
             params[i] = self._check_param(params[i], (self.low_spb, self.high_spb))
@@ -552,6 +544,8 @@ class GA:
 
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 bparams = ''.join([str(i) for i in population[0].params])
+                self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
+                                                   fitness=[i.fitness_value for i in population])
                 logger.info(f"TERMINATION IS TRIGGERED: EVAL NUM."
                             f"DATASET {self.dataset}."
                             f"TOPICS NUM {self.topic_count}."
@@ -657,6 +651,8 @@ class GA:
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
+                self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
+                                                   fitness=[i.fitness_value for i in population])
                 bparams = ''.join([str(i) for i in population[0].params])
                 logger.info(f"TERMINATION IS TRIGGERED: EVAL NUM (2)."
                             f"DATASET {self.dataset}."
@@ -686,6 +682,8 @@ class GA:
                     early_stopping_counter += 1
                     if early_stopping_counter == self.early_stopping_iterations:
                         bparams = ''.join([str(i) for i in population[0].params])
+                        self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
+                                                           fitness=[i.fitness_value for i in population])
                         logger.info(f"TERMINATION IS TRIGGERED: EARLY STOPPING."
                                     f"DATASET {self.dataset}."
                                     f"TOPICS NUM {self.topic_count}."
@@ -697,6 +695,8 @@ class GA:
 
             x.append(ii)
             y.append(population[0].fitness_value)
+            self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
+                                               fitness=[i.fitness_value for i in population])
             logger.info(f"Population len {len(population)}. "
                         f"Best params so far: {population[0].params}, with fitness: {population[0].fitness_value}."
                         f"ITERATION TIME: {time.time() - iteration_start_time}"
@@ -704,8 +704,9 @@ class GA:
                         f"TOPICS NUM {self.topic_count}."
                         f"RUN ID {run_id}.")
 
-        logger.info(f"Y: {y}")
+        self.metric_collector.visualise_trace()
 
+        logger.info(f"Y: {y}")
         best_individual = population[0]
         ind = log_best_solution(best_individual, alg_args=' '.join(sys.argv))
         logger.info(f"Logged the best solution. Obtained fitness is {ind.fitness_value}")
