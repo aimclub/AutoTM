@@ -6,6 +6,7 @@ import uuid
 from collections import OrderedDict
 from contextlib import contextmanager
 from typing import Dict, Optional, Tuple, ContextManager, List
+import multiprocessing as mp
 
 import artm
 import gensim.corpora as corpora
@@ -153,13 +154,13 @@ class Dataset:
 
 
 class TopicModelFactory:
-    num_processors: Optional[int] = None
+    num_processors: Optional[int] = mp.cpu_count()
     experiments_path: str = "/tmp/tm_experiments"
     cached_dataset_settings: Dict[str, Dataset] = dict()
 
     @classmethod
     def init_factory_settings(cls,
-                              num_processors: Optional[int] = None,
+                              num_processors: Optional[int] = mp.cpu_count(),
                               dataset_settings: Dict[str, Dict[str, object]] = None):
         cls.num_processors = num_processors
         cls.cached_dataset_settings = {k: cls.init_dataset(v) for k, v in dataset_settings.items()} \
@@ -320,7 +321,7 @@ class TopicModel:
             return True
         return False
 
-    def train(self, option='online'):
+    def train(self, option='online_v2'):
         if self.model is None:
             print('Initialise the model first!')
             return
@@ -331,8 +332,11 @@ class TopicModel:
                                                                     topic_names=self.back, tau=self.decor_2))
         if option == 'offline':
             self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n1)
-        elif option == 'online':
+        elif option == 'online_v1':
             self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n1)
+        elif option == 'online_v2':
+            self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
+                                  update_every=self.num_processors)
 
         if self.n1 > 0:
             if self._early_stopping():
@@ -347,8 +351,11 @@ class TopicModel:
                                                                           topic_names=self.back, tau=self.stb))
             if option == 'offline':
                 self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n2)
-            elif option == 'online':
+            elif option == 'online_v1':
                 self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n2)
+            elif option == 'online_v2':
+                self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
+                                      update_every=self.num_processors)
 
         if self.n1 + self.n2 > 0:
             if self._early_stopping():
@@ -364,6 +371,9 @@ class TopicModel:
                 self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n3)
             elif option == 'online':
                 self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n3)
+            elif option == 'online_v2':
+                self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
+                                      update_every=self.num_processors)
 
         if self.n1 + self.n2 + self.n3 > 0:
             if self._early_stopping():
@@ -375,8 +385,11 @@ class TopicModel:
             self.model.regularizers['SparseTheta'].tau = self.st2
             if option == 'offline':
                 self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n4)
-            elif option == 'online':
+            elif option == 'online_v1':
                 self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n4)
+            elif option == 'online_v2':
+                self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
+                                      update_every=self.num_processors)
 
         if self.n1 + self.n2 + self.n3 > 0:
             if self._early_stopping():
