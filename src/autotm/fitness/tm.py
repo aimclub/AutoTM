@@ -195,7 +195,7 @@ class TopicModelFactory:
         if self.fitness_name == "default":
             logging.info(f"Using TM model: {TopicModel} according "
                          f"to fitness name: {self.fitness_name}, topics count: {self.topic_count}")
-            self.tm = TopicModel(uid, self.experiments_path, self.topic_count, self.num_processors, 
+            self.tm = TopicModel(uid, self.experiments_path, self.topic_count, self.num_processors,
                                  dataset, self.params)
         else:
             raise Exception(
@@ -228,7 +228,8 @@ def fit_tm_of_individual(dataset: str,
 
     start = time.time()
 
-    with TopicModelFactory(dataset, data_path, fitness_name, params, topic_count, force_dataset_settings_checkout) as tm:
+    with TopicModelFactory(dataset, data_path, fitness_name, params, topic_count,
+                           force_dataset_settings_checkout) as tm:
         try:
             with log_exec_timer("TM Training") as train_timer:
                 tm.train()
@@ -260,7 +261,8 @@ def calculate_fitness_of_individual(dataset: str,
                                     fitness_name: str = "default",
                                     topic_count: Optional[int] = None,
                                     force_dataset_settings_checkout: bool = False) -> MetricsScores:
-    with fit_tm_of_individual(dataset, data_path, params, fitness_name, topic_count, force_dataset_settings_checkout) as result:
+    with fit_tm_of_individual(dataset, data_path, params, fitness_name, topic_count,
+                              force_dataset_settings_checkout) as result:
         time_metrics, fitness, tm = result
 
     return fitness
@@ -364,6 +366,14 @@ class TopicModel:
                 return
 
         print('Training is complete')
+
+    # TODO:
+    def train_online(self):
+        raise NotImplementedError
+
+    # TODO: sampling batches for online training
+    def _sample_batches(self):
+        raise NotImplementedError
 
     def decor_train(self):
         if self.model is None:
