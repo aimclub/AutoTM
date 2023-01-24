@@ -25,7 +25,7 @@ class MetricsCollector:
         if not experiment_id:
             experiment_id = str(int(time.time()))
         self.save_path = os.path.join(save_path)
-        self.save_fname = f'{experiment_id}_{dataset}_{n_specific_topics}.csv'
+        self.save_fname = f'{experiment_id}_{dataset}_{n_specific_topics}'
         self.dict_of_population = {}
         self.mutation_changes = {}
         self.crossover_changes = []
@@ -47,7 +47,8 @@ class MetricsCollector:
             self.mutation_changes[f'gen_{generation}'] = {'params_dist': [eucledian_distance],
                                                           'fitness_diff': [fitness_diff]}
 
-    def save_crossover(self, generation: int, parent_1:, parent_2:):
+    def save_crossover(self, generation: int, parent_1: list, parent_2: list, child: list, parent_1_fitness: float,
+                       parent_2_fitness: float, child_fitness: float):
         """
 
         :param generation:
@@ -63,6 +64,7 @@ class MetricsCollector:
         :param fitness: fitness value
         :return:
         """
+
         if generation > self.num_generations:
             self.num_generations = generation
 
@@ -71,10 +73,6 @@ class MetricsCollector:
             self.dict_of_population[f'gen_{generation}']['params'].append(params)
         else:
             self.dict_of_population[f'gen_{generation}'] = {'fitness': [[fitness]], 'params': [[params]]}
-
-    def visualise_mutation_effectiveness(self):
-
-        pass
 
     def get_metric_df(self):
         if self.metric_df is not None:
@@ -101,20 +99,26 @@ class MetricsCollector:
                 dfs.append(cur_df)
             self.mutation_df = pd.concat(dfs)
 
-
     def write_metrics_to_file(self):
         os.makedirs(self.save_path, exist_ok=True)
-        for gen in self.dict_of_population:
-            fitness_vals = self.dict_of_population[gen]['fitness']
-
-        # TODO: write save procedure
-        raise NotImplementedError
+        self.metric_df.to_csv(os.path.join(f'{self.save_fname}_metric_{int(time.time())}.csv'))
+        self.mutation_df.to_csv(os.path.join(f'{self.save_fname}_mutation_{int(time.time())}.csv'))
 
     def visualise_trace(self):
         self.get_metric_df()
         # traces vis
+        graph_template = 'plotly_white'
+
         fig = px.line(self.metric_df, x=GENERATION_COL, y=FITNESS_COL, title='Score changes with generations',
-                      template='plotly_white')
+                      template=graph_template)
         fig.show()
 
         # mutation diff vis
+        fig = px.scatter(self.mutation_df, x=PARAMS_DIST_COL, y=FITNESS_DIFF_COL,
+                         title='Effectiveness of mutation operation', template=graph_template)
+        fig.show()
+
+        # crossover diff vis
+
+        # save params
+        self.write_metrics_to_file()s
