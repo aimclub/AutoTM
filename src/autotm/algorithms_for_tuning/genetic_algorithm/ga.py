@@ -169,20 +169,20 @@ class GA:
         """
 
         :param dataset: dataset name
-        :param data_path:
-        :param num_individuals:
-        :param num_iterations:
-        :param mutation_type:
-        :param crossover_type:
-        :param selection_type:
-        :param elem_cross_prob:
-        :param num_fitness_evaluations:
-        :param early_stopping_iterations:
+        :param data_path: path to data
+        :param num_individuals: number of individuals
+        :param num_iterations: number of iterations
+        :param mutation_type: type of mutation, available types ['mutation_one_param', 'combined', 'psm', 'positioning_mutation']
+        :param crossover_type: type of crossover, available types ['crossover_pmx', 'crossover_one_point', 'blend_crossover']
+        :param selection_type: type of selection, available types ['fitness_prop', 'rank_based']
+        :param elem_cross_prob: probability of crossover
+        :param num_fitness_evaluations: number of fitness evaluations in case of limited resources
+        :param early_stopping_iterations: number of iterations when there is no significant changes in fitness to stop training
         :param best_proc:
         :param alpha:
         :param exp_id:
         :param surrogate_name:
-        :param calc_scheme:
+        :param calc_scheme: how to apply surrogates, available values: 'type 1' - to use surrogates through iteration, 'type 2' - calculating 70% on each iteration
         :param topic_count:
         :param fitness_obj_type:
         :param tag:
@@ -519,6 +519,8 @@ class GA:
 
         for ii in range(self.num_iterations):
             iteration_start_time = time.time()
+            before_mutation = []  # individual
+            id_mutation = []  # new individual id
 
             logger.info(f"ENTERING GENERATION {ii}")
 
@@ -602,6 +604,8 @@ class GA:
                 #                                                                  high=self.high_prob, size=1)[0]
 
                 if random.random() <= population[i].params[12]:
+                    before_mutation.append([population[i]])
+                    id_mutation.append(i)
                     params = self.mutation(copy.deepcopy(population[i].params),
                                            elem_mutation_prob=copy.deepcopy(population[i].params[13]),
                                            low_spb=self.low_spb, high_spb=self.high_spb,
@@ -633,6 +637,17 @@ class GA:
             if not SPEEDUP or not self.surrogate:
                 population = estimate_fitness(population)
                 self.save_params(population)
+
+            for ix, elem in enumerate(before_mutation):
+                # TODO generation: int, original_params: list, mutated_params: list, original_fitness: float,
+                #                       mutated_fitness: float
+                self.metric_collector.save_mutation(generation=ii,
+                                                    original_params=elem.params,
+                                                    mutated_params=population[id_mutation[ix]].params,
+                                                    original_fitness=elem.fitness_value,
+                                                    mutated_fitness=population[id_mutation[ix]].fitness_value
+                                                    )
+
             logger.info(f"TIME OF THE FITNESS FUNCTION IN MUTATION: {time.time() - fitness_calc_time_start}")
 
             if self.calc_scheme == 'type1' and self.surrogate:
@@ -648,6 +663,7 @@ class GA:
             ###
             logger.info("MUTATION IS OVER")
 
+            # TODO: add Nelder-Mead initialization
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
