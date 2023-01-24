@@ -5,9 +5,12 @@ import time
 
 import pandas as pd
 import plotly.express as px
+from scipy.spatial import distance
 
 GENERATION_COL = 'generation'
 FITNESS_COL = 'fitness'
+FITNESS_DIFF_COL = 'fitness_diff'
+PARAMS_DIST_COL = 'params_dist'
 
 
 class MetricsCollector:
@@ -24,10 +27,33 @@ class MetricsCollector:
         self.save_path = os.path.join(save_path)
         self.save_fname = f'{experiment_id}_{dataset}_{n_specific_topics}.csv'
         self.dict_of_population = {}
-        self.mutation_changes = []
+        self.mutation_changes = {}
         self.crossover_changes = []
         self.num_generations = 0
         self.metric_df = None
+        self.mutation_df = None
+
+    def save_mutation(self, generation: int, original_params: list, mutated_params: list, original_fitness: float,
+                      mutated_fitness: float):
+        # excluding mutation parameters
+        eucledian_distance = distance.euclidean(original_params[:11] + [original_params[15]],
+                                                mutated_params[:11] + [mutated_params[15]])
+        fitness_diff = mutated_fitness - original_fitness
+
+        if f'gen_{generation}' in self.mutation_changes:
+            self.mutation_changes[f'gen_{generation}']['params_dist'].append(eucledian_distance)
+            self.mutation_changes[f'gen_{generation}']['fitness_diff'].append(fitness_diff)
+        else:
+            self.mutation_changes[f'gen_{generation}'] = {'params_dist': [eucledian_distance],
+                                                          'fitness_diff': [fitness_diff]}
+
+    def save_crossover(self, generation: int, parent_1:, parent_2:):
+        """
+
+        :param generation:
+        :return:
+        """
+        raise NotImplementedError
 
     def save_fitness(self, generation: int, params: list, fitness: float):
         """
@@ -40,11 +66,15 @@ class MetricsCollector:
         if generation > self.num_generations:
             self.num_generations = generation
 
-        if generation in self.dict_of_population:
+        if f'gen_{generation}' in self.dict_of_population:
             self.dict_of_population[f'gen_{generation}']['fitness'].append(fitness)
             self.dict_of_population[f'gen_{generation}']['params'].append(params)
         else:
             self.dict_of_population[f'gen_{generation}'] = {'fitness': [[fitness]], 'params': [[params]]}
+
+    def visualise_mutation_effectiveness(self):
+
+        pass
 
     def get_metric_df(self):
         if self.metric_df is not None:
@@ -59,6 +89,18 @@ class MetricsCollector:
                     population_max.append(max(population_max[i - 1], gen_value))
             self.metric_df = pd.DataFrame(list(zip([i for i in range(self.num_generations + 1)], population_max)),
                                           columns=[GENERATION_COL, FITNESS_COL])
+        if self.mutation_df is not None:
+            print('Mutation df already exists')
+        else:
+            dfs = []
+            for gen in self.mutation_changes:
+                cur_df = pd.DataFrame(
+                    list(zip(self.mutation_changes['params_dist'], self.mutation_changes['fitness_diff'])),
+                    columns=[PARAMS_DIST_COL, FITNESS_DIFF_COL])
+                cur_df[GENERATION_COL] = gen
+                dfs.append(cur_df)
+            self.mutation_df = pd.concat(dfs)
+
 
     def write_metrics_to_file(self):
         os.makedirs(self.save_path, exist_ok=True)
@@ -70,5 +112,9 @@ class MetricsCollector:
 
     def visualise_trace(self):
         self.get_metric_df()
-        fig = px.line(self.metric_df, x=GENERATION_COL, y=FITNESS_COL, title='Score changes with generations', template='plotly_white')
+        # traces vis
+        fig = px.line(self.metric_df, x=GENERATION_COL, y=FITNESS_COL, title='Score changes with generations',
+                      template='plotly_white')
         fig.show()
+
+        # mutation diff vis
