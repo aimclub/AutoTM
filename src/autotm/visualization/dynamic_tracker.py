@@ -28,7 +28,7 @@ class MetricsCollector:
         self.save_fname = f'{experiment_id}_{dataset}_{n_specific_topics}'
         self.dict_of_population = {}
         self.mutation_changes = {}
-        self.crossover_changes = []
+        self.crossover_changes = {}
         self.num_generations = 0
         self.metric_df = None
         self.mutation_df = None
@@ -43,18 +43,51 @@ class MetricsCollector:
         if f'gen_{generation}' in self.mutation_changes:
             self.mutation_changes[f'gen_{generation}']['params_dist'].append(eucledian_distance)
             self.mutation_changes[f'gen_{generation}']['fitness_diff'].append(fitness_diff)
+            self.mutation_changes[f'gen_{generation}']['original_params'].append(
+                original_params[:11] + [original_params[15]])
+            self.mutation_changes[f'gen_{generation}']['mutated_params'].append(
+                mutated_params[:11] + [mutated_params[15]])
         else:
             self.mutation_changes[f'gen_{generation}'] = {'params_dist': [eucledian_distance],
-                                                          'fitness_diff': [fitness_diff]}
+                                                          'fitness_diff': [fitness_diff],
+                                                          'original_params': [
+                                                              original_params[:11] + [original_params[15]]],
+                                                          'mutated_params': [
+                                                              mutated_params[:11] + [mutated_params[15]]]}
 
-    def save_crossover(self, generation: int, parent_1: list, parent_2: list, child: list, parent_1_fitness: float,
-                       parent_2_fitness: float, child_fitness: float):
+    def save_crossover(self, generation: int, parent_1: list, parent_2: list, child_1: list, parent_1_fitness: float,
+                       parent_2_fitness: float, child_1_fitness: float, child_2: list = None,
+                       child_2_fitness: list = None):
         """
 
         :param generation:
+        :param parent_1:
+        :param parent_2:
+        :param child_1:
+        :param parent_1_fitness:
+        :param parent_2_fitness:
+        :param child_1_fitness:
+        :param child_2:
+        :param child_2_fitness:
         :return:
         """
-        raise NotImplementedError
+        if f'gen_{generation}' in self.crossover_changes:
+            self.crossover_changes[f'gen_{generation}']['parent_1_params'].append(parent_1)
+            self.crossover_changes[f'gen_{generation}']['parent_2_params'].append(parent_2)
+            self.crossover_changes[f'gen_{generation}']['child_1_params'].append(child_1)
+            self.crossover_changes[f'gen_{generation}']['parent_1_fitness'].append(parent_1_fitness)
+            self.crossover_changes[f'gen_{generation}']['parent_2_fitness'].append(parent_2_fitness)
+            self.crossover_changes[f'gen_{generation}']['child_1_fitness'].append(child_1_fitness)
+        else:
+            self.crossover_changes[f'gen_{generation}'] = {'parent_1_params': [parent_1],
+                                                           'parent_2_params': [parent_2],
+                                                           'child_1_params': [child_1],
+                                                           'parent_1_fitness': [parent_1_fitness],
+                                                           'parent_2_fitness': [parent_2_fitness],
+                                                           'child_1_fitness': [child_1_fitness]}
+            if child_2 is not None:
+                self.crossover_changes[f'gen_{generation}']['child_2_params'] = [child_2]
+                self.crossover_changes[f'gen_{generation}']['child_2_fitness'] = [child_2_fitness]
 
     def save_fitness(self, generation: int, params: list, fitness: float):
         """
@@ -92,9 +125,13 @@ class MetricsCollector:
         else:
             dfs = []
             for gen in self.mutation_changes:
+                cur_df_dict = {PARAMS_DIST_COL: self.mutation_changes[gen]['params_dist'],
+                               FITNESS_DIFF_COL: self.mutation_changes[gen]['fitness_diff'],
+                               'original_params': self.mutation_changes[gen]['original_params'],
+                               'mutated_params': self.mutation_changes[gen]['mutated_params']}
                 cur_df = pd.DataFrame(
-                    list(zip(self.mutation_changes[gen]['params_dist'], self.mutation_changes[gen]['fitness_diff'])),
-                    columns=[PARAMS_DIST_COL, FITNESS_DIFF_COL])
+                    cur_df_dict
+                )
                 cur_df[GENERATION_COL] = gen
                 dfs.append(cur_df)
             self.mutation_df = pd.concat(dfs)

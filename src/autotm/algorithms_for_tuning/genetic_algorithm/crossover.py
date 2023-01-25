@@ -5,7 +5,7 @@ import numpy as np
 def crossover_pmx(parent_1, parent_2, **kwargs):
     points_num = len(parent_1)
     flag = False
-    while flag == False:
+    while not flag:
         cut_ix = np.random.choice(points_num + 1, 2, replace=False)
         min_ix = np.min(cut_ix)
         max_ix = np.max(cut_ix)
