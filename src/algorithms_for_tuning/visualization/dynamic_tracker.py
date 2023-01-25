@@ -1,10 +1,8 @@
 import os
-import numpy as np
-from abc import ABC, abstractmethod
 import time
 
+import numpy as np
 import pandas as pd
-import plotly.express as px
 from scipy.spatial import distance
 
 GENERATION_COL = 'generation'
@@ -140,6 +138,15 @@ class MetricsCollector:
 
     def visualise_trace(self):
         self.get_metric_df()
+
+        # save params
+        self.write_metrics_to_file()
+
+        try:
+            import plotly.express as px
+        except:
+            return
+
         # traces vis
         graph_template = 'plotly_white'
 
@@ -151,8 +158,3 @@ class MetricsCollector:
         fig = px.scatter(self.mutation_df, x=PARAMS_DIST_COL, y=FITNESS_DIFF_COL,
                          title='Effectiveness of mutation operation', template=graph_template)
         fig.show()
-
-        # crossover diff vis
-
-        # save params
-        self.write_metrics_to_file()

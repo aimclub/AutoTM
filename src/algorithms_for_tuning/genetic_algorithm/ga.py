@@ -207,7 +207,8 @@ class GA:
         self.set_regularizer_limits()
         self.use_nelder_mead = use_nelder_mead
         self.metric_collector = MetricsCollector(dataset=self.dataset,
-                                                 n_specific_topics=topic_count)
+                                                 n_specific_topics=topic_count,
+                                                 save_path=f"/var/lib/repeater/metrics/metrics-{tag}")
         self.crossover_changes_dict = {}
         # params
 
