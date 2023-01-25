@@ -22,10 +22,10 @@ SAVE_PATH = DATA_PATH # place where all the artifacts will be stored
 dataset = pd.read_csv(PATH_TO_DATASET)
 col_to_process = 'text'
 dataset_name = 'sample_lenta'
-lang = 'ru'  # available languages: ru, en
+lang = 'en'  # available languages: ru, en
 min_tokens_num = 3  # the minimal amount of tokens after processing to save the result
-num_iterations = 3
-topic_count = 5
+num_iterations = 100
+topic_count = 10
 exp_id = int(time.time())
 print(exp_id)
 
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     # exp_id and dataset_name will be needed further to store results in mlflow
     best_result = run_algorithm(data_path=SAVE_PATH,
-                                dataset='test',
+                                dataset=dataset_name,
                                 exp_id=exp_id,
                                 topic_count=topic_count,
                                 log_file='./log_file_test.txt',
