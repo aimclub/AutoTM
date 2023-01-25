@@ -230,8 +230,7 @@ class GA:
         self.use_nelder_mead = use_nelder_mead
         self.metric_collector = MetricsCollector(dataset=self.dataset,
                                                  n_specific_topics=topic_count)
-        self.crossover_changes_dict = {} # generation, parent_1_params, parent_2_params, ...
-
+        self.crossover_changes_dict = {}  # generation, parent_1_params, parent_2_params, ...
 
     def set_regularizer_limits(self, low_decor=0, high_decor=1e5,
                                low_n=0, high_n=30,
@@ -417,6 +416,9 @@ class GA:
     def run_crossover(self, pairs_generator, surrogate_iteration, iteration_num: int):
         new_generation = []
 
+        crossover_changes = {'parent_1_params': [], 'parent_2_params': [], 'parent_1_fitness': [],
+                             'parent_2_fitness': [], 'child_id': []}
+
         for i, j in pairs_generator:
 
             if i is None:
@@ -467,10 +469,20 @@ class GA:
 
                 self.evaluations_counter += 1
 
+            # {'parent_1_params': [], 'parent_2_params': [], 'parent_1_fitness': [],
+             # 'parent_2_fitness': [], 'child_id': []}
+
+            crossover_changes['parent_1_params'].append(i.params)
+            crossover_changes['parent_2_params'].append(j.params)
+            crossover_changes['parent_1_fitness'].append(i.fitness_value)
+            crossover_changes['parent_2_fitness'].append(j.fitness_value)
+            crossover_changes['child_id'].append(len(new_generation) - 1)
+
             # generation: int, parent_1: list, parent_2: list, child: list, parent_1_fitness: float,
             # parent_2_fitness: float, child_fitness: float
 
-            self.metric_collector.save_crossover(generation=iteration_num, parent_1=i.params, parent_2=j.params, child=child1_dto)
+            self.metric_collector.save_crossover(generation=iteration_num, parent_1=i.params, parent_2=j.params,
+                                                 child=child1_dto)
 
         logger.info(f"CURRENT COUNTER: {self.evaluations_counter}")
 
@@ -494,7 +506,7 @@ class GA:
                     new_generation = self._calculate_uncertain_res(new_generation, iteration_num=iteration_num)
                     self.save_params(new_generation)
 
-        return new_generation
+        return new_generation, crossover_changes
 
     def run(self, verbose=False):
 
@@ -547,7 +559,7 @@ class GA:
             logger.info(f"PAIRS ARE CREATED")
 
             # Crossover
-            new_generation = self.run_crossover(pairs_generator, surrogate_iteration, iteration_num=ii)
+            new_generation, crossover_changes = self.run_crossover(pairs_generator, surrogate_iteration, iteration_num=ii)
 
             new_generation.sort(key=operator.attrgetter('fitness_value'), reverse=True)
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
@@ -673,9 +685,15 @@ class GA:
             ###
             logger.info("MUTATION IS OVER")
 
-            # TODO: add Nelder-Mead initialization
+            # TODO: define Nelder-Mead case
             if self.use_nelder_mead:
-                pass
+                collected_params = []
+                for elem in population:
+                    collected_params.append(elem.params, elem.fitness_value)
+
+                minimize(objective, starting_points,
+                         method='nelder-mead',
+                         bounds='')
 
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
