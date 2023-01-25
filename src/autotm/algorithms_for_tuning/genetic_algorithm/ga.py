@@ -27,6 +27,7 @@ from autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
 from autotm.algorithms_for_tuning.individuals import make_individual, IndividualDTO
 
 from autotm.utils import AVG_COHERENCE_SCORE
+from scipy.optimize import minimize
 from autotm.visualization.dynamic_tracker import MetricsCollector
 
 from autotm.fitness.tasks import estimate_fitness, log_best_solution
@@ -165,7 +166,7 @@ class GA:
                  early_stopping_iterations: Optional[int] = 500,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
                  calc_scheme='type2', topic_count: Optional[int] = None, fitness_obj_type='single_objective',
-                 tag: Optional[str] = None, **kwargs):
+                 tag: Optional[str] = None, use_nelder_mead: bool = False, **kwargs):
         """
 
         :param dataset: dataset name
@@ -178,7 +179,7 @@ class GA:
         :param elem_cross_prob: probability of crossover
         :param num_fitness_evaluations: number of fitness evaluations in case of limited resources
         :param early_stopping_iterations: number of iterations when there is no significant changes in fitness to stop training
-        :param best_proc:
+        :param best_proc: percentage of parents to be transferred to new generation
         :param alpha:
         :param exp_id:
         :param surrogate_name:
@@ -186,6 +187,7 @@ class GA:
         :param topic_count:
         :param fitness_obj_type:
         :param tag:
+        :param use_nelder_mead: should Nelder-Mead enchan
         :param kwargs:
         """
 
@@ -225,8 +227,11 @@ class GA:
         self.tag = tag
         # hyperparams
         self.set_regularizer_limits()
+        self.use_nelder_mead = use_nelder_mead
         self.metric_collector = MetricsCollector(dataset=self.dataset,
                                                  n_specific_topics=topic_count)
+        self.crossover_changes_dict = {} # generation, parent_1_params, parent_2_params, ...
+
 
     def set_regularizer_limits(self, low_decor=0, high_decor=1e5,
                                low_n=0, high_n=30,
@@ -462,6 +467,11 @@ class GA:
 
                 self.evaluations_counter += 1
 
+            # generation: int, parent_1: list, parent_2: list, child: list, parent_1_fitness: float,
+            # parent_2_fitness: float, child_fitness: float
+
+            self.metric_collector.save_crossover(generation=iteration_num, parent_1=i.params, parent_2=j.params, child=child1_dto)
+
         logger.info(f"CURRENT COUNTER: {self.evaluations_counter}")
 
         if len(new_generation) > 0:
@@ -604,7 +614,7 @@ class GA:
                 #                                                                  high=self.high_prob, size=1)[0]
 
                 if random.random() <= population[i].params[12]:
-                    before_mutation.append([population[i]])
+                    before_mutation.append(population[i])
                     id_mutation.append(i)
                     params = self.mutation(copy.deepcopy(population[i].params),
                                            elem_mutation_prob=copy.deepcopy(population[i].params[13]),
@@ -664,6 +674,9 @@ class GA:
             logger.info("MUTATION IS OVER")
 
             # TODO: add Nelder-Mead initialization
+            if self.use_nelder_mead:
+                pass
+
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:

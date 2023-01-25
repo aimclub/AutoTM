@@ -93,7 +93,7 @@ class MetricsCollector:
             dfs = []
             for gen in self.mutation_changes:
                 cur_df = pd.DataFrame(
-                    list(zip(self.mutation_changes['params_dist'], self.mutation_changes['fitness_diff'])),
+                    list(zip(self.mutation_changes[gen]['params_dist'], self.mutation_changes[gen]['fitness_diff'])),
                     columns=[PARAMS_DIST_COL, FITNESS_DIFF_COL])
                 cur_df[GENERATION_COL] = gen
                 dfs.append(cur_df)
@@ -101,8 +101,8 @@ class MetricsCollector:
 
     def write_metrics_to_file(self):
         os.makedirs(self.save_path, exist_ok=True)
-        self.metric_df.to_csv(os.path.join(f'{self.save_fname}_metric_{int(time.time())}.csv'))
-        self.mutation_df.to_csv(os.path.join(f'{self.save_fname}_mutation_{int(time.time())}.csv'))
+        self.metric_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_metric_{int(time.time())}.csv'))
+        self.mutation_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_mutation_{int(time.time())}.csv'))
 
     def visualise_trace(self):
         self.get_metric_df()
@@ -121,4 +121,4 @@ class MetricsCollector:
         # crossover diff vis
 
         # save params
-        self.write_metrics_to_file()s
+        self.write_metrics_to_file()
