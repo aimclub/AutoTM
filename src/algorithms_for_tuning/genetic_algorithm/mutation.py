@@ -99,7 +99,7 @@ def mutation_psm(individ, elem_mutation_prob=0.1, **kwargs):
             if i == 0:
                 individ[i] = np.random.uniform(low=1, high=100, size=1)[0]
             elif i in [1, 4, 7]:
-                j = np.random.choice([1, 4, 7])
+                j = np.random.choice([1, 4, 7, 10])
                 tmp = individ[i]
                 individ[i] = individ[j]
                 individ[j] = tmp
@@ -109,7 +109,7 @@ def mutation_psm(individ, elem_mutation_prob=0.1, **kwargs):
                 individ[i] = individ[j]
                 individ[j] = tmp
             elif i in [3, 6]:
-                j = np.random.choice([2, 5])
+                j = np.random.choice([3, 6]) # check
                 tmp = individ[i]
                 individ[i] = individ[j]
                 individ[j] = tmp
@@ -122,6 +122,6 @@ def mutation(mutation_type='mutation_one_param'):
     if mutation_type == 'combined':
         return mutation_combined
     if mutation_type == 'psm':
-        return mutation_psm
+        return mutation_psm_new
     if mutation_type == "positioning_mutation":
         return positioning_mutation

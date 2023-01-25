@@ -31,6 +31,8 @@ from algorithms_for_tuning.genetic_algorithm.selection import selection
 from algorithms_for_tuning.individuals import make_individual
 from kube_fitness.tasks import IndividualDTO
 
+from algorithms_for_tuning.visualization.dynamic_tracker import MetricsCollector
+
 from algorithms_for_tuning.utils.fitness_estimator import estimate_fitness, prepare_fitness_estimator, log_best_solution
 
 ALG_ID = "ga"
@@ -38,6 +40,7 @@ SPEEDUP = True
 
 warnings.filterwarnings("ignore")
 logger = logging.getLogger("GA_algo")
+
 
 # TODO: Add fitness type
 def set_surrogate_fitness(value, fitness_type='avg_coherence_score'):
@@ -66,8 +69,6 @@ def set_surrogate_fitness(value, fitness_type='avg_coherence_score'):
         **npmis
     }
     return scores_dict
-
-
 
 
 class Surrogate:
@@ -167,7 +168,9 @@ class GA:
                  num_fitness_evaluations: Optional[int] = 500,
                  early_stopping_iterations: Optional[int] = 500,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
-                 calc_scheme='type2', topic_count: Optional[int] = None, tag: Optional[str] = None, **kwargs):
+                 calc_scheme='type2', topic_count: Optional[int] = None, tag: Optional[str] = None,
+                 fitness_obj_type='single_objective',
+                 use_nelder_mead: bool = False, **kwargs):
 
         self.dataset = dataset
 
@@ -201,26 +204,41 @@ class GA:
         self.calc_scheme = calc_scheme
         self.topic_count = topic_count
         self.tag = tag
+        self.set_regularizer_limits()
+        self.use_nelder_mead = use_nelder_mead
+        self.metric_collector = MetricsCollector(dataset=self.dataset,
+                                                 n_specific_topics=topic_count)
+        self.crossover_changes_dict = {}
         # params
-        self.high_decor = 1e5  # TODO: check param
-        self.low_decor = 0
-        self.low_n = 0
-        self.high_n = 30  # TODO: check param
-        self.low_back = 0
-        self.high_back = 5
-        self.high_spb = 1e2  # TODO: check param
-        self.low_spb = 1e-3
-        self.low_spm = 1e2
-        self.high_spm = -1e-3
-        self.low_prob = 0
-        self.high_prob = 1
+
+    def set_regularizer_limits(self, low_decor=0, high_decor=1e5,
+                               low_n=0, high_n=30,
+                               low_back=0, high_back=5,
+                               low_spb=0, high_spb=1e2,
+                               low_spm=-1e-3, high_spm=1e2,
+                               low_sp_phi=-1e3, high_sp_phi=1e3,
+                               low_prob=0, high_prob=1):
+        self.high_decor = high_decor
+        self.low_decor = low_decor
+        self.low_n = low_n
+        self.high_n = high_n
+        self.low_back = low_back
+        self.high_back = high_back
+        self.high_spb = high_spb
+        self.low_spb = low_spb
+        self.low_spm = low_spm
+        self.high_spm = high_spm
+        self.low_sp_phi = low_sp_phi
+        self.high_sp_phi = high_sp_phi
+        self.low_prob = low_prob
+        self.high_prob = high_prob
 
     def init_individ(self, base_model=False):
         val_decor = np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[0]
         var_n = np.random.randint(low=self.low_n, high=self.high_n, size=4)
         var_back = np.random.randint(low=self.low_back, high=self.high_back, size=1)[0]
         var_sm = np.random.uniform(low=self.low_spb, high=self.high_spb, size=2)
-        var_sp = np.random.uniform(low=self.low_spm, high=self.high_spm, size=4)
+        var_sp = np.random.uniform(low=self.low_sp_phi, high=self.high_sp_phi, size=4)
         ext_mutation_prob = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
         ext_elem_mutation_prob = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
         ext_mutation_selector = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
@@ -244,7 +262,8 @@ class GA:
         list_of_individuals = []
         for i in range(self.num_individuals):
             if i == 0:
-                dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=self.init_individ(base_model=True),
+                dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset,
+                                    params=self.init_individ(base_model=True),
                                     exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
                                     topic_count=self.topic_count, tag=self.tag)
             else:
@@ -345,24 +364,33 @@ class GA:
         return param
 
     def check_params_bounds(self, params):
+        # smooth
         for i in [2, 3]:
             params[i] = self._check_param(params[i], (self.low_spb, self.high_spb))
+        # sparce
         for i in [5, 6, 8, 9]:
-            params[i] = self._check_param(params[i], (self.low_spm, self.high_spm))
+            params[i] = self._check_param(params[i], (self.low_sp_phi, self.high_sp_phi))
+        # iterations
         for i in [1, 4, 7, 10]:
             params[i] = float(int(params[i]))
             params[i] = self._check_param(params[i], (self.low_n, self.high_n))
+        # back
         for i in [11]:
             params[i] = float(int(params[i]))
             params[i] = self._check_param(params[i], (self.low_back, self.high_back))
+        # mutation
         for i in [12, 13, 14]:
             params[i] = self._check_param(params[i], (self.low_prob, self.high_prob))
+        # decorrelation
         for i in [0, 15]:
             params[i] = self._check_param(params[i], (self.low_decor, self.high_decor))
         return params
 
     def run_crossover(self, pairs_generator, surrogate_iteration, iteration_num: int):
         new_generation = []
+
+        crossover_changes = {'parent_1_params': [], 'parent_2_params': [], 'parent_1_fitness': [],
+                             'parent_2_fitness': [], 'child_id': []}
 
         for i, j in pairs_generator:
 
@@ -411,6 +439,12 @@ class GA:
 
                 self.evaluations_counter += 1
 
+            crossover_changes['parent_1_params'].append(i.params)
+            crossover_changes['parent_2_params'].append(j.params)
+            crossover_changes['parent_1_fitness'].append(i.fitness_value)
+            crossover_changes['parent_2_fitness'].append(j.fitness_value)
+            crossover_changes['child_id'].append(len(new_generation) - 1)
+
         logger.info(f"CURRENT COUNTER: {self.evaluations_counter}")
 
         if len(new_generation) > 0:
@@ -433,7 +467,7 @@ class GA:
                     new_generation = self._calculate_uncertain_res(new_generation, iteration_num=iteration_num)
                     self.save_params(new_generation)
 
-        return new_generation
+        return new_generation, crossover_changes
 
     def run(self, verbose=False):
         prepare_fitness_estimator()
@@ -470,6 +504,9 @@ class GA:
         for ii in range(self.num_iterations):
             iteration_start_time = time.time()
 
+            before_mutation = []  # individual
+            id_mutation = []  # new individual id
+
             logger.info(f"ENTERING GENERATION {ii}")
 
             if self.surrogate is not None:
@@ -485,7 +522,8 @@ class GA:
             logger.info(f"PAIRS ARE CREATED")
 
             # Crossover
-            new_generation = self.run_crossover(pairs_generator, surrogate_iteration, iteration_num=ii)
+            new_generation, crossover_changes = self.run_crossover(pairs_generator, surrogate_iteration,
+                                                                   iteration_num=ii)
 
             new_generation.sort(key=operator.attrgetter('fitness_value'), reverse=True)
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
@@ -493,6 +531,8 @@ class GA:
             logger.info("CROSSOVER IS OVER")
 
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
+                self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
+                                                   fitness=[i.fitness_value for i in population])
                 bparams = ''.join([str(i) for i in population[0].params])
                 logger.info(f"TERMINATION IS TRIGGERED: EVAL NUM."
                             f"DATASET {self.dataset}."
@@ -536,20 +576,24 @@ class GA:
             # TODO: check this code
             for i in range(1, len(population)):
 
-            #     if random.random() <= population[i].params[12]:
-            #         for idx in range(3):
-            #             if random.random() < population[i].params[13]:
-            #                 if idx == 0:
-            #                     population[i].params[12] = np.random.uniform(low=self.low_prob,
-            #                                                                  high=self.high_prob, size=1)[0]
-            #                 elif idx == 1:
-            #                     population[i].params[13] = np.random.uniform(low=self.low_prob,
-            #                                                                  high=self.high_prob, size=1)[0]
-            #                 elif idx == 2:
-            #                     population[i].params[13] = np.random.uniform(low=self.low_prob,
-            #                                                                  high=self.high_prob, size=1)[0]
+                #     if random.random() <= population[i].params[12]:
+                #         for idx in range(3):
+                #             if random.random() < population[i].params[13]:
+                #                 if idx == 0:
+                #                     population[i].params[12] = np.random.uniform(low=self.low_prob,
+                #                                                                  high=self.high_prob, size=1)[0]
+                #                 elif idx == 1:
+                #                     population[i].params[13] = np.random.uniform(low=self.low_prob,
+                #                                                                  high=self.high_prob, size=1)[0]
+                #                 elif idx == 2:
+                #                     population[i].params[13] = np.random.uniform(low=self.low_prob,
+                #                                                                  high=self.high_prob, size=1)[0]
 
                 if random.random() <= population[i].params[12]:
+
+                    before_mutation.append(population[i])
+                    id_mutation.append(i)
+
                     params = self.mutation(copy.deepcopy(population[i].params),
                                            elem_mutation_prob=copy.deepcopy(population[i].params[13]),
                                            low_spb=self.low_spb, high_spb=self.high_spb,
@@ -572,7 +616,6 @@ class GA:
                     population[i] = make_individual(dto=dto)
                 self.evaluations_counter += 1
 
-
             # after the mutation we obtain a new population that needs to be evaluated
             for p in population:
                 p.dto.iteration_id = ii
@@ -581,6 +624,15 @@ class GA:
             if not SPEEDUP or not self.surrogate:
                 population = estimate_fitness(population)
                 self.save_params(population)
+
+            for ix, elem in enumerate(before_mutation):
+                self.metric_collector.save_mutation(generation=ii,
+                                                    original_params=elem.params,
+                                                    mutated_params=population[id_mutation[ix]].params,
+                                                    original_fitness=elem.fitness_value,
+                                                    mutated_fitness=population[id_mutation[ix]].fitness_value
+                                                    )
+
             logger.info(f"TIME OF THE FITNESS FUNCTION IN MUTATION: {time.time() - fitness_calc_time_start}")
 
             if self.calc_scheme == 'type1' and self.surrogate:
@@ -599,6 +651,8 @@ class GA:
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
+                self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
+                                                   fitness=[i.fitness_value for i in population])
                 bparams = ''.join([str(i) for i in population[0].params])
                 logger.info(f"TERMINATION IS TRIGGERED: EVAL NUM (2)."
                             f"DATASET {self.dataset}."
@@ -640,12 +694,18 @@ class GA:
             bparams = ''.join([str(i) for i in population[0].params])
             x.append(ii)
             y.append(population[0].fitness_value)
+
+            self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
+                                               fitness=[i.fitness_value for i in population])
+
             logger.info(f"Population len {len(population)}. "
-                        f"Best params so far: {population[0].params}, with fitness: {population[0].fitness_value}." 
+                        f"Best params so far: {population[0].params}, with fitness: {population[0].fitness_value}."
                         f"ITERATION TIME: {time.time() - iteration_start_time}"
                         f"DATASET {self.dataset}."
                         f"TOPICS NUM {self.topic_count}."
                         f"RUN ID {run_id}.")
+
+        self.metric_collector.visualise_trace()
 
         logger.info(f"Y: {y}")
 
