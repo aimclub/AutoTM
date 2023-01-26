@@ -25,6 +25,7 @@ from autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from autotm.algorithms_for_tuning.genetic_algorithm.crossover import crossover
 from autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
 from autotm.algorithms_for_tuning.individuals import make_individual, IndividualDTO
+from autotm.algorithms_for_tuning.nelder_mead_optimization.nelder_mead import NelderMeadOptimization
 
 from autotm.utils import AVG_COHERENCE_SCORE
 from scipy.optimize import minimize
@@ -166,7 +167,9 @@ class GA:
                  early_stopping_iterations: Optional[int] = 500,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
                  calc_scheme='type2', topic_count: Optional[int] = None, fitness_obj_type='single_objective',
-                 tag: Optional[str] = None, use_nelder_mead: bool = False, **kwargs):
+                 tag: Optional[str] = None, use_nelder_mead: bool = False, use_nelder_mead_in_mutation: bool = False,
+                 use_nelder_mead_in_crossover: bool = False, use_nelder_mead_in_selector: bool = False,
+                 **kwargs):
         """
 
         :param dataset: dataset name
@@ -228,6 +231,9 @@ class GA:
         # hyperparams
         self.set_regularizer_limits()
         self.use_nelder_mead = use_nelder_mead
+        self.use_nelder_mead_in_mutation = use_nelder_mead_in_mutation
+        self.use_nelder_mead_in_crossover = use_nelder_mead_in_crossover
+        self.use_nelder_mead_in_selectior = use_nelder_mead_in_selector
         self.metric_collector = MetricsCollector(dataset=self.dataset,
                                                  n_specific_topics=topic_count)
         self.crossover_changes_dict = {}  # generation, parent_1_params, parent_2_params, ...
@@ -469,8 +475,6 @@ class GA:
 
                 self.evaluations_counter += 1
 
-            # {'parent_1_params': [], 'parent_2_params': [], 'parent_1_fitness': [],
-            # 'parent_2_fitness': [], 'child_id': []}
 
             crossover_changes['parent_1_params'].append(i.params)
             crossover_changes['parent_2_params'].append(j.params)
@@ -478,8 +482,6 @@ class GA:
             crossover_changes['parent_2_fitness'].append(j.fitness_value)
             crossover_changes['child_id'].append(len(new_generation) - 1)
 
-            # generation: int, parent_1: list, parent_2: list, child: list, parent_1_fitness: float,
-            # parent_2_fitness: float, child_fitness: float
 
         logger.info(f"CURRENT COUNTER: {self.evaluations_counter}")
 
@@ -514,6 +516,26 @@ class GA:
                     self.save_params(new_generation)
 
         return new_generation, crossover_changes
+
+    def apply_nelder_mead(self, starting_points_set, num_gen, num_iterations=2):
+        nelder_opt = NelderMeadOptimization(data_path=self.data_path,
+                                            dataset=self.dataset,
+                                            exp_id=self.exp_id,
+                                            topic_count=self.topic_count)
+        new_population = []
+        for point in starting_points_set:
+            res = nelder_opt.run_algorithm(num_iterations=num_iterations)
+            solution = list(res['x'])
+            solution = solution[:-1] + point[11:15] + [solution[-1]] # TODO: check mutation ids
+            fitness = -res.fun
+            solution_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
+                                       dataset=self.dataset, params=solution,
+                                       exp_id=self.exp_id,
+                                       alg_id=ALG_ID, iteration_id=num_gen,
+                                       topic_count=self.topic_count, tag=self.tag,
+                                       fitness_value=fitness)
+
+            new_population.append(make_individual(dto=solution_dto))
 
     def run(self, verbose=False):
 
@@ -573,6 +595,10 @@ class GA:
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
             logger.info("CROSSOVER IS OVER")
+
+            if self.use_nelder_mead_in_crossover:
+                # TODO: implement Nelder-Mead here
+                pass
 
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 bparams = ''.join([str(i) for i in population[0].params])
@@ -693,17 +719,18 @@ class GA:
             ###
             logger.info("MUTATION IS OVER")
 
+            population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
+
             # TODO: define Nelder-Mead case
-            if self.use_nelder_mead:
+
+            if self.use_nelder_mead_in_mutation:
+
+
+
                 collected_params = []
                 for elem in population:
                     collected_params.append(elem.params, elem.fitness_value)
 
-                minimize(objective, starting_points,
-                         method='nelder-mead',
-                         bounds='')
-
-            population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],

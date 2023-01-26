@@ -11,11 +11,11 @@ SAVE_PATH = DATA_PATH # place where all the artifacts will be stored
 
 dataset = pd.read_csv(PATH_TO_DATASET)
 col_to_process = 'text'
-dataset_name = 'sample_lenta'
+dataset_name = 'sample_20ng'
 lang = 'en'  # available languages: ru, en
 min_tokens_num = 3  # the minimal amount of tokens after processing to save the result
-num_iterations = 2
-topic_count = 10
+num_iterations = 15
+topic_count = 50
 exp_id = int(time.time())
 print(exp_id)
 
@@ -25,5 +25,6 @@ if __name__ == '__main__':
                                 exp_id=exp_id,
                                 topic_count=topic_count)
 
-    nelder_opt.run_algorithm(num_individuals=10,
-                             num_iterations=num_iterations)
+    res = nelder_opt.run_algorithm(num_iterations=num_iterations)
+    print(res)
+    print(-res.fun)

@@ -341,7 +341,7 @@ class TopicModel:
             return True
         return False
 
-    def train(self, option='offline'):
+    def train(self, option='online_v1'):
         if self.model is None:
             print('Initialise the model first!')
             return
