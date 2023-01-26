@@ -55,11 +55,15 @@ class NelderMeadOptimization:
         return params
 
     def run_algorithm(self,
-                      num_individuals: int = 11,
-                      num_iterations: int = 400):
+                      num_iterations: int = 400,
+                      ini_point: list = None
+                      ):
         fitness_calculator = FitnessCalculatorWrapper(self.dataset, self.data_path, self.topic_count)
 
-        initial_point = self.initialize_params()
+        if ini_point == 0:
+            initial_point = self.initialize_params()
+        else:
+            initial_point = ini_point
 
         res = minimize(fitness_calculator.run, initial_point, bounds=[
             (self.low_decor, self.high_decor),
@@ -79,4 +83,4 @@ class NelderMeadOptimization:
                        options={'return_all': True,
                                 'maxiter': num_iterations})
 
-        print(res)
+        return res
