@@ -277,7 +277,9 @@ class FitnessCalculatorWrapper:
                                                   params=params,
                                                   topic_count=self.topic_count)
         result = fitness[AVG_COHERENCE_SCORE]
-        return result
+        print(result)
+        print()
+        return -result
 
 
 def calculate_fitness_of_individual(dataset: str,

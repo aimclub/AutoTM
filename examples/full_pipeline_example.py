@@ -24,7 +24,7 @@ col_to_process = 'text'
 dataset_name = 'sample_lenta'
 lang = 'en'  # available languages: ru, en
 min_tokens_num = 3  # the minimal amount of tokens after processing to save the result
-num_iterations = 2
+num_iterations = 10
 topic_count = 10
 exp_id = int(time.time())
 print(exp_id)
