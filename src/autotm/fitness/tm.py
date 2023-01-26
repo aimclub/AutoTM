@@ -262,6 +262,24 @@ def fit_tm_of_individual(dataset: str,
         yield time_metrics, fitness, tm
 
 
+class FitnessCalculatorWrapper:
+    def __init__(self, dataset, data_path, topic_count):
+        self.dataset = dataset
+        self.data_path = data_path
+        self.topic_count = topic_count
+
+    def run(self, params):
+        print(params)
+        params = list(params)
+        params = params[:-1] + [0, 0, 0] + [params[-1]]
+        fitness = calculate_fitness_of_individual(dataset=self.dataset,
+                                                  data_path=self.data_path,
+                                                  params=params,
+                                                  topic_count=self.topic_count)
+        result = fitness[AVG_COHERENCE_SCORE]
+        return result
+
+
 def calculate_fitness_of_individual(dataset: str,
                                     data_path: str,
                                     params: list,
