@@ -32,6 +32,7 @@ class MetricsCollector:
         self.num_generations = 0
         self.metric_df = None
         self.mutation_df = None
+        self.crossover_df = None
 
     def save_mutation(self, generation: int, original_params: list, mutated_params: list, original_fitness: float,
                       mutated_fitness: float):
@@ -60,15 +61,15 @@ class MetricsCollector:
                        child_2_fitness: list = None):
         """
 
-        :param generation:
-        :param parent_1:
-        :param parent_2:
-        :param child_1:
-        :param parent_1_fitness:
-        :param parent_2_fitness:
-        :param child_1_fitness:
-        :param child_2:
-        :param child_2_fitness:
+        :param generation: generation number
+        :param parent_1: parameters of the first parent
+        :param parent_2: parameters of the second parent
+        :param child_1: parameters of the first child
+        :param parent_1_fitness: fitness of the first parent
+        :param parent_2_fitness:  fitness of the second parent
+        :param child_1_fitness: fitness of the firs child
+        :param child_2: parameters of the second child if exists
+        :param child_2_fitness: fitness of the second child if exists
         :return:
         """
         if f'gen_{generation}' in self.crossover_changes:
@@ -141,8 +142,11 @@ class MetricsCollector:
         self.metric_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_metric_{int(time.time())}.csv'))
         self.mutation_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_mutation_{int(time.time())}.csv'))
 
-    def visualise_trace(self):
+    def save_and_visualise_trace(self):
         self.get_metric_df()
+        # save params
+        self.write_metrics_to_file()
+
         # traces vis
         graph_template = 'plotly_white'
 
@@ -156,6 +160,3 @@ class MetricsCollector:
         fig.show()
 
         # crossover diff vis
-
-        # save params
-        self.write_metrics_to_file()

@@ -470,7 +470,7 @@ class GA:
                 self.evaluations_counter += 1
 
             # {'parent_1_params': [], 'parent_2_params': [], 'parent_1_fitness': [],
-             # 'parent_2_fitness': [], 'child_id': []}
+            # 'parent_2_fitness': [], 'child_id': []}
 
             crossover_changes['parent_1_params'].append(i.params)
             crossover_changes['parent_2_params'].append(j.params)
@@ -481,19 +481,26 @@ class GA:
             # generation: int, parent_1: list, parent_2: list, child: list, parent_1_fitness: float,
             # parent_2_fitness: float, child_fitness: float
 
-            self.metric_collector.save_crossover(generation=iteration_num, parent_1=i.params, parent_2=j.params,
-                                                 child=child1_dto)
-
         logger.info(f"CURRENT COUNTER: {self.evaluations_counter}")
 
         if len(new_generation) > 0:
 
             fitness_calc_time_start = time.time()
             if not SPEEDUP or not self.surrogate:
-                new_generation = estimate_fitness(new_generation)
+                new_generation = estimate_fitness(new_generation)  # TODO: check the order
                 self.save_params(new_generation)
             logger.info(f"ize of the new generation is {len(new_generation)}")
             logger.info(f"TIME OF THE FITNESS FUNCTION IN CROSSOVER: {time.time() - fitness_calc_time_start}")
+
+            for i in range(len(crossover_changes['parent_1_params'])):
+                self.metric_collector.save_crossover(generation=iteration_num,
+                                                     parent_1=crossover_changes['parent_1_params'][i],
+                                                     parent_2=crossover_changes['parent_2_params'][i],
+                                                     parent_1_fitness=crossover_changes['parent_1_fitness'][i],
+                                                     parent_2_fitness=crossover_changes['parent_2_fitness'][i],
+                                                     child_1=new_generation[crossover_changes['child_id'][i]].params,
+                                                     child_1_fitness=new_generation[
+                                                         crossover_changes['child_id'][i]].fitness_value)
 
             if self.surrogate:
                 if self.calc_scheme == 'type1':
@@ -559,7 +566,8 @@ class GA:
             logger.info(f"PAIRS ARE CREATED")
 
             # Crossover
-            new_generation, crossover_changes = self.run_crossover(pairs_generator, surrogate_iteration, iteration_num=ii)
+            new_generation, crossover_changes = self.run_crossover(pairs_generator, surrogate_iteration,
+                                                                   iteration_num=ii)
 
             new_generation.sort(key=operator.attrgetter('fitness_value'), reverse=True)
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
@@ -751,7 +759,7 @@ class GA:
                         f"TOPICS NUM {self.topic_count}."
                         f"RUN ID {run_id}.")
 
-        self.metric_collector.visualise_trace()
+        self.metric_collector.save_and_visualise_trace()
 
         logger.info(f"Y: {y}")
         best_individual = population[0]
