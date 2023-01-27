@@ -545,7 +545,6 @@ class GA:
                                          fitness_value={AVG_COHERENCE_SCORE: fitness}, train_option=self.train_option)
 
             new_population.append(make_individual(dto=solution_dto))
-        new_population = estimate_fitness(new_population)
         return new_population
 
     def run(self, verbose=False):
