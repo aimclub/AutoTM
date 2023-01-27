@@ -20,12 +20,14 @@ num_iterations = 20
 topic_count = 10
 exp_id = int(time.time())
 print(exp_id)
+train_option='offline'
 
 if __name__ == '__main__':
     nelder_opt = NelderMeadOptimization(data_path=SAVE_PATH,
                                         dataset=dataset_name,
                                         exp_id=exp_id,
-                                        topic_count=topic_count)
+                                        topic_count=topic_count,
+                                        train_option=train_option)
 
     res = nelder_opt.run_algorithm(num_iterations=num_iterations)
     print(res)
