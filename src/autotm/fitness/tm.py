@@ -205,7 +205,7 @@ class TopicModelFactory:
             logging.info(f"Using TM model: {TopicModel} according "
                          f"to fitness name: {self.fitness_name}, topics count: {self.topic_count}")
             self.tm = TopicModel(uid, self.experiments_path, self.topic_count, self.num_processors,
-                                 dataset, self.params)
+                                 dataset, self.params, train_option=self.train_option)
         else:
             raise Exception(
                 f"Unknown fitness name: {self.fitness_name}. Only the following ones are known: {['default']}")
@@ -242,7 +242,7 @@ def fit_tm_of_individual(dataset: str,
                            force_dataset_settings_checkout, train_option) as tm:
         try:
             with log_exec_timer("TM Training") as train_timer:
-                tm.train(option=train_option)
+                tm.train()
             with log_exec_timer("Metrics calculation") as metrics_timer:
                 fitness = tm.metrics_get_last_avg_vals(texts=tm.dataset.texts, total_tokens=tm.dataset.total_tokens)
 
@@ -308,12 +308,15 @@ class TopicModel:
                  topic_count: int,
                  num_processors: int,
                  dataset: Dataset,
-                 params: list, decor_test=False):
+                 params: list,
+                 decor_test=False,
+                 train_option: str = 'offline'):
         self.uid = uid
         self.experiments_path: str = experiments_path
         self.topic_count: int = topic_count
         self.num_processors: int = num_processors
         self.dataset = dataset
+        self.train_option = train_option
 
         self.model = None
         self.S = self.topic_count
@@ -347,7 +350,9 @@ class TopicModel:
             return True
         return False
 
+    # TODO: refactor option
     def train(self, option='online_v1'):
+
         if self.model is None:
             print('Initialise the model first!')
             return
