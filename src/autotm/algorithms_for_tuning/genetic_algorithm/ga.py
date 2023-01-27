@@ -542,7 +542,7 @@ class GA:
                                          exp_id=self.exp_id,
                                          alg_id=ALG_ID, iteration_id=num_gen,
                                          topic_count=self.topic_count, tag=self.tag,
-                                         fitness_value=fitness, train_option=self.train_option)
+                                         fitness_value={AVG_COHERENCE_SCORE: fitness}, train_option=self.train_option)
 
             new_population.append(make_individual(dto=solution_dto))
         new_population = estimate_fitness(new_population)
