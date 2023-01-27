@@ -532,7 +532,7 @@ class GA:
                                             train_option=self.train_option)
         new_population = []
         for point in starting_points_set:
-            st_point = point[:12] + [point[15:]]
+            st_point = point[:12] + [point[15]]
             res = nelder_opt.run_algorithm(num_iterations=num_iterations, ini_point=st_point)
             solution = list(res['x'])
             solution = solution[:-1] + point[12:15] + [solution[-1]]  # TODO: check mutation ids

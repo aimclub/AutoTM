@@ -66,6 +66,8 @@ class NelderMeadOptimization:
             initial_point = self.initialize_params()
         else:
             assert len(ini_point) == 13
+            print(ini_point) # TODO: remove this
+            ini_point = [float(i) for i in ini_point]
             initial_point = ini_point
 
         res = minimize(fitness_calculator.run, initial_point, bounds=[
