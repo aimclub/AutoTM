@@ -9,6 +9,7 @@ import time
 import uuid
 import warnings
 from typing import Optional
+import random
 
 import numpy as np
 from sklearn.svm import SVR
@@ -475,13 +476,11 @@ class GA:
 
                 self.evaluations_counter += 1
 
-
             crossover_changes['parent_1_params'].append(i.params)
             crossover_changes['parent_2_params'].append(j.params)
             crossover_changes['parent_1_fitness'].append(i.fitness_value)
             crossover_changes['parent_2_fitness'].append(j.fitness_value)
             crossover_changes['child_id'].append(len(new_generation) - 1)
-
 
         logger.info(f"CURRENT COUNTER: {self.evaluations_counter}")
 
@@ -526,16 +525,18 @@ class GA:
         for point in starting_points_set:
             res = nelder_opt.run_algorithm(num_iterations=num_iterations)
             solution = list(res['x'])
-            solution = solution[:-1] + point[11:15] + [solution[-1]] # TODO: check mutation ids
+            solution = solution[:-1] + point[11:15] + [solution[-1]]  # TODO: check mutation ids
             fitness = -res.fun
             solution_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
-                                       dataset=self.dataset, params=solution,
-                                       exp_id=self.exp_id,
-                                       alg_id=ALG_ID, iteration_id=num_gen,
-                                       topic_count=self.topic_count, tag=self.tag,
-                                       fitness_value=fitness)
+                                         dataset=self.dataset, params=solution,
+                                         exp_id=self.exp_id,
+                                         alg_id=ALG_ID, iteration_id=num_gen,
+                                         topic_count=self.topic_count, tag=self.tag,
+                                         fitness_value=fitness)
 
             new_population.append(make_individual(dto=solution_dto))
+        new_population = estimate_fitness(new_population)
+        return new_population
 
     def run(self, verbose=False):
 
@@ -725,12 +726,19 @@ class GA:
 
             if self.use_nelder_mead_in_mutation:
 
-
-
                 collected_params = []
-                for elem in population:
-                    collected_params.append(elem.params, elem.fitness_value)
 
+                for elem in population:
+                    collected_params.append(elem.params)
+
+                random_ids = random.sample([i for i in range(len(collected_params))], k=3)
+                starting_points = [collected_params[i] for i in random_ids]
+
+                nm_population = self.apply_nelder_mead(starting_points, num_gen=ii)
+                for i, elem in enumerate(nm_population):
+                    if population[i].fitness_value < elem.fitness_value:
+                        print(f'NM found better solution! {elem.fitness_value} vs {population[i].fitness_value}')
+                        population[i] = elem
 
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],

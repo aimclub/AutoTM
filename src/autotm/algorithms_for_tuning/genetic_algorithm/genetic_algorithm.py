@@ -37,7 +37,11 @@ def run_algorithm(dataset: str,
                   surrogate_name: str = None,  # fix
                   gpr_kernel: str = None,
                   gpr_alpha: float = None,
-                  gpr_normalize_y: float = None):
+                  gpr_normalize_y: float = None,
+                  use_nelder_mead_in_mutation: bool = False,
+                  use_nelder_mead_in_crossover: bool = False,
+                  use_nelder_mead_in_selector: bool = False
+                  ):
     '''
 
     :param dataset: Dataset name that is being processed. The name will be used to store results
@@ -59,8 +63,14 @@ def run_algorithm(dataset: str,
     :param gpr_kernel: Kernel name for gpr surrogate
     :param gpr_alpha: Alpha parameter for gpr
     :param gpr_normalize_y: y normalization parameter for gpr
+    :param use_nelder_mead_in_mutation:
+    :param use_nelder_mead_in_crossover:
+    :param use_nelder_mead_in_selector:
     :return:
     '''
+
+    assert sum([use_nelder_mead_in_mutation, use_nelder_mead_in_crossover, use_nelder_mead_in_selector]) <= 1
+
     logger.debug(f"Command line: {sys.argv}")
 
     run_uid = str(uuid.uuid4())
@@ -93,7 +103,10 @@ def run_algorithm(dataset: str,
            surrogate_name=surrogate_name,
            gpr_kernel=gpr_kernel,
            gpr_alpha=gpr_alpha,
-           normalize_y=gpr_normalize_y
+           normalize_y=gpr_normalize_y,
+           use_nelder_mead_in_mutation=use_nelder_mead_in_mutation,
+           use_nelder_mead_in_crossover=use_nelder_mead_in_crossover,
+           use_nelder_mead_in_selector=use_nelder_mead_in_selector
            )
     best_value = g.run(verbose=True)
     print(best_value * (-1))
