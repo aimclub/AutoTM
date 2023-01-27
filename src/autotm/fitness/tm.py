@@ -175,13 +175,15 @@ class TopicModelFactory:
 
     def __init__(self, dataset_name: str, data_path: str,
                  fitness_name: str, params: list,
-                 topic_count: Optional[int] = None, forced_update: bool = False):
+                 topic_count: Optional[int] = None, forced_update: bool = False,
+                 train_option: str = 'offline'):
         self.dataset_name = dataset_name
         self.data_path = data_path
         self.fitness_name = fitness_name
         self.params = params
         self.topic_count = topic_count
         self.forced_update = forced_update
+        self.train_option = train_option
         self._custom_scores = []
         self.tm = None
 
@@ -229,14 +231,15 @@ def fit_tm_of_individual(dataset: str,
                          params: list,
                          fitness_name: str = "default",
                          topic_count: Optional[int] = None,
-                         force_dataset_settings_checkout: bool = False) \
+                         force_dataset_settings_checkout: bool = False,
+                         train_option: str = 'offline') \
         -> ContextManager[Tuple[TimeMeasurements, MetricsScores, 'TopicModel']]:
     params = type_check(params)
 
     start = time.time()
 
     with TopicModelFactory(dataset, data_path, fitness_name, params, topic_count,
-                           force_dataset_settings_checkout) as tm:
+                           force_dataset_settings_checkout, train_option) as tm:
         try:
             with log_exec_timer("TM Training") as train_timer:
                 tm.train()
@@ -263,10 +266,11 @@ def fit_tm_of_individual(dataset: str,
 
 
 class FitnessCalculatorWrapper:
-    def __init__(self, dataset, data_path, topic_count):
+    def __init__(self, dataset, data_path, topic_count, train_option):
         self.dataset = dataset
         self.data_path = data_path
         self.topic_count = topic_count
+        self.train_option = train_option
 
     def run(self, params):
         print(params)
@@ -275,7 +279,8 @@ class FitnessCalculatorWrapper:
         fitness = calculate_fitness_of_individual(dataset=self.dataset,
                                                   data_path=self.data_path,
                                                   params=params,
-                                                  topic_count=self.topic_count)
+                                                  topic_count=self.topic_count,
+                                                  train_option=self.train_option)
         result = fitness[AVG_COHERENCE_SCORE]
         print(result)
         print()
@@ -287,9 +292,10 @@ def calculate_fitness_of_individual(dataset: str,
                                     params: list,
                                     fitness_name: str = "default",
                                     topic_count: Optional[int] = None,
-                                    force_dataset_settings_checkout: bool = False) -> MetricsScores:
+                                    force_dataset_settings_checkout: bool = False,
+                                    train_option: str = 'offline') -> MetricsScores:
     with fit_tm_of_individual(dataset, data_path, params, fitness_name, topic_count,
-                              force_dataset_settings_checkout) as result:
+                              force_dataset_settings_checkout, train_option) as result:
         time_metrics, fitness, tm = result
 
     return fitness
