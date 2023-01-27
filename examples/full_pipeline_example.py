@@ -10,10 +10,10 @@ from autotm.preprocessing.text_preprocessing import process_dataset
 from autotm.preprocessing.dictionaries_preparation import prepare_all_artifacts
 from autotm.algorithms_for_tuning.genetic_algorithm.genetic_algorithm import run_algorithm
 
-PATH_TO_DATASET = '../data/sample_corpora/sample_dataset_lenta.csv'  # dataset with corpora to be processed
-SAVE_PATH = '../data/processed_sample_corpora'  # place where all the artifacts will be stored
+# PATH_TO_DATASET = '../data/sample_corpora/sample_dataset_lenta.csv'  # dataset with corpora to be processed
+# SAVE_PATH = '../data/processed_sample_corpora'  # place where all the artifacts will be stored
 
-DATA_PATH = '../data/experiment_datasets/20newsgroups_sample'
+DATA_PATH = '/ess_data/GOTM/datasets_TM_scoring/20newsgroups_sample'
 
 PATH_TO_DATASET = os.path.join(DATA_PATH, 'dataset_processed.csv')  # dataset with corpora to be processed
 SAVE_PATH = DATA_PATH # place where all the artifacts will be stored
@@ -21,13 +21,17 @@ SAVE_PATH = DATA_PATH # place where all the artifacts will be stored
 
 dataset = pd.read_csv(PATH_TO_DATASET)
 col_to_process = 'text'
-dataset_name = 'sample_lenta'
+dataset_name = '20ng_sample_with_nm'
 lang = 'en'  # available languages: ru, en
 min_tokens_num = 3  # the minimal amount of tokens after processing to save the result
 num_iterations = 10
 topic_count = 10
 exp_id = int(time.time())
 print(exp_id)
+
+use_nelder_mead_in_mutation = True
+use_nelder_mead_in_crossover = False
+use_nelder_mead_in_selector = False
 
 if __name__ == '__main__':
     print('Stage 1: Dataset preparation')
@@ -43,7 +47,10 @@ if __name__ == '__main__':
                                 exp_id=exp_id,
                                 topic_count=topic_count,
                                 log_file='./log_file_test.txt',
-                                num_iterations=num_iterations
+                                num_iterations=num_iterations,
+                                use_nelder_mead_in_mutation=use_nelder_mead_in_mutation,
+                                use_nelder_mead_in_crossover=use_nelder_mead_in_crossover,
+                                use_nelder_mead_in_selector=use_nelder_mead_in_selector
                                 )
 
     # results of the run are stored in ./mlruns folder, experiment id is 'experiment_<exp_id>'

@@ -79,6 +79,9 @@ class MetricsCollector:
             self.crossover_changes[f'gen_{generation}']['parent_1_fitness'].append(parent_1_fitness)
             self.crossover_changes[f'gen_{generation}']['parent_2_fitness'].append(parent_2_fitness)
             self.crossover_changes[f'gen_{generation}']['child_1_fitness'].append(child_1_fitness)
+            if child_2 is not None:
+                self.crossover_changes[f'gen_{generation}']['child_2_params'].append(child_2)
+                self.crossover_changes[f'gen_{generation}']['child_2_fitness'].append(child_2_fitness)
         else:
             self.crossover_changes[f'gen_{generation}'] = {'parent_1_params': [parent_1],
                                                            'parent_2_params': [parent_2],
@@ -136,11 +139,32 @@ class MetricsCollector:
                 cur_df[GENERATION_COL] = gen
                 dfs.append(cur_df)
             self.mutation_df = pd.concat(dfs)
+        if self.crossover_df is not None:
+            print('Crossover df already exists')
+        else:
+            dfs = []
+            for gen in self.crossover_changes:
+                cur_df_dict = {
+                    'parent_1_params': self.crossover_changes[gen]['parent_1_params'],
+                    'parent_2_params': self.crossover_changes[gen]['parent_2_params'],
+                    'child_1_params': self.crossover_changes[gen]['child_1_params'],
+                    'parent_1_fitness': self.crossover_changes[gen]['parent_1_fitness'],
+                    'parent_2_fitness': self.crossover_changes[gen]['parent_2_fitness'],
+                    'child_1_fitness': self.crossover_changes[gen]['child_1_fitness'],
+                }
+                # TODO: save child 2 params
+                cur_df = pd.DataFrame(
+                    cur_df_dict
+                )
+                cur_df[GENERATION_COL] = gen
+                dfs.append(cur_df)
+            self.crossover_df = pd.concat(dfs)
 
     def write_metrics_to_file(self):
         os.makedirs(self.save_path, exist_ok=True)
         self.metric_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_metric_{int(time.time())}.csv'))
         self.mutation_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_mutation_{int(time.time())}.csv'))
+        self.crossover_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_crossover_{int(time.time())}.csv'))
 
     def save_and_visualise_trace(self):
         self.get_metric_df()
