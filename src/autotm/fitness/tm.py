@@ -242,7 +242,7 @@ def fit_tm_of_individual(dataset: str,
                            force_dataset_settings_checkout, train_option) as tm:
         try:
             with log_exec_timer("TM Training") as train_timer:
-                tm.train()
+                tm.train(option=train_option)
             with log_exec_timer("Metrics calculation") as metrics_timer:
                 fitness = tm.metrics_get_last_avg_vals(texts=tm.dataset.texts, total_tokens=tm.dataset.total_tokens)
 
