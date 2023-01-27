@@ -528,7 +528,8 @@ class GA:
         nelder_opt = NelderMeadOptimization(data_path=self.data_path,
                                             dataset=self.dataset,
                                             exp_id=self.exp_id,
-                                            topic_count=self.topic_count)
+                                            topic_count=self.topic_count,
+                                            train_option=self.train_option)
         new_population = []
         for point in starting_points_set:
             st_point = point[:12] + [point[15:]]
