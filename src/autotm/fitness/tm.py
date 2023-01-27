@@ -282,7 +282,7 @@ class FitnessCalculatorWrapper:
                                                   topic_count=self.topic_count,
                                                   train_option=self.train_option)
         result = fitness[AVG_COHERENCE_SCORE]
-        print(result)
+        print('Fitness: ', result)
         print()
         return -result
 
