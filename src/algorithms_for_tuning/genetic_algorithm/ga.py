@@ -9,7 +9,8 @@ import time
 import uuid
 import warnings
 from concurrent.futures.thread import ThreadPoolExecutor
-from typing import Optional
+from multiprocessing.pool import ThreadPool
+from typing import Optional, Tuple, Any
 
 import numpy as np
 from kube_fitness.metrics import AVG_COHERENCE_SCORE
@@ -510,7 +511,8 @@ class GA:
         return new_generation, crossover_changes
 
     def apply_nelder_mead(self, starting_points_set, num_gen, num_iterations=2):
-        def func(point, i: int):
+        def func(arg: Tuple[Any, int]):
+            i, point = arg
             logger.info(f"Executing NelderMead optimization for point #{i}")
             nelder_opt = NelderMeadOptimization(data_path=None,#self.data_path,
                                                 dataset=self.dataset,
@@ -534,7 +536,10 @@ class GA:
         logger.info("Optimizing mutated individuals params using Nelder-Mead algorithm (NM)")
 
         with ThreadPoolExecutor(max_workers=1) as pool:
-            new_population = list(pool.map(func, starting_points_set, range(len(starting_points_set))))
+            new_population = list(pool.map(func, enumerate(starting_points_set)))
+
+        # with ThreadPool(processes=10) as pool:
+        #     new_population = list(pool.map(func, enumerate(starting_points_set)))
 
         return new_population
 
