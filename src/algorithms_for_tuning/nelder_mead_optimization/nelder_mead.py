@@ -1,7 +1,11 @@
-from scipy.optimize import minimize
-from typing import Union
-from kube_fitness.tm import FitnessCalculatorWrapper
+import logging
+from typing import Optional
+
 import numpy as np
+from kube_fitness.tm import FitnessCalculatorWrapper
+from scipy.optimize import minimize
+
+logger = logging.getLogger(__name__)
 
 
 class NelderMeadOptimization:
@@ -58,7 +62,8 @@ class NelderMeadOptimization:
 
     def run_algorithm(self,
                       num_iterations: int = 400,
-                      ini_point: list = None
+                      ini_point: list = None,
+                      run_id: Optional[str] = None,
                       ):
         fitness_calculator = FitnessCalculatorWrapper(self.dataset, self.data_path, self.topic_count, self.train_option)
 
@@ -70,22 +75,37 @@ class NelderMeadOptimization:
             ini_point = [float(i) for i in ini_point]
             initial_point = ini_point
 
-        res = minimize(fitness_calculator.run, initial_point, bounds=[
-            (self.low_decor, self.high_decor),
-            (self.low_n, self.high_n),
-            (self.low_spb, self.high_spb),
-            (self.low_spb, self.high_spb),
-            (self.low_n, self.high_n),
-            (self.low_sp_phi, self.high_sp_phi),
-            (self.low_sp_phi, self.high_sp_phi),
-            (self.low_n, self.high_n),
-            (self.low_sp_phi, self.high_sp_phi),
-            (self.low_sp_phi, self.high_sp_phi),
-            (self.low_n, self.high_n),
-            (self.low_back, self.high_back),
-            (self.low_decor, self.high_decor)
-        ], method='Nelder-Mead',
-                       options={'return_all': True,
-                                'maxiter': num_iterations})
+        if run_id is not None:
+            iter_num = 0
+
+            def callback(*_, **__):
+                global iter_num
+                logger.debug(f"Calculated NM iteration #{iter_num} for point #{run_id}")
+                iter_num += 1
+        else:
+            callback = None
+
+        res = minimize(
+            fitness_calculator.run,
+            initial_point,
+            bounds=[
+                (self.low_decor, self.high_decor),
+                (self.low_n, self.high_n),
+                (self.low_spb, self.high_spb),
+                (self.low_spb, self.high_spb),
+                (self.low_n, self.high_n),
+                (self.low_sp_phi, self.high_sp_phi),
+                (self.low_sp_phi, self.high_sp_phi),
+                (self.low_n, self.high_n),
+                (self.low_sp_phi, self.high_sp_phi),
+                (self.low_sp_phi, self.high_sp_phi),
+                (self.low_n, self.high_n),
+                (self.low_back, self.high_back),
+                (self.low_decor, self.high_decor)
+            ],
+            method='Nelder-Mead',
+            options={'return_all': True, 'maxiter': num_iterations},
+            callback=callback
+        )
 
         return res

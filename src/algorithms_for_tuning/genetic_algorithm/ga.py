@@ -9,10 +9,14 @@ import sys
 import time
 import uuid
 import warnings
+from concurrent.futures.thread import ThreadPoolExecutor
+from multiprocessing.pool import ThreadPool
+from threading import Thread
 from typing import Optional
 
 import numpy as np
 import yaml
+from kube_fitness.metrics import AVG_COHERENCE_SCORE
 from sklearn.ensemble import BaggingRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -514,27 +518,32 @@ class GA:
         return new_generation, crossover_changes
 
     def apply_nelder_mead(self, starting_points_set, num_gen, num_iterations=2):
-        nelder_opt = NelderMeadOptimization(data_path=self.data_path,
-                                            dataset=self.dataset,
-                                            exp_id=self.exp_id,
-                                            topic_count=self.topic_count,
-                                            train_option=self.train_option)
-        new_population = []
-        for point in starting_points_set:
+        def func(point, i: int):
+            logger.info(f"Executing NelderMead optimization for point #{i}")
+            nelder_opt = NelderMeadOptimization(data_path=None,#self.data_path,
+                                                dataset=self.dataset,
+                                                exp_id=self.exp_id,
+                                                topic_count=self.topic_count,
+                                                train_option=self.train_option)
             st_point = point[:12] + [point[15]]
             res = nelder_opt.run_algorithm(num_iterations=num_iterations, ini_point=st_point)
             solution = list(res['x'])
             solution = solution[:-1] + point[12:15] + [solution[-1]]  # TODO: check mutation ids
             fitness = -res.fun
-            solution_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
+            solution_dto = IndividualDTO(id=str(uuid.uuid4()), #data_path=self.data_path,
                                          dataset=self.dataset, params=solution,
                                          exp_id=self.exp_id,
                                          alg_id=ALG_ID, iteration_id=num_gen,
                                          topic_count=self.topic_count, tag=self.tag,
                                          fitness_value={AVG_COHERENCE_SCORE: fitness}, train_option=self.train_option)
+            logger.info(f"Finished NelderMead optimization for point #{i}")
+            return make_individual(dto=solution_dto)
 
-            new_population.append(make_individual(dto=solution_dto))
-        new_population = estimate_fitness(new_population)
+        logger.info("Optimizing mutated individuals params using Nelder-Mead algorithm (NM)")
+
+        with ThreadPoolExecutor(max_workers=10) as pool:
+            new_population = list(pool.map(func, starting_points_set, range(len(starting_points_set))))
+
         return new_population
 
     def run(self, verbose=False):

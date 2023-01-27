@@ -1,61 +1,62 @@
 ---
 datasets:
-#  - books_stroyitelstvo_2030
   - 20newsgroups
-#  - clickhouse_issues
-  - banners
-  - amazon_food
-  - hotel-reviews
-  - lenta_ru
+#  - banners
+#  - amazon_food
+#  - hotel-reviews
+#  - lenta_ru
+
+  #  - clickhouse_issues
+  #  - books_stroyitelstvo_2030
 
 configurations:
   - name: "ga_10"
     cmd: "/app/run-autotm.sh"
-    args: "--num-individuals 11 --num-iterations 150 --mutation-type psm --crossover-type blend_crossover
+    args: "--num-individuals 11 --num-iterations 2 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 36 --tag fitness_150_10 --topic-count 10"
+           --exp-id 37 --tag fitness_10_10 --topic-count 10"
     workdir: "/app"
-    repetitions: 5
+    repetitions: 1
 
-  - name: "ga_50"
-    cmd: "/app/run-autotm.sh"
-    args: "--num-individuals 11 --num-iterations 150 --mutation-type psm --crossover-type blend_crossover
-           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 36 --tag fitness_150_50 --topic-count 50"
-    workdir: "/app"
-    repetitions: 5
+#  - name: "ga_50"
+#    cmd: "/app/run-autotm.sh"
+#    args: "--num-individuals 11 --num-iterations 150 --mutation-type psm --crossover-type blend_crossover
+#           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
+#           --exp-id 36 --tag fitness_150_50 --topic-count 50"
+#    workdir: "/app"
+#    repetitions: 5
 
-  - name: "ga_100"
-    cmd: "/app/run-autotm.sh"
-    args: "--num-individuals 11 --num-iterations 150 --mutation-type psm --crossover-type blend_crossover
-           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 36 --tag fitness_150_100 --topic-count 100"
-    workdir: "/app"
-    repetitions: 5
-
-  - name: "ga_10"
-    cmd: "/app/run-autotm.sh"
-    args: "--num-individuals 11 --num-iterations 150 --mutation-type psm --crossover-type blend_crossover
-           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 36 --tag surrogate_fitness_150_10 --topic-count 10 --surrogate-name GPR
-           --gpr-kernel RBF --gpr-alpha 0.000000001 --gpr-normalize-y 1"
-    workdir: "/app"
-    repetitions: 5
-
-  - name: "ga_50"
-    cmd: "/app/run-autotm.sh"
-    args: "--num-individuals 11 --num-iterations 150 --mutation-type psm --crossover-type blend_crossover
-           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 36 --tag surrogate_fitness_150_50 --topic-count 50 --surrogate-name GPR
-           --gpr-kernel RBF --gpr-alpha 0.000000001 --gpr-normalize-y 1"
-    workdir: "/app"
-    repetitions: 5
-
-  - name: "ga_100"
-    cmd: "/app/run-autotm.sh"
-    args: "--num-individuals 11 --num-iterations 150 --mutation-type psm --crossover-type blend_crossover
-           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 36 --tag surrogate_fitness_150_100 --topic-count 100 --surrogate-name GPR
-           --gpr-kernel RBF --gpr-alpha 0.000000001 --gpr-normalize-y 1"
-    workdir: "/app"
-    repetitions: 5
+#  - name: "ga_100"
+#    cmd: "/app/run-autotm.sh"
+#    args: "--num-individuals 11 --num-iterations 150 --mutation-type psm --crossover-type blend_crossover
+#           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
+#           --exp-id 36 --tag fitness_150_100 --topic-count 100"
+#    workdir: "/app"
+#    repetitions: 5
+#
+#  - name: "ga_10"
+#    cmd: "/app/run-autotm.sh"
+#    args: "--num-individuals 11 --num-iterations 150 --mutation-type psm --crossover-type blend_crossover
+#           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
+#           --exp-id 36 --tag surrogate_fitness_150_10 --topic-count 10 --surrogate-name GPR
+#           --gpr-kernel RBF --gpr-alpha 0.000000001 --gpr-normalize-y 1"
+#    workdir: "/app"
+#    repetitions: 5
+#
+#  - name: "ga_50"
+#    cmd: "/app/run-autotm.sh"
+#    args: "--num-individuals 11 --num-iterations 150 --mutation-type psm --crossover-type blend_crossover
+#           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
+#           --exp-id 36 --tag surrogate_fitness_150_50 --topic-count 50 --surrogate-name GPR
+#           --gpr-kernel RBF --gpr-alpha 0.000000001 --gpr-normalize-y 1"
+#    workdir: "/app"
+#    repetitions: 5
+#
+#  - name: "ga_100"
+#    cmd: "/app/run-autotm.sh"
+#    args: "--num-individuals 11 --num-iterations 150 --mutation-type psm --crossover-type blend_crossover
+#           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
+#           --exp-id 36 --tag surrogate_fitness_150_100 --topic-count 100 --surrogate-name GPR
+#           --gpr-kernel RBF --gpr-alpha 0.000000001 --gpr-normalize-y 1"
+#    workdir: "/app"
+#    repetitions: 5
