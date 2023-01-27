@@ -523,9 +523,10 @@ class GA:
                                             topic_count=self.topic_count)
         new_population = []
         for point in starting_points_set:
-            res = nelder_opt.run_algorithm(num_iterations=num_iterations)
+            st_point = point[:11] + [point[14:]]
+            res = nelder_opt.run_algorithm(num_iterations=num_iterations, ini_point=st_point)
             solution = list(res['x'])
-            solution = solution[:-1] + point[11:15] + [solution[-1]]  # TODO: check mutation ids
+            solution = solution[:-1] + point[11:14] + [solution[-1]]  # TODO: check mutation ids
             fitness = -res.fun
             solution_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
                                          dataset=self.dataset, params=solution,
@@ -722,15 +723,10 @@ class GA:
 
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
-            # TODO: define Nelder-Mead case
-
             if self.use_nelder_mead_in_mutation:
-
                 collected_params = []
-
                 for elem in population:
                     collected_params.append(elem.params)
-
                 random_ids = random.sample([i for i in range(len(collected_params))], k=3)
                 starting_points = [collected_params[i] for i in random_ids]
 
