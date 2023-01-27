@@ -162,12 +162,17 @@ class MetricsCollector:
         os.makedirs(self.save_path, exist_ok=True)
         self.metric_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_metric_{int(time.time())}.csv'))
         self.mutation_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_mutation_{int(time.time())}.csv'))
-        self.crossover_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_crossover_{int(time.time())}.csv'))
 
-    def save_and_visualise_trace(self):
+    def visualise_trace(self):
         self.get_metric_df()
+
         # save params
         self.write_metrics_to_file()
+
+        try:
+            import plotly.express as px
+        except:
+            return
 
         # traces vis
         graph_template = 'plotly_white'

@@ -293,13 +293,11 @@ class GA:
                 dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset,
                                     params=self.init_individ(base_model=True),
                                     exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
-                                    topic_count=self.topic_count, tag=self.tag,
-                                    train_option=self.train_option)
+                                    topic_count=self.topic_count, tag=self.tag)
             else:
                 dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=self.init_individ(),
                                     exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
-                                    topic_count=self.topic_count, tag=self.tag,
-                                    train_option=self.train_option)
+                                    topic_count=self.topic_count, tag=self.tag)
             # TODO: improve heuristic on search space
             list_of_individuals.append(make_individual(dto=dto))
         population_with_fitness = estimate_fitness(list_of_individuals)
