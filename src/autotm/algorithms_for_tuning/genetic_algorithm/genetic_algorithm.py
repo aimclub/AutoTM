@@ -40,7 +40,8 @@ def run_algorithm(dataset: str,
                   gpr_normalize_y: float = None,
                   use_nelder_mead_in_mutation: bool = False,
                   use_nelder_mead_in_crossover: bool = False,
-                  use_nelder_mead_in_selector: bool = False
+                  use_nelder_mead_in_selector: bool = False,
+                  train_option: str = 'offline'
                   ):
     '''
 
@@ -106,7 +107,8 @@ def run_algorithm(dataset: str,
            normalize_y=gpr_normalize_y,
            use_nelder_mead_in_mutation=use_nelder_mead_in_mutation,
            use_nelder_mead_in_crossover=use_nelder_mead_in_crossover,
-           use_nelder_mead_in_selector=use_nelder_mead_in_selector
+           use_nelder_mead_in_selector=use_nelder_mead_in_selector,
+           train_option=train_option
            )
     best_value = g.run(verbose=True)
     print(best_value * (-1))

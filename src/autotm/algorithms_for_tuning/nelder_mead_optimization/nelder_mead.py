@@ -60,9 +60,10 @@ class NelderMeadOptimization:
                       ):
         fitness_calculator = FitnessCalculatorWrapper(self.dataset, self.data_path, self.topic_count)
 
-        if ini_point == 0:
+        if ini_point is None:
             initial_point = self.initialize_params()
         else:
+            assert len(ini_point) == 13
             initial_point = ini_point
 
         res = minimize(fitness_calculator.run, initial_point, bounds=[

@@ -531,10 +531,10 @@ class GA:
                                             topic_count=self.topic_count)
         new_population = []
         for point in starting_points_set:
-            st_point = point[:11] + [point[14:]]
+            st_point = point[:12] + [point[15:]]
             res = nelder_opt.run_algorithm(num_iterations=num_iterations, ini_point=st_point)
             solution = list(res['x'])
-            solution = solution[:-1] + point[11:14] + [solution[-1]]  # TODO: check mutation ids
+            solution = solution[:-1] + point[12:15] + [solution[-1]]  # TODO: check mutation ids
             fitness = -res.fun
             solution_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
                                          dataset=self.dataset, params=solution,

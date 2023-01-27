@@ -32,6 +32,7 @@ print(exp_id)
 use_nelder_mead_in_mutation = True
 use_nelder_mead_in_crossover = False
 use_nelder_mead_in_selector = False
+train_option = 'offline'
 
 if __name__ == '__main__':
     print('Stage 1: Dataset preparation')
@@ -50,7 +51,8 @@ if __name__ == '__main__':
                                 num_iterations=num_iterations,
                                 use_nelder_mead_in_mutation=use_nelder_mead_in_mutation,
                                 use_nelder_mead_in_crossover=use_nelder_mead_in_crossover,
-                                use_nelder_mead_in_selector=use_nelder_mead_in_selector
+                                use_nelder_mead_in_selector=use_nelder_mead_in_selector,
+                                train_option=train_option
                                 )
 
     # results of the run are stored in ./mlruns folder, experiment id is 'experiment_<exp_id>'
