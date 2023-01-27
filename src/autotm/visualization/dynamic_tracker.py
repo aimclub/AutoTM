@@ -45,9 +45,9 @@ class MetricsCollector:
             self.mutation_changes[f'gen_{generation}']['params_dist'].append(eucledian_distance)
             self.mutation_changes[f'gen_{generation}']['fitness_diff'].append(fitness_diff)
             self.mutation_changes[f'gen_{generation}']['original_params'].append(
-                original_params[:11] + [original_params[15]])
+                original_params[:12] + [original_params[15]])
             self.mutation_changes[f'gen_{generation}']['mutated_params'].append(
-                mutated_params[:11] + [mutated_params[15]])
+                mutated_params[:12] + [mutated_params[15]])
         else:
             self.mutation_changes[f'gen_{generation}'] = {'params_dist': [eucledian_distance],
                                                           'fitness_diff': [fitness_diff],
