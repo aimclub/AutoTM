@@ -1,8 +1,6 @@
+import random
 from dataclasses import dataclass
 from typing import List, Optional
-import random
-import time
-from tqdm import tqdm
 
 
 @dataclass

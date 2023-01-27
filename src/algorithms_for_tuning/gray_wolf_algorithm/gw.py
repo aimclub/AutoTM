@@ -2,23 +2,15 @@
 import copy
 import logging
 import os
-import sys
-import uuid
 import warnings
-from logging import config
 from typing import List, Optional
 
 # from kube_fitness.tasks import make_celery_app, parallel_fitness, IndividualDTO
 # from kube_fitness.tasks import IndividualDTO, TqdmToLogger
 import click
-import numpy as np
 import yaml
 from numpy import random
-from numpy.random import permutation, rand
-from sklearn.preprocessing import MinMaxScaler
 from yaml import Loader
-
-from algorithms_for_tuning.utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
 
@@ -37,8 +29,6 @@ with open(filepath, "r") as file:
 
 if not config['testMode']:
     from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
-    from kube_fitness.tasks import parallel_fitness as estimate_fitness
-    from kube_fitness.tasks import log_best_solution
 else:
     # from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
     from tqdm import tqdm

@@ -2,13 +2,11 @@
 import copy
 import logging
 import os
-import sys
-import uuid
+import random
 import warnings
-from logging import config
 from typing import List, Optional
 
-from algorithms_for_tuning.utils import make_log_config_dict
+import yaml
 
 warnings.filterwarnings("ignore")
 
@@ -23,12 +21,10 @@ else:
     filepath = "../../algorithms_for_tuning/abc_algorithm/config.yaml"
 
 with open(filepath, "r") as file:
-    config = yaml.load(file, Loader=Loader)
+    config = yaml.load(file, Loader=yaml.Loader)
 
 if not config['testMode']:
-    from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
-    from kube_fitness.tasks import parallel_fitness as estimate_fitness
-    from kube_fitness.tasks import log_best_solution
+    pass
 else:
     # from kube_fitness.tm import calculate_fitness_of_individual, TopicModelFactory
     from tqdm import tqdm

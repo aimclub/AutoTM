@@ -1,10 +1,9 @@
-from abc import ABC, abstractmethod
-from dataclasses import dataclass
 import os
 import pickle
+from abc import ABC, abstractmethod
 from typing import List
-import numpy as np
 
+import numpy as np
 from kube_fitness.metrics import AVG_COHERENCE_SCORE
 from kube_fitness.schemas import IndividualDTO
 

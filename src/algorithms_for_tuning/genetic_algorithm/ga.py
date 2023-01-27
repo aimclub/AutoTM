@@ -3,20 +3,17 @@ import gc
 import logging
 import math
 import operator
-import os
 import random
 import sys
 import time
 import uuid
 import warnings
 from concurrent.futures.thread import ThreadPoolExecutor
-from multiprocessing.pool import ThreadPool
-from threading import Thread
 from typing import Optional
 
 import numpy as np
-import yaml
 from kube_fitness.metrics import AVG_COHERENCE_SCORE
+from kube_fitness.tasks import IndividualDTO
 from sklearn.ensemble import BaggingRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -26,19 +23,14 @@ from sklearn.metrics import mean_squared_error
 from sklearn.neural_network import MLPRegressor
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
-from sklearn.svm import SVR
-from yaml import Loader
 
 from algorithms_for_tuning.genetic_algorithm.crossover import crossover
 from algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from algorithms_for_tuning.genetic_algorithm.selection import selection
 from algorithms_for_tuning.individuals import make_individual
-from kube_fitness.tasks import IndividualDTO
 from algorithms_for_tuning.nelder_mead_optimization.nelder_mead import NelderMeadOptimization
-
-from algorithms_for_tuning.visualization.dynamic_tracker import MetricsCollector
-
 from algorithms_for_tuning.utils.fitness_estimator import estimate_fitness, prepare_fitness_estimator, log_best_solution
+from algorithms_for_tuning.visualization.dynamic_tracker import MetricsCollector
 
 ALG_ID = "ga"
 SPEEDUP = True
@@ -526,7 +518,7 @@ class GA:
                                                 topic_count=self.topic_count,
                                                 train_option=self.train_option)
             st_point = point[:12] + [point[15]]
-            res = nelder_opt.run_algorithm(num_iterations=num_iterations, ini_point=st_point)
+            res = nelder_opt.run_algorithm(num_iterations=num_iterations, ini_point=st_point, run_id=f"point #{i}")
             solution = list(res['x'])
             solution = solution[:-1] + point[12:15] + [solution[-1]]  # TODO: check mutation ids
             fitness = -res.fun
@@ -541,7 +533,7 @@ class GA:
 
         logger.info("Optimizing mutated individuals params using Nelder-Mead algorithm (NM)")
 
-        with ThreadPoolExecutor(max_workers=10) as pool:
+        with ThreadPoolExecutor(max_workers=1) as pool:
             new_population = list(pool.map(func, starting_points_set, range(len(starting_points_set))))
 
         return new_population

@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 
 import numpy as np
-from kube_fitness.tm import FitnessCalculatorWrapper
+from kube_fitness.tasks import FitnessCalculatorWrapper
 from scipy.optimize import minimize
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class NelderMeadOptimization:
                  low_spm=-1e-3, high_spm=1e2,
                  low_sp_phi=-1e3, high_sp_phi=1e3,
                  low_prob=0, high_prob=1):
-        self.dataset = dataset,
+        self.dataset = dataset
         self.data_path = data_path
         self.exp_id = exp_id
         self.topic_count = topic_count
@@ -80,7 +80,7 @@ class NelderMeadOptimization:
 
             def callback(*_, **__):
                 global iter_num
-                logger.debug(f"Calculated NM iteration #{iter_num} for point #{run_id}")
+                logger.debug(f"Calculated NM iteration #{iter_num} for run id: {run_id}")
                 iter_num += 1
         else:
             callback = None

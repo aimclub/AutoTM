@@ -1,12 +1,9 @@
-from src.algorithms_for_tuning.genetic_algorithm.mutation import positioning_mutation
-from src.algorithms_for_tuning.genetic_algorithm.crossover import crossover_pmx
-from src.algorithms_for_tuning.genetic_algorithm.selection import selection_rank_based
+import random
+from dataclasses import dataclass
+from typing import List, Optional
 
 import pytest
-from dataclasses import dataclass
 from dataclasses_json import dataclass_json
-from typing import List, Optional
-import random
 
 
 @dataclass_json

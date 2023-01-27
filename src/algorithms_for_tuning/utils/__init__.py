@@ -1,7 +1,6 @@
 import logging
 import os
 from contextlib import contextmanager
-from logging import Logger
 from typing import Dict, Any, Optional
 
 
