@@ -68,7 +68,8 @@ def log_best_solution(individual: IndividualDTO,
                       wait_for_result_timeout: Optional[float] = None,
                       alg_args: Optional[str] = None):
     logger.info(f"Sending a best individual to be logged")
-    res = make_individual(fitness_from_json(calculate_fitness(fitness_to_json(individual.dto), log_artifact_and_parameters=True)))
+    res = make_individual(
+        fitness_from_json(calculate_fitness(fitness_to_json(individual.dto), log_artifact_and_parameters=True)))
 
     # TODO: write logging
     return res
