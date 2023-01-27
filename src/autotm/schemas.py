@@ -28,6 +28,9 @@ class IndividualDTO(BaseModel):
     iteration_id: int = 0
     topic_count: Optional[int] = None
 
+    class Config:
+        arbitrary_types_allowed = True
+
     def make_params_dict(self):
         if len(self.params) > len(PARAM_NAMES):
             len_diff = len(self.params) - len(PARAM_NAMES)
