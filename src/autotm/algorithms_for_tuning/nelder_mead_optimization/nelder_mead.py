@@ -10,6 +10,7 @@ class NelderMeadOptimization:
                  data_path,
                  exp_id,
                  topic_count,
+                 train_option,
                  low_decor=0, high_decor=1e5,
                  low_n=0, high_n=30,
                  low_back=0, high_back=5,
@@ -21,6 +22,7 @@ class NelderMeadOptimization:
         self.data_path = data_path
         self.exp_id = exp_id
         self.topic_count = topic_count
+        self.train_option = train_option
         self.high_decor = high_decor
         self.low_decor = low_decor
         self.low_n = low_n
@@ -58,7 +60,7 @@ class NelderMeadOptimization:
                       num_iterations: int = 400,
                       ini_point: list = None
                       ):
-        fitness_calculator = FitnessCalculatorWrapper(self.dataset, self.data_path, self.topic_count)
+        fitness_calculator = FitnessCalculatorWrapper(self.dataset, self.data_path, self.topic_count, self.train_option)
 
         if ini_point is None:
             initial_point = self.initialize_params()
