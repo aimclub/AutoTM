@@ -170,7 +170,7 @@ class GA:
                  calc_scheme='type2', topic_count: Optional[int] = None, fitness_obj_type='single_objective',
                  tag: Optional[str] = None, use_nelder_mead: bool = False, use_nelder_mead_in_mutation: bool = False,
                  use_nelder_mead_in_crossover: bool = False, use_nelder_mead_in_selector: bool = False,
-                 **kwargs):
+                 train_option: str = 'offline', **kwargs):
         """
 
         :param dataset: dataset name
@@ -235,6 +235,7 @@ class GA:
         self.use_nelder_mead_in_mutation = use_nelder_mead_in_mutation
         self.use_nelder_mead_in_crossover = use_nelder_mead_in_crossover
         self.use_nelder_mead_in_selectior = use_nelder_mead_in_selector
+        self.train_option = train_option
         self.metric_collector = MetricsCollector(dataset=self.dataset,
                                                  n_specific_topics=topic_count)
         self.crossover_changes_dict = {}  # generation, parent_1_params, parent_2_params, ...
@@ -294,12 +295,14 @@ class GA:
                                     dataset=self.dataset,
                                     params=self.init_individ(base_model=True),
                                     exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
-                                    topic_count=self.topic_count, tag=self.tag)
+                                    topic_count=self.topic_count, tag=self.tag,
+                                    train_option=self.train_option)
             else:
                 dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
                                     dataset=self.dataset, params=self.init_individ(),
                                     exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
-                                    topic_count=self.topic_count, tag=self.tag)
+                                    topic_count=self.topic_count, tag=self.tag,
+                                    train_option=self.train_option)
             # TODO: improve heuristic on search space
             list_of_individuals.append(make_individual(dto=dto))
         population_with_fitness = estimate_fitness(list_of_individuals)
@@ -322,7 +325,8 @@ class GA:
             dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
                                 params=[float(i) for i in params], dataset=self.dataset,
                                 exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=iteration_num,
-                                topic_count=self.topic_count, tag=self.tag)
+                                topic_count=self.topic_count, tag=self.tag,
+                                train_option=self.train_option)
             calculated.append(make_individual(dto=dto))
 
         calculated = estimate_fitness(calculated)
@@ -336,7 +340,8 @@ class GA:
                                 data_path=self.data_path,
                                 params=params, dataset=self.dataset,
                                 fitness_value=set_surrogate_fitness(pred_y[ix]), exp_id=self.exp_id, alg_id=ALG_ID,
-                                topic_count=self.topic_count, tag=self.tag)
+                                topic_count=self.topic_count, tag=self.tag,
+                                train_option=self.train_option)
             calculated.append(make_individual(dto=dto))
         return calculated
 
@@ -448,12 +453,14 @@ class GA:
                                            dataset=self.dataset, params=child_1,
                                            exp_id=self.exp_id,
                                            alg_id=ALG_ID, iteration_id=iteration_num,
-                                           topic_count=self.topic_count, tag=self.tag)
+                                           topic_count=self.topic_count, tag=self.tag,
+                                           train_option=self.train_option)
                 child2_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
                                            dataset=self.dataset, params=child_2,
                                            exp_id=self.exp_id,
                                            alg_id=ALG_ID, iteration_id=iteration_num,
-                                           topic_count=self.topic_count, tag=self.tag)
+                                           topic_count=self.topic_count, tag=self.tag,
+                                           train_option=self.train_option)
 
                 new_generation.append(make_individual(dto=child1_dto))
                 new_generation.append(make_individual(dto=child2_dto))
@@ -471,7 +478,8 @@ class GA:
                                            dataset=self.dataset, params=child_1,
                                            exp_id=self.exp_id,
                                            alg_id=ALG_ID, iteration_id=iteration_num,
-                                           topic_count=self.topic_count, tag=self.tag)
+                                           topic_count=self.topic_count, tag=self.tag,
+                                           train_option=self.train_option)
                 new_generation.append(make_individual(dto=child1_dto))
 
                 self.evaluations_counter += 1
@@ -533,7 +541,7 @@ class GA:
                                          exp_id=self.exp_id,
                                          alg_id=ALG_ID, iteration_id=num_gen,
                                          topic_count=self.topic_count, tag=self.tag,
-                                         fitness_value=fitness)
+                                         fitness_value=fitness, train_option=self.train_option)
 
             new_population.append(make_individual(dto=solution_dto))
         new_population = estimate_fitness(new_population)
@@ -683,7 +691,8 @@ class GA:
                                         dataset=self.dataset,
                                         params=[float(i) for i in params],
                                         exp_id=self.exp_id, alg_id=ALG_ID,
-                                        topic_count=self.topic_count, tag=self.tag)
+                                        topic_count=self.topic_count, tag=self.tag,
+                                        train_option=self.train_option)
                     population[i] = make_individual(dto=dto)
                 self.evaluations_counter += 1
 

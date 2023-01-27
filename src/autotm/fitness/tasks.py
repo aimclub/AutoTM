@@ -24,7 +24,8 @@ def do_fitness_calculating(individual: str,
             params=individual.params,
             fitness_name=individual.fitness_name,
             topic_count=individual.topic_count,
-            force_dataset_settings_checkout=individual.force_dataset_settings_checkout) as (time_metrics, metrics, tm):
+            force_dataset_settings_checkout=individual.force_dataset_settings_checkout,
+            train_option=individual.train_option) as (time_metrics, metrics, tm):
         individual.fitness_value = metrics
 
         with model_files(tm) as tm_files:

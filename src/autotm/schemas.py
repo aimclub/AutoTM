@@ -27,6 +27,7 @@ class IndividualDTO(BaseModel):
     tag: Optional[str] = None
     iteration_id: int = 0
     topic_count: Optional[int] = None
+    train_option: str = 'offline'
 
     class Config:
         arbitrary_types_allowed = True
@@ -54,6 +55,7 @@ def fitness_to_json(obj: IndividualDTO):
         "fitness_name": obj.fitness_name,
         "dataset": obj.dataset,
         "topic_count": obj.topic_count,
+        "train_option": obj.train_option,
         "force_dataset_settings_checkout": obj.force_dataset_settings_checkout
     })
 
@@ -72,5 +74,6 @@ def fitness_from_json(obj):
         fitness_name=obj["fitness_name"],
         dataset=obj["dataset"],
         topic_count=obj["topic_count"],
+        train_option=obj["train_option"],
         force_dataset_settings_checkout=obj["force_dataset_settings_checkout"]
     )
