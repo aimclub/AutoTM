@@ -31,6 +31,7 @@ class MetricsCollector:
         self.num_generations = 0
         self.metric_df = None
         self.mutation_df = None
+        self.crossover_df = None
 
     def save_mutation(self, generation: int, original_params: list, mutated_params: list, original_fitness: float,
                       mutated_fitness: float):
@@ -43,9 +44,9 @@ class MetricsCollector:
             self.mutation_changes[f'gen_{generation}']['params_dist'].append(eucledian_distance)
             self.mutation_changes[f'gen_{generation}']['fitness_diff'].append(fitness_diff)
             self.mutation_changes[f'gen_{generation}']['original_params'].append(
-                original_params[:11] + [original_params[15]])
+                original_params[:12] + [original_params[15]])
             self.mutation_changes[f'gen_{generation}']['mutated_params'].append(
-                mutated_params[:11] + [mutated_params[15]])
+                mutated_params[:12] + [mutated_params[15]])
         else:
             self.mutation_changes[f'gen_{generation}'] = {'params_dist': [eucledian_distance],
                                                           'fitness_diff': [fitness_diff],
@@ -58,15 +59,16 @@ class MetricsCollector:
                        parent_2_fitness: float, child_1_fitness: float, child_2: list = None,
                        child_2_fitness: list = None):
         """
-        :param generation:
-        :param parent_1:
-        :param parent_2:
-        :param child_1:
-        :param parent_1_fitness:
-        :param parent_2_fitness:
-        :param child_1_fitness:
-        :param child_2:
-        :param child_2_fitness:
+
+        :param generation: generation number
+        :param parent_1: parameters of the first parent
+        :param parent_2: parameters of the second parent
+        :param child_1: parameters of the first child
+        :param parent_1_fitness: fitness of the first parent
+        :param parent_2_fitness:  fitness of the second parent
+        :param child_1_fitness: fitness of the firs child
+        :param child_2: parameters of the second child if exists
+        :param child_2_fitness: fitness of the second child if exists
         :return:
         """
         if f'gen_{generation}' in self.crossover_changes:
@@ -76,6 +78,9 @@ class MetricsCollector:
             self.crossover_changes[f'gen_{generation}']['parent_1_fitness'].append(parent_1_fitness)
             self.crossover_changes[f'gen_{generation}']['parent_2_fitness'].append(parent_2_fitness)
             self.crossover_changes[f'gen_{generation}']['child_1_fitness'].append(child_1_fitness)
+            if child_2 is not None:
+                self.crossover_changes[f'gen_{generation}']['child_2_params'].append(child_2)
+                self.crossover_changes[f'gen_{generation}']['child_2_fitness'].append(child_2_fitness)
         else:
             self.crossover_changes[f'gen_{generation}'] = {'parent_1_params': [parent_1],
                                                            'parent_2_params': [parent_2],
@@ -132,14 +137,38 @@ class MetricsCollector:
                 cur_df[GENERATION_COL] = gen
                 dfs.append(cur_df)
             self.mutation_df = pd.concat(dfs)
+        if self.crossover_df is not None:
+            print('Crossover df already exists')
+        else:
+            dfs = []
+            for gen in self.crossover_changes:
+                cur_df_dict = {
+                    'parent_1_params': self.crossover_changes[gen]['parent_1_params'],
+                    'parent_2_params': self.crossover_changes[gen]['parent_2_params'],
+                    'child_1_params': self.crossover_changes[gen]['child_1_params'],
+                    'parent_1_fitness': self.crossover_changes[gen]['parent_1_fitness'],
+                    'parent_2_fitness': self.crossover_changes[gen]['parent_2_fitness'],
+                    'child_1_fitness': self.crossover_changes[gen]['child_1_fitness'],
+                }
+                # TODO: save child 2 params
+                cur_df = pd.DataFrame(
+                    cur_df_dict
+                )
+                cur_df[GENERATION_COL] = gen
+                dfs.append(cur_df)
+            self.crossover_df = pd.concat(dfs)
 
     def write_metrics_to_file(self):
         os.makedirs(self.save_path, exist_ok=True)
         self.metric_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_metric_{int(time.time())}.csv'))
         self.mutation_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_mutation_{int(time.time())}.csv'))
+        self.crossover_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_crossover_{int(time.time())}.csv'))
 
-    def visualise_trace(self):
+    def save_and_visualise_trace(self):
         self.get_metric_df()
+        # save params
+        self.write_metrics_to_file()
+
         # traces vis
         graph_template = 'plotly_white'
 
@@ -153,6 +182,3 @@ class MetricsCollector:
         fig.show()
 
         # crossover diff vis
-
-        # save params
-        self.write_metrics_to_file()

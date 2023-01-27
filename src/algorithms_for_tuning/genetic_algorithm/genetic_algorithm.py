@@ -56,6 +56,10 @@ NUM_FITNESS_EVALUATIONS = 150
 @click.option('--gpr-kernel', required=False, type=str, help='kernel name for gpr')
 @click.option('--gpr-alpha', required=False, type=float, help='alpha for gpr')
 @click.option('--gpr-normalize-y', required=False, type=float, help='y normalization for gpr')
+@click.option('--train-option', required=False, default='offline', type=str, help='training type')
+@click.option('--use-nelder-mead-in-mutation', required=False, default=True, type=bool, help='Enable NM after mutation')
+@click.option('--use-nelder-mead-in-crossover', required=False, default=False, type=bool, help='Enable NM after crossover')
+@click.option('--use-nelder-mead-in-selector', required=False, default=False, type=bool, help='Enable NM after selection')
 def run_algorithm(dataset,
                   num_individuals,
                   num_iterations,
@@ -63,7 +67,10 @@ def run_algorithm(dataset,
                   mutation_type, crossover_type, selection_type,
                   elem_cross_prob, cross_alpha,
                   best_proc, log_file, exp_id, topic_count, tag,
-                  surrogate_name, gpr_kernel, gpr_alpha, gpr_normalize_y):
+                  surrogate_name, gpr_kernel, gpr_alpha, gpr_normalize_y,
+                  train_option, use_nelder_mead_in_mutation,
+                  use_nelder_mead_in_crossover, use_nelder_mead_in_selector
+                  ):
     logger.debug(f"Command line: {sys.argv}")
 
     run_uid = str(uuid.uuid4())
@@ -95,7 +102,11 @@ def run_algorithm(dataset,
            surrogate_name=surrogate_name,
            gpr_kernel=gpr_kernel,
            gpr_alpha=gpr_alpha,
-           normalize_y=gpr_normalize_y
+           normalize_y=gpr_normalize_y,
+           use_nelder_mead_in_mutation=use_nelder_mead_in_mutation,
+           use_nelder_mead_in_crossover=use_nelder_mead_in_crossover,
+           use_nelder_mead_in_selector=use_nelder_mead_in_selector,
+           train_option=train_option
            )
     best_value = g.run(verbose=True)
     print(best_value * (-1))

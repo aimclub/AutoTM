@@ -30,6 +30,7 @@ from algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from algorithms_for_tuning.genetic_algorithm.selection import selection
 from algorithms_for_tuning.individuals import make_individual
 from kube_fitness.tasks import IndividualDTO
+from algorithms_for_tuning.nelder_mead_optimization.nelder_mead import NelderMeadOptimization
 
 from algorithms_for_tuning.visualization.dynamic_tracker import MetricsCollector
 
@@ -168,9 +169,33 @@ class GA:
                  num_fitness_evaluations: Optional[int] = 500,
                  early_stopping_iterations: Optional[int] = 500,
                  best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
-                 calc_scheme='type2', topic_count: Optional[int] = None, tag: Optional[str] = None,
-                 fitness_obj_type='single_objective',
-                 use_nelder_mead: bool = False, **kwargs):
+                 calc_scheme='type2', topic_count: Optional[int] = None, fitness_obj_type='single_objective',
+                 tag: Optional[str] = None, use_nelder_mead: bool = False, use_nelder_mead_in_mutation: bool = False,
+                 use_nelder_mead_in_crossover: bool = False, use_nelder_mead_in_selector: bool = False,
+                 train_option: str = 'offline', **kwargs):
+        """
+
+        :param dataset: dataset name
+        :param data_path: path to data
+        :param num_individuals: number of individuals
+        :param num_iterations: number of iterations
+        :param mutation_type: type of mutation, available types ['mutation_one_param', 'combined', 'psm', 'positioning_mutation']
+        :param crossover_type: type of crossover, available types ['crossover_pmx', 'crossover_one_point', 'blend_crossover']
+        :param selection_type: type of selection, available types ['fitness_prop', 'rank_based']
+        :param elem_cross_prob: probability of crossover
+        :param num_fitness_evaluations: number of fitness evaluations in case of limited resources
+        :param early_stopping_iterations: number of iterations when there is no significant changes in fitness to stop training
+        :param best_proc: percentage of parents to be transferred to new generation
+        :param alpha:
+        :param exp_id:
+        :param surrogate_name:
+        :param calc_scheme: how to apply surrogates, available values: 'type 1' - to use surrogates through iteration, 'type 2' - calculating 70% on each iteration
+        :param topic_count:
+        :param fitness_obj_type:
+        :param tag:
+        :param use_nelder_mead: should Nelder-Mead enchan
+        :param kwargs:
+        """
 
         self.dataset = dataset
 
@@ -206,10 +231,13 @@ class GA:
         self.tag = tag
         self.set_regularizer_limits()
         self.use_nelder_mead = use_nelder_mead
+        self.use_nelder_mead_in_mutation = use_nelder_mead_in_mutation
+        self.use_nelder_mead_in_crossover = use_nelder_mead_in_crossover
+        self.use_nelder_mead_in_selectior = use_nelder_mead_in_selector
+        self.train_option = train_option
         self.metric_collector = MetricsCollector(dataset=self.dataset,
                                                  n_specific_topics=topic_count)
-        self.crossover_changes_dict = {}
-        # params
+        self.crossover_changes_dict = {}  # generation, parent_1_params, parent_2_params, ...
 
     def set_regularizer_limits(self, low_decor=0, high_decor=1e5,
                                low_n=0, high_n=30,
@@ -265,11 +293,13 @@ class GA:
                 dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset,
                                     params=self.init_individ(base_model=True),
                                     exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
-                                    topic_count=self.topic_count, tag=self.tag)
+                                    topic_count=self.topic_count, tag=self.tag,
+                                    train_option=self.train_option)
             else:
                 dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=self.init_individ(),
                                     exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
-                                    topic_count=self.topic_count, tag=self.tag)
+                                    topic_count=self.topic_count, tag=self.tag,
+                                    train_option=self.train_option)
             # TODO: improve heuristic on search space
             list_of_individuals.append(make_individual(dto=dto))
         population_with_fitness = estimate_fitness(list_of_individuals)
@@ -290,7 +320,8 @@ class GA:
         for params in X[:recalculate_num]:
             dto = IndividualDTO(id=str(uuid.uuid4()), params=[float(i) for i in params], dataset=self.dataset,
                                 exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=iteration_num,
-                                topic_count=self.topic_count, tag=self.tag)
+                                topic_count=self.topic_count, tag=self.tag,
+                                train_option=self.train_option)
             calculated.append(make_individual(dto=dto))
 
         calculated = estimate_fitness(calculated)
@@ -302,7 +333,8 @@ class GA:
         for ix, params in enumerate(X[recalculate_num:]):
             dto = IndividualDTO(id=str(uuid.uuid4()), params=params, dataset=self.dataset,
                                 fitness_value=set_surrogate_fitness(pred_y[ix]), exp_id=self.exp_id, alg_id=ALG_ID,
-                                topic_count=self.topic_count, tag=self.tag)
+                                topic_count=self.topic_count, tag=self.tag,
+                                train_option=self.train_option)
             calculated.append(make_individual(dto=dto))
         return calculated
 
@@ -413,11 +445,14 @@ class GA:
                 child1_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_1,
                                            exp_id=self.exp_id,
                                            alg_id=ALG_ID, iteration_id=iteration_num,
-                                           topic_count=self.topic_count, tag=self.tag)
-                child2_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_2,
+                                           topic_count=self.topic_count, tag=self.tag,
+                                           train_option=self.train_option)
+                child2_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
+                                           dataset=self.dataset, params=child_2,
                                            exp_id=self.exp_id,
                                            alg_id=ALG_ID, iteration_id=iteration_num,
-                                           topic_count=self.topic_count, tag=self.tag)
+                                           topic_count=self.topic_count, tag=self.tag,
+                                           train_option=self.train_option)
 
                 new_generation.append(make_individual(dto=child1_dto))
                 new_generation.append(make_individual(dto=child2_dto))
@@ -434,7 +469,8 @@ class GA:
                 child1_dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset, params=child_1,
                                            exp_id=self.exp_id,
                                            alg_id=ALG_ID, iteration_id=iteration_num,
-                                           topic_count=self.topic_count, tag=self.tag)
+                                           topic_count=self.topic_count, tag=self.tag,
+                                           train_option=self.train_option)
                 new_generation.append(make_individual(dto=child1_dto))
 
                 self.evaluations_counter += 1
@@ -456,6 +492,16 @@ class GA:
             logger.info(f"ize of the new generation is {len(new_generation)}")
             logger.info(f"TIME OF THE FITNESS FUNCTION IN CROSSOVER: {time.time() - fitness_calc_time_start}")
 
+            for i in range(len(crossover_changes['parent_1_params'])):
+                self.metric_collector.save_crossover(generation=iteration_num,
+                                                     parent_1=crossover_changes['parent_1_params'][i],
+                                                     parent_2=crossover_changes['parent_2_params'][i],
+                                                     parent_1_fitness=crossover_changes['parent_1_fitness'][i],
+                                                     parent_2_fitness=crossover_changes['parent_2_fitness'][i],
+                                                     child_1=new_generation[crossover_changes['child_id'][i]].params,
+                                                     child_1_fitness=new_generation[
+                                                         crossover_changes['child_id'][i]].fitness_value)
+
             if self.surrogate:
                 if self.calc_scheme == 'type1':
                     if surrogate_iteration:
@@ -468,6 +514,30 @@ class GA:
                     self.save_params(new_generation)
 
         return new_generation, crossover_changes
+
+    def apply_nelder_mead(self, starting_points_set, num_gen, num_iterations=2):
+        nelder_opt = NelderMeadOptimization(data_path=self.data_path,
+                                            dataset=self.dataset,
+                                            exp_id=self.exp_id,
+                                            topic_count=self.topic_count,
+                                            train_option=self.train_option)
+        new_population = []
+        for point in starting_points_set:
+            st_point = point[:12] + [point[15]]
+            res = nelder_opt.run_algorithm(num_iterations=num_iterations, ini_point=st_point)
+            solution = list(res['x'])
+            solution = solution[:-1] + point[12:15] + [solution[-1]]  # TODO: check mutation ids
+            fitness = -res.fun
+            solution_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
+                                         dataset=self.dataset, params=solution,
+                                         exp_id=self.exp_id,
+                                         alg_id=ALG_ID, iteration_id=num_gen,
+                                         topic_count=self.topic_count, tag=self.tag,
+                                         fitness_value={AVG_COHERENCE_SCORE: fitness}, train_option=self.train_option)
+
+            new_population.append(make_individual(dto=solution_dto))
+        new_population = estimate_fitness(new_population)
+        return new_population
 
     def run(self, verbose=False):
         prepare_fitness_estimator()
@@ -529,6 +599,10 @@ class GA:
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
             logger.info("CROSSOVER IS OVER")
+
+            if self.use_nelder_mead_in_crossover:
+                # TODO: implement Nelder-Mead here
+                pass
 
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
@@ -612,7 +686,8 @@ class GA:
                     dto = IndividualDTO(id=str(uuid.uuid4()), dataset=self.dataset,
                                         params=[float(i) for i in params],
                                         exp_id=self.exp_id, alg_id=ALG_ID,
-                                        topic_count=self.topic_count, tag=self.tag)
+                                        topic_count=self.topic_count, tag=self.tag,
+                                        train_option=self.train_option)
                     population[i] = make_individual(dto=dto)
                 self.evaluations_counter += 1
 
@@ -650,6 +725,19 @@ class GA:
 
             population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
 
+            if self.use_nelder_mead_in_mutation:
+                collected_params = []
+                for elem in population:
+                    collected_params.append(elem.params)
+                random_ids = random.sample([i for i in range(len(collected_params))], k=3)
+                starting_points = [collected_params[i] for i in random_ids]
+
+                nm_population = self.apply_nelder_mead(starting_points, num_gen=ii)
+                for i, elem in enumerate(nm_population):
+                    if population[i].fitness_value < elem.fitness_value:
+                        print(f'NM found better solution! {elem.fitness_value} vs {population[i].fitness_value}')
+                        population[i] = elem
+
             if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
                                                    fitness=[i.fitness_value for i in population])
@@ -682,6 +770,8 @@ class GA:
                     early_stopping_counter += 1
                     if early_stopping_counter == self.early_stopping_iterations:
                         bparams = ''.join([str(i) for i in population[0].params])
+                        self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
+                                                           fitness=[i.fitness_value for i in population])
                         logger.info(f"TERMINATION IS TRIGGERED: EARLY STOPPING."
                                     f"DATASET {self.dataset}."
                                     f"TOPICS NUM {self.topic_count}."
@@ -705,7 +795,7 @@ class GA:
                         f"TOPICS NUM {self.topic_count}."
                         f"RUN ID {run_id}.")
 
-        self.metric_collector.visualise_trace()
+        self.metric_collector.save_and_visualise_trace()
 
         logger.info(f"Y: {y}")
 
