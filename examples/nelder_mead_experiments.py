@@ -6,7 +6,7 @@ import os
 
 fnames = ['20newsgroups_sample', 'amazon_food_sample', 'banners_sample', 'hotel-reviews_sample', 'lenta_ru_sample']
 data_lang = ['en', 'en', 'ru', 'en', 'ru']
-dataset_id = 3
+dataset_id = 4
 
 DATA_PATH = os.path.join('/ess_data/GOTM/datasets_TM_scoring', fnames[dataset_id])
 
