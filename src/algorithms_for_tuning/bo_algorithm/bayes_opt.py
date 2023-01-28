@@ -93,20 +93,21 @@ class BigartmFitness:
         # self.best_solution: Optional[IndividualDTO] = None
 
     def parse_kwargs(self, **kwargs):
-        params = []
-        params.append(kwargs.get('decor', 1))
-        params.append(int(kwargs.get('n1', 1)))
-        params.append(kwargs.get('spb', 1))
-        params.append(kwargs.get('stb', 1))
-        params.append(int(kwargs.get('n2', 1)))
-        params.append(kwargs.get('sp1', 1))
-        params.append(kwargs.get('st1', 1))
-        params.append(int(kwargs.get('n3', 1)))
-        params.append(kwargs.get('sp2', 1))
-        params.append(kwargs.get('st2', 1))
-        params.append(int(kwargs.get('n4', 1)))
-        params.append(int(kwargs.get('B', 1)))
-        params.append(kwargs.get('decor_2', 1))
+        params = [
+            kwargs.get('decor', 1),
+            int(kwargs.get('n1', 1)),
+            kwargs.get('spb', 1),
+            kwargs.get('stb', 1),
+            int(kwargs.get('n2', 1)),
+            kwargs.get('sp1', 1),
+            kwargs.get('st1', 1),
+            int(kwargs.get('n3', 1)),
+            kwargs.get('sp2', 1),
+            kwargs.get('st2', 1),
+            int(kwargs.get('n4', 1)),
+            int(kwargs.get('B', 1)),
+            kwargs.get('decor_2', 1)
+        ]
         return params
 
     def make_individ(self, **kwargs):

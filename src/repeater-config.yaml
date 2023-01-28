@@ -1,10 +1,10 @@
 ---
 datasets:
   - 20newsgroups
-#  - banners
-#  - amazon_food
-#  - hotel-reviews
-#  - lenta_ru
+  - banners
+  - amazon_food
+  - hotel-reviews
+  - lenta_ru
 
   #  - clickhouse_issues
   #  - books_stroyitelstvo_2030
@@ -12,11 +12,11 @@ datasets:
 configurations:
   - name: "ga_10"
     cmd: "/app/run-autotm.sh"
-    args: "--num-individuals 11 --num-iterations 2 --mutation-type psm --crossover-type blend_crossover
+    args: "--num-individuals 11 --num-iterations 10 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
            --exp-id 37 --tag fitness_10_10 --topic-count 10"
     workdir: "/app"
-    repetitions: 1
+    repetitions: 2
 
 #  - name: "ga_50"
 #    cmd: "/app/run-autotm.sh"

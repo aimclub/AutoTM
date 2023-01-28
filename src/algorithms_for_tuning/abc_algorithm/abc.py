@@ -179,7 +179,7 @@ def lhd(n_sam, n_val, val_rng=None, method='random', criterion=None,
         raise NotImplementedError("You should not get here")
         # return (sam_set, np.array([mm_val, corr_val, multi_val]))
     else:
-        return (sam_set)
+        return sam_set
 
 
 def _lhd_random(n_sam, n_val):
@@ -196,7 +196,7 @@ def _lhd_random(n_sam, n_val):
         sam_set[:, i] = permutation(bins_low + rand(n_sam) * (bins_high - bins_low))
 
     # Return sam_set
-    return (sam_set)
+    return sam_set
 
 
 def _lhd_fixed(n_sam, n_val):
@@ -209,7 +209,7 @@ def _lhd_fixed(n_sam, n_val):
         sam_set[:, i] = permutation(val)
 
     # Return sam_set
-    return (sam_set)
+    return sam_set
 
 
 def _lhd_center(n_sam, n_val):
@@ -229,7 +229,7 @@ def _lhd_center(n_sam, n_val):
         sam_set[:, i] = permutation(center_num)
 
     # Return sam_set
-    return (sam_set)
+    return sam_set
 
 
 def abc_fitness(sources):

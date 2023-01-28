@@ -19,6 +19,7 @@ def test_mode_from_env() -> bool:
 
     return test_mode.lower() in ("yes", "true", "t", "1")
 
+
 def test_mode_from_config() -> bool:
     if "FITNESS_CONFIG_PATH" in os.environ:
         filepath = os.environ["FITNESS_CONFIG_PATH"]
@@ -36,8 +37,8 @@ def test_mode_from_config() -> bool:
 
 test_mode = test_mode_from_env() or test_mode_from_config()
 
-
 if not test_mode:
+    # noinspection PyUnresolvedReferences
     from kube_fitness.tasks import make_celery_app as prepare_fitness_estimator
     from kube_fitness.tasks import parallel_fitness
     from kube_fitness.tasks import log_best_solution as lbs

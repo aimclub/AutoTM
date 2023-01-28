@@ -76,12 +76,8 @@ class NelderMeadOptimization:
             initial_point = ini_point
 
         if run_id is not None:
-            iter_num = 0
-
             def callback(*_, **__):
-                global iter_num
-                logger.debug(f"Calculated NM iteration #{iter_num} for run id: {run_id}")
-                iter_num += 1
+                logger.debug(f"Calculated NM iteration for run id: {run_id}")
         else:
             callback = None
 

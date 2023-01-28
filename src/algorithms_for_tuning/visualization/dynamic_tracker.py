@@ -161,7 +161,7 @@ class MetricsCollector:
         self.metric_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_metric_{int(time.time())}.csv'))
         self.mutation_df.to_csv(os.path.join(self.save_path, f'{self.save_fname}_mutation_{int(time.time())}.csv'))
 
-    def visualise_trace(self):
+    def save_and_visualise_trace(self):
         self.get_metric_df()
 
         # save params
@@ -169,7 +169,7 @@ class MetricsCollector:
 
         try:
             import plotly.express as px
-        except:
+        except ImportError:
             return
 
         # traces vis
@@ -183,5 +183,3 @@ class MetricsCollector:
         fig = px.scatter(self.mutation_df, x=PARAMS_DIST_COL, y=FITNESS_DIFF_COL,
                          title='Effectiveness of mutation operation', template=graph_template)
         fig.show()
-
-        # crossover diff vis

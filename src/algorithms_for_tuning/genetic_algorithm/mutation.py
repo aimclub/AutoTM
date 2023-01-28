@@ -26,28 +26,28 @@ def mutation_one_param(individ, low_spb, high_spb,
 
 def positioning_mutation(individ, elem_mutation_prob=0.1, **kwargs):
     for i in range(len(individ)):
-        set_1 = set([i])
+        set_1 = {i}
         if random.random() <= elem_mutation_prob:
             if i in [0, 15]:
-                set_2 = set([0, 15])
+                set_2 = {0, 15}
                 ix = np.random.choice(list(set_2.difference(set_1)))
                 tmp = individ[ix]
                 individ[ix] = individ[i]
                 individ[i] = tmp
             elif i in [1, 4, 7, 10, 11]:
-                set_2 = set([1, 4, 7, 10, 11])
+                set_2 = {1, 4, 7, 10, 11}
                 ix = np.random.choice(list(set_2.difference(set_1)))
                 tmp = individ[ix]
                 individ[ix] = individ[i]
                 individ[i] = tmp
             elif i in [2, 3]:
-                set_2 = set([2, 3])
+                set_2 = {2, 3}
                 ix = np.random.choice(list(set_2.difference(set_1)))
                 tmp = individ[ix]
                 individ[ix] = individ[i]
                 individ[i] = tmp
             elif i in [5, 6, 8, 9]:
-                set_2 = set([5, 6, 8, 9])
+                set_2 = {5, 6, 8, 9}
                 ix = np.random.choice(list(set_2.difference(set_1)))
                 tmp = individ[ix]
                 individ[ix] = individ[i]

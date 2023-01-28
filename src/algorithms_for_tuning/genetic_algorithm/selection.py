@@ -22,7 +22,7 @@ def yield_matching_pairs(pairs, population):
 
         selection_probability = random.random()
         for k, individ in enumerate(population):
-            if (k != idx):
+            if k != idx:
                 if selection_probability <= individ._prob:
                     elems = frozenset((idx, k))
                     if (len(population_pairs_pool) == 0) or (
