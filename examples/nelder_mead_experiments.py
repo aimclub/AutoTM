@@ -2,11 +2,12 @@ from autotm.algorithms_for_tuning.nelder_mead_optimization.nelder_mead import Ne
 import time
 import pandas as pd
 import os
+
 # 2
 
 fnames = ['20newsgroups_sample', 'amazon_food_sample', 'banners_sample', 'hotel-reviews_sample', 'lenta_ru_sample']
 data_lang = ['en', 'en', 'ru', 'en', 'ru']
-dataset_id = 4
+dataset_id = 1
 
 DATA_PATH = os.path.join('/ess_data/GOTM/datasets_TM_scoring', fnames[dataset_id])
 
@@ -21,7 +22,7 @@ num_iterations = 20
 topic_count = 10
 exp_id = int(time.time())
 print(exp_id)
-train_option='offline'
+train_option = 'offline'
 
 if __name__ == '__main__':
     nelder_opt = NelderMeadOptimization(data_path=SAVE_PATH,
