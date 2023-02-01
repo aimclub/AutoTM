@@ -8,55 +8,6 @@ from math import sqrt, log, exp
 
 
 class Strategy(object):
-    """
-    A strategy that will keep track of the basic parameters of the CMA-ES
-    algorithm ([Hansen2001]_).
-    :param centroid: An iterable object that indicates where to start the
-                     evolution.
-    :param sigma: The initial standard deviation of the distribution.
-    :param parameter: One or more parameter to pass to the strategy as
-                      described in the following table, optional.
-    +----------------+---------------------------+----------------------------+
-    | Parameter      | Default                   | Details                    |
-    +================+===========================+============================+
-    | ``lambda_``    | ``int(4 + 3 * log(N))``   | Number of children to      |
-    |                |                           | produce at each generation,|
-    |                |                           | ``N`` is the individual's  |
-    |                |                           | size (integer).            |
-    +----------------+---------------------------+----------------------------+
-    | ``mu``         | ``int(lambda_ / 2)``      | The number of parents to   |
-    |                |                           | keep from the              |
-    |                |                           | lambda children (integer). |
-    +----------------+---------------------------+----------------------------+
-    | ``cmatrix``    | ``identity(N)``           | The initial covariance     |
-    |                |                           | matrix of the distribution |
-    |                |                           | that will be sampled.      |
-    +----------------+---------------------------+----------------------------+
-    | ``weights``    | ``"superlinear"``         | Decrease speed, can be     |
-    |                |                           | ``"superlinear"``,         |
-    |                |                           | ``"linear"`` or            |
-    |                |                           | ``"equal"``.               |
-    +----------------+---------------------------+----------------------------+
-    | ``cs``         | ``(mueff + 2) /           | Cumulation constant for    |
-    |                | (N + mueff + 3)``         | step-size.                 |
-    +----------------+---------------------------+----------------------------+
-    | ``damps``      | ``1 + 2 * max(0, sqrt((   | Damping for step-size.     |
-    |                | mueff - 1) / (N + 1)) - 1)|                            |
-    |                | + cs``                    |                            |
-    +----------------+---------------------------+----------------------------+
-    | ``ccum``       | ``4 / (N + 4)``           | Cumulation constant for    |
-    |                |                           | covariance matrix.         |
-    +----------------+---------------------------+----------------------------+
-    | ``ccov1``      | ``2 / ((N + 1.3)^2 +      | Learning rate for rank-one |
-    |                | mueff)``                  | update.                    |
-    +----------------+---------------------------+----------------------------+
-    | ``ccovmu``     | ``2 * (mueff - 2 + 1 /    | Learning rate for rank-mu  |
-    |                | mueff) / ((N + 2)^2 +     | update.                    |
-    |                | mueff)``                  |                            |
-    +----------------+---------------------------+----------------------------+
-    .. [Hansen2001] Hansen and Ostermeier, 2001. Completely Derandomized
-       Self-Adaptation in Evolution Strategies. *Evolutionary Computation*
-    """
 
     def __init__(self, centroid, sigma, **kwargs):
         self.params = kwargs
