@@ -31,7 +31,7 @@ Distributed version to run experiments on kubernetes is available in ```autotm-d
     author = {Khodorchenko, Maria and Butakov, Nikolay and Sokhin, Timur and Teryoshkin, Sergey},
     title = "{ Surrogate-based optimization of learning strategies for additively regularized topic models}",
     journal = {Logic Journal of the IGPL},
-    year = {2022},2
+    year = {2022},
     month = {02},
     issn = {1367-0751},
     doi = {10.1093/jigpal/jzac019},
