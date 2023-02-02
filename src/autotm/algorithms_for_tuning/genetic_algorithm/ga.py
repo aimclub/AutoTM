@@ -8,6 +8,7 @@ import sys
 import time
 import uuid
 import warnings
+from abc import ABC, abstractmethod
 from os.path import abspath, exists
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 import random
@@ -174,20 +175,70 @@ class ModelStorage:
 class GABase:
     def __init__(self,
                  dataset: str,
-                 data_path: Optional[str],
+                 data_path: str,
                  num_individuals: int,
-                 num_iterations: int):
+                 num_iterations: int,
+                 topic_count: int,
+                 num_fitness_evaluations: Optional[int] = 500,
+                 early_stopping_iterations: Optional[int] = 20,
+                 high_decor: float = 1e5,
+                 low_decor: float = 0,
+                 low_n: int = 0,
+                 high_n: int = 30,
+                 low_back: int = 0,
+                 high_back: int = 5,
+                 high_spb: float = 1e2,
+                 low_spb: float = 0,
+                 low_spm: float = -1e3,
+                 high_spm: float = -1e-3,
+                 low_sp_phi: float = -1e3,
+                 high_sp_phi: float = 1e3,
+                 low_prob: Optional[float] = 0,
+                 high_prob: Optional[float] = 1,
+                 fitness_obj_type: Optional[str] = 'single_objective'):
         self.dataset = dataset
         self.data_path = data_path
         self.num_individuals = num_individuals
         self.num_iterations = num_iterations
+        self.topic_count = topic_count
+
+        self.num_fitness_evaluations = num_fitness_evaluations
+        self.early_stopping_iterations = early_stopping_iterations
+
+        self.high_decor = high_decor
+        self.low_decor = low_decor
+        self.low_n = low_n
+        self.high_n = high_n
+        self.low_back = low_back
+        self.high_back = high_back
+        self.high_spb = high_spb
+        self.low_spb = low_spb
+        self.low_spm = low_spm
+        self.high_spm = high_spm
+        self.low_sp_phi = low_sp_phi
+        self.high_sp_phi = high_sp_phi
+        self.low_prob = low_prob
+        self.high_prob = high_prob
+
+        self.fitness_obj_type = fitness_obj_type
 
         if not exists(abspath(self.data_path)):
+            raise OSError(f"{self.data_path} doesnt exist on disk")
+
+    @abstractmethod
+    def init_individ(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def init_population(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def run(self):
+        raise NotImplementedError
 
 
-
-
-class GA:
+class GA(GABase):
     def __init__(self, dataset, data_path, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
                  selection_type='fitness_prop', elem_cross_prob=0.2,
@@ -222,7 +273,8 @@ class GA:
         :param kwargs:
         """
 
-        self.dataset = dataset
+        super().__init__(dataset, data_path, num_individuals, num_iterations, topic_count, num_fitness_evaluations,
+                         early_stopping_iterations)
 
         if crossover_type == 'blend_crossover':
             self.crossover_children = 1
@@ -233,18 +285,11 @@ class GA:
         #     self.crossover_children = 1
         # else:
         # self.crossover_children = 2
-        self.data_path = data_path
-        self.num_individuals = num_individuals
-        self.num_iterations = num_iterations
         self.mutation = mutation(mutation_type)
         self.crossover = crossover(crossover_type)
         self.selection = selection(selection_type)
         self.elem_cross_prob = elem_cross_prob
         self.alpha = alpha
-        self.evaluations_counter = 0
-        self.num_fitness_evaluations = num_fitness_evaluations
-        self.early_stopping_iterations = early_stopping_iterations
-        self.fitness_obj_type = fitness_obj_type
         self.best_proc = best_proc
         self.all_params = []
         self.all_fitness = []
@@ -257,7 +302,6 @@ class GA:
         self.topic_count = topic_count
         self.tag = tag
         # hyperparams
-        self.set_regularizer_limits()
         self.use_nelder_mead = use_nelder_mead
         self.use_nelder_mead_in_mutation = use_nelder_mead_in_mutation
         self.use_nelder_mead_in_crossover = use_nelder_mead_in_crossover
@@ -267,27 +311,7 @@ class GA:
                                                  n_specific_topics=topic_count)
         self.crossover_changes_dict = {}  # generation, parent_1_params, parent_2_params, ...
 
-    def set_regularizer_limits(self, low_decor=0, high_decor=1e5,
-                               low_n=0, high_n=30,
-                               low_back=0, high_back=5,
-                               low_spb=0, high_spb=1e2,
-                               low_spm=-1e-3, high_spm=1e2,
-                               low_sp_phi=-1e3, high_sp_phi=1e3,
-                               low_prob=0, high_prob=1):
-        self.high_decor = high_decor
-        self.low_decor = low_decor
-        self.low_n = low_n
-        self.high_n = high_n
-        self.low_back = low_back
-        self.high_back = high_back
-        self.high_spb = high_spb
-        self.low_spb = low_spb
-        self.low_spm = low_spm
-        self.high_spm = high_spm
-        self.low_sp_phi = low_sp_phi
-        self.high_sp_phi = high_sp_phi
-        self.low_prob = low_prob
-        self.high_prob = high_prob
+        self.evaluations_counter = 0
 
     def init_individ(self, base_model=False):
         val_decor = np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[0]

@@ -3,6 +3,7 @@ import os
 import pickle
 import time
 import uuid
+from abc import ABC, abstractmethod
 from collections import OrderedDict
 from contextlib import contextmanager
 from typing import Dict, Optional, Tuple, ContextManager, List
@@ -176,7 +177,8 @@ class TopicModelFactory:
     def __init__(self, dataset_name: str, data_path: str,
                  fitness_name: str, params: list,
                  topic_count: Optional[int] = None, forced_update: bool = False,
-                 train_option: str = 'offline'):
+                 train_option: str = 'offline',
+                 gen_type: str = 'fixed'):  #
         self.dataset_name = dataset_name
         self.data_path = data_path
         self.fitness_name = fitness_name
@@ -184,6 +186,7 @@ class TopicModelFactory:
         self.topic_count = topic_count
         self.forced_update = forced_update
         self.train_option = train_option
+        self.gen_type = gen_type
         self._custom_scores = []
         self.tm = None
 
@@ -202,10 +205,14 @@ class TopicModelFactory:
         uid = uuid.uuid4()
 
         if self.fitness_name == "default":
-            logging.info(f"Using TM model: {TopicModel} according "
-                         f"to fitness name: {self.fitness_name}, topics count: {self.topic_count}")
-            self.tm = TopicModel(uid, self.experiments_path, self.topic_count, self.num_processors,
-                                 dataset, self.params, train_option=self.train_option)
+            if self.gen_type == 'fixed':
+                logging.info(f"Using TM model: {TopicModel} according "
+                             f"to fitness name: {self.fitness_name}, topics count: {self.topic_count}")
+                self.tm = TopicModel(uid, self.experiments_path, self.topic_count, self.num_processors,
+                                     dataset, self.params, train_option=self.train_option)
+            if self.gen_type == 'dynamic':
+
+
         else:
             raise Exception(
                 f"Unknown fitness name: {self.fitness_name}. Only the following ones are known: {['default']}")
@@ -301,14 +308,13 @@ def calculate_fitness_of_individual(dataset: str,
     return fitness
 
 
-class TopicModel:
+class TopicModelBase:
     def __init__(self,
                  uid: uuid.UUID,
                  experiments_path: str,
                  topic_count: int,
                  num_processors: int,
                  dataset: Dataset,
-                 params: list,
                  decor_test=False,
                  train_option: str = 'offline'):
         self.uid = uid
@@ -327,6 +333,24 @@ class TopicModel:
 
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
+
+    @abstractmethod
+    def train(self):
+        raise NotImplementedError
+
+
+class TopicModel(TopicModelBase):
+    def __init__(self,
+                 uid: uuid.UUID,
+                 experiments_path: str,
+                 topic_count: int,
+                 num_processors: int,
+                 dataset: Dataset,
+                 params: list,
+                 decor_test=False,
+                 train_option: str = 'offline'):
+
+        super().__init__(uid, experiments_path, topic_count, num_processors, dataset, decor_test, train_option)
 
         self.__set_params(params)
         self.back = ['back{}'.format(i) for i in range(self.B)]
@@ -745,3 +769,43 @@ class TopicModel:
         }
 
         return scores_dict
+
+
+class TopicModelMultistage(TopicModelBase):
+    def __init__(self,
+                 uid: uuid.UUID,
+                 experiments_path: str,
+                 topic_count: int,
+                 num_processors: int,
+                 dataset: Dataset,
+                 params: list,
+                 decor_test=False,
+                 train_option: str = 'offline'):
+
+        super().__init__(uid, experiments_path, topic_count, num_processors, dataset, decor_test, train_option)
+
+        self.__set_params(params)
+        self.back = ['back{}'.format(i) for i in range(self.B)]
+
+
+    def __set_params(self, params_string):
+
+        self.B = params_string[0]['B']
+
+        self.decor = params_string[0]
+        self.n1 = params_string[1]
+
+        if self.decor_test:
+            return
+
+        self.spb = params_string[2]
+        self.stb = params_string[3]
+        self.n2 = params_string[4]
+        self.sp1 = params_string[5]
+        self.st1 = params_string[6]
+        self.n3 = params_string[7]
+        self.sp2 = params_string[8]
+        self.st2 = params_string[9]
+        self.n4 = params_string[10]
+        self.B = params_string[11]
+        self.decor_2 = params_string[15]
