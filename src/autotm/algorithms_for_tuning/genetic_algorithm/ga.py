@@ -8,7 +8,8 @@ import sys
 import time
 import uuid
 import warnings
-from typing import Optional
+from os.path import abspath, exists
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 import random
 
 import numpy as np
@@ -158,6 +159,32 @@ def get_prediction_uncertanty(model, X, surrogate_name, percentile=90):
     elif surrogate_name == 'decision-tree-regressor':
         raise NotImplementedError
     return interval_len
+
+
+class ModelStorage:
+    def __init__(self):
+        self.stage_1_components = {}  # {config_id: id}
+        self.stage_1_hyperp = {}  # {config_id: [[params1, params2]]}
+
+    def model_search(self, model):
+        raise NotImplementedError
+        # for model.components
+
+
+class GABase:
+    def __init__(self,
+                 dataset: str,
+                 data_path: Optional[str],
+                 num_individuals: int,
+                 num_iterations: int):
+        self.dataset = dataset
+        self.data_path = data_path
+        self.num_individuals = num_individuals
+        self.num_iterations = num_iterations
+
+        if not exists(abspath(self.data_path)):
+
+
 
 
 class GA:
@@ -807,3 +834,83 @@ class GA:
         logger.info(f"Logged the best solution. Obtained fitness is {ind.fitness_value}")
 
         return ind.fitness_value
+
+
+# multistage bag of regularizers approach
+# TODO: add penalty for the solution length
+
+
+class GAmultistage(GA):
+    def __init__(self, dataset, num_individuals, max_stages=5):  # max_stage_len
+        self.max_stages = max_stages  # amount of unique regularizers
+        self.dataset = dataset
+        self.bag_of_regularizers = ['decor_S', 'decor_B', 'S_phi_B', 'S_phi_S',
+                                    'S_theta_B', 'S_theta_S']  # add separate smooth and sparsity
+        self.num_individuals = num_individuals
+        self.initial_element_stage_probability = 0.5
+        self.positioning_matrix = np.full((len(self.bag_of_regularizers), self.max_stages - 1), 0.5)
+        self.set_regularizer_limits()
+
+    def set_regularizer_limits(self, low_decor=0, high_decor=1e5,
+                               low_n=1, high_n=30,  # minimal value changed to 1
+                               low_back=0, high_back=5,
+                               low_spb=0, high_spb=1e2,
+                               low_spm=-1e-3, high_spm=1e2,
+                               low_sp_phi=-1e3, high_sp_phi=1e3):
+        self.high_decor = high_decor
+        self.low_decor = low_decor
+        self.low_n = low_n
+        self.high_n = high_n
+        self.low_back = low_back
+        self.high_back = high_back
+        self.high_spb = high_spb
+        self.low_spb = low_spb
+        self.low_spm = low_spm
+        self.high_spm = high_spm
+        self.low_sp_phi = low_sp_phi
+        self.high_sp_phi = high_sp_phi
+
+    # TODO: check if float is needed
+    def _init_param(self, param_type):
+        if param_type == 'decor_S' or param_type == 'decor_B':
+            return float(np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[0])
+        elif param_type == 'S_phi_B' or 'S_theta_B':
+            return float(np.random.uniform(low=self.low_spb, high=self.high_spb, size=1)[0])
+        elif param_type == 'S_phi_S' or 'S_theta_S':
+            return float(np.random.uniform(low=self.low_sp_phi, high=self.high_sp_phi, size=1)[0])
+        elif param_type == 'n':
+            return float(np.random.randint(low=self.low_n, high=self.high_n, size=1)[0])
+        elif param_type == 'B':
+            return float(np.random.randint(low=self.low_back, high=self.high_back, size=1)[0])
+
+    def _create_stage(self, stage_num):
+        stage_regularizers = []
+        for ix, elem in enumerate(self.bag_of_regularizers):
+            elem_sample_prob = self.positioning_matrix[ix][stage_num - 1]
+            if random.random() < elem_sample_prob:
+                stage_regularizers.append(elem)
+        stage_regularizers.append('n')
+        return stage_regularizers
+
+    def init_individ(self):
+        number_of_stages = np.random.randint(low=1, high=self.max_stages, size=1)[0]
+        dict_of_stages = [{} for _ in range(number_of_stages)]
+        for i in range(number_of_stages):
+            regularizers = self._create_stage(i)
+            for reg_name in regularizers:
+                value = self._init_param(reg_name)
+                dict_of_stages[i][reg_name] = value
+        dict_of_stages = [{'B': self._init_param('B')}] + dict_of_stages
+        return dict_of_stages
+
+    def init_population(self):
+
+        if random.random() < self.initial_element_stage_probability:
+
+        for i in range(self.max_stages):
+            print()
+
+        raise NotImplementedError
+
+    def ffff(self):
+        raise NotImplementedError
