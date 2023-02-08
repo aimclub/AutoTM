@@ -334,26 +334,12 @@ class TopicModelBase:
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
 
+        self.B = None
+        self.back = None
+
     @abstractmethod
     def train(self):
         raise NotImplementedError
-
-
-class TopicModel(TopicModelBase):
-    def __init__(self,
-                 uid: uuid.UUID,
-                 experiments_path: str,
-                 topic_count: int,
-                 num_processors: int,
-                 dataset: Dataset,
-                 params: list,
-                 decor_test=False,
-                 train_option: str = 'offline'):
-
-        super().__init__(uid, experiments_path, topic_count, num_processors, dataset, decor_test, train_option)
-
-        self.__set_params(params)
-        self.back = ['back{}'.format(i) for i in range(self.B)]
 
     def init_model(self):
         self.model = artm.ARTM(
@@ -367,187 +353,6 @@ class TopicModel(TopicModelBase):
         )
 
         self.__set_model_scores()
-
-    def _early_stopping(self):
-        coherences_main, coherences_back = self.__return_all_tokens_coherence(self.model, s=self.S, b=self.B)
-        if len(coherences_main) < self.S or not any(coherences_main):
-            return True
-        return False
-
-    # TODO: refactor option
-    def train(self, option='online_v1'):
-
-        if self.model is None:
-            print('Initialise the model first!')
-            return
-
-        self.model.regularizers.add(artm.DecorrelatorPhiRegularizer(name='decorr',
-                                                                    topic_names=self.specific, tau=self.decor))
-        self.model.regularizers.add(artm.DecorrelatorPhiRegularizer(name='decorr_2',
-                                                                    topic_names=self.back, tau=self.decor_2))
-        if option == 'offline':
-            self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n1)
-        elif option == 'online_v1':
-            self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n1)
-        elif option == 'online_v2':
-            self.model.num_document_passes = self.n1
-            self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
-                                  update_every=self.num_processors)
-
-        if self.n1 > 0:
-            if self._early_stopping():
-                print('Early stopping is triggered')
-                return
-
-        #         if ((self.n2 != 0) and (self.B != 0)):
-        if self.B != 0:
-            self.model.regularizers.add(artm.SmoothSparseThetaRegularizer(name='SmoothPhi',
-                                                                          topic_names=self.back, tau=self.spb))
-            self.model.regularizers.add(artm.SmoothSparseThetaRegularizer(name='SmoothTheta',
-                                                                          topic_names=self.back, tau=self.stb))
-            if option == 'offline':
-                self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n2)
-            elif option == 'online_v1':
-                self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n2)
-            elif option == 'online_v2':
-                self.model.num_document_passes = self.n2
-                self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
-                                      update_every=self.num_processors)
-
-        if self.n1 + self.n2 > 0:
-            if self._early_stopping():
-                print('Early stopping is triggered')
-                return
-
-        if self.n3 != 0:
-            self.model.regularizers.add(artm.SmoothSparseThetaRegularizer(name='SparsePhi',
-                                                                          topic_names=self.specific, tau=self.sp1))
-            self.model.regularizers.add(artm.SmoothSparseThetaRegularizer(name='SparseTheta',
-                                                                          topic_names=self.specific, tau=self.st1))
-            if option == 'offline':
-                self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n3)
-            elif option == 'online':
-                self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n3)
-            elif option == 'online_v2':
-                self.model.num_document_passes = self.n3
-                self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
-                                      update_every=self.num_processors)
-
-        if self.n1 + self.n2 + self.n3 > 0:
-            if self._early_stopping():
-                print('Early stopping is triggered')
-                return
-
-        if self.n4 != 0:
-            self.model.regularizers['SparsePhi'].tau = self.sp2
-            self.model.regularizers['SparseTheta'].tau = self.st2
-            if option == 'offline':
-                self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n4)
-            elif option == 'online_v1':
-                self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n4)
-            elif option == 'online_v2':
-                self.model.num_document_passes = self.n4
-                self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
-                                      update_every=self.num_processors)
-
-        if self.n1 + self.n2 + self.n3 > 0:
-            if self._early_stopping():
-                print('Early stopping is triggered')
-                return
-
-        print('Training is complete')
-
-    def decor_train(self):
-        if self.model is None:
-            print('Initialise the model first')
-            return
-
-        self.model.regularizers.add(artm.DecorrelatorPhiRegularizer(name='decorr',
-                                                                    topic_names=self.specific, tau=self.decor))
-
-    def dump_model(self, ii):
-        self.model.dump_artm_model(os.path.join(self.save_path, 'model_{}'.format(ii)))
-
-    def save_model(self, path):
-        self.model.dump_artm_model(path)
-
-    def print_topics(self):
-        for i, (topic, top_tokens) in enumerate(self.get_topics().items()):
-            print(topic)
-            print(top_tokens)
-            print()
-
-    def get_topics(self):
-        if 'TopTokensScore' not in self.model.score_tracker:
-            logger.warning(f"Key 'TopTokensScore' is not presented in the model's (uid={self.uid}) score_tracker. "
-                           f"Returning empty dict of topics.")
-            return dict()
-        res = self.model.score_tracker['TopTokensScore'].last_tokens
-        topics = {topic: tokens[:50] for topic, tokens in res.items()}
-        return topics
-
-    def _get_avg_coherence_score(self, for_individ_fitness=False):
-        coherences_main, coherences_back = self.__return_all_tokens_coherence(self.model, s=self.S, b=self.B)
-        if for_individ_fitness:
-            # print('COMPONENTS: ', np.mean(list(coherences_main.values())), np.min(list(coherences_main.values())))
-            return np.mean(list(coherences_main.values())) + np.min(list(coherences_main.values()))
-        return np.mean(list(coherences_main.values()))
-
-    # added
-    def _calculate_labels_coeff(self, topk=3):
-        theta = self.model.get_theta()
-        # theta.set_index('Unnamed: 0', inplace=True)
-        documents_topics = OrderedDict()
-        topics_documents = OrderedDict()
-        for col in theta.columns:
-            topics = theta.nlargest(topk, col).index.tolist()
-            documents_topics[col] = topics
-            for tp in topics:
-                if tp not in topics_documents:
-                    topics_documents[tp] = []
-                topics_documents[tp].append(col)
-        total_res = []
-        for label in self.dataset.labels:
-            docs = self.dataset.labels[label]
-            all_lens = []
-            for topic in topics_documents:
-                all_lens.append(len(set(topics_documents[topic]).intersection(set(docs))))
-            total_res.append(max(all_lens) / len(docs))
-        coeff = np.mean(total_res)
-        logging.info(f"Calculated coefficient: {coeff}")
-        return coeff
-
-    def dispose(self):
-        """
-        Disposes the model instance and removes the model from the object making it reusable again
-        :return:
-        """
-        self.model.dispose()
-        self.model = None
-
-        log_files = [file for file in os.listdir(".") if file.startswith("bigartm.")]
-        logging.info(f"Deleting bigartm logs: {log_files}")
-        for file in log_files:
-            os.remove(file)
-
-    def __set_params(self, params_string):
-        self.decor = params_string[0]
-        self.n1 = params_string[1]
-
-        if self.decor_test:
-            return
-
-        self.spb = params_string[2]
-        self.stb = params_string[3]
-        self.n2 = params_string[4]
-        self.sp1 = params_string[5]
-        self.st1 = params_string[6]
-        self.n3 = params_string[7]
-        self.sp2 = params_string[8]
-        self.st2 = params_string[9]
-        self.n4 = params_string[10]
-        self.B = params_string[11]
-        self.decor_2 = params_string[15]
 
     def __set_model_scores(self):
 
@@ -569,18 +374,32 @@ class TopicModel(TopicModelBase):
         # Looking at top tokens
         self.model.scores.add(artm.TopTokensScore(name='TopTokensScore', class_id='@default_class', num_tokens=100))
 
-    def __calculate_topic_coherence(self, tokens, top=50):
-        tokens = tokens[:top]
-        total_sum = 0
-        for ix, token_1 in enumerate(tokens[:-1]):
-            for ij, token_2 in enumerate(tokens[(ix + 1):]):
-                try:
-                    total_sum += self.dataset.mutual_info_dict['{}_{}'.format(token_1, token_2)]
-                except KeyError:
-                    total_sum += 0
+    def _early_stopping(self):
+        coherences_main, coherences_back = self.__return_all_tokens_coherence(self.model, s=self.S, b=self.B)
+        if len(coherences_main) < self.S or not any(coherences_main):
+            return True
+        return False
 
-        coherence = 2 / (top * (top - 1)) * total_sum
-        return coherence
+    def dump_model(self, ii):
+        self.model.dump_artm_model(os.path.join(self.save_path, 'model_{}'.format(ii)))
+
+    def save_model(self, path):
+        self.model.dump_artm_model(path)
+
+    def print_topics(self):
+        for i, (topic, top_tokens) in enumerate(self.get_topics().items()):
+            print(topic)
+            print(top_tokens)
+            print()
+
+    def get_topics(self):
+        if 'TopTokensScore' not in self.model.score_tracker:
+            logger.warning(f"Key 'TopTokensScore' is not presented in the model's (uid={self.uid}) score_tracker. "
+                           f"Returning empty dict of topics.")
+            return dict()
+        res = self.model.score_tracker['TopTokensScore'].last_tokens
+        topics = {topic: tokens[:50] for topic, tokens in res.items()}
+        return topics
 
     def __return_all_tokens_coherence(self, model, s, b, top=50, return_backs=True):
         topics = list(model.score_tracker['TopTokensScore'].last_tokens.keys())
@@ -617,7 +436,34 @@ class TopicModel(TopicModelBase):
         else:
             return coh_vals_main
 
-    # TODO: fix
+    def __calculate_topic_coherence(self, tokens, top=50):
+        tokens = tokens[:top]
+        total_sum = 0
+        for ix, token_1 in enumerate(tokens[:-1]):
+            for ij, token_2 in enumerate(tokens[(ix + 1):]):
+                try:
+                    total_sum += self.dataset.mutual_info_dict['{}_{}'.format(token_1, token_2)]
+                except KeyError:
+                    total_sum += 0
+
+        coherence = 2 / (top * (top - 1)) * total_sum
+        return coherence
+
+    def dispose(self):
+        """
+        Disposes the model instance and removes the model from the object making it reusable again
+        :return:
+        """
+        self.model.dispose()
+        self.model = None
+
+        log_files = [file for file in os.listdir(".") if file.startswith("bigartm.")]
+        logging.info(f"Deleting bigartm logs: {log_files}")
+        for file in log_files:
+            os.remove(file)
+
+        # TODO: fix
+
     def __return_all_coherence_types(self, model, S, only_specific=True, top=(10, 15, 20, 25, 30, 35, 40, 45, 50, 55)):
         topics = list(model.score_tracker['TopTokensScore'].last_tokens.keys())
         coh_vals = {}
@@ -655,7 +501,15 @@ class TopicModel(TopicModelBase):
             AVG_COHERENCE_SCORE: avg_coherence_score
         }
 
-    # TODO: fix
+        # TODO: fix
+
+    def _get_avg_coherence_score(self, for_individ_fitness=False):
+        coherences_main, coherences_back = self.__return_all_tokens_coherence(self.model, s=self.S, b=self.B)
+        if for_individ_fitness:
+            # print('COMPONENTS: ', np.mean(list(coherences_main.values())), np.min(list(coherences_main.values())))
+            return np.mean(list(coherences_main.values())) + np.min(list(coherences_main.values()))
+        return np.mean(list(coherences_main.values()))
+
     def metrics_get_last_avg_vals(self, texts, total_tokens, calculate_significance=False,
                                   calculate_npmi=False, calculate_switchp=False) -> MetricsScores:
 
@@ -771,7 +625,7 @@ class TopicModel(TopicModelBase):
         return scores_dict
 
 
-class TopicModelMultistage(TopicModelBase):
+class TopicModel(TopicModelBase):
     def __init__(self,
                  uid: uuid.UUID,
                  experiments_path: str,
@@ -787,11 +641,122 @@ class TopicModelMultistage(TopicModelBase):
         self.__set_params(params)
         self.back = ['back{}'.format(i) for i in range(self.B)]
 
+    # TODO: refactor option
+    def train(self, option='online_v1'):
+
+        if self.model is None:
+            print('Initialise the model first!')
+            return
+
+        self.model.regularizers.add(artm.DecorrelatorPhiRegularizer(name='decorr',
+                                                                    topic_names=self.specific, tau=self.decor))
+        self.model.regularizers.add(artm.DecorrelatorPhiRegularizer(name='decorr_2',
+                                                                    topic_names=self.back, tau=self.decor_2))
+        if option == 'offline':
+            self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n1)
+        elif option == 'online_v1':
+            self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n1)
+        elif option == 'online_v2':
+            self.model.num_document_passes = self.n1
+            self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
+                                  update_every=self.num_processors)
+
+        if self.n1 > 0:
+            if self._early_stopping():
+                print('Early stopping is triggered')
+                return
+
+        #         if ((self.n2 != 0) and (self.B != 0)):
+        if self.B != 0:
+            self.model.regularizers.add(artm.SmoothSparseThetaRegularizer(name='SmoothPhi',
+                                                                          topic_names=self.back, tau=self.spb))
+            self.model.regularizers.add(artm.SmoothSparseThetaRegularizer(name='SmoothTheta',
+                                                                          topic_names=self.back, tau=self.stb))
+            if option == 'offline':
+                self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n2)
+            elif option == 'online_v1':
+                self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n2)
+            elif option == 'online_v2':
+                self.model.num_document_passes = self.n2
+                self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
+                                      update_every=self.num_processors)
+
+        if self.n1 + self.n2 > 0:
+            if self._early_stopping():
+                print('Early stopping is triggered')
+                return
+
+        if self.n3 != 0:
+            self.model.regularizers.add(artm.SmoothSparseThetaRegularizer(name='SparsePhi',
+                                                                          topic_names=self.specific, tau=self.sp1))
+            self.model.regularizers.add(artm.SmoothSparseThetaRegularizer(name='SparseTheta',
+                                                                          topic_names=self.specific, tau=self.st1))
+            if option == 'offline':
+                self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n3)
+            elif option == 'online':
+                self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n3)
+            elif option == 'online_v2':
+                self.model.num_document_passes = self.n3
+                self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
+                                      update_every=self.num_processors)
+
+        if self.n1 + self.n2 + self.n3 > 0:
+            if self._early_stopping():
+                print('Early stopping is triggered')
+                return
+
+        if self.n4 != 0:
+            self.model.regularizers['SparsePhi'].tau = self.sp2
+            self.model.regularizers['SparseTheta'].tau = self.st2
+            if option == 'offline':
+                self.model.fit_offline(batch_vectorizer=self.dataset.batches, num_collection_passes=self.n4)
+            elif option == 'online_v1':
+                self.model.fit_offline(batch_vectorizer=self.dataset.sample_batches, num_collection_passes=self.n4)
+            elif option == 'online_v2':
+                self.model.num_document_passes = self.n4
+                self.model.fit_online(batch_vectorizer=self.dataset.sample_batches,
+                                      update_every=self.num_processors)
+
+        if self.n1 + self.n2 + self.n3 > 0:
+            if self._early_stopping():
+                print('Early stopping is triggered')
+                return
+
+        print('Training is complete')
+
+    def decor_train(self):
+        if self.model is None:
+            print('Initialise the model first')
+            return
+
+        self.model.regularizers.add(artm.DecorrelatorPhiRegularizer(name='decorr',
+                                                                    topic_names=self.specific, tau=self.decor))
+
+    # added
+    def _calculate_labels_coeff(self, topk=3):
+        theta = self.model.get_theta()
+        # theta.set_index('Unnamed: 0', inplace=True)
+        documents_topics = OrderedDict()
+        topics_documents = OrderedDict()
+        for col in theta.columns:
+            topics = theta.nlargest(topk, col).index.tolist()
+            documents_topics[col] = topics
+            for tp in topics:
+                if tp not in topics_documents:
+                    topics_documents[tp] = []
+                topics_documents[tp].append(col)
+        total_res = []
+        for label in self.dataset.labels:
+            docs = self.dataset.labels[label]
+            all_lens = []
+            for topic in topics_documents:
+                all_lens.append(len(set(topics_documents[topic]).intersection(set(docs))))
+            total_res.append(max(all_lens) / len(docs))
+        coeff = np.mean(total_res)
+        logging.info(f"Calculated coefficient: {coeff}")
+        return coeff
 
     def __set_params(self, params_string):
-
-        self.B = params_string[0]['B']
-
         self.decor = params_string[0]
         self.n1 = params_string[1]
 
@@ -809,3 +774,26 @@ class TopicModelMultistage(TopicModelBase):
         self.n4 = params_string[10]
         self.B = params_string[11]
         self.decor_2 = params_string[15]
+
+
+class TopicModelMultistage(TopicModelBase):
+    def __init__(self,
+                 uid: uuid.UUID,
+                 experiments_path: str,
+                 topic_count: int,
+                 num_processors: int,
+                 dataset: Dataset,
+                 params: list,  # list of dict
+                 decor_test=False,
+                 train_option: str = 'offline'):
+        super().__init__(uid, experiments_path, topic_count, num_processors, dataset, decor_test, train_option)
+
+        self.strategy = params
+        self.B = params[0]['B']
+        self.back = ['back{}'.format(i) for i in range(self.B)]
+
+
+    def train(self):
+        if self.model is None:
+
+        pass
