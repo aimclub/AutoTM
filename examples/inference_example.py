@@ -20,7 +20,7 @@ def main():
 
     # initializing the inference
     extractor = TopicsExtractor(path_to_trained_model)
-    extractor.get_prob_mixture(data_path=os.path.join(save_processed_dataset_path, 'processed_dataset.csv'),
+    extractor.get_prob_mixture(data_path=os.path.join(save_processed_dataset_path, 'dataset_processed.csv'),
                                text_column_name='processed_text',
                                OUTPUT_DIR=out_fpath)
 

@@ -10,26 +10,20 @@ from autotm.preprocessing.text_preprocessing import process_dataset
 from autotm.preprocessing.dictionaries_preparation import prepare_all_artifacts
 from autotm.algorithms_for_tuning.genetic_algorithm.genetic_algorithm import run_algorithm
 
-# PATH_TO_DATASET = '../data/sample_corpora/sample_dataset_lenta.csv'  # dataset with corpora to be processed
-# SAVE_PATH = '../data/processed_sample_corpora'  # place where all the artifacts will be stored
-
-DATA_PATH = '/ess_data/GOTM/datasets_TM_scoring/20newsgroups_sample'
-
-PATH_TO_DATASET = os.path.join(DATA_PATH, 'dataset_processed.csv')  # dataset with corpora to be processed
-SAVE_PATH = DATA_PATH # place where all the artifacts will be stored
-
+PATH_TO_DATASET = '../data/sample_corpora/sample_dataset_lenta.csv'  # dataset with corpora to be processed
+SAVE_PATH = '../data/processed_sample_corpora'  # place where all the artifacts will be stored
 
 dataset = pd.read_csv(PATH_TO_DATASET)
 col_to_process = 'text'
-dataset_name = '20ng_sample_with_nm'
-lang = 'en'  # available languages: ru, en
+dataset_name = 'lenta_sample'
+lang = 'ru'  # available languages: ru, en
 min_tokens_num = 3  # the minimal amount of tokens after processing to save the result
 num_iterations = 10
 topic_count = 10
 exp_id = int(time.time())
 print(exp_id)
 
-use_nelder_mead_in_mutation = True
+use_nelder_mead_in_mutation = False
 use_nelder_mead_in_crossover = False
 use_nelder_mead_in_selector = False
 train_option = 'offline'
@@ -57,7 +51,6 @@ if __name__ == '__main__':
 
     # results of the run are stored in ./mlruns folder, experiment id is 'experiment_<exp_id>'
 
-
     # uncomment this after getting a topic model
     # print('Step 3: Looking at results and making inference')
     # # usage and inference
@@ -65,7 +58,7 @@ if __name__ == '__main__':
     # TEST_RUN_NAME = 'fitness-test-50051a97-98d5-41b8-b4a7-e0e76566751a'  # run_name is shown in terminal after model run
     # MLFLOW_PATH = './mlruns/'
     # processed_dataset = pd.read_csv(
-    #     os.path.join(SAVE_PATH, 'processed_dataset.csv'))  # here the processed dataset is needed
+    #     os.path.join(SAVE_PATH, 'dataset_processed.csv'))  # here the processed dataset is needed
     # artifacts_path = get_experiment_path(exp_id, TEST_RUN_NAME)
     # if artifacts_path:
     #     phi_matrix, theta_matrix, topics = get_artifacts(artifacts_path)
