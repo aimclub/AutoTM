@@ -792,7 +792,6 @@ class TopicModelMultistage(TopicModelBase):
         self.B = params[0]['B']
         self.back = ['back{}'.format(i) for i in range(self.B)]
 
-
     def train(self):
         if self.model is None:
 
