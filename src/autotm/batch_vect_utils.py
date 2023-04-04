@@ -19,6 +19,8 @@ class SampleBatchVectorizer(BatchVectorizer):
         for (data_p, data_w, target_f) in zip(data_paths, data_weights, target_folders):
             if batches is None:
                 batch_filenames = glob.glob(os.path.join(data_p, '*.batch'))
+                if len(batch_filenames) < self.sample_size:
+                    self.sample_size = len(batch_filenames)
                 batch_filenames = random.sample(batch_filenames, self.sample_size)
                 self._batches_list += [Batch(filename) for filename in batch_filenames]
 

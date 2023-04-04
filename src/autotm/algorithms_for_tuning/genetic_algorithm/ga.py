@@ -171,22 +171,6 @@ class ModelStorage:
         # for model.components
 
 
-class GABase:
-    def __init__(self,
-                 dataset: str,
-                 data_path: Optional[str],
-                 num_individuals: int,
-                 num_iterations: int):
-        self.dataset = dataset
-        self.data_path = data_path
-        self.num_individuals = num_individuals
-        self.num_iterations = num_iterations
-
-        if not exists(abspath(self.data_path)):
-
-
-
-
 class GA:
     def __init__(self, dataset, data_path, num_individuals, num_iterations,
                  mutation_type='mutation_one_param', crossover_type='blend_crossover',
@@ -905,12 +889,9 @@ class GAmultistage(GA):
 
     def init_population(self):
 
-        if random.random() < self.initial_element_stage_probability:
+        # if random.random() < self.initial_element_stage_probability:
+        #
+        # for i in range(self.max_stages):
+        #     print()
 
-        for i in range(self.max_stages):
-            print()
-
-        raise NotImplementedError
-
-    def ffff(self):
         raise NotImplementedError
