@@ -19,31 +19,32 @@ logger = logging.getLogger("GA")
 NUM_FITNESS_EVALUATIONS = 150
 
 
-def run_algorithm(dataset: str,
-                  data_path: str,
-                  exp_id: Union[int, str],
-                  topic_count: int,
-                  num_individuals: int = 11,
-                  num_iterations: int = 400,
-                  num_fitness_evaluations: int = None,
-                  mutation_type: str = "psm",
-                  crossover_type: str = "blend_crossover",
-                  selection_type: str = "fitness_prop",
-                  elem_cross_prob: float = None,
-                  cross_alpha: float = 0.5046,
-                  best_proc: float = 0.4439,
-                  log_file: str = "/var/log/tm-alg.log",
-                  tag: str = "v0",
-                  surrogate_name: str = None,  # fix
-                  gpr_kernel: str = None,
-                  gpr_alpha: float = None,
-                  gpr_normalize_y: float = None,
-                  use_nelder_mead_in_mutation: bool = False,
-                  use_nelder_mead_in_crossover: bool = False,
-                  use_nelder_mead_in_selector: bool = False,
-                  train_option: str = 'offline'
-                  ):
-    '''
+def run_algorithm(
+    dataset: str,
+    data_path: str,
+    exp_id: Union[int, str],
+    topic_count: int,
+    num_individuals: int = 11,
+    num_iterations: int = 400,
+    num_fitness_evaluations: int = None,
+    mutation_type: str = "psm",
+    crossover_type: str = "blend_crossover",
+    selection_type: str = "fitness_prop",
+    elem_cross_prob: float = None,
+    cross_alpha: float = 0.5046,
+    best_proc: float = 0.4439,
+    log_file: str = "/var/log/tm-alg.log",
+    tag: str = "v0",
+    surrogate_name: str = None,  # fix
+    gpr_kernel: str = None,
+    gpr_alpha: float = None,
+    gpr_normalize_y: float = None,
+    use_nelder_mead_in_mutation: bool = False,
+    use_nelder_mead_in_crossover: bool = False,
+    use_nelder_mead_in_selector: bool = False,
+    train_option: str = "offline",
+):
+    """
 
     :param dataset: Dataset name that is being processed. The name will be used to store results
     :param data_path: Path to all the artifacts obtained after
@@ -68,9 +69,18 @@ def run_algorithm(dataset: str,
     :param use_nelder_mead_in_crossover:
     :param use_nelder_mead_in_selector:
     :return:
-    '''
+    """
 
-    assert sum([use_nelder_mead_in_mutation, use_nelder_mead_in_crossover, use_nelder_mead_in_selector]) <= 1
+    assert (
+        sum(
+            [
+                use_nelder_mead_in_mutation,
+                use_nelder_mead_in_crossover,
+                use_nelder_mead_in_selector,
+            ]
+        )
+        <= 1
+    )
 
     logger.debug(f"Command line: {sys.argv}")
 
@@ -87,29 +97,30 @@ def run_algorithm(dataset: str,
     if cross_alpha is not None:
         cross_alpha = float(cross_alpha)
 
-    g = GA(dataset=dataset,
-           data_path=data_path,
-           num_individuals=num_individuals,
-           num_iterations=num_iterations,
-           mutation_type=mutation_type,
-           crossover_type=crossover_type,
-           selection_type=selection_type,
-           elem_cross_prob=elem_cross_prob,
-           num_fitness_evaluations=num_fitness_evaluations,
-           best_proc=best_proc,
-           alpha=cross_alpha,
-           exp_id=exp_id,
-           topic_count=topic_count,
-           tag=tag,
-           surrogate_name=surrogate_name,
-           gpr_kernel=gpr_kernel,
-           gpr_alpha=gpr_alpha,
-           normalize_y=gpr_normalize_y,
-           use_nelder_mead_in_mutation=use_nelder_mead_in_mutation,
-           use_nelder_mead_in_crossover=use_nelder_mead_in_crossover,
-           use_nelder_mead_in_selector=use_nelder_mead_in_selector,
-           train_option=train_option
-           )
+    g = GA(
+        dataset=dataset,
+        data_path=data_path,
+        num_individuals=num_individuals,
+        num_iterations=num_iterations,
+        mutation_type=mutation_type,
+        crossover_type=crossover_type,
+        selection_type=selection_type,
+        elem_cross_prob=elem_cross_prob,
+        num_fitness_evaluations=num_fitness_evaluations,
+        best_proc=best_proc,
+        alpha=cross_alpha,
+        exp_id=exp_id,
+        topic_count=topic_count,
+        tag=tag,
+        surrogate_name=surrogate_name,
+        gpr_kernel=gpr_kernel,
+        gpr_alpha=gpr_alpha,
+        normalize_y=gpr_normalize_y,
+        use_nelder_mead_in_mutation=use_nelder_mead_in_mutation,
+        use_nelder_mead_in_crossover=use_nelder_mead_in_crossover,
+        use_nelder_mead_in_selector=use_nelder_mead_in_selector,
+        train_option=train_option,
+    )
     best_value = g.run(verbose=True)
     print(best_value * (-1))
 
