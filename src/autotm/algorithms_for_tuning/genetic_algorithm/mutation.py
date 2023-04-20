@@ -2,13 +2,20 @@ import random
 import numpy as np
 
 
-def mutation_one_param(individ, low_spb, high_spb,
-                       low_spm, high_spm,
-                       low_n, high_n,
-                       low_back, high_back,
-                       low_decor, high_decor,
-                       elem_mutation_prob=0.1
-                       ):
+def mutation_one_param(
+    individ,
+    low_spb,
+    high_spb,
+    low_spm,
+    high_spm,
+    low_n,
+    high_n,
+    low_back,
+    high_back,
+    low_decor,
+    high_decor,
+    elem_mutation_prob=0.1,
+):
     for i in range(len(individ)):
         if random.random() <= elem_mutation_prob:
             if i in [2, 3]:
@@ -18,9 +25,13 @@ def mutation_one_param(individ, low_spb, high_spb,
             for i in [1, 4, 7, 10]:
                 individ[i] = float(np.random.randint(low=low_n, high=high_n, size=1)[0])
             for i in [11]:
-                individ[i] = float(np.random.randint(low=low_back, high=high_back, size=1)[0])
+                individ[i] = float(
+                    np.random.randint(low=low_back, high=high_back, size=1)[0]
+                )
             for i in [0, 15]:
-                individ[i] = np.random.uniform(low=low_decor, high=high_decor, size=1)[0]
+                individ[i] = np.random.uniform(low=low_decor, high=high_decor, size=1)[
+                    0
+                ]
     return individ
 
 
@@ -116,12 +127,12 @@ def mutation_psm(individ, elem_mutation_prob=0.1, **kwargs):
     return individ
 
 
-def mutation(mutation_type='mutation_one_param'):
-    if mutation_type == 'mutation_one_param':
+def mutation(mutation_type="mutation_one_param"):
+    if mutation_type == "mutation_one_param":
         return mutation_one_param
-    if mutation_type == 'combined':
+    if mutation_type == "combined":
         return mutation_combined
-    if mutation_type == 'psm':
+    if mutation_type == "psm":
         return mutation_psm
     if mutation_type == "positioning_mutation":
         return positioning_mutation

@@ -6,11 +6,22 @@ from pydantic import BaseModel
 from autotm.utils import MetricsScores
 
 PARAM_NAMES = [
-    'val_decor', 'var_n_0', 'var_sm_0', 'var_sm_1', 'var_n_1',
-    'var_sp_0', 'var_sp_1', 'var_n_2',
-    'var_sp_2', 'var_sp_3', "var_n_3",
-    'var_n_4', 'ext_mutation_prob', 'ext_elem_mutation_prob',
-    'ext_mutation_selector', 'val_decor_2'
+    "val_decor",
+    "var_n_0",
+    "var_sm_0",
+    "var_sm_1",
+    "var_n_1",
+    "var_sp_0",
+    "var_sp_1",
+    "var_n_2",
+    "var_sp_2",
+    "var_sp_3",
+    "var_n_3",
+    "var_n_4",
+    "ext_mutation_prob",
+    "ext_elem_mutation_prob",
+    "ext_mutation_selector",
+    "val_decor_2",
 ]
 
 
@@ -27,7 +38,7 @@ class IndividualDTO(BaseModel):
     tag: Optional[str] = None
     iteration_id: int = 0
     topic_count: Optional[int] = None
-    train_option: str = 'offline'
+    train_option: str = "offline"
 
     class Config:
         arbitrary_types_allowed = True
@@ -35,7 +46,9 @@ class IndividualDTO(BaseModel):
     def make_params_dict(self):
         if len(self.params) > len(PARAM_NAMES):
             len_diff = len(self.params) - len(PARAM_NAMES)
-            param_names = copy.deepcopy(PARAM_NAMES) + [f"unknown_param_#{i}" for i in range(len_diff)]
+            param_names = copy.deepcopy(PARAM_NAMES) + [
+                f"unknown_param_#{i}" for i in range(len_diff)
+            ]
         else:
             param_names = PARAM_NAMES
 
@@ -43,21 +56,23 @@ class IndividualDTO(BaseModel):
 
 
 def fitness_to_json(obj: IndividualDTO):
-    return json.dumps({
-        "id": obj.id,
-        "data_path": obj.data_path,
-        "params": obj.params,
-        "exp_id": obj.exp_id,
-        "alg_id": obj.alg_id,
-        "iteration_id": obj.iteration_id,
-        "tag": obj.tag,
-        "fitness_value": obj.fitness_value,
-        "fitness_name": obj.fitness_name,
-        "dataset": obj.dataset,
-        "topic_count": obj.topic_count,
-        "train_option": obj.train_option,
-        "force_dataset_settings_checkout": obj.force_dataset_settings_checkout
-    })
+    return json.dumps(
+        {
+            "id": obj.id,
+            "data_path": obj.data_path,
+            "params": obj.params,
+            "exp_id": obj.exp_id,
+            "alg_id": obj.alg_id,
+            "iteration_id": obj.iteration_id,
+            "tag": obj.tag,
+            "fitness_value": obj.fitness_value,
+            "fitness_name": obj.fitness_name,
+            "dataset": obj.dataset,
+            "topic_count": obj.topic_count,
+            "train_option": obj.train_option,
+            "force_dataset_settings_checkout": obj.force_dataset_settings_checkout,
+        }
+    )
 
 
 def fitness_from_json(obj):
@@ -75,5 +90,5 @@ def fitness_from_json(obj):
         dataset=obj["dataset"],
         topic_count=obj["topic_count"],
         train_option=obj["train_option"],
-        force_dataset_settings_checkout=obj["force_dataset_settings_checkout"]
+        force_dataset_settings_checkout=obj["force_dataset_settings_checkout"],
     )

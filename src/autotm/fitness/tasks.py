@@ -11,26 +11,32 @@ logger = logging.getLogger("root")
 
 # task_logger = get_task_logger(__name__)
 
-def do_fitness_calculating(individual: str,
-                           log_artifact_and_parameters: bool = False,
-                           log_run_stats: bool = False,
-                           alg_args: Optional[str] = None) -> str:
+
+def do_fitness_calculating(
+    individual: str,
+    log_artifact_and_parameters: bool = False,
+    log_run_stats: bool = False,
+    alg_args: Optional[str] = None,
+) -> str:
     individual: IndividualDTO = IndividualDTO.parse_raw(individual)
     # task_logger.info(f"Calculating fitness for an individual with id {individual.id}: \n{individual}")
 
     with fit_tm_of_individual(
-            dataset=individual.dataset,
-            data_path=individual.data_path,
-            params=individual.params,
-            fitness_name=individual.fitness_name,
-            topic_count=individual.topic_count,
-            force_dataset_settings_checkout=individual.force_dataset_settings_checkout,
-            train_option=individual.train_option) as (time_metrics, metrics, tm):
+        dataset=individual.dataset,
+        data_path=individual.data_path,
+        params=individual.params,
+        fitness_name=individual.fitness_name,
+        topic_count=individual.topic_count,
+        force_dataset_settings_checkout=individual.force_dataset_settings_checkout,
+        train_option=individual.train_option,
+    ) as (time_metrics, metrics, tm):
         individual.fitness_value = metrics
 
         with model_files(tm) as tm_files:
             if log_artifact_and_parameters:
-                log_params_and_artifacts(tm, tm_files, individual, time_metrics, alg_args)
+                log_params_and_artifacts(
+                    tm, tm_files, individual, time_metrics, alg_args
+                )
 
             if log_run_stats:
                 log_stats(tm, tm_files, individual, time_metrics, alg_args)
@@ -40,13 +46,18 @@ def do_fitness_calculating(individual: str,
     return individual.json()
 
 
-def calculate_fitness(individual: str,
-                      log_artifact_and_parameters: bool = False,
-                      log_run_stats: bool = False,
-                      alg_args: Optional[str] = None) -> str:
+def calculate_fitness(
+    individual: str,
+    log_artifact_and_parameters: bool = False,
+    log_run_stats: bool = False,
+    alg_args: Optional[str] = None,
+) -> str:
     try:
-        return do_fitness_calculating(individual, log_artifact_and_parameters, log_run_stats, alg_args)
-    except:
+        return do_fitness_calculating(
+            individual, log_artifact_and_parameters, log_run_stats, alg_args
+        )
+    except Exception as e:
+        print(str(e))
         raise Exception(f"Some exception")
 
 
@@ -59,17 +70,26 @@ def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
     for individual in population:
         json_individ = fitness_to_json(individual.dto)
         individ_with_fitness = calculate_fitness(json_individ)
-        population_with_fitness.append(make_individual(fitness_from_json(individ_with_fitness)))
+        population_with_fitness.append(
+            make_individual(fitness_from_json(individ_with_fitness))
+        )
     logger.info("The fitness results have been obtained")
     return population_with_fitness
 
 
-def log_best_solution(individual: IndividualDTO,
-                      wait_for_result_timeout: Optional[float] = None,
-                      alg_args: Optional[str] = None):
+def log_best_solution(
+    individual: IndividualDTO,
+    wait_for_result_timeout: Optional[float] = None,
+    alg_args: Optional[str] = None,
+):
     logger.info(f"Sending a best individual to be logged")
     res = make_individual(
-        fitness_from_json(calculate_fitness(fitness_to_json(individual.dto), log_artifact_and_parameters=True)))
+        fitness_from_json(
+            calculate_fitness(
+                fitness_to_json(individual.dto), log_artifact_and_parameters=True
+            )
+        )
+    )
 
     # TODO: write logging
     return res
