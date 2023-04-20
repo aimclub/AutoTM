@@ -22,18 +22,18 @@ logger = logging.getLogger(__name__)
 
 class TqdmToLogger(io.StringIO):
     """
-        Output stream for TQDM which will output to logger module instead of
-        the StdOut.
+    Output stream for TQDM which will output to logger module instead of
+    the StdOut.
     """
 
     def __init__(self, base_logger, level=None):
         super(TqdmToLogger, self).__init__()
         self.logger = base_logger
         self.level = level or logging.INFO
-        self.buf = ''
+        self.buf = ""
 
     def write(self, buf):
-        self.buf = buf.strip('\r\n\t ')
+        self.buf = buf.strip("\r\n\t ")
 
     def flush(self):
         self.logger.log(self.level, self.buf)
@@ -51,7 +51,11 @@ class log_exec_timer:
 
     def __exit__(self, typ, value, traceback):
         self._duration = (datetime.now() - self._start).total_seconds()
-        msg = f"Exec time of {self.name}: {self._duration}" if self.name else f"Exec time: {self._duration}"
+        msg = (
+            f"Exec time of {self.name}: {self._duration}"
+            if self.name
+            else f"Exec time: {self._duration}"
+        )
         logger.info(msg)
 
     @property
@@ -66,8 +70,8 @@ def merge_dicts(dicts):
     return full_dict
 
 
-def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type='df', **kwargs):
-    '''
+def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type="df", **kwargs):
+    """
 
     :param df: Dataframe to process.
     :param func: Function to be applied in parallel mode on data chunks
@@ -75,7 +79,7 @@ def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type='df', **k
     :param return_type: datatype returned by func: 'df' or 'dict'
     :param kwargs: Additional parameters of the function, which is applied in parallel mode.
     :return: pd.DataFrame
-    '''
+    """
     if n_cores == -1:
         n_cores = mp.cpu_count() - 1
     df_split = np.array_split(df, n_cores)
@@ -83,13 +87,13 @@ def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type='df', **k
     pool = Pool(n_cores)
     func_with_args = partial(func, **kwargs)
     map_res = pool.map(func_with_args, df_split)
-    if return_type == 'df':
+    if return_type == "df":
         if isinstance(map_res[0], pd.DataFrame):
             res = pd.concat(map_res)
         elif isinstance(map_res[0], tuple):
             zipped_elems = list(zip(*map_res))
             res = (pd.concat(zipped_elems[0]), pd.concat(zipped_elems[1]))
-    elif return_type == 'dict':
+    elif return_type == "dict":
         if isinstance(map_res[0], dict):
             res = merge_dicts(map_res)
         elif isinstance(map_res[0], tuple):
@@ -100,7 +104,9 @@ def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type='df', **k
     return res
 
 
-def make_log_config_dict(filename: str = "/var/log/tm-alg.txt", uid: Optional[str] = None) -> Dict[str, Any]:
+def make_log_config_dict(
+    filename: str = "/var/log/tm-alg.txt", uid: Optional[str] = None
+) -> Dict[str, Any]:
     if uid:
         dirname = os.path.dirname(filename)
         file, ext = os.path.splitext(os.path.basename(filename))
@@ -108,47 +114,47 @@ def make_log_config_dict(filename: str = "/var/log/tm-alg.txt", uid: Optional[st
     else:
         log_filename = filename
     return {
-        'version': 1,
-        'disable_existing_loggers': True,
-        'formatters': {
-            'standard': {
-                'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        "version": 1,
+        "disable_existing_loggers": True,
+        "formatters": {
+            "standard": {
+                "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
             },
         },
-        'handlers': {
-            'default': {
-                'level': 'DEBUG',
-                'formatter': 'standard',
-                'class': 'logging.StreamHandler',
-                'stream': 'ext://sys.stderr',
+        "handlers": {
+            "default": {
+                "level": "DEBUG",
+                "formatter": "standard",
+                "class": "logging.StreamHandler",
+                "stream": "ext://sys.stderr",
             },
-            'logfile': {
-                'level': 'DEBUG',
-                'formatter': 'standard',
-                'class': 'logging.FileHandler',
-                'filename': log_filename,
-            }
+            "logfile": {
+                "level": "DEBUG",
+                "formatter": "standard",
+                "class": "logging.FileHandler",
+                "filename": log_filename,
+            },
         },
-        'loggers': {
-            'root': {
-                'handlers': ['default', 'logfile'],
-                'level': 'DEBUG',
-                'propagate': False
+        "loggers": {
+            "root": {
+                "handlers": ["default", "logfile"],
+                "level": "DEBUG",
+                "propagate": False,
             },
-            'GA': {
-                'handlers': ['default', 'logfile'],
-                'level': 'DEBUG',
-                'propagate': False
+            "GA": {
+                "handlers": ["default", "logfile"],
+                "level": "DEBUG",
+                "propagate": False,
             },
-            'GA_algo': {
-                'handlers': ['default', 'logfile'],
-                'level': 'DEBUG',
-                'propagate': False
+            "GA_algo": {
+                "handlers": ["default", "logfile"],
+                "level": "DEBUG",
+                "propagate": False,
             },
-            'GA_surrogate': {
-                'handlers': ['default', 'logfile'],
-                'level': 'DEBUG',
-                'propagate': False
+            "GA_surrogate": {
+                "handlers": ["default", "logfile"],
+                "level": "DEBUG",
+                "propagate": False,
             },
-        }
+        },
     }

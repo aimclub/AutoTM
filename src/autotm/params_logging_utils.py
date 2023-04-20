@@ -32,11 +32,7 @@ class TopicModelFiles:
         """
         :return: Dict of (name,filepath) pairs
         """
-        return {
-            "model": self.model_archive,
-            "phi": self.phi,
-            "theta": self.theta
-        }
+        return {"model": self.model_archive, "phi": self.phi, "theta": self.theta}
 
 
 @contextmanager
@@ -54,7 +50,7 @@ def model_files(tm: TopicModel) -> ContextManager[TopicModelFiles]:
     tm.save_model(path=tmp_file)
 
     tmp_zip_file_base_name, _ = os.path.splitext(tmp_zip_file)
-    shutil.make_archive(tmp_zip_file_base_name, 'zip', tmp_file)
+    shutil.make_archive(tmp_zip_file_base_name, "zip", tmp_file)
 
     model = cast(artm.ARTM, tm.model)
     theta_matrix = model.get_theta()
@@ -63,7 +59,12 @@ def model_files(tm: TopicModel) -> ContextManager[TopicModelFiles]:
     theta_matrix.to_csv(tmp_theta_file, header=True)
     phi_matrix.to_csv(tmp_phi_file, header=True)
 
-    yield TopicModelFiles(model_dir=tmp_file, model_archive=tmp_zip_file, phi=tmp_phi_file, theta=tmp_theta_file)
+    yield TopicModelFiles(
+        model_dir=tmp_file,
+        model_archive=tmp_zip_file,
+        phi=tmp_phi_file,
+        theta=tmp_theta_file,
+    )
 
     shutil.rmtree(base_path, ignore_errors=True)
 
@@ -74,9 +75,9 @@ def make_readable_topics(tm: TopicModel) -> str:
     def topic_seq_num(pair: Tuple[str, List[str]]) -> int:
         tname, _ = pair
         if tname.startswith("main"):
-            return int(tname[len("main"):])
+            return int(tname[len("main") :])
         if tname.startswith("back"):
-            return tm.topic_count + int(tname[len("back"):])
+            return tm.topic_count + int(tname[len("back") :])
         return -1
 
     ordered_topics = sorted(topics.items(), key=topic_seq_num)
@@ -88,23 +89,25 @@ def make_readable_topics(tm: TopicModel) -> str:
     return full_repr
 
 
-def log_params_and_artifacts(tm: TopicModel,
-                             tm_files: TopicModelFiles,
-                             individual: IndividualDTO,
-                             time_metrics: TimeMeasurements,
-                             alg_args: Optional[str]):
+def log_params_and_artifacts(
+    tm: TopicModel,
+    tm_files: TopicModelFiles,
+    individual: IndividualDTO,
+    time_metrics: TimeMeasurements,
+    alg_args: Optional[str],
+):
     logger.info("Logging params and artifacts to mlflow")
 
-    logger.info(f'Created experiment_{individual.exp_id}')
+    logger.info(f"Created experiment_{individual.exp_id}")
     run_name = f"fitness-{individual.dataset}-{uuid.uuid4()}"
-    experiment_id = mlflow.create_experiment(f'experiment_{individual.exp_id}')
-    print(f'Experiment run name: {run_name}')
+    experiment_id = mlflow.create_experiment(f"experiment_{individual.exp_id}")
+    print(f"Experiment run name: {run_name}")
     with mlflow.start_run(run_name=run_name, experiment_id=experiment_id):
         params = {
             "uid": tm.uid,
             "dataset": individual.dataset,
             "fitness_name": individual.fitness_name,
-            "exp_id": individual.exp_id
+            "exp_id": individual.exp_id,
         }
         d = individual.make_params_dict()
         logger.debug(f"Params dict: {d}")
@@ -128,17 +131,26 @@ def log_params_and_artifacts(tm: TopicModel,
         mlflow.log_dict(individual.fitness_value, artifact_file=metrics_artifact_path)
         mlflow.log_dict(time_metrics, artifact_file=time_metrics_artifact_path)
         mlflow.log_artifact(local_path=tm_files.model_dir, artifact_path=artifact_path)
-        mlflow.log_artifact(local_path=tm_files.theta, artifact_path=theta_artifact_path)
+        mlflow.log_artifact(
+            local_path=tm_files.theta, artifact_path=theta_artifact_path
+        )
         mlflow.log_artifact(local_path=tm_files.phi, artifact_path=phi_artifact_path)
         mlflow.log_dict(topics, artifact_file=topics_artifact_path)
-        mlflow.log_text(alg_args if alg_args else '', artifact_file=alg_args_artifact_path)
+        mlflow.log_text(
+            alg_args if alg_args else "", artifact_file=alg_args_artifact_path
+        )
         mlflow.log_text(full_repr_topics, artifact_file=readable_topics_artifact_path)
 
     logger.info("Logged params and artifacts to mlflow")
 
 
-def log_stats(tm: TopicModel, tm_files: TopicModelFiles,
-              individual: IndividualDTO, time_metrics: TimeMeasurements, alg_args: Optional[str]):
+def log_stats(
+    tm: TopicModel,
+    tm_files: TopicModelFiles,
+    individual: IndividualDTO,
+    time_metrics: TimeMeasurements,
+    alg_args: Optional[str],
+):
     logger.info("Logging run stats to mongodb")
 
     uid = tm.uid
@@ -155,9 +167,9 @@ def log_stats(tm: TopicModel, tm_files: TopicModelFiles,
 
         gridfs_files = dict()
         for name, file_path in tm_files.files.items():
-            with open(file_path, 'rb') as f:
-                file_id = fs.put(f, filename=f'{name}-{uid}.zip', parent_uid=f"{uid}")
-            gridfs_files[f'{name}_file_id'] = file_id
+            with open(file_path, "rb") as f:
+                file_id = fs.put(f, filename=f"{name}-{uid}.zip", parent_uid=f"{uid}")
+            gridfs_files[f"{name}_file_id"] = file_id
 
         logger.info("Writing main stats")
         dt = datetime.now()
@@ -170,7 +182,7 @@ def log_stats(tm: TopicModel, tm_files: TopicModelFiles,
             "params": individual.make_params_dict(),
             "topics": tm.get_topics(),
             "time_metrics": time_metrics,
-            **gridfs_files
+            **gridfs_files,
         }
         collection = db[mongo_collection]
         uid = collection.insert_one(stats).inserted_id
@@ -183,5 +195,6 @@ def succeed_or_log_error():
     try:
         yield
     except Exception as ex:
-        logger.error("Exception occured while trying to execute the action", exc_info=ex)
-
+        logger.error(
+            "Exception occured while trying to execute the action", exc_info=ex
+        )
