@@ -25,8 +25,7 @@ from autotm.utils import (
 )
 from autotm.batch_vect_utils import SampleBatchVectorizer
 
-logger = logging.getLogger()
-logging.basicConfig(level="INFO")
+logger = logging.getLogger(__name__)
 
 
 class Dataset:
@@ -317,7 +316,7 @@ class FitnessCalculatorWrapper:
         self.train_option = train_option
 
     def run(self, params):
-        print(params)
+        logger.info(params)
         params = list(params)
         params = params[:-1] + [0, 0, 0] + [params[-1]]
         fitness = calculate_fitness_of_individual(
@@ -328,7 +327,7 @@ class FitnessCalculatorWrapper:
             train_option=self.train_option,
         )
         result = fitness[AVG_COHERENCE_SCORE]
-        print("Fitness: ", result)
+        logger.info("Fitness: ", result)
         print()
         return -result
 
@@ -412,7 +411,7 @@ class TopicModel:
     # TODO: refactor option
     def train(self, option="online_v1"):
         if self.model is None:
-            print("Initialise the model first!")
+            logger.info("Initialise the model first!")
             return
 
         self.model.regularizers.add(
@@ -443,7 +442,7 @@ class TopicModel:
 
         if self.n1 > 0:
             if self._early_stopping():
-                print("Early stopping is triggered")
+                logger.info("Early stopping is triggered")
                 return
 
         #         if ((self.n2 != 0) and (self.B != 0)):
@@ -476,7 +475,7 @@ class TopicModel:
 
         if self.n1 + self.n2 > 0:
             if self._early_stopping():
-                print("Early stopping is triggered")
+                logger.info("Early stopping is triggered")
                 return
 
         if self.n3 != 0:
@@ -508,7 +507,7 @@ class TopicModel:
 
         if self.n1 + self.n2 + self.n3 > 0:
             if self._early_stopping():
-                print("Early stopping is triggered")
+                logger.info("Early stopping is triggered")
                 return
 
         if self.n4 != 0:
@@ -532,14 +531,14 @@ class TopicModel:
 
         if self.n1 + self.n2 + self.n3 > 0:
             if self._early_stopping():
-                print("Early stopping is triggered")
+                logger.info("Early stopping is triggered")
                 return
 
-        print("Training is complete")
+        logger.info("Training is complete")
 
     def decor_train(self):
         if self.model is None:
-            print("Initialise the model first")
+            logger.info("Initialise the model first")
             return
 
         self.model.regularizers.add(
@@ -778,7 +777,7 @@ class TopicModel:
         # coeff = self._calculate_labels_coeff()
         coeff = 1.0
         if for_individ_fitness:
-            print(
+            logger.info(
                 "COMPONENTS: ",
                 np.mean(list(coherences_main.values())),
                 np.min(list(coherences_main.values())),
@@ -839,7 +838,7 @@ class TopicModel:
 
         all_topics_flag = False
         if len(specific_topics) == self.S:
-            print("Wow! all topics")
+            logger.info("Wow! all topics")
             all_topics_flag = True
 
         logger.info("Building dictionary")

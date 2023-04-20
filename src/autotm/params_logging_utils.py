@@ -17,7 +17,7 @@ from autotm.schemas import IndividualDTO, fitness_to_json
 from autotm.fitness.tm import TopicModel
 
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 @dataclass

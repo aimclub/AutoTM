@@ -10,6 +10,7 @@ logging.basicConfig(
     level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger()
+# logger = logging.getLogger(__name__)
 
 
 # example: irace-log-2021-07-19T21:48:00-2b5faba3-99a8-47ba-a5cd-2c99e6877160.Rdata

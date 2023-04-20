@@ -39,7 +39,7 @@ SPACE = {
 
 warnings.filterwarnings("ignore")
 
-logger = logging.getLogger("BO")
+logger = logging.getLogger(__name__ + ".BO")
 
 # getting config vars
 if "FITNESS_CONFIG_PATH" in os.environ:
@@ -146,7 +146,7 @@ def run_algorithm(dataset, log_file, exp_id):
     best_solution = log_best_solution(
         best_solution, wait_for_result_timeout=-1, alg_args=" ".join(sys.argv)
     )
-    print(best_solution.fitness_value * -1)
+    logger.info(best_solution.fitness_value * -1)
 
 
 if __name__ == "__main__":

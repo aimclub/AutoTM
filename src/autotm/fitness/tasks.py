@@ -6,8 +6,8 @@ from autotm.fitness.tm import fit_tm_of_individual
 from autotm.schemas import IndividualDTO, fitness_to_json, fitness_from_json
 from autotm.algorithms_for_tuning.individuals import make_individual
 
-logger = logging.getLogger("root")
-
+# logger = logging.getLogger("root")
+logger = logging.getLogger(__name__)
 
 # task_logger = get_task_logger(__name__)
 

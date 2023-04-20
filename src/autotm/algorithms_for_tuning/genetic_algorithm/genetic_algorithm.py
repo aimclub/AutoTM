@@ -14,7 +14,7 @@ from autotm.utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
 
-logger = logging.getLogger("GA")
+logger = logging.getLogger(__name__ + ".GA")
 
 NUM_FITNESS_EVALUATIONS = 150
 
@@ -49,10 +49,12 @@ def run_algorithm(
     :param dataset: Dataset name that is being processed. The name will be used to store results
     :param data_path: Path to all the artifacts obtained after
     :param exp_id: Mlflow experiment id
-    :param topic_count: desired count of SPECIFIC topics (in optimization process BACK topics are also produced, thus the total amount of topics can be more than topic_count)
+    :param topic_count: desired count of SPECIFIC topics (in optimization process BACK topics are also produced,
+        thus the total amount of topics can be more than topic_count)
     :param num_individuals: Number of individuals in generation
     :param num_iterations: Number of iterations to make
-    :param num_fitness_evaluations: Max number of possible fitness estimations. This setting may lead to premature algorithm stopping even if there is more generations to go
+    :param num_fitness_evaluations: Max number of possible fitness estimations.
+        This setting may lead to premature algorithm stopping even if there is more generations to go
     :param mutation_type: Mutation type can have value from (mutation_one_param, combined, psm, positioning_mutation)
     :param crossover_type: Crossover type can have value from (crossover_pmx, crossover_one_point, blend_crossover)
     :param selection_type: Selection type can have value from (fitness_prop, rank_based)
@@ -122,7 +124,7 @@ def run_algorithm(
         train_option=train_option,
     )
     best_value = g.run(verbose=True)
-    print(best_value * (-1))
+    logger.info(best_value * (-1))
 
 
 if __name__ == "__main__":
