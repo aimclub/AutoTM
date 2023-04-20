@@ -30,7 +30,7 @@ def init_individ(self, base_model=False):
 def run_sensitivity_analysis():
     problem = {
         'num_var': 13,
-        'names': ['decor', 'back'],
+        'names': ['decor_1', '', 'back'],
         'bounds': [
             [low=self.low_decor, high=self.high_decor],
 

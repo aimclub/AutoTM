@@ -195,6 +195,7 @@ class GABase:
                  high_sp_phi: float = 1e3,
                  low_prob: Optional[float] = 0,
                  high_prob: Optional[float] = 1,
+                 train_option: Optional[str] = 'offline',
                  fitness_obj_type: Optional[str] = 'single_objective'):
         self.dataset = dataset
         self.data_path = data_path
@@ -204,6 +205,7 @@ class GABase:
 
         self.num_fitness_evaluations = num_fitness_evaluations
         self.early_stopping_iterations = early_stopping_iterations
+        self.train_option = train_option
 
         self.high_decor = high_decor
         self.low_decor = low_decor
@@ -274,7 +276,7 @@ class GA(GABase):
         """
 
         super().__init__(dataset, data_path, num_individuals, num_iterations, topic_count, num_fitness_evaluations,
-                         early_stopping_iterations)
+                         early_stopping_iterations, train_option=train_option, fitness_obj_type=fitness_obj_type)
 
         if crossover_type == 'blend_crossover':
             self.crossover_children = 1
@@ -306,7 +308,6 @@ class GA(GABase):
         self.use_nelder_mead_in_mutation = use_nelder_mead_in_mutation
         self.use_nelder_mead_in_crossover = use_nelder_mead_in_crossover
         self.use_nelder_mead_in_selectior = use_nelder_mead_in_selector
-        self.train_option = train_option
         self.metric_collector = MetricsCollector(dataset=self.dataset,
                                                  n_specific_topics=topic_count)
         self.crossover_changes_dict = {}  # generation, parent_1_params, parent_2_params, ...
@@ -864,35 +865,18 @@ class GA(GABase):
 # TODO: add penalty for the solution length
 
 
-class GAmultistage(GA):
-    def __init__(self, dataset, num_individuals, max_stages=5):  # max_stage_len
+class GAmultistage(GABase):
+    def __init__(self, dataset, data_path, num_individuals, num_iterations,
+                 topic_count, max_stages=5,
+                 initial_element_stage_probability=0.5):  # max_stage_len
         self.max_stages = max_stages  # amount of unique regularizers
-        self.dataset = dataset
         self.bag_of_regularizers = ['decor_S', 'decor_B', 'S_phi_B', 'S_phi_S',
                                     'S_theta_B', 'S_theta_S']  # add separate smooth and sparsity
-        self.num_individuals = num_individuals
         self.initial_element_stage_probability = 0.5
-        self.positioning_matrix = np.full((len(self.bag_of_regularizers), self.max_stages - 1), 0.5)
-        self.set_regularizer_limits()
-
-    def set_regularizer_limits(self, low_decor=0, high_decor=1e5,
-                               low_n=1, high_n=30,  # minimal value changed to 1
-                               low_back=0, high_back=5,
-                               low_spb=0, high_spb=1e2,
-                               low_spm=-1e-3, high_spm=1e2,
-                               low_sp_phi=-1e3, high_sp_phi=1e3):
-        self.high_decor = high_decor
-        self.low_decor = low_decor
-        self.low_n = low_n
-        self.high_n = high_n
-        self.low_back = low_back
-        self.high_back = high_back
-        self.high_spb = high_spb
-        self.low_spb = low_spb
-        self.low_spm = low_spm
-        self.high_spm = high_spm
-        self.low_sp_phi = low_sp_phi
-        self.high_sp_phi = high_sp_phi
+        self.positioning_matrix = np.full((len(self.bag_of_regularizers), self.max_stages - 1),
+                                          self.initial_element_stage_probability)
+        super().__init__(dataset, data_path, num_individuals, num_iterations, topic_count, num_fitness_evaluations,
+                         early_stopping_iterations, train_option=train_option, fitness_obj_type=fitness_obj_type)
 
     # TODO: check if float is needed
     def _init_param(self, param_type):
