@@ -19,7 +19,7 @@ def crossover_pmx(parent_1, parent_2, **kwargs):
 
 # discrete crossover
 def crossover_one_point(parent_1, parent_2, **kwargs):
-    elem_cross_prob = kwargs['elem_cross_prob']
+    elem_cross_prob = kwargs["elem_cross_prob"]
     for i in range(len(parent_1)):
         # removed mutation preservation
         if random.random() < elem_cross_prob:
@@ -30,14 +30,14 @@ def crossover_one_point(parent_1, parent_2, **kwargs):
 
 
 def crossover_blend_new(parent_1, parent_2, **kwargs):
-    alpha = kwargs['alpha']
+    alpha = kwargs["alpha"]
     child_1 = []
     child_2 = []
     u = random.random()
-    gamma = (1. + 2. * alpha) * u - alpha  # fixed (1. + 2. * alpha) * u - alpha
+    gamma = (1.0 + 2.0 * alpha) * u - alpha  # fixed (1. + 2. * alpha) * u - alpha
     for i in range(len(parent_1)):
-        child_1.append((1. - gamma) * parent_1[i] + gamma * parent_2[i])
-        child_2.append(gamma * parent_1[i] + (1. - gamma) * parent_2[i])
+        child_1.append((1.0 - gamma) * parent_1[i] + gamma * parent_2[i])
+        child_2.append(gamma * parent_1[i] + (1.0 - gamma) * parent_2[i])
 
     # TODO: reconsider this
     child_1[12:15] = parent_1[12:15]
@@ -55,7 +55,7 @@ def crossover_blend_new(parent_1, parent_2, **kwargs):
 
 
 def crossover_blend(parent_1, parent_2, **kwargs):
-    alpha = kwargs['alpha']
+    alpha = kwargs["alpha"]
     child = []
     u = random.random()
     gamma = (1 - 2 * alpha) * u - alpha
@@ -68,10 +68,10 @@ def crossover_blend(parent_1, parent_2, **kwargs):
     return child
 
 
-def crossover(crossover_type='crossover_one_point'):
-    if crossover_type == 'crossover_pmx':
+def crossover(crossover_type="crossover_one_point"):
+    if crossover_type == "crossover_pmx":
         return crossover_pmx
-    if crossover_type == 'crossover_one_point':
+    if crossover_type == "crossover_one_point":
         return crossover_one_point
-    if crossover_type == 'blend_crossover':
+    if crossover_type == "blend_crossover":
         return crossover_blend

@@ -17,8 +17,14 @@ from sklearn.svm import SVR
 from sklearn.ensemble import BaggingRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import RBF, Matern, WhiteKernel, \
-    ConstantKernel, ExpSineSquared, RationalQuadratic
+from sklearn.gaussian_process.kernels import (
+    RBF,
+    Matern,
+    WhiteKernel,
+    ConstantKernel,
+    ExpSineSquared,
+    RationalQuadratic,
+)
 from sklearn.metrics import mean_squared_error
 from sklearn.neural_network import MLPRegressor
 from sklearn.tree import DecisionTreeRegressor
@@ -27,7 +33,9 @@ from autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from autotm.algorithms_for_tuning.genetic_algorithm.crossover import crossover
 from autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
 from autotm.algorithms_for_tuning.individuals import make_individual, IndividualDTO
-from autotm.algorithms_for_tuning.nelder_mead_optimization.nelder_mead import NelderMeadOptimization
+from autotm.algorithms_for_tuning.nelder_mead_optimization.nelder_mead import (
+    NelderMeadOptimization,
+)
 
 from autotm.utils import AVG_COHERENCE_SCORE
 from scipy.optimize import minimize
@@ -43,30 +51,32 @@ logger = logging.getLogger("GA_algo")
 
 
 # TODO: Add fitness type
-def set_surrogate_fitness(value, fitness_type='avg_coherence_score'):
-    npmis = {f"npmi_50": None,
-             f"npmi_15": None,
-             f"npmi_25": None,
-             f"npmi_50_list": None}
+def set_surrogate_fitness(value, fitness_type="avg_coherence_score"):
+    npmis = {
+        f"npmi_50": None,
+        f"npmi_15": None,
+        f"npmi_25": None,
+        f"npmi_50_list": None,
+    }
     scores_dict = {
         fitness_type: value,
-        'perplexityScore': None,
-        'backgroundTokensRatioScore': None,
-        'contrast': None,
-        'purity': None,
-        'kernelSize': None,
-        'npmi_50_list': [None],  # npmi_values_50_list,
-        'npmi_50': None,
-        'sparsity_phi': None,
-        'sparsity_theta': None,
-        'topic_significance_uni': None,
-        'topic_significance_vacuous': None,
-        'topic_significance_back': None,
-        'switchP_list': [None],
-        'switchP': None,
-        'all_topics': None,
+        "perplexityScore": None,
+        "backgroundTokensRatioScore": None,
+        "contrast": None,
+        "purity": None,
+        "kernelSize": None,
+        "npmi_50_list": [None],  # npmi_values_50_list,
+        "npmi_50": None,
+        "sparsity_phi": None,
+        "sparsity_theta": None,
+        "topic_significance_uni": None,
+        "topic_significance_vacuous": None,
+        "topic_significance_back": None,
+        "switchP_list": [None],
+        "switchP": None,
+        "all_topics": None,
         # **coherence_scores,
-        **npmis
+        **npmis,
     }
     return scores_dict
 
@@ -85,23 +95,26 @@ class Surrogate:
             self.surrogate = RandomForestRegressor(**self.kwargs)
         elif self.name == "mlp-regressor":
             if not self.br_n_estimators:
-                self.br_n_estimators = self.kwargs['br_n_estimators']
-                del self.kwargs['br_n_estimators']
-                self.br_n_jobs = self.kwargs['n_jobs']
-                del self.kwargs['n_jobs']
-                self.kwargs['alpha'] = self.kwargs['mlp_alpha']
-                del self.kwargs['mlp_alpha']
-            self.surrogate = BaggingRegressor(base_estimator=MLPRegressor(**self.kwargs),
-                                              n_estimators=self.br_n_estimators, n_jobs=self.br_n_jobs)
+                self.br_n_estimators = self.kwargs["br_n_estimators"]
+                del self.kwargs["br_n_estimators"]
+                self.br_n_jobs = self.kwargs["n_jobs"]
+                del self.kwargs["n_jobs"]
+                self.kwargs["alpha"] = self.kwargs["mlp_alpha"]
+                del self.kwargs["mlp_alpha"]
+            self.surrogate = BaggingRegressor(
+                base_estimator=MLPRegressor(**self.kwargs),
+                n_estimators=self.br_n_estimators,
+                n_jobs=self.br_n_jobs,
+            )
         elif self.name == "GPR":  # tune ??
             if not self.gpr_kernel:
-                kernel = self.kwargs['gpr_kernel']
-                del self.kwargs['gpr_kernel']
-                if kernel == 'RBF':
+                kernel = self.kwargs["gpr_kernel"]
+                del self.kwargs["gpr_kernel"]
+                if kernel == "RBF":
                     self.gpr_kernel = 1.0 * RBF(1.0)
                 elif kernel == "RBFwithConstant":
                     self.gpr_kernel = 1.0 * RBF(1.0) + ConstantKernel()
-                elif kernel == 'Matern':
+                elif kernel == "Matern":
                     self.gpr_kernel = 1.0 * Matern(1.0)
                 elif kernel == "WhiteKernel":
                     self.gpr_kernel = 1.0 * WhiteKernel(1.0)
@@ -109,9 +122,9 @@ class Surrogate:
                     self.gpr_kernel = ExpSineSquared()
                 elif kernel == "RationalQuadratic":
                     self.gpr_kernel = RationalQuadratic(1.0)
-                self.kwargs['kernel'] = self.gpr_kernel
-                self.kwargs['alpha'] = self.kwargs['gpr_alpha']
-                del self.kwargs['gpr_alpha']
+                self.kwargs["kernel"] = self.gpr_kernel
+                self.kwargs["alpha"] = self.kwargs["gpr_alpha"]
+                del self.kwargs["gpr_alpha"]
             self.surrogate = GaussianProcessRegressor(**self.kwargs)
         elif self.name == "decision-tree-regressor":
             try:
@@ -144,19 +157,19 @@ class Surrogate:
 
 def get_prediction_uncertanty(model, X, surrogate_name, percentile=90):
     interval_len = []
-    if surrogate_name == 'random-forest-regressor':
+    if surrogate_name == "random-forest-regressor":
         for x in range(len(X)):
             preds = []
             for pred in model.estimators_:
                 prediction = pred.predict(np.array(X[x]).reshape(1, -1))
                 preds.append(prediction[0])
-            err_down = np.percentile(preds, (100 - percentile) / 2.)
-            err_up = np.percentile(preds, 100 - (100 - percentile) / 2.)
+            err_down = np.percentile(preds, (100 - percentile) / 2.0)
+            err_up = np.percentile(preds, 100 - (100 - percentile) / 2.0)
             interval_len.append(err_up - err_down)
-    elif surrogate_name == 'GPR':
+    elif surrogate_name == "GPR":
         y_hat, y_sigma = model.predict(X, return_std=True)
         interval_len = list(y_sigma)
-    elif surrogate_name == 'decision-tree-regressor':
+    elif surrogate_name == "decision-tree-regressor":
         raise NotImplementedError
     return interval_len
 
@@ -172,16 +185,33 @@ class ModelStorage:
 
 
 class GA:
-    def __init__(self, dataset, data_path, num_individuals, num_iterations,
-                 mutation_type='mutation_one_param', crossover_type='blend_crossover',
-                 selection_type='fitness_prop', elem_cross_prob=0.2,
-                 num_fitness_evaluations: Optional[int] = 500,
-                 early_stopping_iterations: Optional[int] = 500,
-                 best_proc=0.3, alpha=None, exp_id: Optional[int] = None, surrogate_name=None,
-                 calc_scheme='type2', topic_count: Optional[int] = None, fitness_obj_type='single_objective',
-                 tag: Optional[str] = None, use_nelder_mead: bool = False, use_nelder_mead_in_mutation: bool = False,
-                 use_nelder_mead_in_crossover: bool = False, use_nelder_mead_in_selector: bool = False,
-                 train_option: str = 'offline', **kwargs):
+    def __init__(
+        self,
+        dataset,
+        data_path,
+        num_individuals,
+        num_iterations,
+        mutation_type="mutation_one_param",
+        crossover_type="blend_crossover",
+        selection_type="fitness_prop",
+        elem_cross_prob=0.2,
+        num_fitness_evaluations: Optional[int] = 500,
+        early_stopping_iterations: Optional[int] = 500,
+        best_proc=0.3,
+        alpha=None,
+        exp_id: Optional[int] = None,
+        surrogate_name=None,
+        calc_scheme="type2",
+        topic_count: Optional[int] = None,
+        fitness_obj_type="single_objective",
+        tag: Optional[str] = None,
+        use_nelder_mead: bool = False,
+        use_nelder_mead_in_mutation: bool = False,
+        use_nelder_mead_in_crossover: bool = False,
+        use_nelder_mead_in_selector: bool = False,
+        train_option: str = "offline",
+        **kwargs,
+    ):
         """
 
         :param dataset: dataset name
@@ -208,7 +238,7 @@ class GA:
 
         self.dataset = dataset
 
-        if crossover_type == 'blend_crossover':
+        if crossover_type == "blend_crossover":
             self.crossover_children = 1
         else:
             self.crossover_children = 2
@@ -247,17 +277,30 @@ class GA:
         self.use_nelder_mead_in_crossover = use_nelder_mead_in_crossover
         self.use_nelder_mead_in_selectior = use_nelder_mead_in_selector
         self.train_option = train_option
-        self.metric_collector = MetricsCollector(dataset=self.dataset,
-                                                 n_specific_topics=topic_count)
-        self.crossover_changes_dict = {}  # generation, parent_1_params, parent_2_params, ...
+        self.metric_collector = MetricsCollector(
+            dataset=self.dataset, n_specific_topics=topic_count
+        )
+        self.crossover_changes_dict = (
+            {}
+        )  # generation, parent_1_params, parent_2_params, ...
 
-    def set_regularizer_limits(self, low_decor=0, high_decor=1e5,
-                               low_n=0, high_n=30,
-                               low_back=0, high_back=5,
-                               low_spb=0, high_spb=1e2,
-                               low_spm=-1e-3, high_spm=1e2,
-                               low_sp_phi=-1e3, high_sp_phi=1e3,
-                               low_prob=0, high_prob=1):
+    def set_regularizer_limits(
+        self,
+        low_decor=0,
+        high_decor=1e5,
+        low_n=0,
+        high_n=30,
+        low_back=0,
+        high_back=5,
+        low_spb=0,
+        high_spb=1e2,
+        low_spm=-1e-3,
+        high_spm=1e2,
+        low_sp_phi=-1e3,
+        high_sp_phi=1e3,
+        low_prob=0,
+        high_prob=1,
+    ):
         self.high_decor = high_decor
         self.low_decor = low_decor
         self.low_n = low_n
@@ -274,23 +317,42 @@ class GA:
         self.high_prob = high_prob
 
     def init_individ(self, base_model=False):
-        val_decor = np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[0]
+        val_decor = np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[
+            0
+        ]
         var_n = np.random.randint(low=self.low_n, high=self.high_n, size=4)
         var_back = np.random.randint(low=self.low_back, high=self.high_back, size=1)[0]
         var_sm = np.random.uniform(low=self.low_spb, high=self.high_spb, size=2)
         var_sp = np.random.uniform(low=self.low_sp_phi, high=self.high_sp_phi, size=4)
-        ext_mutation_prob = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
-        ext_elem_mutation_prob = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
-        ext_mutation_selector = np.random.uniform(low=self.low_prob, high=self.high_prob, size=1)[0]
-        val_decor_2 = np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[0]
+        ext_mutation_prob = np.random.uniform(
+            low=self.low_prob, high=self.high_prob, size=1
+        )[0]
+        ext_elem_mutation_prob = np.random.uniform(
+            low=self.low_prob, high=self.high_prob, size=1
+        )[0]
+        ext_mutation_selector = np.random.uniform(
+            low=self.low_prob, high=self.high_prob, size=1
+        )[0]
+        val_decor_2 = np.random.uniform(
+            low=self.low_decor, high=self.high_decor, size=1
+        )[0]
         params = [
-            val_decor, var_n[0],
-            var_sm[0], var_sm[1], var_n[1],
-            var_sp[0], var_sp[1], var_n[2],
-            var_sp[2], var_sp[3], var_n[3],
+            val_decor,
+            var_n[0],
+            var_sm[0],
+            var_sm[1],
+            var_n[1],
+            var_sp[0],
+            var_sp[1],
+            var_n[2],
+            var_sp[2],
+            var_sp[3],
+            var_n[3],
             var_back,
-            ext_mutation_prob, ext_elem_mutation_prob, ext_mutation_selector,
-            val_decor_2
+            ext_mutation_prob,
+            ext_elem_mutation_prob,
+            ext_mutation_selector,
+            val_decor_2,
         ]
         if base_model:
             for i in [0, 4, 7, 10, 11, 15]:
@@ -302,63 +364,98 @@ class GA:
         list_of_individuals = []
         for i in range(self.num_individuals):
             if i == 0:
-                dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
-                                    dataset=self.dataset,
-                                    params=self.init_individ(base_model=True),
-                                    exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
-                                    topic_count=self.topic_count, tag=self.tag,
-                                    train_option=self.train_option)
+                dto = IndividualDTO(
+                    id=str(uuid.uuid4()),
+                    data_path=self.data_path,
+                    dataset=self.dataset,
+                    params=self.init_individ(base_model=True),
+                    exp_id=self.exp_id,
+                    alg_id=ALG_ID,
+                    iteration_id=0,
+                    topic_count=self.topic_count,
+                    tag=self.tag,
+                    train_option=self.train_option,
+                )
             else:
-                dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
-                                    dataset=self.dataset, params=self.init_individ(),
-                                    exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=0,
-                                    topic_count=self.topic_count, tag=self.tag,
-                                    train_option=self.train_option)
+                dto = IndividualDTO(
+                    id=str(uuid.uuid4()),
+                    data_path=self.data_path,
+                    dataset=self.dataset,
+                    params=self.init_individ(),
+                    exp_id=self.exp_id,
+                    alg_id=ALG_ID,
+                    iteration_id=0,
+                    topic_count=self.topic_count,
+                    tag=self.tag,
+                    train_option=self.train_option,
+                )
             # TODO: improve heuristic on search space
             list_of_individuals.append(make_individual(dto=dto))
         population_with_fitness = estimate_fitness(list_of_individuals)
 
         self.save_params(population_with_fitness)
-        if self.surrogate is not None and self.calc_scheme == 'type2':
+        if self.surrogate is not None and self.calc_scheme == "type2":
             self.surrogate.fit(np.array(self.all_params), np.array(self.all_fitness))
             logger.info("Surrogate is initialized!")
         return population_with_fitness
 
     def _calculate_uncertain_res(self, generation, iteration_num: int, proc=0.3):
         X = np.array([individ.dto.params for individ in generation])
-        certanty = get_prediction_uncertanty(self.surrogate.surrogate, X, self.surrogate.name)
+        certanty = get_prediction_uncertanty(
+            self.surrogate.surrogate, X, self.surrogate.name
+        )
         recalculate_num = int(np.floor(len(certanty) * proc))
-        logger.info(f'Certanty values: {certanty}')
+        logger.info(f"Certanty values: {certanty}")
 
-        certanty, X = (list(t) for t in zip(*sorted(zip(certanty, X.tolist()), reverse=True)))  # check
+        certanty, X = (
+            list(t) for t in zip(*sorted(zip(certanty, X.tolist()), reverse=True))
+        )  # check
         calculated = []
         for params in X[:recalculate_num]:
-            dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
-                                params=[float(i) for i in params], dataset=self.dataset,
-                                exp_id=self.exp_id, alg_id=ALG_ID, iteration_id=iteration_num,
-                                topic_count=self.topic_count, tag=self.tag,
-                                train_option=self.train_option)
+            dto = IndividualDTO(
+                id=str(uuid.uuid4()),
+                data_path=self.data_path,
+                params=[float(i) for i in params],
+                dataset=self.dataset,
+                exp_id=self.exp_id,
+                alg_id=ALG_ID,
+                iteration_id=iteration_num,
+                topic_count=self.topic_count,
+                tag=self.tag,
+                train_option=self.train_option,
+            )
             calculated.append(make_individual(dto=dto))
 
         calculated = estimate_fitness(calculated)
 
         self.all_params += [individ.dto.params for individ in calculated]
-        self.all_fitness += [individ.dto.fitness_value['avg_coherence_score'] for individ in calculated]
+        self.all_fitness += [
+            individ.dto.fitness_value["avg_coherence_score"] for individ in calculated
+        ]
 
         pred_y = self.surrogate.predict(X[recalculate_num:])
         for ix, params in enumerate(X[recalculate_num:]):
-            dto = IndividualDTO(id=str(uuid.uuid4()),
-                                data_path=self.data_path,
-                                params=params, dataset=self.dataset,
-                                fitness_value=set_surrogate_fitness(pred_y[ix]), exp_id=self.exp_id, alg_id=ALG_ID,
-                                topic_count=self.topic_count, tag=self.tag,
-                                train_option=self.train_option)
+            dto = IndividualDTO(
+                id=str(uuid.uuid4()),
+                data_path=self.data_path,
+                params=params,
+                dataset=self.dataset,
+                fitness_value=set_surrogate_fitness(pred_y[ix]),
+                exp_id=self.exp_id,
+                alg_id=ALG_ID,
+                topic_count=self.topic_count,
+                tag=self.tag,
+                train_option=self.train_option,
+            )
             calculated.append(make_individual(dto=dto))
         return calculated
 
     def save_params(self, population):
-        params_and_f = [(copy.deepcopy(individ.params), individ.fitness_value) for individ in
-                        population if individ.fitness_value not in self.all_fitness]
+        params_and_f = [
+            (copy.deepcopy(individ.params), individ.fitness_value)
+            for individ in population
+            if individ.fitness_value not in self.all_fitness
+        ]
 
         def check_val(fval):
             return not (fval is None or math.isnan(fval) or math.isinf(fval))
@@ -369,7 +466,9 @@ class GA:
         clean_params_and_f = []
         for p, f in params_and_f:
             if not check_params(p) or not check_val(f):
-                logger.warning(f"Bad params or fitness found. Fitness: {f}. Params: {p}.")
+                logger.warning(
+                    f"Bad params or fitness found. Fitness: {f}. Params: {p}."
+                )
             else:
                 clean_params_and_f.append((p, f))
 
@@ -394,7 +493,9 @@ class GA:
             clean_params_and_f = []
             for i in range(len(y_val)):
                 if not check_params(X_val[i]) or not check_val(y_val[i]):
-                    logger.warning(f"Bad params or fitness found. Fitness: {y_val[i]}. Params: {X_val[i]}.")
+                    logger.warning(
+                        f"Bad params or fitness found. Fitness: {y_val[i]}. Params: {X_val[i]}."
+                    )
                 else:
                     clean_params_and_f.append((X_val[i], y_val[i]))
 
@@ -419,7 +520,9 @@ class GA:
             params[i] = self._check_param(params[i], (self.low_spb, self.high_spb))
         # sparce
         for i in [5, 6, 8, 9]:
-            params[i] = self._check_param(params[i], (self.low_sp_phi, self.high_sp_phi))
+            params[i] = self._check_param(
+                params[i], (self.low_sp_phi, self.high_sp_phi)
+            )
         # iterations
         for i in [1, 4, 7, 10]:
             params[i] = float(int(params[i]))
@@ -439,11 +542,15 @@ class GA:
     def run_crossover(self, pairs_generator, surrogate_iteration, iteration_num: int):
         new_generation = []
 
-        crossover_changes = {'parent_1_params': [], 'parent_2_params': [], 'parent_1_fitness': [],
-                             'parent_2_fitness': [], 'child_id': []}
+        crossover_changes = {
+            "parent_1_params": [],
+            "parent_2_params": [],
+            "parent_1_fitness": [],
+            "parent_2_fitness": [],
+            "child_id": [],
+        }
 
         for i, j in pairs_generator:
-
             if i is None:
                 break
 
@@ -451,115 +558,155 @@ class GA:
             parent_2 = copy.deepcopy(j.params)
 
             if self.crossover_children == 2:
-
-                child_1, child_2 = self.crossover(parent_1=parent_1,
-                                                  parent_2=parent_2,
-                                                  elem_cross_prob=self.elem_cross_prob,
-                                                  alpha=self.alpha)
+                child_1, child_2 = self.crossover(
+                    parent_1=parent_1,
+                    parent_2=parent_2,
+                    elem_cross_prob=self.elem_cross_prob,
+                    alpha=self.alpha,
+                )
 
                 child_1 = self.check_params_bounds(child_1)
                 child_2 = self.check_params_bounds(child_2)
 
-                child1_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
-                                           dataset=self.dataset, params=child_1,
-                                           exp_id=self.exp_id,
-                                           alg_id=ALG_ID, iteration_id=iteration_num,
-                                           topic_count=self.topic_count, tag=self.tag,
-                                           train_option=self.train_option)
-                child2_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
-                                           dataset=self.dataset, params=child_2,
-                                           exp_id=self.exp_id,
-                                           alg_id=ALG_ID, iteration_id=iteration_num,
-                                           topic_count=self.topic_count, tag=self.tag,
-                                           train_option=self.train_option)
+                child1_dto = IndividualDTO(
+                    id=str(uuid.uuid4()),
+                    data_path=self.data_path,
+                    dataset=self.dataset,
+                    params=child_1,
+                    exp_id=self.exp_id,
+                    alg_id=ALG_ID,
+                    iteration_id=iteration_num,
+                    topic_count=self.topic_count,
+                    tag=self.tag,
+                    train_option=self.train_option,
+                )
+                child2_dto = IndividualDTO(
+                    id=str(uuid.uuid4()),
+                    data_path=self.data_path,
+                    dataset=self.dataset,
+                    params=child_2,
+                    exp_id=self.exp_id,
+                    alg_id=ALG_ID,
+                    iteration_id=iteration_num,
+                    topic_count=self.topic_count,
+                    tag=self.tag,
+                    train_option=self.train_option,
+                )
 
                 new_generation.append(make_individual(dto=child1_dto))
                 new_generation.append(make_individual(dto=child2_dto))
                 self.evaluations_counter += 2
             else:
-                child_1 = self.crossover(parent_1=parent_1,
-                                         parent_2=parent_2,
-                                         elem_cross_prob=self.elem_cross_prob,
-                                         alpha=self.alpha
-                                         )
+                child_1 = self.crossover(
+                    parent_1=parent_1,
+                    parent_2=parent_2,
+                    elem_cross_prob=self.elem_cross_prob,
+                    alpha=self.alpha,
+                )
 
                 child_1 = self.check_params_bounds(child_1)
 
-                child1_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
-                                           dataset=self.dataset, params=child_1,
-                                           exp_id=self.exp_id,
-                                           alg_id=ALG_ID, iteration_id=iteration_num,
-                                           topic_count=self.topic_count, tag=self.tag,
-                                           train_option=self.train_option)
+                child1_dto = IndividualDTO(
+                    id=str(uuid.uuid4()),
+                    data_path=self.data_path,
+                    dataset=self.dataset,
+                    params=child_1,
+                    exp_id=self.exp_id,
+                    alg_id=ALG_ID,
+                    iteration_id=iteration_num,
+                    topic_count=self.topic_count,
+                    tag=self.tag,
+                    train_option=self.train_option,
+                )
                 new_generation.append(make_individual(dto=child1_dto))
 
                 self.evaluations_counter += 1
 
-            crossover_changes['parent_1_params'].append(i.params)
-            crossover_changes['parent_2_params'].append(j.params)
-            crossover_changes['parent_1_fitness'].append(i.fitness_value)
-            crossover_changes['parent_2_fitness'].append(j.fitness_value)
-            crossover_changes['child_id'].append(len(new_generation) - 1)
+            crossover_changes["parent_1_params"].append(i.params)
+            crossover_changes["parent_2_params"].append(j.params)
+            crossover_changes["parent_1_fitness"].append(i.fitness_value)
+            crossover_changes["parent_2_fitness"].append(j.fitness_value)
+            crossover_changes["child_id"].append(len(new_generation) - 1)
 
         logger.info(f"CURRENT COUNTER: {self.evaluations_counter}")
 
         if len(new_generation) > 0:
-
             fitness_calc_time_start = time.time()
             if not SPEEDUP or not self.surrogate:
-                new_generation = estimate_fitness(new_generation)  # TODO: check the order
+                new_generation = estimate_fitness(
+                    new_generation
+                )  # TODO: check the order
                 self.save_params(new_generation)
             logger.info(f"ize of the new generation is {len(new_generation)}")
-            logger.info(f"TIME OF THE FITNESS FUNCTION IN CROSSOVER: {time.time() - fitness_calc_time_start}")
+            logger.info(
+                f"TIME OF THE FITNESS FUNCTION IN CROSSOVER: {time.time() - fitness_calc_time_start}"
+            )
 
-            for i in range(len(crossover_changes['parent_1_params'])):
-                self.metric_collector.save_crossover(generation=iteration_num,
-                                                     parent_1=crossover_changes['parent_1_params'][i],
-                                                     parent_2=crossover_changes['parent_2_params'][i],
-                                                     parent_1_fitness=crossover_changes['parent_1_fitness'][i],
-                                                     parent_2_fitness=crossover_changes['parent_2_fitness'][i],
-                                                     child_1=new_generation[crossover_changes['child_id'][i]].params,
-                                                     child_1_fitness=new_generation[
-                                                         crossover_changes['child_id'][i]].fitness_value)
+            for i in range(len(crossover_changes["parent_1_params"])):
+                self.metric_collector.save_crossover(
+                    generation=iteration_num,
+                    parent_1=crossover_changes["parent_1_params"][i],
+                    parent_2=crossover_changes["parent_2_params"][i],
+                    parent_1_fitness=crossover_changes["parent_1_fitness"][i],
+                    parent_2_fitness=crossover_changes["parent_2_fitness"][i],
+                    child_1=new_generation[crossover_changes["child_id"][i]].params,
+                    child_1_fitness=new_generation[
+                        crossover_changes["child_id"][i]
+                    ].fitness_value,
+                )
 
             if self.surrogate:
-                if self.calc_scheme == 'type1':
+                if self.calc_scheme == "type1":
                     if surrogate_iteration:
                         self.surrogate_calculation(new_generation)
                     elif not surrogate_iteration and SPEEDUP:
                         new_generation = estimate_fitness(new_generation)
                         self.save_params(new_generation)
-                elif self.calc_scheme == 'type2':
-                    new_generation = self._calculate_uncertain_res(new_generation, iteration_num=iteration_num)
+                elif self.calc_scheme == "type2":
+                    new_generation = self._calculate_uncertain_res(
+                        new_generation, iteration_num=iteration_num
+                    )
                     self.save_params(new_generation)
 
         return new_generation, crossover_changes
 
     def apply_nelder_mead(self, starting_points_set, num_gen, num_iterations=2):
-        nelder_opt = NelderMeadOptimization(data_path=self.data_path,
-                                            dataset=self.dataset,
-                                            exp_id=self.exp_id,
-                                            topic_count=self.topic_count,
-                                            train_option=self.train_option)
+        nelder_opt = NelderMeadOptimization(
+            data_path=self.data_path,
+            dataset=self.dataset,
+            exp_id=self.exp_id,
+            topic_count=self.topic_count,
+            train_option=self.train_option,
+        )
         new_population = []
         for point in starting_points_set:
             st_point = point[:12] + [point[15]]
-            res = nelder_opt.run_algorithm(num_iterations=num_iterations, ini_point=st_point)
-            solution = list(res['x'])
-            solution = solution[:-1] + point[12:15] + [solution[-1]]  # TODO: check mutation ids
+            res = nelder_opt.run_algorithm(
+                num_iterations=num_iterations, ini_point=st_point
+            )
+            solution = list(res["x"])
+            solution = (
+                solution[:-1] + point[12:15] + [solution[-1]]
+            )  # TODO: check mutation ids
             fitness = -res.fun
-            solution_dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
-                                         dataset=self.dataset, params=solution,
-                                         exp_id=self.exp_id,
-                                         alg_id=ALG_ID, iteration_id=num_gen,
-                                         topic_count=self.topic_count, tag=self.tag,
-                                         fitness_value={AVG_COHERENCE_SCORE: fitness}, train_option=self.train_option)
+            solution_dto = IndividualDTO(
+                id=str(uuid.uuid4()),
+                data_path=self.data_path,
+                dataset=self.dataset,
+                params=solution,
+                exp_id=self.exp_id,
+                alg_id=ALG_ID,
+                iteration_id=num_gen,
+                topic_count=self.topic_count,
+                tag=self.tag,
+                fitness_value={AVG_COHERENCE_SCORE: fitness},
+                train_option=self.train_option,
+            )
 
             new_population.append(make_individual(dto=solution_dto))
         return new_population
 
     def run(self, verbose=False):
-
         self.evaluations_counter = 0
         ftime = str(int(time.time()))
 
@@ -567,12 +714,14 @@ class GA:
 
         logger.info(f"Starting experiment: {ftime}")
 
-        logger.info(f"ALGORITHM PARAMS  number of individuals {self.num_individuals}; "
-                    f"number of fitness evals "
-                    f"{self.num_fitness_evaluations if self.num_fitness_evaluations else 'unlimited'}; "
-                    f"number of early stopping iterations "
-                    f"{self.early_stopping_iterations if self.early_stopping_iterations else 'unlimited'}; "
-                    f"crossover prob {self.elem_cross_prob}")
+        logger.info(
+            f"ALGORITHM PARAMS  number of individuals {self.num_individuals}; "
+            f"number of fitness evals "
+            f"{self.num_fitness_evaluations if self.num_fitness_evaluations else 'unlimited'}; "
+            f"number of early stopping iterations "
+            f"{self.early_stopping_iterations if self.early_stopping_iterations else 'unlimited'}; "
+            f"crossover prob {self.elem_cross_prob}"
+        )
 
         # population initialization
         population = self.init_population()
@@ -601,19 +750,22 @@ class GA:
                 if ii % 2 != 0:
                     surrogate_iteration = True
 
-            population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
-            pairs_generator = self.selection(population=population,
-                                             best_proc=self.best_proc,
-                                             children_num=self.crossover_children)
+            population.sort(key=operator.attrgetter("fitness_value"), reverse=True)
+            pairs_generator = self.selection(
+                population=population,
+                best_proc=self.best_proc,
+                children_num=self.crossover_children,
+            )
 
             logger.info(f"PAIRS ARE CREATED")
 
             # Crossover
-            new_generation, crossover_changes = self.run_crossover(pairs_generator, surrogate_iteration,
-                                                                   iteration_num=ii)
+            new_generation, crossover_changes = self.run_crossover(
+                pairs_generator, surrogate_iteration, iteration_num=ii
+            )
 
-            new_generation.sort(key=operator.attrgetter('fitness_value'), reverse=True)
-            population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
+            new_generation.sort(key=operator.attrgetter("fitness_value"), reverse=True)
+            population.sort(key=operator.attrgetter("fitness_value"), reverse=True)
 
             logger.info("CROSSOVER IS OVER")
 
@@ -621,17 +773,25 @@ class GA:
                 # TODO: implement Nelder-Mead here
                 pass
 
-            if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
-                bparams = ''.join([str(i) for i in population[0].params])
-                self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
-                                                   fitness=[i.fitness_value for i in population])
-                logger.info(f"TERMINATION IS TRIGGERED: EVAL NUM."
-                            f"DATASET {self.dataset}."
-                            f"TOPICS NUM {self.topic_count}."
-                            f"RUN ID {run_id}."
-                            f"THE BEST FITNESS {population[0].fitness_value}."
-                            f"THE BEST PARAMS {bparams}."
-                            f"ITERATION TIME {time.time() - iteration_start_time}.")
+            if (
+                self.num_fitness_evaluations
+                and self.evaluations_counter >= self.num_fitness_evaluations
+            ):
+                bparams = "".join([str(i) for i in population[0].params])
+                self.metric_collector.save_fitness(
+                    generation=ii,
+                    params=[i.params for i in population],
+                    fitness=[i.fitness_value for i in population],
+                )
+                logger.info(
+                    f"TERMINATION IS TRIGGERED: EVAL NUM."
+                    f"DATASET {self.dataset}."
+                    f"TOPICS NUM {self.topic_count}."
+                    f"RUN ID {run_id}."
+                    f"THE BEST FITNESS {population[0].fitness_value}."
+                    f"THE BEST PARAMS {bparams}."
+                    f"ITERATION TIME {time.time() - iteration_start_time}."
+                )
                 # return population[0].fitness_value
                 break
 
@@ -641,13 +801,24 @@ class GA:
             # population_params = [copy.deepcopy(individ.params) for individ in population]
 
             the_best_guy_params = copy.deepcopy(population[0].params)
-            new_generation = [individ for individ in new_generation if individ.params != the_best_guy_params]
+            new_generation = [
+                individ
+                for individ in new_generation
+                if individ.params != the_best_guy_params
+            ]
 
-            new_generation_n = min((self.num_individuals - int(np.ceil(self.num_individuals * self.best_proc))),
-                                   len(new_generation))
+            new_generation_n = min(
+                (
+                    self.num_individuals
+                    - int(np.ceil(self.num_individuals * self.best_proc))
+                ),
+                len(new_generation),
+            )
             old_generation_n = self.num_individuals - new_generation_n
 
-            population = population[:old_generation_n] + new_generation[:new_generation_n]
+            population = (
+                population[:old_generation_n] + new_generation[:new_generation_n]
+            )
 
             try:
                 del new_generation
@@ -656,7 +827,7 @@ class GA:
 
             gc.collect()
 
-            population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
+            population.sort(key=operator.attrgetter("fitness_value"), reverse=True)
 
             try:
                 del population[self.num_individuals]
@@ -666,7 +837,6 @@ class GA:
             # mutation params 12, 13
             # TODO: check this code
             for i in range(1, len(population)):
-
                 #     if random.random() <= population[i].params[12]:
                 #         for idx in range(3):
                 #             if random.random() < population[i].params[13]:
@@ -683,27 +853,39 @@ class GA:
                 if random.random() <= population[i].params[12]:
                     before_mutation.append(population[i])
                     id_mutation.append(i)
-                    params = self.mutation(copy.deepcopy(population[i].params),
-                                           elem_mutation_prob=copy.deepcopy(population[i].params[13]),
-                                           low_spb=self.low_spb, high_spb=self.high_spb,
-                                           low_spm=self.low_spm, high_spm=self.high_spm,
-                                           low_n=self.low_n, high_n=self.high_n,
-                                           low_back=self.low_back, high_back=self.high_back,
-                                           low_decor=self.low_decor, high_decor=self.high_decor
-                                           )
+                    params = self.mutation(
+                        copy.deepcopy(population[i].params),
+                        elem_mutation_prob=copy.deepcopy(population[i].params[13]),
+                        low_spb=self.low_spb,
+                        high_spb=self.high_spb,
+                        low_spm=self.low_spm,
+                        high_spm=self.high_spm,
+                        low_n=self.low_n,
+                        high_n=self.high_n,
+                        low_back=self.low_back,
+                        high_back=self.high_back,
+                        low_decor=self.low_decor,
+                        high_decor=self.high_decor,
+                    )
 
                     fix_value_13 = population[i].params[13]
                     for ix in [12, 13, 14]:
                         if random.random() < fix_value_13:
-                            population[i].params[12] = np.random.uniform(low=self.low_prob,
-                                                                         high=self.high_prob, size=1)[0]
+                            population[i].params[12] = np.random.uniform(
+                                low=self.low_prob, high=self.high_prob, size=1
+                            )[0]
                     params = self.check_params_bounds(params)
-                    dto = IndividualDTO(id=str(uuid.uuid4()), data_path=self.data_path,
-                                        dataset=self.dataset,
-                                        params=[float(i) for i in params],
-                                        exp_id=self.exp_id, alg_id=ALG_ID,
-                                        topic_count=self.topic_count, tag=self.tag,
-                                        train_option=self.train_option)
+                    dto = IndividualDTO(
+                        id=str(uuid.uuid4()),
+                        data_path=self.data_path,
+                        dataset=self.dataset,
+                        params=[float(i) for i in params],
+                        exp_id=self.exp_id,
+                        alg_id=ALG_ID,
+                        topic_count=self.topic_count,
+                        tag=self.tag,
+                        train_option=self.train_option,
+                    )
                     population[i] = make_individual(dto=dto)
                 self.evaluations_counter += 1
 
@@ -719,54 +901,69 @@ class GA:
             for ix, elem in enumerate(before_mutation):
                 # TODO generation: int, original_params: list, mutated_params: list, original_fitness: float,
                 #                       mutated_fitness: float
-                self.metric_collector.save_mutation(generation=ii,
-                                                    original_params=elem.params,
-                                                    mutated_params=population[id_mutation[ix]].params,
-                                                    original_fitness=elem.fitness_value,
-                                                    mutated_fitness=population[id_mutation[ix]].fitness_value
-                                                    )
+                self.metric_collector.save_mutation(
+                    generation=ii,
+                    original_params=elem.params,
+                    mutated_params=population[id_mutation[ix]].params,
+                    original_fitness=elem.fitness_value,
+                    mutated_fitness=population[id_mutation[ix]].fitness_value,
+                )
 
-            logger.info(f"TIME OF THE FITNESS FUNCTION IN MUTATION: {time.time() - fitness_calc_time_start}")
+            logger.info(
+                f"TIME OF THE FITNESS FUNCTION IN MUTATION: {time.time() - fitness_calc_time_start}"
+            )
 
-            if self.calc_scheme == 'type1' and self.surrogate:
+            if self.calc_scheme == "type1" and self.surrogate:
                 if surrogate_iteration and self.surrogate:
                     self.surrogate_calculation(population)
                 elif not surrogate_iteration and SPEEDUP and self.surrogate:
                     population = estimate_fitness(population)
                     self.save_params(population)
-            elif self.calc_scheme == 'type2' and self.surrogate:
+            elif self.calc_scheme == "type2" and self.surrogate:
                 population = self._calculate_uncertain_res(population, iteration_num=ii)
                 self.save_params(population)
 
             ###
             logger.info("MUTATION IS OVER")
 
-            population.sort(key=operator.attrgetter('fitness_value'), reverse=True)
+            population.sort(key=operator.attrgetter("fitness_value"), reverse=True)
 
             if self.use_nelder_mead_in_mutation:
                 collected_params = []
                 for elem in population:
                     collected_params.append(elem.params)
-                random_ids = random.sample([i for i in range(len(collected_params))], k=3)
+                random_ids = random.sample(
+                    [i for i in range(len(collected_params))], k=3
+                )
                 starting_points = [collected_params[i] for i in random_ids]
 
                 nm_population = self.apply_nelder_mead(starting_points, num_gen=ii)
                 for i, elem in enumerate(nm_population):
                     if population[i].fitness_value < elem.fitness_value:
-                        print(f'NM found better solution! {elem.fitness_value} vs {population[i].fitness_value}')
+                        print(
+                            f"NM found better solution! {elem.fitness_value} vs {population[i].fitness_value}"
+                        )
                         population[i] = elem
 
-            if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
-                self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
-                                                   fitness=[i.fitness_value for i in population])
-                bparams = ''.join([str(i) for i in population[0].params])
-                logger.info(f"TERMINATION IS TRIGGERED: EVAL NUM (2)."
-                            f"DATASET {self.dataset}."
-                            f"TOPICS NUM {self.topic_count}."
-                            f"RUN ID {run_id}."
-                            f"THE BEST FITNESS {population[0].fitness_value}."
-                            f"THE BEST PARAMS {bparams}."
-                            f"ITERATION TIME {time.time() - iteration_start_time}.")
+            if (
+                self.num_fitness_evaluations
+                and self.evaluations_counter >= self.num_fitness_evaluations
+            ):
+                self.metric_collector.save_fitness(
+                    generation=ii,
+                    params=[i.params for i in population],
+                    fitness=[i.fitness_value for i in population],
+                )
+                bparams = "".join([str(i) for i in population[0].params])
+                logger.info(
+                    f"TERMINATION IS TRIGGERED: EVAL NUM (2)."
+                    f"DATASET {self.dataset}."
+                    f"TOPICS NUM {self.topic_count}."
+                    f"RUN ID {run_id}."
+                    f"THE BEST FITNESS {population[0].fitness_value}."
+                    f"THE BEST PARAMS {bparams}."
+                    f"ITERATION TIME {time.time() - iteration_start_time}."
+                )
                 # return population[0].fitness_value
                 break
 
@@ -775,10 +972,14 @@ class GA:
                 high_fitness = current_fitness
 
             if self.surrogate:
-                if self.calc_scheme == 'type1' and not surrogate_iteration:
-                    self.surrogate.fit(np.array(self.all_params), np.array(self.all_fitness))
-                elif self.calc_scheme == 'type2':
-                    self.surrogate.fit(np.array(self.all_params), np.array(self.all_fitness))
+                if self.calc_scheme == "type1" and not surrogate_iteration:
+                    self.surrogate.fit(
+                        np.array(self.all_params), np.array(self.all_fitness)
+                    )
+                elif self.calc_scheme == "type2":
+                    self.surrogate.fit(
+                        np.array(self.all_params), np.array(self.all_fitness)
+                    )
 
             if self.early_stopping_iterations:
                 if population[0].fitness_value > best_val_so_far:
@@ -787,35 +988,47 @@ class GA:
                 else:
                     early_stopping_counter += 1
                     if early_stopping_counter == self.early_stopping_iterations:
-                        bparams = ''.join([str(i) for i in population[0].params])
-                        self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
-                                                           fitness=[i.fitness_value for i in population])
-                        logger.info(f"TERMINATION IS TRIGGERED: EARLY STOPPING."
-                                    f"DATASET {self.dataset}."
-                                    f"TOPICS NUM {self.topic_count}."
-                                    f"RUN ID {run_id}."
-                                    f"THE BEST FITNESS {population[0].fitness_value}."
-                                    f"THE BEST PARAMS {bparams}."
-                                    f"ITERATION TIME {time.time() - iteration_start_time}.")
+                        bparams = "".join([str(i) for i in population[0].params])
+                        self.metric_collector.save_fitness(
+                            generation=ii,
+                            params=[i.params for i in population],
+                            fitness=[i.fitness_value for i in population],
+                        )
+                        logger.info(
+                            f"TERMINATION IS TRIGGERED: EARLY STOPPING."
+                            f"DATASET {self.dataset}."
+                            f"TOPICS NUM {self.topic_count}."
+                            f"RUN ID {run_id}."
+                            f"THE BEST FITNESS {population[0].fitness_value}."
+                            f"THE BEST PARAMS {bparams}."
+                            f"ITERATION TIME {time.time() - iteration_start_time}."
+                        )
                         break
 
             x.append(ii)
             y.append(population[0].fitness_value)
-            self.metric_collector.save_fitness(generation=ii, params=[i.params for i in population],
-                                               fitness=[i.fitness_value for i in population])
-            logger.info(f"Population len {len(population)}. "
-                        f"Best params so far: {population[0].params}, with fitness: {population[0].fitness_value}."
-                        f"ITERATION TIME: {time.time() - iteration_start_time}"
-                        f"DATASET {self.dataset}."
-                        f"TOPICS NUM {self.topic_count}."
-                        f"RUN ID {run_id}.")
+            self.metric_collector.save_fitness(
+                generation=ii,
+                params=[i.params for i in population],
+                fitness=[i.fitness_value for i in population],
+            )
+            logger.info(
+                f"Population len {len(population)}. "
+                f"Best params so far: {population[0].params}, with fitness: {population[0].fitness_value}."
+                f"ITERATION TIME: {time.time() - iteration_start_time}"
+                f"DATASET {self.dataset}."
+                f"TOPICS NUM {self.topic_count}."
+                f"RUN ID {run_id}."
+            )
 
         self.metric_collector.save_and_visualise_trace()
 
         logger.info(f"Y: {y}")
         best_individual = population[0]
-        ind = log_best_solution(best_individual, alg_args=' '.join(sys.argv))
-        logger.info(f"Logged the best solution. Obtained fitness is {ind.fitness_value}")
+        ind = log_best_solution(best_individual, alg_args=" ".join(sys.argv))
+        logger.info(
+            f"Logged the best solution. Obtained fitness is {ind.fitness_value}"
+        )
 
         return ind.fitness_value
 
@@ -828,19 +1041,36 @@ class GAmultistage(GA):
     def __init__(self, dataset, num_individuals, max_stages=5):  # max_stage_len
         self.max_stages = max_stages  # amount of unique regularizers
         self.dataset = dataset
-        self.bag_of_regularizers = ['decor_S', 'decor_B', 'S_phi_B', 'S_phi_S',
-                                    'S_theta_B', 'S_theta_S']  # add separate smooth and sparsity
+        self.bag_of_regularizers = [
+            "decor_S",
+            "decor_B",
+            "S_phi_B",
+            "S_phi_S",
+            "S_theta_B",
+            "S_theta_S",
+        ]  # add separate smooth and sparsity
         self.num_individuals = num_individuals
         self.initial_element_stage_probability = 0.5
-        self.positioning_matrix = np.full((len(self.bag_of_regularizers), self.max_stages - 1), 0.5)
+        self.positioning_matrix = np.full(
+            (len(self.bag_of_regularizers), self.max_stages - 1), 0.5
+        )
         self.set_regularizer_limits()
 
-    def set_regularizer_limits(self, low_decor=0, high_decor=1e5,
-                               low_n=1, high_n=30,  # minimal value changed to 1
-                               low_back=0, high_back=5,
-                               low_spb=0, high_spb=1e2,
-                               low_spm=-1e-3, high_spm=1e2,
-                               low_sp_phi=-1e3, high_sp_phi=1e3):
+    def set_regularizer_limits(
+        self,
+        low_decor=0,
+        high_decor=1e5,
+        low_n=1,
+        high_n=30,  # minimal value changed to 1
+        low_back=0,
+        high_back=5,
+        low_spb=0,
+        high_spb=1e2,
+        low_spm=-1e-3,
+        high_spm=1e2,
+        low_sp_phi=-1e3,
+        high_sp_phi=1e3,
+    ):
         self.high_decor = high_decor
         self.low_decor = low_decor
         self.low_n = low_n
@@ -856,16 +1086,24 @@ class GAmultistage(GA):
 
     # TODO: check if float is needed
     def _init_param(self, param_type):
-        if param_type == 'decor_S' or param_type == 'decor_B':
-            return float(np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[0])
-        elif param_type == 'S_phi_B' or 'S_theta_B':
-            return float(np.random.uniform(low=self.low_spb, high=self.high_spb, size=1)[0])
-        elif param_type == 'S_phi_S' or 'S_theta_S':
-            return float(np.random.uniform(low=self.low_sp_phi, high=self.high_sp_phi, size=1)[0])
-        elif param_type == 'n':
+        if param_type == "decor_S" or param_type == "decor_B":
+            return float(
+                np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[0]
+            )
+        elif param_type == "S_phi_B" or "S_theta_B":
+            return float(
+                np.random.uniform(low=self.low_spb, high=self.high_spb, size=1)[0]
+            )
+        elif param_type == "S_phi_S" or "S_theta_S":
+            return float(
+                np.random.uniform(low=self.low_sp_phi, high=self.high_sp_phi, size=1)[0]
+            )
+        elif param_type == "n":
             return float(np.random.randint(low=self.low_n, high=self.high_n, size=1)[0])
-        elif param_type == 'B':
-            return float(np.random.randint(low=self.low_back, high=self.high_back, size=1)[0])
+        elif param_type == "B":
+            return float(
+                np.random.randint(low=self.low_back, high=self.high_back, size=1)[0]
+            )
 
     def _create_stage(self, stage_num):
         stage_regularizers = []
@@ -873,7 +1111,7 @@ class GAmultistage(GA):
             elem_sample_prob = self.positioning_matrix[ix][stage_num - 1]
             if random.random() < elem_sample_prob:
                 stage_regularizers.append(elem)
-        stage_regularizers.append('n')
+        stage_regularizers.append("n")
         return stage_regularizers
 
     def init_individ(self):
@@ -884,11 +1122,10 @@ class GAmultistage(GA):
             for reg_name in regularizers:
                 value = self._init_param(reg_name)
                 dict_of_stages[i][reg_name] = value
-        dict_of_stages = [{'B': self._init_param('B')}] + dict_of_stages
+        dict_of_stages = [{"B": self._init_param("B")}] + dict_of_stages
         return dict_of_stages
 
     def init_population(self):
-
         # if random.random() < self.initial_element_stage_probability:
         #
         # for i in range(self.max_stages):
