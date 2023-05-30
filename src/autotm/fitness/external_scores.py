@@ -3,6 +3,7 @@ import numpy as np
 
 # additional scores to calculate
 
+
 # Topic Significance
 def kl_divergence(p, q):
     return np.sum(np.where(p != 0, p * np.log(p / q), 0))
@@ -41,7 +42,11 @@ def switchp(phi, texts):
     max_topic_word_dist = dict(zip(words, max_topic_word_dist))
     switchp_scores = []
     for text in texts:
-        mapped_text = [max_topic_word_dist[word] for word in text.split() if word in max_topic_word_dist]
+        mapped_text = [
+            max_topic_word_dist[word]
+            for word in text.split()
+            if word in max_topic_word_dist
+        ]
         switches = (np.diff(mapped_text) != 0).sum()
         switchp_scores.append(switches / (len(mapped_text) - 1))
 
