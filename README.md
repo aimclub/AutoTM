@@ -6,6 +6,11 @@
 Automatic parameters selection for topic models (ARTM approach) using evolutionary algorithms. 
 AutoTM provides necessary tools to preprocess english and russian text datasets and tune topic models.
 
+## What is AutoTM?
+Topic modeling is one of the basic methods for EDA of unlabelled text data. While ARTM (additive regularization 
+for topic models) approach provides the significant flexibility and quality comparative or better that neural 
+approaches it is hard to tune such models due to amount of hyperparameters and their combinations.
+
 ## Installation
 
 ! Note: The functionality of topic models training is available only for linux distributions.
@@ -24,6 +29,9 @@ The notebook with an example is available in ```examples``` folder.
 
 Distributed version to run experiments on kubernetes is available in ```autotm-distributed``` brunch. Still this version is in development stage and will be transfered to separate repository.
 
+## Backlog:
+- [ ] Add tests
+ 
 ## Citation
 
 ```bibtex
