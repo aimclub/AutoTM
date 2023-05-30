@@ -15,13 +15,13 @@ class BaseScore:
     """
     Base Class to construct custom score functions.
     """
-    _PRECOMPUTED_DATA_PARAMETER_NAME = 'precomputed_data'
+
+    _PRECOMPUTED_DATA_PARAMETER_NAME = "precomputed_data"
 
     # TODO: name should not be optional
     def __init__(
-            self,
-            name: str = None,
-            should_compute: Callable[[int], bool] or bool = None):
+        self, name: str = None, should_compute: Callable[[int], bool] or bool = None
+    ):
         """
         Parameters
         ----------
@@ -74,7 +74,9 @@ class BaseScore:
         elif should_compute is False:
             should_compute = self.compute_on_last
         elif not isinstance(should_compute, type(lambda: None)):
-            raise TypeError(f'Unknown type of `should_compute`: {type(should_compute)}!')
+            raise TypeError(
+                f"Unknown type of `should_compute`: {type(should_compute)}!"
+            )
         else:
             pass
 
@@ -93,7 +95,7 @@ class BaseScore:
         return False
 
     def __repr__(self):
-        return f'{self.__class__.__name__}'
+        return f"{self.__class__.__name__}"
 
     def save(self, path):
         with open(path, "wb") as f:
@@ -120,7 +122,7 @@ class BaseScore:
         try:
             score = float(score)
         except known_errors:
-            raise ValueError(f'Score call should return float but not {score}')
+            raise ValueError(f"Score call should return float but not {score}")
 
         self.value.append(score)
 
@@ -183,4 +185,4 @@ class BaseScore:
         ...
         ...         return 0
         """
-        raise NotImplementedError('Define your score here')
+        raise NotImplementedError("Define your score here")

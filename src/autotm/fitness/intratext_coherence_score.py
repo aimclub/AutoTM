@@ -20,8 +20,8 @@ from typing import (
 
 from base_score import BaseScore
 
-VW_TEXT_COL = 'vw_text'
-RAW_TEXT_COL = 'raw_text'
+VW_TEXT_COL = "vw_text"
+RAW_TEXT_COL = "raw_text"
 
 
 class TextType(Enum):
@@ -46,6 +46,7 @@ class ComputationMethod(IntEnum):
         word of the topic is found in text, it is the center of the first window;
         next word of the topic is found (outside of the previous window), window; etc
     """
+
     SEGMENT_LENGTH = auto()
     SEGMENT_WEIGHT = auto()
     SUM_OVER_WINDOW = auto()
@@ -61,6 +62,7 @@ class WordTopicRelatednessType(IntEnum):
     PTW :
         p(t | w)
     """
+
     PWT = auto()
     PTW = auto()
 
@@ -83,6 +85,7 @@ class SpecificityEstimationMethod(IntEnum):
         From probability, corresponding to word and topic,
         extract *average* among probabilities for the word and other topics
     """
+
     NONE = auto()
     MAXIMUM = auto()
     AVERAGE = auto()
@@ -98,24 +101,24 @@ class IntratextCoherenceScore(BaseScore):
     """
 
     def __init__(  # noqa: C901
-            self,
-            dataset: Union[Dataset, str],
-            name: str = None,
-            should_compute: Callable[[int], bool] = None,
-            keep_dataset_in_memory: bool = None,
-            keep_dataset: bool = True,
-            documents: List[str] = None,
-            documents_fraction: float = 1.0,
-            text_type: TextType = TextType.VW_TEXT,
-            computation_method: ComputationMethod = ComputationMethod.SEGMENT_WEIGHT,
-            word_topic_relatedness: WordTopicRelatednessType = WordTopicRelatednessType.PWT,
-            specificity_estimation: SpecificityEstimationMethod = SpecificityEstimationMethod.NONE,
-            max_num_out_of_topic_words: int = 10,
-            window: int = 20,
-            start_fit_iteration: int = 0,
-            fit_iteration_step: int = 1,
-            seed: int = 11221963,
-            verbose: bool = False,
+        self,
+        dataset: Union[Dataset, str],
+        name: str = None,
+        should_compute: Callable[[int], bool] = None,
+        keep_dataset_in_memory: bool = None,
+        keep_dataset: bool = True,
+        documents: List[str] = None,
+        documents_fraction: float = 1.0,
+        text_type: TextType = TextType.VW_TEXT,
+        computation_method: ComputationMethod = ComputationMethod.SEGMENT_WEIGHT,
+        word_topic_relatedness: WordTopicRelatednessType = WordTopicRelatednessType.PWT,
+        specificity_estimation: SpecificityEstimationMethod = SpecificityEstimationMethod.NONE,
+        max_num_out_of_topic_words: int = 10,
+        window: int = 20,
+        start_fit_iteration: int = 0,
+        fit_iteration_step: int = 1,
+        seed: int = 11221963,
+        verbose: bool = False,
     ):
         """
         Parameters
@@ -199,68 +202,76 @@ class IntratextCoherenceScore(BaseScore):
 
         if not isinstance(dataset, Dataset):
             raise TypeError(
-                f'Got "{type(dataset)}" as \"dataset\". Expect it to derive from "Dataset"')
+                f'Got "{type(dataset)}" as "dataset". Expect it to derive from "Dataset"'
+            )
 
         if not isinstance(text_type, TextType):
             raise TypeError(
-                f'Wrong "text_type": \"{text_type}\". '
-                f'Expect to be \"{TextType}\"')
+                f'Wrong "text_type": "{text_type}". ' f'Expect to be "{TextType}"'
+            )
 
         if not isinstance(computation_method, ComputationMethod):
             raise TypeError(
-                f'Wrong "computation_method": \"{computation_method}\". '
-                f'Expect to be \"{ComputationMethod}\"')
+                f'Wrong "computation_method": "{computation_method}". '
+                f'Expect to be "{ComputationMethod}"'
+            )
 
         if not isinstance(word_topic_relatedness, WordTopicRelatednessType):
             raise TypeError(
-                f'Wrong "word_topic_relatedness": \"{word_topic_relatedness}\". '
-                f'Expect to be \"{WordTopicRelatednessType}\"')
+                f'Wrong "word_topic_relatedness": "{word_topic_relatedness}". '
+                f'Expect to be "{WordTopicRelatednessType}"'
+            )
 
         if not isinstance(specificity_estimation, SpecificityEstimationMethod):
             raise TypeError(
-                f'Wrong "specificity_estimation": \"{specificity_estimation}\". '
-                f'Expect to be \"{SpecificityEstimationMethod}\"')
+                f'Wrong "specificity_estimation": "{specificity_estimation}". '
+                f'Expect to be "{SpecificityEstimationMethod}"'
+            )
 
         if not isinstance(max_num_out_of_topic_words, int):
             raise TypeError(
-                f'Wrong "max_num_out_of_topic_words": \"{max_num_out_of_topic_words}\". '
-                f'Expect to be \"int\"')
+                f'Wrong "max_num_out_of_topic_words": "{max_num_out_of_topic_words}". '
+                f'Expect to be "int"'
+            )
 
         if not isinstance(window, int):
-            raise TypeError(f'Wrong "window": \"{window}\". Expect to be \"int\"')
+            raise TypeError(f'Wrong "window": "{window}". Expect to be "int"')
 
-        if window < 0 or (window == 0 and computation_method == ComputationMethod.SUM_OVER_WINDOW):
+        if window < 0 or (
+            window == 0 and computation_method == ComputationMethod.SUM_OVER_WINDOW
+        ):
             raise ValueError(
-                f'Wrong value for "window": \"{window}\". '
-                f'Expect to be non-negative. And greater than zero in case '
-                f'computation_method == ComputationMethod.SUM_OVER_WINDOW')
+                f'Wrong value for "window": "{window}". '
+                f"Expect to be non-negative. And greater than zero in case "
+                f"computation_method == ComputationMethod.SUM_OVER_WINDOW"
+            )
 
         if not isinstance(start_fit_iteration, int):
             raise TypeError(
-                f'Wrong "start_fit_iteration": \"{start_fit_iteration}\".'
-                f' Expect to be \"int\"'
+                f'Wrong "start_fit_iteration": "{start_fit_iteration}".'
+                f' Expect to be "int"'
             )
 
         if not isinstance(fit_iteration_step, int):
             raise TypeError(
-                f'Wrong "fit_iteration_step": \"{start_fit_iteration}\".'
-                f' Expect to be \"int\"'
+                f'Wrong "fit_iteration_step": "{start_fit_iteration}".'
+                f' Expect to be "int"'
             )
         if fit_iteration_step <= 0:
             raise ValueError(
-                f'Wrong "fit_iteration_step": \"{fit_iteration_step}\".'
-                f' Expect to be > 0'
+                f'Wrong "fit_iteration_step": "{fit_iteration_step}".'
+                f" Expect to be > 0"
             )
 
         if documents_fraction <= 0:
             raise ValueError(
-                f'Wrong "documents_fraction": \"{documents_fraction}\".'
-                f' Expect to be in (0, 1]'
+                f'Wrong "documents_fraction": "{documents_fraction}".'
+                f" Expect to be in (0, 1]"
             )
         if documents_fraction > 1.0:
             warnings.warn(
-                f'Parameter documents_fraction={documents_fraction} can\'t be bigger than 1.0'
-                f' Setting it equal to 1.0'
+                f"Parameter documents_fraction={documents_fraction} can't be bigger than 1.0"
+                f" Setting it equal to 1.0"
             )
 
             documents_fraction = 1.0
@@ -294,21 +305,21 @@ class IntratextCoherenceScore(BaseScore):
 
             self._documents = list(
                 custom_random.choice(
-                    all_documents,
-                    size=num_documents_to_choose,
-                    replace=False
+                    all_documents, size=num_documents_to_choose, replace=False
                 )
             )
 
     def __repr__(self):
-        return (f'{self.__class__.__name__}('
-                f'text_type={self._text_type!r}'
-                f'computation_method={self._computation_method!r}'
-                f'word_topic_relatedness={self._word_topic_relatedness!r}'
-                f'specificity_estimation_method={self._specificity_estimation_method!r}'
-                f'max_num_out_of_topic_words={self._max_num_out_of_topic_words!r}'
-                f'window={self._window!r}'
-                f')')
+        return (
+            f"{self.__class__.__name__}("
+            f"text_type={self._text_type!r}"
+            f"computation_method={self._computation_method!r}"
+            f"word_topic_relatedness={self._word_topic_relatedness!r}"
+            f"specificity_estimation_method={self._specificity_estimation_method!r}"
+            f"max_num_out_of_topic_words={self._max_num_out_of_topic_words!r}"
+            f"window={self._window!r}"
+            f")"
+        )
 
     @property
     def dataset(self) -> Dataset:
@@ -325,7 +336,7 @@ class IntratextCoherenceScore(BaseScore):
         dataset = self._dataset
         self._dataset = None
 
-        with open(path, 'wb') as f:
+        with open(path, "wb") as f:
             dill.dump(self, f)
 
         self._dataset = dataset
@@ -342,7 +353,7 @@ class IntratextCoherenceScore(BaseScore):
         """
         score: IntratextCoherenceScore
 
-        with open(path, 'rb') as f:
+        with open(path, "rb") as f:
             score = dill.load(f)
 
         if not score._keep_dataset:
@@ -357,10 +368,12 @@ class IntratextCoherenceScore(BaseScore):
         return score
 
     def call(self, model: BaseModel, **kwargs) -> float:
-        if (self._current_iteration - self._start_fit_iteration) % self._fit_iteration_step != 0:
+        if (
+            self._current_iteration - self._start_fit_iteration
+        ) % self._fit_iteration_step != 0:
             self._current_iteration += 1
 
-            return float('nan')
+            return float("nan")
 
         try:
             if self._dataset is None:
@@ -386,16 +399,13 @@ class IntratextCoherenceScore(BaseScore):
                 self._dataset = None
 
     def compute(
-            self,
-            model: BaseModel,
-            topics: List[str] = None,
-            documents: List[str] = None
+        self, model: BaseModel, topics: List[str] = None, documents: List[str] = None
     ) -> Dict[str, Optional[float]]:
-
         if not isinstance(model, BaseModel):
             raise TypeError(
                 f'Got "{type(model)}" as "model". '
-                f'Expect it to derive from "BaseModel"')
+                f'Expect it to derive from "BaseModel"'
+            )
 
         if topics is None:
             topics = IntratextCoherenceScore._get_topics(model)
@@ -405,11 +415,13 @@ class IntratextCoherenceScore(BaseScore):
 
         if not isinstance(topics, list):
             raise TypeError(
-                f'Got "{type(topics)}" as "topics". Expect list of topic names')
+                f'Got "{type(topics)}" as "topics". Expect list of topic names'
+            )
 
         if not isinstance(documents, list):
             raise TypeError(
-                f'Got "{type(documents)}" as "documents". Expect list of document ids')
+                f'Got "{type(documents)}" as "documents". Expect list of document ids'
+            )
 
         word_topic_relatednesses = self._get_word_topic_relatednesses(model)
 
@@ -427,24 +439,35 @@ class IntratextCoherenceScore(BaseScore):
             for topic_index, topic in enumerate(topics):
                 # TODO: read document text only once for all topics
                 topic_coherence = self._compute_coherence(
-                    topic, document, word_topic_relatednesses)
+                    topic, document, word_topic_relatednesses
+                )
 
                 if topic_coherence is not None:
-                    topic_document_coherences[topic_index, document_index] = topic_coherence
+                    topic_document_coherences[
+                        topic_index, document_index
+                    ] = topic_coherence
                     document_indices_with_topic_coherence[topic].append(document_index)
 
         topic_coherences = [
-            topic_document_coherences[topic_index, document_indices_with_topic_coherence[topic]]
-            if len(document_indices_with_topic_coherence) > 0 else list()
+            topic_document_coherences[
+                topic_index, document_indices_with_topic_coherence[topic]
+            ]
+            if len(document_indices_with_topic_coherence) > 0
+            else list()
             for topic_index, topic in enumerate(topics)
         ]
 
-        return dict(zip(
-            topics,
-            [float(np.mean(coherence_values))
-             if len(coherence_values) > 0 else None
-             for coherence_values in topic_coherences]
-        ))
+        return dict(
+            zip(
+                topics,
+                [
+                    float(np.mean(coherence_values))
+                    if len(coherence_values) > 0
+                    else None
+                    for coherence_values in topic_coherences
+                ],
+            )
+        )
 
     @staticmethod
     def _get_topics(model):
@@ -459,20 +482,19 @@ class IntratextCoherenceScore(BaseScore):
             pass
 
         elif self._specificity_estimation_method == SpecificityEstimationMethod.AVERAGE:
-            word_topic_probs[:] = (
-                    word_topic_probs.values -
-                    np.sum(word_topic_probs.values, axis=1, keepdims=True) /  # noqa E131
-                    max(word_topic_probs.shape[1], 1)  # noqa E131
-            )
+            word_topic_probs[:] = word_topic_probs.values - np.sum(
+                word_topic_probs.values, axis=1, keepdims=True
+            ) / max(  # noqa E131
+                word_topic_probs.shape[1], 1
+            )  # noqa E131
 
         elif self._specificity_estimation_method == SpecificityEstimationMethod.MAXIMUM:
             new_columns = []
 
             for t in word_topic_probs.columns:
-                new_column = (
-                        word_topic_probs[t].values -
-                        np.max(
-                            word_topic_probs[word_topic_probs.columns.difference([t])].values, axis=1)
+                new_column = word_topic_probs[t].values - np.max(
+                    word_topic_probs[word_topic_probs.columns.difference([t])].values,
+                    axis=1,
                 )
                 new_columns.append(list(new_column))
 
@@ -494,7 +516,7 @@ class IntratextCoherenceScore(BaseScore):
             return pd.DataFrame(
                 index=pwt.index,
                 columns=pwt.columns,
-                data=pwt_values / (pwt_values.sum(axis=1).reshape(-1, 1) + eps)
+                data=pwt_values / (pwt_values.sum(axis=1).reshape(-1, 1) + eps),
             )
 
         assert False
@@ -511,7 +533,10 @@ class IntratextCoherenceScore(BaseScore):
 
             return average_sum_over_window
 
-        topic_segment_length, topic_segment_weight = self._compute_segment_characteristics(
+        (
+            topic_segment_length,
+            topic_segment_weight,
+        ) = self._compute_segment_characteristics(
             topic, words, word_topic_relatednesses
         )
 
@@ -528,21 +553,24 @@ class IntratextCoherenceScore(BaseScore):
             if len(modalities) == 0:
                 return DEFAULT_ARTM_MODALITY
 
-            modalities_vocabulary_sizes = list(map(
-                lambda m: self._dataset.get_dataset().loc[m].shape[0],
-                modalities
-            ))
+            modalities_vocabulary_sizes = list(
+                map(lambda m: self._dataset.get_dataset().loc[m].shape[0], modalities)
+            )
 
             return modalities[np.argmax(modalities_vocabulary_sizes)]
 
         if self._text_type == TextType.RAW_TEXT:
-            text = self._dataset.get_source_document(document).values[0, 0]  # TODO: this way?
+            text = self._dataset.get_source_document(document).values[
+                0, 0
+            ]  # TODO: this way?
             modality = get_biggest_modality_or_default()
 
             return list(map(lambda w: (modality, w), text.split()))
 
         if self._text_type == TextType.VW_TEXT:
-            text = self._dataset.get_vw_document(document).values[0, 0]  # TODO: this way?
+            text = self._dataset.get_vw_document(document).values[
+                0, 0
+            ]  # TODO: this way?
 
             words = []
             modality = None
@@ -554,7 +582,7 @@ class IntratextCoherenceScore(BaseScore):
 
                     continue
 
-                word = word.split(':')[0]
+                word = word.split(":")[0]
 
                 if modality is not None:
                     word = (modality, word)  # phi multiIndex
@@ -568,9 +596,8 @@ class IntratextCoherenceScore(BaseScore):
         assert False
 
     def _compute_segment_characteristics(
-            self, topic, words, word_topic_relatednesses: pd.DataFrame
+        self, topic, words, word_topic_relatednesses: pd.DataFrame
     ) -> Tuple[float, float]:
-
         topic_segment_lengths = []
         topic_segment_weights = []
 
@@ -581,9 +608,7 @@ class IntratextCoherenceScore(BaseScore):
             if word not in word_topic_relatednesses.index:
                 return -1
             else:
-                return word_topic_indices[
-                    word_topic_relatednesses.index.get_loc(word)
-                ]
+                return word_topic_indices[word_topic_relatednesses.index.get_loc(word)]
 
         index = 0
 
@@ -604,7 +629,10 @@ class IntratextCoherenceScore(BaseScore):
 
             index += 1
 
-            while index < len(words) and num_out_of_topic_words < self._max_num_out_of_topic_words:
+            while (
+                index < len(words)
+                and num_out_of_topic_words < self._max_num_out_of_topic_words
+            ):
                 if get_word_topic_index(words[index]) != topic_index:
                     num_out_of_topic_words += 1
                 else:
@@ -628,8 +656,8 @@ class IntratextCoherenceScore(BaseScore):
             return np.mean(topic_segment_lengths), np.mean(topic_segment_weights)
 
     def _sum_relatednesses_over_window(
-            self, topic, words, word_topic_relatednesses) -> float:
-
+        self, topic, words, word_topic_relatednesses
+    ) -> float:
         topic_index = word_topic_relatednesses.columns.get_loc(topic)
         word_topic_indices = np.argmax(word_topic_relatednesses.values, axis=1)
 
@@ -637,15 +665,14 @@ class IntratextCoherenceScore(BaseScore):
             if word not in word_topic_relatednesses.index:
                 return -1
             else:
-                return word_topic_indices[
-                    word_topic_relatednesses.index.get_loc(word)
-                ]
+                return word_topic_indices[word_topic_relatednesses.index.get_loc(word)]
 
         def find_next_topic_word(starting_index: int) -> int:
             index = starting_index
 
-            while index < len(words) and \
-                    get_word_topic_index(words[index]) != topic_index:
+            while (
+                index < len(words) and get_word_topic_index(words[index]) != topic_index
+            ):
                 index += 1
 
             if index == len(words):
@@ -684,9 +711,7 @@ class IntratextCoherenceScore(BaseScore):
         return np.mean(sums)
 
     @staticmethod
-    def _get_relatedness(
-            word, topic, word_topic_relatednesses: pd.DataFrame) -> float:
-
+    def _get_relatedness(word, topic, word_topic_relatednesses: pd.DataFrame) -> float:
         if word in word_topic_relatednesses.index:
             return word_topic_relatednesses.loc[word, topic]
 

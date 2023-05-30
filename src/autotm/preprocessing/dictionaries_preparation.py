@@ -8,10 +8,11 @@ from autotm.utils import parallelize_dataframe
 import itertools
 from collections import Counter
 
-RESERVED_TUPLE = ('_SERVICE_', 'total_pairs_count')
+RESERVED_TUPLE = ("_SERVICE_", "total_pairs_count")
 
 
 # TODO: add inter-text coherence metrics (SemantiC, TopLen and FoCon)
+
 
 def get_words_dict(text, stop_list):
     all_words = text
@@ -21,13 +22,13 @@ def get_words_dict(text, stop_list):
 
 def vocab_preparation(VOCAB_PATH, DICTIONARY_PATH):
     if not os.path.exists(VOCAB_PATH):
-        with open(DICTIONARY_PATH, 'r') as dictionary_file:
-            with open(VOCAB_PATH, 'w') as vocab_file:
+        with open(DICTIONARY_PATH, "r") as dictionary_file:
+            with open(VOCAB_PATH, "w") as vocab_file:
                 dictionary_file.readline()
                 dictionary_file.readline()
                 for line in dictionary_file:
-                    elems = re.split(', ', line)
-                    vocab_file.write(' '.join(elems[:2]) + '\n')
+                    elems = re.split(", ", line)
+                    vocab_file.write(" ".join(elems[:2]) + "\n")
 
 
 def _calculate_token_count():
@@ -49,7 +50,7 @@ def _calculate_cooc_df_dict(data: list, window: int = 10) -> dict:
         document_cooc_df_dict = {}
         splitted = text.split()
         for i in range(0, len(splitted) - window):
-            for comb in itertools.combinations(splitted[i:i + window], 2):  # speed up
+            for comb in itertools.combinations(splitted[i : i + window], 2):  # speed up
                 comb = tuple(sorted(comb))  # adding comb sorting
                 if comb in document_cooc_df_dict:
                     continue
@@ -68,7 +69,7 @@ def _calculate_cooc_tf_dict(data: list, window: int = 10) -> dict:
         document_cooc_tf_dict = {}
         splitted = text.split()
         for i in range(0, len(splitted) - window):
-            for comb in itertools.combinations(splitted[i:i + window], 2):
+            for comb in itertools.combinations(splitted[i : i + window], 2):
                 if comb in document_cooc_tf_dict:
                     document_cooc_tf_dict[comb] += 1
                 else:
@@ -85,41 +86,46 @@ def _calculate_cooc_tf_dict(data: list, window: int = 10) -> dict:
 
 
 def calculate_ppmi(cooc_dict_path, n, term_freq_dict):
-    print('Calculating pPMI...')
+    print("Calculating pPMI...")
     ppmi_dict = {}
     with open(cooc_dict_path) as fopen:
         for line in fopen:
             splitted_line = line.split()
             ppmi_dict[splitted_line[0]] = [
                 f'{word.split(":")[0].strip()}:{max(math.log2((int(word.split(":")[1]) / n) / (term_freq_dict[word.split(":")[0].strip()] / n * term_freq_dict[splitted_line[0]] / n)), 0)}'
-                for word in splitted_line[1:]]
+                for word in splitted_line[1:]
+            ]
     return ppmi_dict
 
 
 # TODO: rewrite to storing in rb tree
 def calculate_cooc_dicts(df, window=10, n_cores=-1):
-    '''
+    """
 
     :param df: dataframe with 'processed_text'  column
     :param window: The size of window to collect cooccurrences in
     :param n_cores: available cores for parallel processing. Default: -1 (all)
     :return: cooc_df and cooc_tf dictionaries
-    '''
-    data = df['processed_text'].tolist()
-    cooc_df_dict = parallelize_dataframe(data, _calculate_cooc_df_dict, n_cores, return_type='dict', window=window)
-    cooc_tf_dict = parallelize_dataframe(data, _calculate_cooc_tf_dict, n_cores, return_type='dict', window=window)
+    """
+    data = df["processed_text"].tolist()
+    cooc_df_dict = parallelize_dataframe(
+        data, _calculate_cooc_df_dict, n_cores, return_type="dict", window=window
+    )
+    cooc_tf_dict = parallelize_dataframe(
+        data, _calculate_cooc_tf_dict, n_cores, return_type="dict", window=window
+    )
     return cooc_df_dict, cooc_tf_dict
 
 
 def write_vw_dict(res_dict, vocab_words, fpath):
-    with open(fpath, 'w') as fopen:
+    with open(fpath, "w") as fopen:
         for word in vocab_words:
             try:
-                fopen.write(f'{word}' + ' ' + ' '.join(res_dict[word]) + '\n')
+                fopen.write(f"{word}" + " " + " ".join(res_dict[word]) + "\n")
             except:
                 # print(f'The word {word} is not found')
                 pass
-    print(f'{fpath} is ready!')
+    print(f"{fpath} is ready!")
 
 
 def convert_to_vw_format_and_save(cooc_dict, vocab_words, vw_path):
@@ -137,18 +143,28 @@ def convert_to_vw_format_and_save(cooc_dict, vocab_words, vw_path):
             word_2 = item[0][0]
             word_1 = item[0][1]
         if item[0][0] in data_dict:
-            data_dict[item[0][0]].append(f'{item[0][1]}:{item[1]}')
+            data_dict[item[0][0]].append(f"{item[0][1]}:{item[1]}")
         else:
-            data_dict[item[0][0]] = [f'{item[0][1]}:{item[1]}']
+            data_dict[item[0][0]] = [f"{item[0][1]}:{item[1]}"]
     write_vw_dict(data_dict, vocab_words, vw_path)
 
 
-def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
-                         path_to_dataset,
-                         cooc_file_path_tf, cooc_file_path_df,
-                         ppmi_dict_tf, ppmi_dict_df, cooc_min_tf=0,
-                         cooc_min_df=0, cooc_window=10, n_cores=-1):
-    '''
+def prepearing_cooc_dict(
+    BATCHES_DIR,
+    WV_PATH,
+    VOCAB_PATH,
+    COOC_DICTIONARY_PATH,
+    path_to_dataset,
+    cooc_file_path_tf,
+    cooc_file_path_df,
+    ppmi_dict_tf,
+    ppmi_dict_df,
+    cooc_min_tf=0,
+    cooc_min_df=0,
+    cooc_window=10,
+    n_cores=-1,
+):
+    """
     :param WV_PATH: path where to store data in Vowpal Wabbit format (https://github.com/VowpalWabbit/vowpal_wabbit/wiki/Input-format)
     :param VOCAB_PATH: path where the full dictionary is listed
     :param COOC_DICTIONARY_PATH: path to cooccurrence dictionary
@@ -161,7 +177,7 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
     :param cooc_min_df: Minimal number of documents to docs to cooc to store the results
     :param cooc_window: size of the window where to search for the cooccurrences
     :return:
-    '''
+    """
 
     # TODO: rewrite this part in case of several modalities
     vocab_words = []
@@ -169,7 +185,7 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
         for line in vpath:
             splitted_line = line.split()
             if len(splitted_line) > 2:
-                raise Exception('There are more than 2 modalities!')
+                raise Exception("There are more than 2 modalities!")
             vocab_words.append(splitted_line[0].strip())
 
     data = pd.read_csv(path_to_dataset)
@@ -203,53 +219,63 @@ def prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH, COOC_DICTIONARY_PATH,
         data_path=BATCHES_DIR,
         cooc_file_path=ppmi_dict_tf,
         vocab_file_path=VOCAB_PATH,
-        symmetric_cooc_values=True)
+        symmetric_cooc_values=True,
+    )
     cooc_dict.save_text(COOC_DICTIONARY_PATH)
 
 
 def return_string_part(name_type, text):
     tokens = text.split()
-    tokens = [item for item in tokens if item != '']
+    tokens = [item for item in tokens if item != ""]
     tokens_dict = get_words_dict(tokens, set())
 
-    return " |" + name_type + ' ' + ' '.join(['{}:{}'.format(k, v) for k, v in tokens_dict.items()])
+    return (
+        " |"
+        + name_type
+        + " "
+        + " ".join(["{}:{}".format(k, v) for k, v in tokens_dict.items()])
+    )
 
 
-def prepare_voc(batches_dir, vw_path, data_path, column_name='processed_text.txt'):
-    print('Starting...')
-    with open(vw_path, 'w', encoding='utf8') as ofile:
+def prepare_voc(batches_dir, vw_path, data_path, column_name="processed_text.txt"):
+    print("Starting...")
+    with open(vw_path, "w", encoding="utf8") as ofile:
         num_parts = 0
         try:
             for file in os.listdir(data_path):
-                if file.startswith('part'):
-                    print('part_{}'.format(num_parts), end='\r')
-                    if file.split('.')[-1] == 'csv':
+                if file.startswith("part"):
+                    print("part_{}".format(num_parts), end="\r")
+                    if file.split(".")[-1] == "csv":
                         part = pd.read_csv(os.path.join(data_path, file))
                     else:
                         part = pd.read_parquet(os.path.join(data_path, file))
                     part_processed = part[column_name].tolist()
                     for text in part_processed:
-                        result = return_string_part('@default_class', text)
-                        ofile.write(result + '\n')
+                        result = return_string_part("@default_class", text)
+                        ofile.write(result + "\n")
                     num_parts += 1
 
         except NotADirectoryError:
-            print('part 1/1')
+            print("part 1/1")
             part = pd.read_csv(data_path)
             part_processed = part[column_name].tolist()
             for text in part_processed:
-                result = return_string_part('@default_class', text)
-                ofile.write(result + '\n')
+                result = return_string_part("@default_class", text)
+                ofile.write(result + "\n")
 
-    print(' batches {} \n vocabulary {} \n are ready'.format(batches_dir, vw_path))
+    print(" batches {} \n vocabulary {} \n are ready".format(batches_dir, vw_path))
 
 
-def prepare_batch_vectorizer(batches_dir: str, vw_path: str, data_path: str, column_name: str = 'processed_text'):
+def prepare_batch_vectorizer(
+    batches_dir: str, vw_path: str, data_path: str, column_name: str = "processed_text"
+):
     prepare_voc(batches_dir, vw_path, data_path, column_name=column_name)
-    batch_vectorizer = artm.BatchVectorizer(data_path=vw_path,
-                                            data_format="vowpal_wabbit",
-                                            target_folder=batches_dir,
-                                            batch_size=100)
+    batch_vectorizer = artm.BatchVectorizer(
+        data_path=vw_path,
+        data_format="vowpal_wabbit",
+        target_folder=batches_dir,
+        batch_size=100,
+    )
     #     else:
     #         batch_vectorizer = artm.BatchVectorizer(data_path=batches_dir, data_format='batches')
 
@@ -264,42 +290,49 @@ def mutual_info_dict_preparation(fname):
             list_of_words = line.strip().split()
             word_1 = list_of_words[0]
             for word_val in list_of_words[1:]:
-                word_2, value = word_val.split(':')
-                tokens_dict['{}_{}'.format(word_1, word_2)] = float(value)
-                tokens_dict['{}_{}'.format(word_2, word_1)] = float(value)
+                word_2, value = word_val.split(":")
+                tokens_dict["{}_{}".format(word_1, word_2)] = float(value)
+                tokens_dict["{}_{}".format(word_2, word_1)] = float(value)
     return tokens_dict
 
 
 def prepare_all_artifacts(save_path: str):
-    DATASET_PATH = os.path.join(save_path, 'ppp.csv')
-    BATCHES_DIR = os.path.join(save_path, 'batches')
-    WV_PATH = os.path.join(save_path, 'test_set_data_voc.txt')
-    COOC_DICTIONARY_PATH = os.path.join(save_path, 'cooc_dictionary.txt')
-    DICTIONARY_PATH = os.path.join(save_path, 'dictionary.txt')
-    VOCAB_PATH = os.path.join(save_path, 'vocab.txt')
-    cooc_file_path_df = os.path.join(save_path, 'cooc_df.txt')
-    cooc_file_path_tf = os.path.join(save_path, 'cooc_tf.txt')
-    ppmi_dict_df = os.path.join(save_path, 'ppmi_df.txt')
-    ppmi_dict_tf = os.path.join(save_path, 'ppmi_tf.txt')
-    MUTUAL_INFO_DICT_PATH = os.path.join(save_path, 'mutual_info_dict.pkl')
-    DOCUMENTS_TO_BATCH_PATH = os.path.join(save_path, 'ppp.csv')
+    DATASET_PATH = os.path.join(save_path, "ppp.csv")
+    BATCHES_DIR = os.path.join(save_path, "batches")
+    WV_PATH = os.path.join(save_path, "test_set_data_voc.txt")
+    COOC_DICTIONARY_PATH = os.path.join(save_path, "cooc_dictionary.txt")
+    DICTIONARY_PATH = os.path.join(save_path, "dictionary.txt")
+    VOCAB_PATH = os.path.join(save_path, "vocab.txt")
+    cooc_file_path_df = os.path.join(save_path, "cooc_df.txt")
+    cooc_file_path_tf = os.path.join(save_path, "cooc_tf.txt")
+    ppmi_dict_df = os.path.join(save_path, "ppmi_df.txt")
+    ppmi_dict_tf = os.path.join(save_path, "ppmi_tf.txt")
+    MUTUAL_INFO_DICT_PATH = os.path.join(save_path, "mutual_info_dict.pkl")
+    DOCUMENTS_TO_BATCH_PATH = os.path.join(save_path, "ppp.csv")
 
     # TODO: check why batch vectorizer is returned (unused further)
-    batch_vectorizer = prepare_batch_vectorizer(BATCHES_DIR, WV_PATH, DOCUMENTS_TO_BATCH_PATH)
+    batch_vectorizer = prepare_batch_vectorizer(
+        BATCHES_DIR, WV_PATH, DOCUMENTS_TO_BATCH_PATH
+    )
 
     my_dictionary = artm.Dictionary()
     my_dictionary.gather(data_path=BATCHES_DIR, vocab_file_path=WV_PATH)
-    my_dictionary.filter(min_df=3, class_id='text')
+    my_dictionary.filter(min_df=3, class_id="text")
     my_dictionary.save_text(DICTIONARY_PATH)
 
     vocab_preparation(VOCAB_PATH, DICTIONARY_PATH)
-    prepearing_cooc_dict(BATCHES_DIR, WV_PATH, VOCAB_PATH,
-                         COOC_DICTIONARY_PATH,
-                         DATASET_PATH,
-                         cooc_file_path_tf,
-                         cooc_file_path_df, ppmi_dict_tf,
-                         ppmi_dict_df)
+    prepearing_cooc_dict(
+        BATCHES_DIR,
+        WV_PATH,
+        VOCAB_PATH,
+        COOC_DICTIONARY_PATH,
+        DATASET_PATH,
+        cooc_file_path_tf,
+        cooc_file_path_df,
+        ppmi_dict_tf,
+        ppmi_dict_df,
+    )
 
     mutual_info_dict = mutual_info_dict_preparation(ppmi_dict_tf)
-    with open(MUTUAL_INFO_DICT_PATH, 'wb') as handle:
+    with open(MUTUAL_INFO_DICT_PATH, "wb") as handle:
         pickle.dump(mutual_info_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
