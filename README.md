@@ -2,6 +2,7 @@
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 ![build](https://github.com/ngc436/AutoTM/actions/workflows/build.yaml/badge.svg)
+[![GitHub Repo stars](https://img.shields.io/github/stars/ngc436/AutoTM?style=social)](https://github.com/ngc436/AutoTM/stargazers)
 
 Automatic parameters selection for topic models (ARTM approach) using evolutionary algorithms. 
 AutoTM provides necessary tools to preprocess english and russian text datasets and tune topic models.
@@ -10,6 +11,16 @@ AutoTM provides necessary tools to preprocess english and russian text datasets 
 Topic modeling is one of the basic methods for EDA of unlabelled text data. While ARTM (additive regularization 
 for topic models) approach provides the significant flexibility and quality comparative or better that neural 
 approaches it is hard to tune such models due to amount of hyperparameters and their combinations.
+
+To overcome the tuning problems AutoTM presents an easy way to represent a learning strategy to train specific models for input corporas.
+
+<img src="docs/img/strategy.png" alt="Learning strategy representation" height=""/>
+
+Optimization procedure is done by genetic algorithm which operators are specifically tuned for 
+the task.
+
+<img src="docs/img/img_library_eng.png" alt="Library scheme" height=""/>
+
 
 ## Installation
 
@@ -31,6 +42,7 @@ Distributed version to run experiments on kubernetes is available in ```autotm-d
 
 ## Backlog:
 - [ ] Add tests
+- [ ] Add new multi-stage 
  
 ## Citation
 
