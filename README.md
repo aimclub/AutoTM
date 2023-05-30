@@ -17,7 +17,8 @@ To overcome the tuning problems AutoTM presents an easy way to represent a learn
 <img src="docs/img/strategy.png" alt="Learning strategy representation" height=""/>
 
 Optimization procedure is done by genetic algorithm which operators are specifically tuned for 
-the task.
+the task. To speed up the procedure we also implemented surrogate modeling that, for some iterations, 
+approximate fitness function to reduce computation costs on training topic models.
 
 <img src="docs/img/img_library_eng.png" alt="Library scheme" height=""/>
 
@@ -31,6 +32,8 @@ the task.
 ```python -m spacy download en_core_web_sm```
 
 ```export PYTHONPATH="${PYTHONPATH}:/path/to/src"```
+
+[//]: # (## Dataset and )
 
 ## Quickstart
 
