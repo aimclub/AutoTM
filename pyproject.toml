@@ -50,6 +50,7 @@ pytest = "*"
 
 [tool.poetry.dev-dependencies]
 black = "*"
+sphinx = "*"
 
 [build-system]
 requires = ["poetry-core"]
