@@ -7,7 +7,7 @@ autotm.algorithms_for_tuning
 Algorithms for tuning.
 
 .. .. currentmodule:: autotm.algorithms_for_tuning.bayesian_optimization
-.. currentmodule:: autotm.algorithms_for_tuning.genetic_algorithm
+.. currentmodule:: autotm.algorithms_for_tuning.genetic_algorithm.genetic_algorithm
 
 .. autosummary::
     :toctree: ./generated
