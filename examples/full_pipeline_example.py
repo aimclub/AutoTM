@@ -38,13 +38,13 @@ train_option = "offline"
 
 if __name__ == "__main__":
     print("Stage 1: Dataset preparation")
-    # process_dataset(
-    #     PATH_TO_DATASET,
-    #     col_to_process,
-    #     SAVE_PATH,
-    #     lang,
-    #     min_tokens_count=min_tokens_num,
-    # )
+    process_dataset(
+        PATH_TO_DATASET,
+        col_to_process,
+        SAVE_PATH,
+        lang,
+        min_tokens_count=min_tokens_num,
+    )
     prepare_all_artifacts(SAVE_PATH)
     print("Stage 2: Tuning the topic model")
 

@@ -1,4 +1,6 @@
 import os
+from typing import List
+
 import artm
 import math
 import pickle
@@ -43,12 +45,13 @@ def _add_word_to_dict(word, w_dict):
     return w_dict
 
 
-def _calculate_cooc_df_dict(data: list, window: int = 10) -> dict:
+def _calculate_cooc_df_dict(data: list, vocab: List[str], window: int = 10) -> dict:
     cooc_df_dict = {}  # format dict{(tuple): cooc}
     term_freq_dict = {}
+    existing_vocab = set(vocab)
     for text in data:
         document_cooc_df_dict = {}
-        splitted = text.split()
+        splitted = [word for word in text.split() if word in existing_vocab]
         for i in range(0, len(splitted) - window):
             for comb in itertools.combinations(splitted[i : i + window], 2):  # speed up
                 comb = tuple(sorted(comb))  # adding comb sorting
@@ -62,12 +65,13 @@ def _calculate_cooc_df_dict(data: list, window: int = 10) -> dict:
     return cooc_df_dict, term_freq_dict
 
 
-def _calculate_cooc_tf_dict(data: list, window: int = 10) -> dict:
+def _calculate_cooc_tf_dict(data: list, vocab: List[str], window: int = 10) -> dict:
     term_freq_dict = {}
     cooc_tf_dict = {RESERVED_TUPLE: 0}  # format dict{(tuple): cooc}
+    existing_vocab = set(vocab)
     for text in data:
         document_cooc_tf_dict = {}
-        splitted = text.split()
+        splitted = [word for word in text.split() if word in existing_vocab]
         for i in range(0, len(splitted) - window):
             for comb in itertools.combinations(splitted[i : i + window], 2):
                 if comb in document_cooc_tf_dict:
@@ -77,9 +81,12 @@ def _calculate_cooc_tf_dict(data: list, window: int = 10) -> dict:
 
                 term_freq_dict = _add_word_to_dict(comb[0], term_freq_dict)
                 term_freq_dict = _add_word_to_dict(comb[1], term_freq_dict)
-
                 cooc_tf_dict[RESERVED_TUPLE] += 2
-        cooc_tf_dict = dict(Counter(document_cooc_tf_dict) + Counter(cooc_tf_dict))
+        # cooc_tf_dict = dict(Counter(document_cooc_tf_dict) + Counter(cooc_tf_dict))
+        counter = Counter(document_cooc_tf_dict)
+        counter.update(cooc_tf_dict)
+        cooc_tf_dict = dict(counter)
+        k = 0
     return cooc_tf_dict, term_freq_dict
     # local_num_of_pairs += 2
     # pass
@@ -99,9 +106,10 @@ def calculate_ppmi(cooc_dict_path, n, term_freq_dict):
 
 
 # TODO: rewrite to storing in rb tree
-def calculate_cooc_dicts(df, window=10, n_cores=-1):
+def calculate_cooc_dicts(vocab: List[str], df: pd.DataFrame, window=10, n_cores=-1):
     """
 
+    :param vocab: list of words to be used for calculating cooccurrences
     :param df: dataframe with 'processed_text'  column
     :param window: The size of window to collect cooccurrences in
     :param n_cores: available cores for parallel processing. Default: -1 (all)
@@ -109,10 +117,10 @@ def calculate_cooc_dicts(df, window=10, n_cores=-1):
     """
     data = df["processed_text"].tolist()
     cooc_df_dict = parallelize_dataframe(
-        data, _calculate_cooc_df_dict, n_cores, return_type="dict", window=window
+        data, _calculate_cooc_df_dict, n_cores, return_type="dict", vocab=vocab, window=window
     )
     cooc_tf_dict = parallelize_dataframe(
-        data, _calculate_cooc_tf_dict, n_cores, return_type="dict", window=window
+        data, _calculate_cooc_tf_dict, n_cores, return_type="dict", vocab=vocab, window=window
     )
     return cooc_df_dict, cooc_tf_dict
 
@@ -191,7 +199,7 @@ def prepearing_cooc_dict(
     data = pd.read_csv(path_to_dataset)
     docs_count = data.shape[0]
 
-    df_dicts, tf_dicts = calculate_cooc_dicts(data, n_cores=n_cores, window=cooc_window)
+    df_dicts, tf_dicts = calculate_cooc_dicts(vocab_words, data, n_cores=n_cores, window=cooc_window)
 
     cooc_df_dict, cooc_df_term_dict = df_dicts[0], df_dicts[1]
     cooc_tf_dict, cooc_tf_term_dict = tf_dicts[0], tf_dicts[1]
