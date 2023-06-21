@@ -95,13 +95,25 @@ def log_params_and_artifacts(
     individual: IndividualDTO,
     time_metrics: TimeMeasurements,
     alg_args: Optional[str],
+    is_tmp: bool = False
 ):
     logger.info("Logging params and artifacts to mlflow")
-
     logger.info(f"Created experiment_{individual.exp_id}")
     run_name = f"fitness-{individual.dataset}-{uuid.uuid4()}"
-    experiment_id = mlflow.create_experiment(f"experiment_{individual.exp_id}")
+    if is_tmp:
+        run_name+=f'_tmp_{individual.iteration_id}'
+
+    try:
+        experiment_id = mlflow.create_experiment(f"experiment_{individual.exp_id}")
+    except:
+        experiment = mlflow.get_experiment_by_name(f"experiment_{individual.exp_id}")
+        experiment_id = experiment.experiment_id
+        logger.info("Experiment exists, omitting creation")
+
+    # mlflow.delete_experiment
+
     print(f"Experiment run name: {run_name}")
+    # try:
     with mlflow.start_run(run_name=run_name, experiment_id=experiment_id):
         params = {
             "uid": tm.uid,
@@ -140,6 +152,8 @@ def log_params_and_artifacts(
             alg_args if alg_args else "", artifact_file=alg_args_artifact_path
         )
         mlflow.log_text(full_repr_topics, artifact_file=readable_topics_artifact_path)
+    # except:
+    #     logger.info("The model is already logged")
 
     logger.info("Logged params and artifacts to mlflow")
 

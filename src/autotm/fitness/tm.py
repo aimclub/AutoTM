@@ -300,7 +300,7 @@ def fit_tm_of_individual(
         except SoftTimeLimitExceeded as ex:
             raise ex
         except Exception:
-            logger.exception(msg="Fitness calculation problem")
+            logger.warning(msg="Fitness calculation problem")
             fitness = {AVG_COHERENCE_SCORE: 0.0}
             time_metrics = {"train": -1, "metrics": -1}
 
