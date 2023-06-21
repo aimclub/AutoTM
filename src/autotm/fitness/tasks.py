@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from autotm.params_logging_utils import log_params_and_artifacts, log_stats, model_files
 from autotm.fitness.tm import fit_tm_of_individual
@@ -9,52 +9,48 @@ from autotm.algorithms_for_tuning.individuals import make_individual
 logger = logging.getLogger("root")
 
 
-# task_logger = get_task_logger(__name__)
-
-
 def do_fitness_calculating(
-    individual: str,
-    log_artifact_and_parameters: bool = False,
-    log_run_stats: bool = False,
-    alg_args: Optional[str] = None,
+        individual: str,
+        log_artifact_and_parameters: bool = False,
+        log_run_stats: bool = False,
+        alg_args: Optional[str] = None,
+        is_tmp: bool = False,
 ) -> str:
     individual: IndividualDTO = IndividualDTO.parse_raw(individual)
-    # task_logger.info(f"Calculating fitness for an individual with id {individual.id}: \n{individual}")
 
     with fit_tm_of_individual(
-        dataset=individual.dataset,
-        data_path=individual.data_path,
-        params=individual.params,
-        fitness_name=individual.fitness_name,
-        topic_count=individual.topic_count,
-        force_dataset_settings_checkout=individual.force_dataset_settings_checkout,
-        train_option=individual.train_option,
+            dataset=individual.dataset,
+            data_path=individual.data_path,
+            params=individual.params,
+            fitness_name=individual.fitness_name,
+            topic_count=individual.topic_count,
+            force_dataset_settings_checkout=individual.force_dataset_settings_checkout,
+            train_option=individual.train_option,
     ) as (time_metrics, metrics, tm):
         individual.fitness_value = metrics
 
         with model_files(tm) as tm_files:
             if log_artifact_and_parameters:
                 log_params_and_artifacts(
-                    tm, tm_files, individual, time_metrics, alg_args
+                    tm, tm_files, individual, time_metrics, alg_args, is_tmp=is_tmp
                 )
 
             if log_run_stats:
                 log_stats(tm, tm_files, individual, time_metrics, alg_args)
 
-    # task_logger.info(f"Fitness has been calculated for {individual.id}: {individual.fitness_value}")
-
     return individual.json()
 
 
 def calculate_fitness(
-    individual: str,
-    log_artifact_and_parameters: bool = False,
-    log_run_stats: bool = False,
-    alg_args: Optional[str] = None,
+        individual: str,
+        log_artifact_and_parameters: bool = False,
+        log_run_stats: bool = False,
+        alg_args: Optional[str] = None,
+        is_tmp: bool = False
 ) -> str:
     try:
         return do_fitness_calculating(
-            individual, log_artifact_and_parameters, log_run_stats, alg_args
+            individual, log_artifact_and_parameters, log_run_stats, is_tmp
         )
     except Exception as e:
         print(str(e))
@@ -62,9 +58,6 @@ def calculate_fitness(
 
 
 def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
-    # ids = [ind.id for ind in population]
-    # assert len(set(ids)) == len(population), \
-    #     f"There are individuals with duplicate ids: {ids}"
     logger.info("Calculating fitness...")
     population_with_fitness = []
     for individual in population:
@@ -78,15 +71,16 @@ def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
 
 
 def log_best_solution(
-    individual: IndividualDTO,
-    wait_for_result_timeout: Optional[float] = None,
-    alg_args: Optional[str] = None,
+        individual: IndividualDTO,
+        wait_for_result_timeout: Optional[float] = None,
+        alg_args: Optional[str] = None,
+        is_tmp: bool = False,
 ):
     logger.info(f"Sending a best individual to be logged")
     res = make_individual(
         fitness_from_json(
             calculate_fitness(
-                fitness_to_json(individual.dto), log_artifact_and_parameters=True
+                fitness_to_json(individual.dto), log_artifact_and_parameters=True, is_tmp=is_tmp
             )
         )
     )
