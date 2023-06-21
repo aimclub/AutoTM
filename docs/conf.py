@@ -10,13 +10,13 @@ import os
 import sys
 
 
-CURR_PATH = os.path.abspath(os.path.dirname(__file__))
+CURR_PATH = os.path.abspath('../..')
 LIB_PATH = os.path.join(CURR_PATH, os.path.pardir + '/src')
 sys.path.insert(0, LIB_PATH)
 
 project = 'AutoTM'
-copyright = '2023, Khodorchenko Maria'
-author = 'Khodorchenko Maria'
+copyright = '2023, Strong AI Lab'
+author = 'Khodorchenko Maria, Butakov Nikolay'
 release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
