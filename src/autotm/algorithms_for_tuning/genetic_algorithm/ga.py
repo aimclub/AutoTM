@@ -1021,7 +1021,7 @@ class GA:
                 f"RUN ID {run_id}."
             )
             best_solution = population[0]
-            log_best_solution(best_solution, alg_args=" ".join(sys.argv))
+            log_best_solution(best_solution, alg_args=" ".join(sys.argv), is_tmp=True)
 
         self.metric_collector.save_and_visualise_trace()
 
