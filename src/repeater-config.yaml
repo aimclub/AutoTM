@@ -10,13 +10,21 @@ datasets:
   #  - books_stroyitelstvo_2030
 
 configurations:
+  - name: "ga_nm_10"
+    cmd: "/app/run-autotm.sh"
+    args: "--num-individuals 11 --num-iterations 10 --mutation-type psm --crossover-type blend_crossover
+           --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
+           --exp-id 37 --tag fitness_nm_10_10 --topic-count 10 --use-nelder-mead-in-mutation=True"
+    workdir: "/app"
+    repetitions: 5
+
   - name: "ga_10"
     cmd: "/app/run-autotm.sh"
     args: "--num-individuals 11 --num-iterations 10 --mutation-type psm --crossover-type blend_crossover
            --selection-type fitness_prop  --cross-alpha 0.5046 --best-proc 0.4439
-           --exp-id 37 --tag fitness_10_10 --topic-count 10"
+           --exp-id 37 --tag fitness_no_nm_10_10 --topic-count 10 --use-nelder-mead-in-mutation=False"
     workdir: "/app"
-    repetitions: 2
+    repetitions: 5
 
 #  - name: "ga_50"
 #    cmd: "/app/run-autotm.sh"
