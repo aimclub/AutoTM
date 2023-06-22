@@ -14,7 +14,7 @@ TOP_TOPICS_COL = "SER_top_topics"
 
 
 def get_experiment_path(
-    exp_id: int, run_name: str, mlflow_path: str = "./mlruns/"
+        exp_id: int, run_name: str, mlflow_path: str = "./mlruns/"
 ) -> str:
     """
 
@@ -28,14 +28,14 @@ def get_experiment_path(
             subfolders = os.listdir(os.path.join(mlflow_path, folder))
             if len(subfolders) > 1:
                 with open(os.path.join(mlflow_path, folder, "meta.yaml"), "r") as f:
-                    data = yaml.load(f)
+                    data = yaml.load(f, Loader=yaml.Loader)
                 if data["name"] == f"experiment_{exp_id}":
                     for subfolder in subfolders:
                         if subfolder != "meta.yaml":
                             with open(
-                                os.path.join(
-                                    mlflow_path, folder, subfolder, PATH_TO_RUN_NAME
-                                )
+                                    os.path.join(
+                                        mlflow_path, folder, subfolder, PATH_TO_RUN_NAME
+                                    )
                             ) as f:
                                 f_run_name = f.read()
                                 if f_run_name.strip() == run_name:
@@ -69,7 +69,7 @@ def _transform_matrix(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def get_most_probable_topics_from_theta(
-    df: pd.DataFrame, theta_df: pd.DataFrame, top_n: int = 2
+        df: pd.DataFrame, theta_df: pd.DataFrame, top_n: int = 2
 ) -> pd.DataFrame:
     """
 
@@ -81,7 +81,7 @@ def get_most_probable_topics_from_theta(
     theta_df = _transform_matrix(theta_df)
     print(theta_df)
     assert (
-        df.shape[0] == theta_df.shape[0]
+            df.shape[0] == theta_df.shape[0]
     ), "Shapes of f and theta matrix are different"
     print(theta_df.apply(lambda x: ", ".join(x.nlargest(top_n).index.tolist()), axis=1))
     df[TOP_TOPICS_COL] = theta_df.apply(
@@ -104,8 +104,8 @@ def get_top_words_from_topic_in_text(df: pd.DataFrame, topics: dict, top_w: int 
             )
             if len(words) > 1:
                 topic_tokens[topic] = [word for word in topics[topic] if word in words][
-                    :top_w
-                ]
+                                      :top_w
+                                      ]
         all_dicts.append(topic_tokens)
     df["SER_words_of_topic"] = all_dicts
     return df
@@ -133,14 +133,14 @@ class TopicsExtractor:
         return artm.load_artm_model(self.__tm_model_path)
 
     def get_prob_mixture(
-        self,
-        data_path,
-        TMP_BATCHES_PATH="./tmp/tmp_batches/",
-        TMP_DICT_PATH="./tmp/tmp_dict/",
-        OUTPUT_DIR="./out",
-        text_column_name="processed_text",
-        input_format="csv",
-        top_n=2,
+            self,
+            data_path,
+            TMP_BATCHES_PATH="./tmp/tmp_batches/",
+            TMP_DICT_PATH="./tmp/tmp_dict/",
+            OUTPUT_DIR="./out",
+            text_column_name="processed_text",
+            input_format="csv",
+            top_n=2,
     ):
         try:
             os.makedirs(TMP_BATCHES_PATH)
