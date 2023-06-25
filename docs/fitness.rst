@@ -18,4 +18,3 @@ Fitness.
     FitnessCalculatorWrapper
     calculate_fitness_of_individual
     TopicModel
-

@@ -11,7 +11,7 @@ Preprocessing.
 .. autosummary::
     :toctree: ./generated
     :nosignatures:
-    :template: classtemplate.rst
+    :template: functiontemplate.rst
 
-    dictionaries_preparation
-    text_preprocessing
+    dictionaries_preparation.get_words_dict
+    text_preprocessing.new_html

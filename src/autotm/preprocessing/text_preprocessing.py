@@ -43,7 +43,8 @@ nlp_model.add_pipe("language_detector", last=True)
 
 
 def new_html(text: str) -> str:
-    text = r_html.sub("", text)
+    # text = r_html.sub("", text)
+    text = ""
     return text
 
 
