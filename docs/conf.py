@@ -10,8 +10,8 @@ import os
 import sys
 
 
-CURR_PATH = os.path.abspath('../..')
-LIB_PATH = os.path.join(CURR_PATH, os.path.pardir + '/src')
+CURR_PATH = os.path.abspath(os.path.dirname(__file__))
+LIB_PATH = os.path.join(CURR_PATH, os.path.pardir, 'src')
 sys.path.insert(0, LIB_PATH)
 
 project = 'AutoTM'
@@ -23,6 +23,22 @@ release = '0.1.0'
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = ["sphinx.ext.autosummary"]
+
+# Delete external references
+autosummary_mock_imports = [
+    "numpy",
+    "pandas",
+    "artm",
+    "gensim",
+    "billiard",
+    "plotly",
+    "scipy",
+    "spacy_langdetect",
+    "sklearn",
+    "spacy",
+    "pymystem3",
+    # "nltk"
+]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
