@@ -69,7 +69,7 @@ def tokens_num(text):
     return len(text.split(" "))
 
 
-def lemmatize_text_ru(text: str) -> str:
+def lemmatize_text_ru(text: str, leave_service_info=False) -> str:
     try:
         text = remove_html(text)
     except:
@@ -83,7 +83,7 @@ def lemmatize_text_ru(text: str) -> str:
     tokens = (x for x in tokens if len(x) >= 3 and not x.isdigit())
     text = " ".join(tokens)
     tokens = m.lemmatize(text)
-    tokens = (x for x in tokens if len(x) > 3)
+    tokens = (x for x in tokens if len(x) >= 3)
     tokens = (x for x in tokens if x not in stop)
     tokens = (x for x in tokens if x.isalpha())
     text = " ".join(tokens)
@@ -140,12 +140,12 @@ def lemmatize_text(df, **kwargs):
 
 
 def process_dataset(
-    fname: str,
-    col_to_process: str,
-    save_path: str,
-    lang: str = "ru",
-    min_tokens_count: int = 3,
-    n_cores: int = -1,
+        fname: str,
+        col_to_process: str,
+        save_path: str,
+        lang: str = "ru",
+        min_tokens_count: int = 3,
+        n_cores: int = -1,
 ):
     """
 
