@@ -42,8 +42,8 @@ nlp_model = spacy.load("en_core_web_sm")
 nlp_model.add_pipe("language_detector", last=True)
 
 
-def new_html(text: str) -> str:
-    """This is my perfect function"""
+def remove_html(text: str) -> str:
+    """html removal function"""
     text = r_html.sub("", text)
     return text
 
@@ -57,11 +57,12 @@ def process_punkt(text: str) -> str:
 
 
 def get_lemma(word: str) -> str:
-    lemma = wordnet.morphy(word)
-    if lemma is None:
+    """function to extract lemma from english words"""
+    synsets = wordnet.synsets(word)
+    if synsets is None or len(synsets) == 0:
         return word
     else:
-        return lemma
+        return synsets[0].lemmas()[0].name()
 
 
 def tokens_num(text):
@@ -70,13 +71,11 @@ def tokens_num(text):
 
 def lemmatize_text_ru(text: str) -> str:
     try:
-        text = new_html(text)
+        text = remove_html(text)
     except:
         return ""
     text = text.lower()
     text = process_punkt(text)
-    #         text = re.findall(r_rus, text)
-    #         text = ' '.join(text)
     try:
         tokens = r_words.split(text)
     except:
