@@ -20,20 +20,24 @@ jobs:
         uses: actions/checkout@v3
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install pip
+        run: apt update && apt install -y python3-pip
       - name: Install dependencies
         run: |
             python -m pip install --upgrade pip
-            python -m pip install flake8 pytest
-            if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-            python -m spacy download en_core_web_sm
+            python -m pip install flake8 pytest poetry
+            poetry export -f requirements.txt --without-hashes --with dev > requirements.txt
+            pip install -r requirements.txt
+      - name: Download english corpus
+        run: python -m spacy download en_core_web_sm
       - name: set pythonpath
         working-directory: src
         run: |
           echo "PYTHONPATH=." >> $GITHUB_ENV
-      - name: Run test code
-        working-directory: src
-        run: python ../examples/full_pipeline_example.py
       - name: Lint with flake8
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+      - name: Run test code
+        working-directory: src
+        run: python ../examples/full_pipeline_example.py
       - run: echo "🍏 This job's status is ${{ job.status }}."

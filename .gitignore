@@ -142,9 +142,20 @@ resources
 surrogate_logs/*
 *.orig
 *.pickle
-/Notebooks/
-/logs/
-/bin/
-/examples/mlruns/
-/data/experiment_datasets/
-/coverage_re/
+Notebooks/
+logs/
+examples/mlruns/
+data/experiment_datasets/
+data/processed_sample_corpora
+data/sample_corpora/*.txt
+data/sample_corpora/*.pkl
+data/sample_corpora/batches/*
+examples/tmp
+examples/metrics
+examples/*.txt
+examples/out
+bigartm.*
+coverage_re/
+
+# sphinx docs
+docs/_build

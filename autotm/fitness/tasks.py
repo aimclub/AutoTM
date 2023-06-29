@@ -50,7 +50,7 @@ def calculate_fitness(
 ) -> str:
     try:
         return do_fitness_calculating(
-            individual, log_artifact_and_parameters, log_run_stats, is_tmp
+            individual, log_artifact_and_parameters, log_run_stats, alg_args, is_tmp
         )
     except Exception as e:
         print(str(e))

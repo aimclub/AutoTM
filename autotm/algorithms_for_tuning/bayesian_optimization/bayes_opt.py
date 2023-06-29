@@ -12,12 +12,12 @@ from typing import List, Optional, Union
 
 import click
 import yaml
-import tqdm
 from hyperopt import STATUS_OK, fmin, hp, tpe
-from kube_fitness.tasks import IndividualDTO, TqdmToLogger
+from tqdm import tqdm
 from yaml import Loader
 
-from algorithms_for_tuning.utils import make_log_config_dict
+from autotm.algorithms_for_tuning.individuals import IndividualDTO
+from autotm.utils import TqdmToLogger, make_log_config_dict
 
 ALG_ID = "bo"
 
@@ -137,7 +137,6 @@ def run_algorithm(dataset, log_file, exp_id):
     logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
     logging.config.dictConfig(logging_config)
 
-    prepare_fitness_estimator()
     fitness = BigartmFitness(dataset, exp_id)
     best_params = fmin(
         fitness, SPACE, algo=tpe.suggest, max_evals=NUM_FITNESS_EVALUATIONS
