@@ -131,7 +131,7 @@ dmypy.json
 # Sphinx
 docs/generated
 
-src/autotm/algorithms_for_tuning/genetic_algorithm/resources/*
+autotm/algorithms_for_tuning/genetic_algorithm/resources/*
 .idea
 algorithms_for_tuning/genetic_algorithm/logs/*
 algorithms_for_tuning/genetic_algorithm/bigartm.*

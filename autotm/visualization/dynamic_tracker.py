@@ -245,7 +245,6 @@ class MetricsCollector:
         fig.show()
 
         if plot_mutation_effectiveness:
-            # mutation diff vis
             fig = px.scatter(
                 self.mutation_df,
                 x=PARAMS_DIST_COL,
