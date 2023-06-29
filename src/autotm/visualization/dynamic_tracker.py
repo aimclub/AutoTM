@@ -227,7 +227,7 @@ class MetricsCollector:
             )
         )
 
-    def save_and_visualise_trace(self):
+    def save_and_visualise_trace(self, plot_mutation_effectiveness=False):
         self.get_metric_df()
         # save params
         self.write_metrics_to_file()
@@ -244,14 +244,13 @@ class MetricsCollector:
         )
         fig.show()
 
-        # mutation diff vis
-        fig = px.scatter(
-            self.mutation_df,
-            x=PARAMS_DIST_COL,
-            y=FITNESS_DIFF_COL,
-            title="Effectiveness of mutation operation",
-            template=graph_template,
-        )
-        fig.show()
-
-        # crossover diff vis
+        if plot_mutation_effectiveness:
+            # mutation diff vis
+            fig = px.scatter(
+                self.mutation_df,
+                x=PARAMS_DIST_COL,
+                y=FITNESS_DIFF_COL,
+                title="Effectiveness of mutation operation",
+                template=graph_template,
+            )
+            fig.show()

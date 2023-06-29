@@ -95,13 +95,13 @@ def log_params_and_artifacts(
     individual: IndividualDTO,
     time_metrics: TimeMeasurements,
     alg_args: Optional[str],
-    is_tmp: bool = False
+    is_tmp: bool = False,
 ):
     logger.info("Logging params and artifacts to mlflow")
     logger.info(f"Created experiment_{individual.exp_id}")
     run_name = f"fitness-{individual.dataset}-{uuid.uuid4()}"
     if is_tmp:
-        run_name+=f'_tmp_{individual.iteration_id}'
+        run_name += f"_tmp_{individual.iteration_id}"
 
     try:
         experiment_id = mlflow.create_experiment(f"experiment_{individual.exp_id}")

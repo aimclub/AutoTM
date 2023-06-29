@@ -117,10 +117,20 @@ def calculate_cooc_dicts(vocab: List[str], df: pd.DataFrame, window=10, n_cores=
     """
     data = df["processed_text"].tolist()
     cooc_df_dict = parallelize_dataframe(
-        data, _calculate_cooc_df_dict, n_cores, return_type="dict", vocab=vocab, window=window
+        data,
+        _calculate_cooc_df_dict,
+        n_cores,
+        return_type="dict",
+        vocab=vocab,
+        window=window,
     )
     cooc_tf_dict = parallelize_dataframe(
-        data, _calculate_cooc_tf_dict, n_cores, return_type="dict", vocab=vocab, window=window
+        data,
+        _calculate_cooc_tf_dict,
+        n_cores,
+        return_type="dict",
+        vocab=vocab,
+        window=window,
     )
     return cooc_df_dict, cooc_tf_dict
 
@@ -199,7 +209,9 @@ def prepearing_cooc_dict(
     data = pd.read_csv(path_to_dataset)
     docs_count = data.shape[0]
 
-    df_dicts, tf_dicts = calculate_cooc_dicts(vocab_words, data, n_cores=n_cores, window=cooc_window)
+    df_dicts, tf_dicts = calculate_cooc_dicts(
+        vocab_words, data, n_cores=n_cores, window=cooc_window
+    )
 
     cooc_df_dict, cooc_df_term_dict = df_dicts[0], df_dicts[1]
     cooc_tf_dict, cooc_tf_term_dict = tf_dicts[0], tf_dicts[1]
