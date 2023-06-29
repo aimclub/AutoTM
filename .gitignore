@@ -147,3 +147,4 @@ surrogate_logs/*
 /bin/
 /examples/mlruns/
 /data/experiment_datasets/
+/coverage_re/
