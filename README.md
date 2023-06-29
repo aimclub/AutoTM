@@ -1,3 +1,6 @@
+
+<img align="left" src="docs/img/photo_2023-06-29_20-20-57.jpg" alt="Library scheme" height="60" id="hp"/>
+
 # AutoTM
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)

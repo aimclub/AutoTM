@@ -1,7 +1,7 @@
 import pytest
 from autotm.preprocessing.text_preprocessing import (remove_html,
                                                      process_punkt,
-                                                     get_lemma)
+                                                     get_lemma, lemmatize_text_ru)
 
 from nltk.corpus import wordnet
 
@@ -51,3 +51,15 @@ class TestPreprocessing:
     def test_get_lemma(self, input, expected_output):
         """Test lemmatization works as intended"""
         assert get_lemma(input) == expected_output
+
+    @pytest.mark.parametrize(
+        "input,expected_output",
+        [
+            ("Эти тексты для пользователя id198890, потому что он пес", "текст пользователь пес"),
+            ("Оболочка работает с CPython 2.6+/3.3+ и PyPy 1.9+", "оболочка работать cpython pypy")
+        ]
+    )
+    def test_full_russian_processing(self, input, expected_output):
+        """Test preprocessing for russian"""
+        assert lemmatize_text_ru(input) == expected_output
+

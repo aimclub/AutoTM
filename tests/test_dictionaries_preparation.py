@@ -37,6 +37,8 @@ def test__add_word_to_dict():
     assert _add_word_to_dict('test', test_dict) == {'test': 1}
 
 
+
+
 # def test_write_vw_dict(mocker):
 #     mocker.patch("builtins.open", mocker.mock_open())
 #     res_dict = {"test": test}
