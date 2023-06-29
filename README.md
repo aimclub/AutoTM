@@ -1,8 +1,9 @@
 # AutoTM
 
-[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![build](https://github.com/ngc436/AutoTM/actions/workflows/build.yaml/badge.svg)
-[![GitHub Repo stars](https://img.shields.io/github/stars/ngc436/AutoTM?style=social)](https://github.com/ngc436/AutoTM/stargazers)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![PyPI version](https://badge.fury.io/py/autotm.svg)](https://badge.fury.io/py/autotm)
 
 Automatic parameters selection for topic models (ARTM approach) using evolutionary algorithms. 
 AutoTM provides necessary tools to preprocess english and russian text datasets and tune topic models.
@@ -26,6 +27,12 @@ approximate fitness function to reduce computation costs on training topic model
 ## Installation
 
 ! Note: The functionality of topic models training is available only for linux distributions.
+
+Via pip:
+
+```pip install autotm```
+
+From source:
 
 ```pip install -r requirements.txt```  
 
