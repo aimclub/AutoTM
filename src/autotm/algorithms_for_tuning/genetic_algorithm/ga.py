@@ -186,31 +186,31 @@ class ModelStorage:
 
 class GA:
     def __init__(
-            self,
-            dataset,
-            data_path,
-            num_individuals,
-            num_iterations,
-            mutation_type="mutation_one_param",
-            crossover_type="blend_crossover",
-            selection_type="fitness_prop",
-            elem_cross_prob=0.2,
-            num_fitness_evaluations: Optional[int] = 500,
-            early_stopping_iterations: Optional[int] = 500,
-            best_proc=0.3,
-            alpha=None,
-            exp_id: Optional[int] = None,
-            surrogate_name=None,
-            calc_scheme="type2",
-            topic_count: Optional[int] = None,
-            fitness_obj_type="single_objective",
-            tag: Optional[str] = None,
-            use_nelder_mead: bool = False,
-            use_nelder_mead_in_mutation: bool = False,
-            use_nelder_mead_in_crossover: bool = False,
-            use_nelder_mead_in_selector: bool = False,
-            train_option: str = "offline",
-            **kwargs,
+        self,
+        dataset,
+        data_path,
+        num_individuals,
+        num_iterations,
+        mutation_type="mutation_one_param",
+        crossover_type="blend_crossover",
+        selection_type="fitness_prop",
+        elem_cross_prob=0.2,
+        num_fitness_evaluations: Optional[int] = 500,
+        early_stopping_iterations: Optional[int] = 500,
+        best_proc=0.3,
+        alpha=None,
+        exp_id: Optional[int] = None,
+        surrogate_name=None,
+        calc_scheme="type2",
+        topic_count: Optional[int] = None,
+        fitness_obj_type="single_objective",
+        tag: Optional[str] = None,
+        use_nelder_mead: bool = False,
+        use_nelder_mead_in_mutation: bool = False,
+        use_nelder_mead_in_crossover: bool = False,
+        use_nelder_mead_in_selector: bool = False,
+        train_option: str = "offline",
+        **kwargs,
     ):
         """
 
@@ -285,21 +285,21 @@ class GA:
         )  # generation, parent_1_params, parent_2_params, ...
 
     def set_regularizer_limits(
-            self,
-            low_decor=0,
-            high_decor=1e5,
-            low_n=0,
-            high_n=30,
-            low_back=0,
-            high_back=5,
-            low_spb=0,
-            high_spb=1e2,
-            low_spm=-1e-3,
-            high_spm=1e2,
-            low_sp_phi=-1e3,
-            high_sp_phi=1e3,
-            low_prob=0,
-            high_prob=1,
+        self,
+        low_decor=0,
+        high_decor=1e5,
+        low_n=0,
+        high_n=30,
+        low_back=0,
+        high_back=5,
+        low_spb=0,
+        high_spb=1e2,
+        low_spm=-1e-3,
+        high_spm=1e2,
+        low_sp_phi=-1e3,
+        high_sp_phi=1e3,
+        low_prob=0,
+        high_prob=1,
     ):
         self.high_decor = high_decor
         self.low_decor = low_decor
@@ -686,7 +686,7 @@ class GA:
             )
             solution = list(res["x"])
             solution = (
-                    solution[:-1] + point[12:15] + [solution[-1]]
+                solution[:-1] + point[12:15] + [solution[-1]]
             )  # TODO: check mutation ids
             fitness = -res.fun
             solution_dto = IndividualDTO(
@@ -774,8 +774,8 @@ class GA:
                 pass
 
             if (
-                    self.num_fitness_evaluations
-                    and self.evaluations_counter >= self.num_fitness_evaluations
+                self.num_fitness_evaluations
+                and self.evaluations_counter >= self.num_fitness_evaluations
             ):
                 bparams = "".join([str(i) for i in population[0].params])
                 self.metric_collector.save_fitness(
@@ -809,15 +809,15 @@ class GA:
 
             new_generation_n = min(
                 (
-                        self.num_individuals
-                        - int(np.ceil(self.num_individuals * self.best_proc))
+                    self.num_individuals
+                    - int(np.ceil(self.num_individuals * self.best_proc))
                 ),
                 len(new_generation),
             )
             old_generation_n = self.num_individuals - new_generation_n
 
             population = (
-                    population[:old_generation_n] + new_generation[:new_generation_n]
+                population[:old_generation_n] + new_generation[:new_generation_n]
             )
 
             try:
@@ -946,8 +946,8 @@ class GA:
                         population[i] = elem
 
             if (
-                    self.num_fitness_evaluations
-                    and self.evaluations_counter >= self.num_fitness_evaluations
+                self.num_fitness_evaluations
+                and self.evaluations_counter >= self.num_fitness_evaluations
             ):
                 self.metric_collector.save_fitness(
                     generation=ii,
@@ -1059,19 +1059,19 @@ class GAmultistage(GA):
         self.set_regularizer_limits()
 
     def set_regularizer_limits(
-            self,
-            low_decor=0,
-            high_decor=1e5,
-            low_n=1,
-            high_n=30,  # minimal value changed to 1
-            low_back=0,
-            high_back=5,
-            low_spb=0,
-            high_spb=1e2,
-            low_spm=-1e-3,
-            high_spm=1e2,
-            low_sp_phi=-1e3,
-            high_sp_phi=1e3,
+        self,
+        low_decor=0,
+        high_decor=1e5,
+        low_n=1,
+        high_n=30,  # minimal value changed to 1
+        low_back=0,
+        high_back=5,
+        low_spb=0,
+        high_spb=1e2,
+        low_spm=-1e-3,
+        high_spm=1e2,
+        low_sp_phi=-1e3,
+        high_sp_phi=1e3,
     ):
         self.high_decor = high_decor
         self.low_decor = low_decor

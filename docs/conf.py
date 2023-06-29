@@ -11,13 +11,13 @@ import sys
 
 
 CURR_PATH = os.path.abspath(os.path.dirname(__file__))
-LIB_PATH = os.path.join(CURR_PATH, os.path.pardir, 'src')
+LIB_PATH = os.path.join(CURR_PATH, os.path.pardir, "src")
 sys.path.insert(0, LIB_PATH)
 
-project = 'AutoTM'
-copyright = '2023, Strong AI Lab'
-author = 'Khodorchenko Maria, Butakov Nikolay'
-release = '0.1.0'
+project = "AutoTM"
+copyright = "2023, Strong AI Lab"
+author = "Khodorchenko Maria, Butakov Nikolay"
+release = "0.1.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -40,13 +40,12 @@ autosummary_mock_imports = [
     # "nltk"
 ]
 
-templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
+templates_path = ["_templates"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
-html_static_path = ['_static']
+html_theme = "alabaster"
+html_static_path = ["_static"]

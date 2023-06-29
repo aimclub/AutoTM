@@ -10,22 +10,22 @@ logger = logging.getLogger("root")
 
 
 def do_fitness_calculating(
-        individual: str,
-        log_artifact_and_parameters: bool = False,
-        log_run_stats: bool = False,
-        alg_args: Optional[str] = None,
-        is_tmp: bool = False,
+    individual: str,
+    log_artifact_and_parameters: bool = False,
+    log_run_stats: bool = False,
+    alg_args: Optional[str] = None,
+    is_tmp: bool = False,
 ) -> str:
     individual: IndividualDTO = IndividualDTO.parse_raw(individual)
 
     with fit_tm_of_individual(
-            dataset=individual.dataset,
-            data_path=individual.data_path,
-            params=individual.params,
-            fitness_name=individual.fitness_name,
-            topic_count=individual.topic_count,
-            force_dataset_settings_checkout=individual.force_dataset_settings_checkout,
-            train_option=individual.train_option,
+        dataset=individual.dataset,
+        data_path=individual.data_path,
+        params=individual.params,
+        fitness_name=individual.fitness_name,
+        topic_count=individual.topic_count,
+        force_dataset_settings_checkout=individual.force_dataset_settings_checkout,
+        train_option=individual.train_option,
     ) as (time_metrics, metrics, tm):
         individual.fitness_value = metrics
 
@@ -42,11 +42,11 @@ def do_fitness_calculating(
 
 
 def calculate_fitness(
-        individual: str,
-        log_artifact_and_parameters: bool = False,
-        log_run_stats: bool = False,
-        alg_args: Optional[str] = None,
-        is_tmp: bool = False
+    individual: str,
+    log_artifact_and_parameters: bool = False,
+    log_run_stats: bool = False,
+    alg_args: Optional[str] = None,
+    is_tmp: bool = False,
 ) -> str:
     try:
         return do_fitness_calculating(
@@ -71,16 +71,18 @@ def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
 
 
 def log_best_solution(
-        individual: IndividualDTO,
-        wait_for_result_timeout: Optional[float] = None,
-        alg_args: Optional[str] = None,
-        is_tmp: bool = False,
+    individual: IndividualDTO,
+    wait_for_result_timeout: Optional[float] = None,
+    alg_args: Optional[str] = None,
+    is_tmp: bool = False,
 ):
     logger.info(f"Sending a best individual to be logged")
     res = make_individual(
         fitness_from_json(
             calculate_fitness(
-                fitness_to_json(individual.dto), log_artifact_and_parameters=True, is_tmp=is_tmp
+                fitness_to_json(individual.dto),
+                log_artifact_and_parameters=True,
+                is_tmp=is_tmp,
             )
         )
     )
