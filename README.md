@@ -1,5 +1,5 @@
 
-<img align="left" src="docs/img/photo_2023-06-30_14-17-08.jpg" alt="Library scheme" height="60" id="hp"/>
+<img align="left" src="docs/img/MyLogo.png" alt="Library scheme" height="180"/>
 
 # AutoTM
 
