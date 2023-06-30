@@ -36,6 +36,7 @@ from autotm.algorithms_for_tuning.individuals import make_individual, Individual
 from autotm.algorithms_for_tuning.nelder_mead_optimization.nelder_mead import (
     NelderMeadOptimization,
 )
+from autotm.algorithms_for_tuning.limit_tracker import LimitTracker
 
 from autotm.utils import AVG_COHERENCE_SCORE
 from scipy.optimize import minimize
@@ -283,6 +284,20 @@ class GA:
         self.crossover_changes_dict = (
             {}
         )  # generation, parent_1_params, parent_2_params, ...
+        self.limit_tracker = LimitTracker(low_decor=self.low_decor,
+                                          high_decor=self.high_decor,
+                                          low_n=self.low_n,
+                                          high_n=self.high_n,
+                                          low_back=self.low_back,
+                                          high_back=self.high_back,
+                                          low_spb=self.low_spb,
+                                          high_spb=self.high_spb,
+                                          low_spm=self.low_spm,
+                                          high_spm=self.high_spm,
+                                          low_sp_phi=self.low_sp_phi,
+                                          high_sp_phi=self.high_sp_phi,
+                                          low_prob=self.low_prob,
+                                          high_prob=self.high_prob)
 
     def set_regularizer_limits(
             self,
@@ -1022,8 +1037,45 @@ class GA:
             )
             best_solution = population[0]
             log_best_solution(best_solution, alg_args=" ".join(sys.argv), is_tmp=True)
+            
+            # update regularizer limits            
+            self.limit_tracker.log_limits(low_decor=self.low_decor,
+                                          high_decor=self.high_decor,
+                                          low_n=self.low_n,
+                                          high_n=self.high_n,
+                                          low_back=self.low_back,
+                                          high_back=self.high_back,
+                                          low_spb=self.low_spb,
+                                          high_spb=self.high_spb,
+                                          low_spm=self.low_spm,
+                                          high_spm=self.high_spm,
+                                          low_sp_phi=self.low_sp_phi,
+                                          high_sp_phi=self.high_sp_phi,
+                                          low_prob=self.low_prob,
+                                          high_prob=self.high_prob,
+                                          fitness=best_solution.fitness_value
+                                          )
+            
+            new_limit = self.limit_tracker.update_limit()
+            self.set_regularizer_limits(
+                low_decor=new_limit['low_decor'],
+                high_decor=new_limit['high_decor'],
+                low_n=new_limit['low_n'],
+                high_n=new_limit['high_n'],
+                low_back=new_limit['low_back'],
+                high_back=new_limit['high_back'],
+                low_spb=new_limit['low_spb'],
+                high_spb=new_limit['high_spb'],
+                low_spm=new_limit['low_spm'],
+                high_spm=new_limit['high_spm'],
+                low_sp_phi=new_limit['low_sp_phi'],
+                high_sp_phi=new_limit['high_sp_phi'],
+                low_prob=new_limit['low_prob'],
+                high_prob=new_limit['high_prob'],
+            )            
 
         self.metric_collector.save_and_visualise_trace()
+        # self.limit_tracker.save_limits()
 
         logger.info(f"Y: {y}")
         best_individual = population[0]
