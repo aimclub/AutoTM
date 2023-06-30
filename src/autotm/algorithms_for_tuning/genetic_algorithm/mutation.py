@@ -120,7 +120,7 @@ def mutation_psm(individ, elem_mutation_prob=0.1, **kwargs):
                 individ[i] = individ[j]
                 individ[j] = tmp
             elif i in [3, 6]:
-                j = np.random.choice([2, 5])
+                j = np.random.choice([3, 6])
                 tmp = individ[i]
                 individ[i] = individ[j]
                 individ[j] = tmp
