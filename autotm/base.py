@@ -121,6 +121,13 @@ class AutoTM(BaseEstimator):
         raise NotImplementedError()
 
     @property
+    def text_preprocessor(self):
+        """
+        An object responsible for text preprocessing before applying ARTM model.
+        """
+        raise NotImplementedError()
+
+    @property
     def topics_extractor(self) -> TopicsExtractor:
         """
         An object responsible for topics mixture identification for texts in the incoming preprocessed dataset.
