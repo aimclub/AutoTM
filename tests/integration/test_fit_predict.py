@@ -3,7 +3,9 @@ import os
 import tempfile
 
 import pandas as pd
+import sklearn
 from numpy.typing import ArrayLike
+from sklearn.model_selection import train_test_split
 
 from autotm.base import AutoTM
 
@@ -17,6 +19,8 @@ def check_predictions(autotm: AutoTM, df: pd.DataFrame, mixtures: ArrayLike):
     assert n_samples_mixture == n_samples
     assert n_topics_mixture == n_topics
 
+    # TODO: check for nullability of the content in mixtures
+
 
 def test_fit_predict():
     # dataset with corpora to be processed
@@ -24,6 +28,7 @@ def test_fit_predict():
     alg_name = "ga"
 
     df = pd.read_csv(path_to_dataset)
+    train_df, test_df = train_test_split(df, test_size=0.1)
 
     with tempfile.TemporaryDirectory(prefix="fp_tmp_working_dir_") as tmp_working_dir:
         model_path = os.path.join(tmp_working_dir, "autotm_model")
@@ -43,13 +48,13 @@ def test_fit_predict():
             artm_train_options={"mode": "offline"},
             working_dir_path=tmp_working_dir
         )
-        mixtures = autotm.fit_predict(df)
-        check_predictions(autotm, df, mixtures)
+        mixtures = autotm.fit_predict(train_df)
+        check_predictions(autotm, train_df, mixtures)
 
         # saving the model
         autotm.save(model_path)
 
         # loading and checking if everything is fine with predicting
         autotm_loaded = AutoTM.load(model_path)
-        mixtures = autotm_loaded.predict(df)
-        check_predictions(autotm, df, mixtures)
+        mixtures = autotm_loaded.predict(test_df)
+        check_predictions(autotm, test_df, mixtures)
