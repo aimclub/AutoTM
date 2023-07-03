@@ -3,7 +3,6 @@ import os
 import tempfile
 
 import pandas as pd
-import sklearn
 from numpy.typing import ArrayLike
 from sklearn.model_selection import train_test_split
 
@@ -43,9 +42,9 @@ def test_fit_predict():
                 "num_iterations": 10,
                 "use_nelder_mead_in_mutation": False,
                 "use_nelder_mead_in_crossover": False,
-                "use_nelder_mead_in_selector": False
+                "use_nelder_mead_in_selector": False,
+                "train_option": "offline"
             },
-            artm_train_options={"mode": "offline"},
             working_dir_path=tmp_working_dir
         )
         mixtures = autotm.fit_predict(train_df)

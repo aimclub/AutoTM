@@ -8,12 +8,9 @@ import sys
 import time
 import uuid
 import warnings
-from os.path import abspath, exists
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
-import random
+from typing import Optional
 
 import numpy as np
-from sklearn.svm import SVR
 from sklearn.ensemble import BaggingRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -27,21 +24,19 @@ from sklearn.gaussian_process.kernels import (
 )
 from sklearn.metrics import mean_squared_error
 from sklearn.neural_network import MLPRegressor
+from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 
-from autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from autotm.algorithms_for_tuning.genetic_algorithm.crossover import crossover
+from autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
-from autotm.algorithms_for_tuning.individuals import make_individual, IndividualDTO
+from autotm.algorithms_for_tuning.individuals import make_individual, IndividualDTO, Individual
 from autotm.algorithms_for_tuning.nelder_mead_optimization.nelder_mead import (
     NelderMeadOptimization,
 )
-
-from autotm.utils import AVG_COHERENCE_SCORE
-from scipy.optimize import minimize
-from autotm.visualization.dynamic_tracker import MetricsCollector
-
 from autotm.fitness.tasks import estimate_fitness, log_best_solution
+from autotm.utils import AVG_COHERENCE_SCORE
+from autotm.visualization.dynamic_tracker import MetricsCollector
 
 ALG_ID = "ga"
 SPEEDUP = True
@@ -706,7 +701,7 @@ class GA:
             new_population.append(make_individual(dto=solution_dto))
         return new_population
 
-    def run(self, verbose=False):
+    def run(self, verbose=False) -> Individual:
         self.evaluations_counter = 0
         ftime = str(int(time.time()))
 
@@ -1032,7 +1027,7 @@ class GA:
             f"Logged the best solution. Obtained fitness is {ind.fitness_value}"
         )
 
-        return ind.fitness_value
+        return ind
 
 
 # multistage bag of regularizers approach

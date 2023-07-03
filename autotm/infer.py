@@ -1,4 +1,6 @@
 import os
+from typing import Union
+
 import yaml
 import json
 
@@ -116,9 +118,13 @@ def get_most_probable_words_from_phi(df, phi_df):
 
 
 class TopicsExtractor:
-    def __init__(self, model_path):
-        self.__tm_model_path = model_path
-        self.model = self.__load_model()
+    def __init__(self, model: Union[str, artm.ARTM]):
+        if isinstance(model, str):
+            self.__tm_model_path = model
+            self.model = self.__load_model()
+        else:
+            self.__tm_model_path = None
+            self.model = model
         self.__tmp_batches_path = "./tmp/tmp_batches/"
         self.__tmp_dict_path = "./tmp/tmp_dict/"
         self.topics_dict = self.model.score_tracker["TopTokensScore"].last_tokens

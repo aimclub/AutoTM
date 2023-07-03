@@ -1,11 +1,13 @@
 import logging
+import multiprocessing
 import os
 import pickle
+import sys
 import time
 import uuid
 from collections import OrderedDict
 from contextlib import contextmanager
-from typing import Dict, Optional, Tuple, ContextManager, List
+from typing import Dict, Optional, Tuple, ContextManager, List, Any
 import multiprocessing as mp
 
 import artm
@@ -235,7 +237,6 @@ class TopicModelFactory:
             )
             self.tm = TopicModel(
                 uid,
-                self.experiments_path,
                 self.topic_count,
                 self.num_processors,
                 dataset,
@@ -360,7 +361,6 @@ class TopicModel:
     def __init__(
         self,
         uid: uuid.UUID,
-        experiments_path: str,
         topic_count: int,
         num_processors: int,
         dataset: Dataset,
@@ -369,7 +369,6 @@ class TopicModel:
         train_option: str = "offline",
     ):
         self.uid = uid
-        self.experiments_path: str = experiments_path
         self.topic_count: int = topic_count
         self.num_processors: int = num_processors
         self.dataset = dataset
@@ -378,12 +377,7 @@ class TopicModel:
         self.model = None
         self.S = self.topic_count
         self.specific = ["main{}".format(i) for i in range(self.S)]
-
-        self.save_path = os.path.join(self.experiments_path, "best_model")
         self.decor_test = decor_test
-
-        if not os.path.exists(self.save_path):
-            os.makedirs(self.save_path)
 
         self.__set_params(params)
         self.back = ["back{}".format(i) for i in range(self.B)]
@@ -547,9 +541,6 @@ class TopicModel:
                 name="decorr", topic_names=self.specific, tau=self.decor
             )
         )
-
-    def dump_model(self, ii):
-        self.model.dump_artm_model(os.path.join(self.save_path, "model_{}".format(ii)))
 
     def save_model(self, path):
         self.model.dump_artm_model(path)
@@ -935,3 +926,25 @@ class TopicModel:
         }
 
         return scores_dict
+
+
+def fit_tm(preproc_data_path: str, topic_count: int, params: list, train_option: str) -> TopicModel:
+    with log_exec_timer("Loading dataset: "):
+        dataset = Dataset(base_path=preproc_data_path, topic_count=topic_count)
+        dataset.load_dataset()
+
+    tm = TopicModel(
+        uuid.uuid4(),
+        topic_count,
+        num_processors=multiprocessing.cpu_count(),
+        dataset=dataset,
+        params=params,
+        train_option=train_option,
+    )
+
+    tm.init_model()
+
+    with log_exec_timer("TM Training"):
+        tm.train()
+
+    return tm
