@@ -13,8 +13,7 @@ from sklearn.base import BaseEstimator
 
 from autotm.algorithms_for_tuning.bayesian_optimization import bayes_opt
 from autotm.algorithms_for_tuning.genetic_algorithm import genetic_algorithm
-from autotm.fitness.tm import TopicModel, extract_topics, print_topics
-
+from autotm.fitness.tm import extract_topics, print_topics
 from autotm.infer import TopicsExtractor
 from autotm.preprocessing.dictionaries_preparation import prepare_all_artifacts
 from autotm.preprocessing.text_preprocessing import process_dataset
@@ -51,7 +50,6 @@ class AutoTM(BaseEstimator):
         autotm._model = model
 
         return autotm
-
 
     def __init__(self,
                  topic_count: int = 10,
@@ -220,6 +218,7 @@ class AutoTM(BaseEstimator):
         """
         Saves AutoTM to a filesystem.
         :param path: local filesystem path to save AutoTM on
+        :param overwrite: if True and path: alredy exists, will try to remove path:
         """
         path_exists = os.path.exists(path)
         if path_exists and not overwrite:
