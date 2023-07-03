@@ -123,7 +123,3 @@ def run_algorithm(
     )
     best_value = g.run(verbose=True)
     print(best_value * (-1))
-
-
-if __name__ == "__main__":
-    run_algorithm()
