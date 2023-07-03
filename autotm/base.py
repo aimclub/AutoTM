@@ -4,6 +4,7 @@ import tempfile
 import uuid
 from typing import Union, Optional, Any, Dict
 
+import artm
 import pandas as pd
 from numpy.typing import ArrayLike
 from sklearn.base import BaseEstimator
@@ -81,7 +82,7 @@ class AutoTM(BaseEstimator):
         self.exp_id = exp_id
         self.exp_tag = exp_tag
         self.exp_dataset_name = exp_dataset_name
-        self._topics_extractor: Optional[TopicsExtractor] = None
+        self._model: Optional[artm.ARTM] = None
 
     def fit(self, dataset: Union[pd.DataFrame, pd.Series]) -> 'AutoTM':
         """
@@ -137,8 +138,7 @@ class AutoTM(BaseEstimator):
                 **self.alg_params
             )
 
-        self._topics_extractor = TopicsExtractor(best_topic_model.model)
-        # TODO: preprocessor as an estimator is absent
+        self._model = best_topic_model.model
 
         return self
 
@@ -159,8 +159,11 @@ class AutoTM(BaseEstimator):
             Returns the probabilities of each topic to be in the every given text.
             Topic's probabilities are ordered according to topics ordering in 'self.topics' property.
         """
-        self._topics_extractor.get_prob_mixture()
-        raise NotImplementedError()
+        with tempfile.TemporaryDirectory(dir=self.working_dir_path) as extractor_working_dir:
+            topics_extractor = TopicsExtractor(self._model)
+            mixtures = topics_extractor.get_prob_mixture(dataset=dataset, working_dir=extractor_working_dir)
+
+        return mixtures
 
     def fit_predict(self, dataset: Union[pd.DataFrame, pd.Series]) -> ArrayLike:
         """
@@ -180,26 +183,13 @@ class AutoTM(BaseEstimator):
             Returns the probabilities of each topic to be in the every given text.
             Topic's probabilities are ordered according to topics ordering in 'self.topics' property.
         """
-        raise NotImplementedError()
+        self.fit(dataset)
+        return self.predict(dataset)
 
     def save(self, path: str):
         """
         Saves AutoTM to a filesystem.
         :param path: local filesystem path to save AutoTM on
-        """
-        raise NotImplementedError()
-
-    @property
-    def text_preprocessor(self):
-        """
-        An object responsible for text preprocessing before applying ARTM model.
-        """
-        raise NotImplementedError()
-
-    @property
-    def topics_extractor(self) -> TopicsExtractor:
-        """
-        An object responsible for topics mixture identification for texts in the incoming preprocessed dataset.
         """
         raise NotImplementedError()
 
