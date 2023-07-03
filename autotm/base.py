@@ -18,6 +18,7 @@ class AutoTM(BaseEstimator):
 
     def __init__(self,
                  topic_count: int = 10,
+                 preprocessing_params: Optional[Dict[str, Any]] = None,
                  alg_name: str = "ga",
                  alg_params: Optional[Dict[str, Any]] = None,
                  surrogate_alg_name: Optional[str] = None,
@@ -33,6 +34,7 @@ class AutoTM(BaseEstimator):
         """
         
         :param topic_count: Count of topics to fit ARTM model with
+        :param preprocessing_params: A dict with params for the preprocessor
         :param alg_name: An algorithm to use for hyper parameters tuning of ARTM model (available: ga, bayes)
         :param alg_params: A dict with the algorithm specific parameters. Depends on alg_name. 
             If not specified default parameters will be used.
@@ -93,7 +95,7 @@ class AutoTM(BaseEstimator):
         """
         raise NotImplementedError()
 
-    def fit_predict(self, dataset: Union[pd.DataFrame, pd.Series, str]) -> pd.Series:
+    def fit_predict(self, dataset: Union[pd.DataFrame, pd.Series, str]) -> ArrayLike:
         """
         Preprocess texts in the datasets, looks for the best hyperparameters for ARTM model, fits the model
         with these parameters and predict topics mixtures for individual documents in the incoming corpus.
