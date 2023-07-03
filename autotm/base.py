@@ -2,14 +2,19 @@ from typing import Union, Optional, Any, Dict
 
 import pandas as pd
 from numpy.typing import ArrayLike
+from sklearn.base import BaseEstimator
 
 from autotm.infer import TopicsExtractor
 
 
-class AutoTM:
+class AutoTM(BaseEstimator):
     @classmethod
     def load(cls, path: str) -> 'AutoTM':
-        pass
+        """
+        Loads AutoTM instance from a path on local filesystem.
+        :param path: a local filesystem path to load an AutoTM instance from.
+        """
+        raise NotImplementedError()
 
     def __init__(self,
                  topic_count: int = 10,
@@ -18,12 +23,36 @@ class AutoTM:
                  surrogate_alg_name: Optional[str] = None,
                  surrogate_alg_params: Optional[Dict[str, Any]] = None,
                  artm_train_options: Optional[Dict[str, Any]] = None,
-                 intermediate_tmp_files_path: str = '/tmp',
+                 working_dir_path: Optional[str] = None,
                  texts_column_name: str = "text",
                  log_file_path: Optional[str] = None,
                  exp_id: Optional[str] = None,
-                 tag: Optional[str] = None,
+                 exp_tag: Optional[str] = None,
+                 exp_dataset_name: Optional[str] = None
                  ):
+        """
+        
+        :param topic_count: Count of topics to fit ARTM model with
+        :param alg_name: An algorithm to use for hyper parameters tuning of ARTM model (available: ga, bayes)
+        :param alg_params: A dict with the algorithm specific parameters. Depends on alg_name. 
+            If not specified default parameters will be used.
+        :param surrogate_alg_name: An algorithm to use for surrogate training during hyperparameter optimization 
+            to reduce number of fitness estimations with real ARTM model fitting. 
+            If not specifed, no surrogates will be used for hyper parameters search.
+        :param surrogate_alg_params: A dict with the surrogate algorithm specific parameters. 
+            Depends on surrogate_alg_name. Should not be specified if surrogate_alg_name is not defined.
+        :param artm_train_options: A dict with additional training options for underlying BigARTM implementation.
+        :param working_dir_path: A directory where a nested temporary folder is created 
+            to store intermediate BigARTM files and other supplementary files.
+            By default, working directory the current process is running with.
+        :param texts_column_name: A name of the column in Pandas DataFrame to read texts of the dataset,
+            if the dataset is represented as a 'pd.DataFrame'.
+        :param log_file_path: A file path to log file for an optimization process.
+        :param exp_id: An experiment id for an experiment versioning system (for example, Mlflow)
+            to use for reporting final and intermediate results and metrics. Only Mlflow is currently supported.
+        :param exp_tag: An experiment tag to log into Mlflow for later search purposes.
+        :param exp_dataset_name: A dataset name to log into Mlflow for later search purposes.
+        """
         pass
 
     def fit(self, dataset: Union[pd.DataFrame, pd.Series]) -> 'AutoTM':
@@ -85,7 +114,11 @@ class AutoTM:
         raise NotImplementedError()
 
     def save(self, path: str):
-        pass
+        """
+        Saves AutoTM to a filesystem.
+        :param path: local filesystem path to save AutoTM on
+        """
+        raise NotImplementedError()
 
     @property
     def topics_extractor(self) -> TopicsExtractor:
