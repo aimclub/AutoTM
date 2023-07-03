@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Optional, Any, Dict
 
 import pandas as pd
 from numpy.typing import ArrayLike
@@ -11,7 +11,19 @@ class AutoTM:
     def load(cls, path: str) -> 'AutoTM':
         pass
 
-    def __init__(self):
+    def __init__(self,
+                 topic_count: int = 10,
+                 alg_name: str = "ga",
+                 alg_params: Optional[Dict[str, Any]] = None,
+                 surrogate_alg_name: Optional[str] = None,
+                 surrogate_alg_params: Optional[Dict[str, Any]] = None,
+                 artm_train_options: Optional[Dict[str, Any]] = None,
+                 intermediate_tmp_files_path: str = '/tmp',
+                 texts_column_name: str = "text",
+                 log_file_path: Optional[str] = None,
+                 exp_id: Optional[str] = None,
+                 tag: Optional[str] = None,
+                 ):
         pass
 
     def fit(self, dataset: Union[pd.DataFrame, pd.Series]) -> 'AutoTM':
@@ -21,7 +33,9 @@ class AutoTM:
 
         Parameters
         ----------
-        dataset : DataFrame or Series containing texts of the corpus of size 'n_samples'.
+        dataset : DataFrame, Series containing texts of the corpus of size 'n_samples'.
+            If dataset is DataFrame, the column containing texts will be identified
+            from value of 'self.texts_column_name'.
 
         Returns
         -------
@@ -31,7 +45,7 @@ class AutoTM:
         """
         raise NotImplementedError()
 
-    def predict(self, dataset: Union[pd.DataFrame, pd.Series]) -> ArrayLike:
+    def predict(self, dataset: Union[pd.DataFrame, pd.Series, str]) -> ArrayLike:
         """
         Looks for the best hyperparameters for ARTM model, fits the model with these parameters
         and predict topics mixtures for individual documents in the incoming corpus.
@@ -39,6 +53,8 @@ class AutoTM:
         Parameters
         ----------
         dataset : DataFrame or Series containing texts of the corpus of size 'n_samples'.
+            If dataset is DataFrame, the column containing texts will be identified
+            from value of 'self.texts_column_name'.
 
         Returns
         -------
@@ -48,7 +64,7 @@ class AutoTM:
         """
         raise NotImplementedError()
 
-    def fit_predict(self, dataset: Union[pd.DataFrame, pd.Series]) -> pd.Series:
+    def fit_predict(self, dataset: Union[pd.DataFrame, pd.Series, str]) -> pd.Series:
         """
         Preprocess texts in the datasets, looks for the best hyperparameters for ARTM model, fits the model
         with these parameters and predict topics mixtures for individual documents in the incoming corpus.
@@ -57,6 +73,8 @@ class AutoTM:
         Parameters
         ----------
         dataset : DataFrame or Series containing texts of the corpus of size 'n_samples'.
+            If dataset is DataFrame, the column containing texts will be identified
+            from value of 'self.texts_column_name'.
 
         Returns
         -------
