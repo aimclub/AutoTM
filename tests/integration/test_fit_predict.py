@@ -1,4 +1,6 @@
 import logging
+import os
+import tempfile
 
 import pandas as pd
 from numpy.typing import ArrayLike
@@ -18,33 +20,36 @@ def check_predictions(autotm: AutoTM, df: pd.DataFrame, mixtures: ArrayLike):
 
 def test_fit_predict():
     # dataset with corpora to be processed
-    path_to_dataset = "../data/sample_corpora/sample_dataset_lenta.csv"
-    model_path = "/tmp/autotm_model"
+    path_to_dataset = "../../data/sample_corpora/sample_dataset_lenta.csv"
+    alg_name = "ga"
 
     df = pd.read_csv(path_to_dataset)
 
-    autotm = AutoTM(
-        preprocessing_params={
-            "lang": "ru",
-            "min_tokens_count": 3
-        },
-        alg_name="ga",
-        alg_params={
-            "num_iterations": 10,
-            "use_nelder_mead_in_mutation": False,
-            "use_nelder_mead_in_crossover": False,
-            "use_nelder_mead_in_selector": False
-        },
-        artm_train_options={"mode": "offline"},
-        working_dir_path="/tmp"
-    )
-    mixtures = autotm.fit_predict(df)
-    check_predictions(autotm, df, mixtures)
+    with tempfile.TemporaryDirectory(prefix="fp_tmp_working_dir_") as tmp_working_dir:
+        model_path = os.path.join(tmp_working_dir, "autotm_model")
 
-    # saving the model
-    autotm.save(model_path)
+        autotm = AutoTM(
+            preprocessing_params={
+                "lang": "ru",
+                "min_tokens_count": 3
+            },
+            alg_name=alg_name,
+            alg_params={
+                "num_iterations": 10,
+                "use_nelder_mead_in_mutation": False,
+                "use_nelder_mead_in_crossover": False,
+                "use_nelder_mead_in_selector": False
+            },
+            artm_train_options={"mode": "offline"},
+            working_dir_path=tmp_working_dir
+        )
+        mixtures = autotm.fit_predict(df)
+        check_predictions(autotm, df, mixtures)
 
-    # loading and checking if everything is fine with predicting
-    autotm_loaded = AutoTM.load(model_path)
-    mixtures = autotm_loaded.predict(df)
-    check_predictions(autotm, df, mixtures)
+        # saving the model
+        autotm.save(model_path)
+
+        # loading and checking if everything is fine with predicting
+        autotm_loaded = AutoTM.load(model_path)
+        mixtures = autotm_loaded.predict(df)
+        check_predictions(autotm, df, mixtures)
