@@ -8,8 +8,8 @@ from autotm.preprocessing.text_preprocessing import process_dataset
 # )
 
 path_to_trained_model = "/home/nikolay/wspace/AutoTM/examples/mlruns/" \
-                        "301330920378617745/2fd5195570c34a9da5c309b272da5241/artifacts/" \
-                        "model.artm/2c5bcf85-bf38-4f9a-91cc-43793c50f2e1.artm"
+                        "359967814084496879/1fbffcb5458646959a2ef92a455d7141/artifacts/model.artm/" \
+                        "7f9c71e1-ae35-4b55-bb82-35630b2997da.artm"
 
 path_to_dataset = "../data/sample_corpora/sample_dataset_lenta.csv"
 save_processed_dataset_path = "../data/processed_sample_corpora/"
