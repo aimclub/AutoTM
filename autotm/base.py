@@ -1,5 +1,7 @@
 import logging
 import os
+import pickle
+import shutil
 import tempfile
 import uuid
 from typing import Union, Optional, Any, Dict, List
@@ -11,7 +13,7 @@ from sklearn.base import BaseEstimator
 
 from autotm.algorithms_for_tuning.bayesian_optimization import bayes_opt
 from autotm.algorithms_for_tuning.genetic_algorithm import genetic_algorithm
-from autotm.fitness.tm import TopicModel
+from autotm.fitness.tm import TopicModel, extract_topics, print_topics
 
 from autotm.infer import TopicsExtractor
 from autotm.preprocessing.dictionaries_preparation import prepare_all_artifacts
@@ -21,6 +23,8 @@ logger = logging.getLogger(__name__)
 
 
 class AutoTM(BaseEstimator):
+    _ARTM_MODEL_FILENAME = "artm_model"
+    _AUTOTM_DATA_FILENAME = "autotm_data"
     _SUPPORTED_ALGS = ["ga", "baeys"]
 
     @classmethod
@@ -29,7 +33,25 @@ class AutoTM(BaseEstimator):
         Loads AutoTM instance from a path on local filesystem.
         :param path: a local filesystem path to load an AutoTM instance from.
         """
-        raise NotImplementedError()
+        assert os.path.exists(path), f"Path doesn't exist: {path}"
+
+        artm_model_path = os.path.join(path, cls._ARTM_MODEL_FILENAME)
+        autotm_data_path = os.path.join(path, cls._AUTOTM_DATA_FILENAME)
+
+        if not (os.path.exists(artm_model_path) and os.path.exists(autotm_data_path)):
+            raise FileNotFoundError(f"One or two of the follwing paths don't exist: "
+                                    f"{artm_model_path}, {autotm_data_path}")
+
+        model = artm.load_artm_model(artm_model_path)
+
+        with open(autotm_data_path, "rb") as f:
+            params = pickle.load(f)
+
+        autotm = AutoTM(**params)
+        autotm._model = model
+
+        return autotm
+
 
     def __init__(self,
                  topic_count: int = 10,
@@ -83,7 +105,7 @@ class AutoTM(BaseEstimator):
         self.exp_id = exp_id
         self.exp_tag = exp_tag
         self.exp_dataset_name = exp_dataset_name
-        self._model: Optional[TopicModel] = None
+        self._model: Optional[artm.ARTM] = None
 
     def fit(self, dataset: Union[pd.DataFrame, pd.Series]) -> 'AutoTM':
         """
@@ -122,6 +144,7 @@ class AutoTM(BaseEstimator):
                              f"Only the following algorithms are supported: {self._SUPPORTED_ALGS}")
 
         if self.alg_name == "ga":
+            # TODO: add checking of surrogate alg names
             # TODO: make mlflow arguments optional
             # exp_id and dataset_name will be needed further to store results in mlflow
             best_topic_model = genetic_algorithm.run_algorithm(
@@ -141,7 +164,7 @@ class AutoTM(BaseEstimator):
                 **self.alg_params
             )
 
-        self._model = best_topic_model
+        self._model = best_topic_model.model
 
         return self
 
@@ -165,7 +188,7 @@ class AutoTM(BaseEstimator):
         self._check_if_already_fitted()
 
         with tempfile.TemporaryDirectory(dir=self.working_dir_path) as extractor_working_dir:
-            topics_extractor = TopicsExtractor(self._model.model)
+            topics_extractor = TopicsExtractor(self._model)
             mixtures = topics_extractor.get_prob_mixture(dataset=dataset, working_dir=extractor_working_dir)
 
         return mixtures
@@ -193,12 +216,26 @@ class AutoTM(BaseEstimator):
         self.fit(dataset)
         return self.predict(dataset)
 
-    def save(self, path: str):
+    def save(self, path: str, overwrite: bool = False):
         """
         Saves AutoTM to a filesystem.
         :param path: local filesystem path to save AutoTM on
         """
-        raise NotImplementedError()
+        path_exists = os.path.exists(path)
+        if path_exists and not overwrite:
+            raise RuntimeError("The path is already exists and is not allowed to overwrite")
+        elif path_exists:
+            logger.debug(f"Removing existing path: {path}")
+            shutil.rmtree(path)
+
+        os.makedirs(path)
+
+        artm_model_path = os.path.join(path, self._ARTM_MODEL_FILENAME)
+        autotm_data_path = os.path.join(path, self._AUTOTM_DATA_FILENAME)
+
+        self._model.dump_artm_model(artm_model_path)
+        with open(autotm_data_path, "wb") as f:
+            pickle.dump(self.get_params(), f)
 
     @property
     def topics(self) -> Dict[str, List[str]]:
@@ -206,14 +243,14 @@ class AutoTM(BaseEstimator):
         Inferred set of topics with their respective top words.
         """
         self._check_if_already_fitted()
-        return self._model.get_topics()
+        return extract_topics(self._model)
 
     def print_topics(self):
         """
         Print topics in a human readable form in stdout
         """
         self._check_if_already_fitted()
-        self._model.print_topics()
+        print_topics(self._model)
 
     def _check_if_already_fitted(self, fit_is_ok=True):
         if fit_is_ok and self._model is None:

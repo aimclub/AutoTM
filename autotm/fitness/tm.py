@@ -31,6 +31,25 @@ logger = logging.getLogger()
 logging.basicConfig(level="INFO")
 
 
+def extract_topics(model: artm.ARTM):
+    if "TopTokensScore" not in model.score_tracker:
+        logger.warning(
+            f"Key 'TopTokensScore' is not presented in the model's score_tracker. "
+            f"Returning empty dict of topics."
+        )
+        return dict()
+    res = model.score_tracker["TopTokensScore"].last_tokens
+    topics = {topic: tokens[:50] for topic, tokens in res.items()}
+    return topics
+
+
+def print_topics(model: artm.ARTM):
+    for i, (topic, top_tokens) in enumerate(extract_topics(model).items()):
+        print(topic)
+        print(top_tokens)
+        print()
+
+
 class Dataset:
     _batches_path: str = "batches"
     _wv_path: str = "test_set_data_voc.txt"
@@ -546,21 +565,10 @@ class TopicModel:
         self.model.dump_artm_model(path)
 
     def print_topics(self):
-        for i, (topic, top_tokens) in enumerate(self.get_topics().items()):
-            print(topic)
-            print(top_tokens)
-            print()
+        print_topics(self.model)
 
     def get_topics(self):
-        if "TopTokensScore" not in self.model.score_tracker:
-            logger.warning(
-                f"Key 'TopTokensScore' is not presented in the model's (uid={self.uid}) score_tracker. "
-                f"Returning empty dict of topics."
-            )
-            return dict()
-        res = self.model.score_tracker["TopTokensScore"].last_tokens
-        topics = {topic: tokens[:50] for topic, tokens in res.items()}
-        return topics
+        return extract_topics(self.model)
 
     def _get_avg_coherence_score(self, for_individ_fitness=False):
         coherences_main, coherences_back = self.__return_all_tokens_coherence(
