@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 
 from autotm.base import AutoTM
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 

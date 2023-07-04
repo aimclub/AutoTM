@@ -125,6 +125,10 @@ class AutoTM(BaseEstimator):
 
         processed_dataset_path = os.path.join(self.working_dir_path, f"{uuid.uuid4()}")
 
+        logger.info(f"Stage 0: Create working dir {self.working_dir_path} if not exists")
+
+        os.makedirs(self.working_dir_path, exist_ok=True)
+
         logger.info("Stage 1: Dataset preparation")
         # TODO: convert Series to DataFrame
         process_dataset(
@@ -165,7 +169,7 @@ class AutoTM(BaseEstimator):
 
         return self
 
-    def predict(self, dataset: Union[pd.DataFrame, pd.Series]) -> ArrayLike:
+    def predict(self, dataset: Union[pd.DataFrame, pd.Series]) -> pd.DataFrame:
         """
         Looks for the best hyperparameters for ARTM model, fits the model with these parameters
         and predict topics mixtures for individual documents in the incoming corpus.
@@ -178,7 +182,7 @@ class AutoTM(BaseEstimator):
 
         Returns
         -------
-        T : array-like of shape (n_samples, n_topics)
+        T : DataFrame of shape (n_samples, n_topics)
             Returns the probabilities of each topic to be in the every given text.
             Topic's probabilities are ordered according to topics ordering in 'self.topics' property.
         """
@@ -190,7 +194,7 @@ class AutoTM(BaseEstimator):
 
         return mixtures
 
-    def fit_predict(self, dataset: Union[pd.DataFrame, pd.Series]) -> ArrayLike:
+    def fit_predict(self, dataset: Union[pd.DataFrame, pd.Series]) -> pd.DataFrame:
         """
         Preprocess texts in the datasets, looks for the best hyperparameters for ARTM model, fits the model
         with these parameters and predict topics mixtures for individual documents in the incoming corpus.
@@ -204,7 +208,7 @@ class AutoTM(BaseEstimator):
 
         Returns
         -------
-        T : array-like of shape (n_samples, n_topics)
+        T : DataFrame of shape (n_samples, n_topics)
             Returns the probabilities of each topic to be in the every given text.
             Topic's probabilities are ordered according to topics ordering in 'self.topics' property.
         """

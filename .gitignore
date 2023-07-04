@@ -160,6 +160,8 @@ tests/integration/mlruns/*
 tests/integration/metrics
 *mlruns/*
 *metrics/*
+autotm_workdir_*
+requirements.txt
 
 # sphinx docs
 docs/_build

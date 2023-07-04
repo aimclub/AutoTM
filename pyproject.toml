@@ -11,7 +11,7 @@ license = "Apache-2.0"
 homepage = "https://autotm.readthedocs.io/en/latest/"
 repository = "https://github.com/ngc436/AutoTM"
 packages = [
-    {include = "src/autotm"}
+    {include = "autotm"}
 ]
 
 
@@ -32,7 +32,7 @@ hyperopt = "*"
 pymystem3 = "*"
 nltk = "*"
 plotly = "*"
-spacy = "*"
+spacy = ">=3.5"
 spacy-langdetect = "*"
 gensim = "*"
 pandas = "*"
