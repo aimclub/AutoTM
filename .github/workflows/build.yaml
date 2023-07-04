@@ -27,17 +27,15 @@ jobs:
             python -m pip install --upgrade pip
             python -m pip install flake8 pytest poetry
             poetry export -f requirements.txt --without-hashes --with dev > requirements.txt
-            pip install -r requirements.txt
+            pip install --ignore-installed -r requirements.txt
       - name: Download english corpus
         run: python -m spacy download en_core_web_sm
       - name: set pythonpath
-        working-directory: src
         run: |
           echo "PYTHONPATH=." >> $GITHUB_ENV
       - name: Lint with flake8
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
       - name: Run test code
-        working-directory: src
-        run: python ../examples/full_pipeline_example.py
+        run: python examples/full_pipeline_example.py
       - run: echo "🍏 This job's status is ${{ job.status }}."
