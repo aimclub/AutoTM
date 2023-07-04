@@ -701,7 +701,7 @@ class GA:
             new_population.append(make_individual(dto=solution_dto))
         return new_population
 
-    def run(self, verbose=False) -> Individual:
+    def run(self, verbose=False, visualize_results=False) -> Individual:
         self.evaluations_counter = 0
         ftime = str(int(time.time()))
 
@@ -1018,7 +1018,10 @@ class GA:
             best_solution = population[0]
             log_best_solution(best_solution, alg_args=" ".join(sys.argv), is_tmp=True)
 
-        self.metric_collector.save_and_visualise_trace()
+        if visualize_results:
+            self.metric_collector.save_and_visualise_trace()
+        else:
+            self.metric_collector.save_trace()
 
         logger.info(f"Y: {y}")
         best_individual = population[0]

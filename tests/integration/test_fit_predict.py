@@ -17,8 +17,8 @@ def check_predictions(autotm: AutoTM, df: pd.DataFrame, mixtures: ArrayLike):
 
     assert n_samples_mixture == n_samples
     assert n_topics_mixture == n_topics
-
-    # TODO: check for nullability of the content in mixtures
+    assert (~mixtures.isna()).all().all()
+    assert (~mixtures.isnull()).all().all()
 
 
 def test_fit_predict():
