@@ -936,10 +936,7 @@ class GA:
                         )
                         population[i] = elem
 
-            if (
-                self.num_fitness_evaluations
-                and self.evaluations_counter >= self.num_fitness_evaluations
-            ):
+            if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 self.metric_collector.save_fitness(
                     generation=ii,
                     params=[i.params for i in population],

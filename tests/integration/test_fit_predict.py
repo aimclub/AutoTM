@@ -23,7 +23,7 @@ def check_predictions(autotm: AutoTM, df: pd.DataFrame, mixtures: ArrayLike):
 
 def test_fit_predict():
     # dataset with corpora to be processed
-    path_to_dataset = "../../data/sample_corpora/sample_dataset_lenta.csv"
+    path_to_dataset = "data/sample_corpora/sample_dataset_lenta.csv"
     alg_name = "ga"
 
     df = pd.read_csv(path_to_dataset)

@@ -158,6 +158,8 @@ bigartm.*
 coverage_re/
 tests/integration/mlruns/*
 tests/integration/metrics
+*mlruns/*
+*metrics/*
 
 # sphinx docs
 docs/_build

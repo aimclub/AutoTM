@@ -15,6 +15,7 @@ from spacy_langdetect import LanguageDetector
 from nltk.stem import WordNetLemmatizer
 
 nltk.download("stopwords")
+nltk.download("wordnet")
 
 stop = stopwords.words("russian") + [" "] + stopwords.words("english")
 

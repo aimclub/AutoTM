@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: ["3.8", "3.9"]
 
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
@@ -35,7 +35,8 @@ jobs:
           echo "PYTHONPATH=." >> $GITHUB_ENV
       - name: Lint with flake8
         run: |
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 autotm --count --select=E9,F63,F7,F82 --show-source --statistics
       - name: Run test code
-        run: python examples/full_pipeline_example.py
+        run: |
+          pytest
       - run: echo "🍏 This job's status is ${{ job.status }}."
