@@ -67,19 +67,18 @@ class AutoTM(BaseEstimator):
                  exp_dataset_name: Optional[str] = None
                  ):
         """
-        
         :param topic_count: Count of topics to fit ARTM model with
         :param preprocessing_params: A dict with params for the preprocessor
         :param alg_name: An algorithm to use for hyper parameters tuning of ARTM model (available: ga, bayes)
-        :param alg_params: A dict with the algorithm specific parameters. Depends on alg_name. 
+        :param alg_params: A dict with the algorithm specific parameters. Depends on alg_name.
             If not specified default parameters will be used.
-        :param surrogate_alg_name: An algorithm to use for surrogate training during hyperparameter optimization 
-            to reduce number of fitness estimations with real ARTM model fitting. 
+        :param surrogate_alg_name: An algorithm to use for surrogate training during hyperparameter optimization
+            to reduce number of fitness estimations with real ARTM model fitting.
             If not specifed, no surrogates will be used for hyper parameters search.
-        :param surrogate_alg_params: A dict with the surrogate algorithm specific parameters. 
+        :param surrogate_alg_params: A dict with the surrogate algorithm specific parameters.
             Depends on surrogate_alg_name. Should not be specified if surrogate_alg_name is not defined.
         :param artm_train_options: A dict with additional training options for underlying BigARTM implementation.
-        :param working_dir_path: A directory where a nested temporary folder is created 
+        :param working_dir_path: A directory where a nested temporary folder is created
             to store intermediate BigARTM files and other supplementary files.
             By default, working directory the current process is running with.
         :param texts_column_name: A name of the column in Pandas DataFrame to read texts of the dataset,

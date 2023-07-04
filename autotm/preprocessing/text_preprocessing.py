@@ -6,8 +6,6 @@ import pymystem3
 from nltk.corpus import stopwords, wordnet
 from autotm.utils import parallelize_dataframe
 import nltk
-
-nltk.download("stopwords")
 import re
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -15,6 +13,8 @@ import spacy
 from spacy.language import Language
 from spacy_langdetect import LanguageDetector
 from nltk.stem import WordNetLemmatizer
+
+nltk.download("stopwords")
 
 stop = stopwords.words("russian") + [" "] + stopwords.words("english")
 

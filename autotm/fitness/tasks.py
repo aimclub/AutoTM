@@ -54,7 +54,7 @@ def calculate_fitness(
         )
     except Exception as e:
         print(str(e))
-        raise Exception(f"Some exception")
+        raise Exception("Some exception")
 
 
 def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
@@ -76,7 +76,7 @@ def log_best_solution(
     alg_args: Optional[str] = None,
     is_tmp: bool = False,
 ):
-    logger.info(f"Sending a best individual to be logged")
+    logger.info("Sending a best individual to be logged")
     res = make_individual(
         fitness_from_json(
             calculate_fitness(

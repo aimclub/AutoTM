@@ -6,7 +6,6 @@ import random
 import sys
 import uuid
 import warnings
-from logging import config
 from multiprocessing.pool import AsyncResult
 from typing import List, Optional, Union
 
@@ -68,6 +67,7 @@ def estimate_fitness(
         results.append(individual)
 
     return results
+
 
 def log_best_solution(
     individual: IndividualDTO,

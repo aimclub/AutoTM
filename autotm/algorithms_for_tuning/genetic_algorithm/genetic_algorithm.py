@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 import logging
 import sys
-from logging import config
-import warnings
-import yaml
-from yaml import Loader
-from typing import Union
-
 import uuid
+import warnings
+from typing import Union
 
 from autotm.algorithms_for_tuning.genetic_algorithm.ga import GA
 from autotm.fitness.tm import fit_tm, TopicModel

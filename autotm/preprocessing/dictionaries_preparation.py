@@ -55,7 +55,7 @@ def _calculate_cooc_df_dict(data: list, vocab: List[str], window: int = 10) -> d
         document_cooc_df_dict = {}
         splitted = [word for word in text.split() if word in existing_vocab]
         for i in range(0, len(splitted) - window):
-            for comb in itertools.combinations(splitted[i : i + window], 2):  # speed up
+            for comb in itertools.combinations(splitted[i: i + window], 2):  # speed up
                 comb = tuple(sorted(comb))  # adding comb sorting
                 if comb in document_cooc_df_dict:
                     continue
@@ -75,7 +75,7 @@ def _calculate_cooc_tf_dict(data: list, vocab: List[str], window: int = 10) -> d
         document_cooc_tf_dict = {}
         splitted = [word for word in text.split() if word in existing_vocab]
         for i in range(0, len(splitted) - window):
-            for comb in itertools.combinations(splitted[i : i + window], 2):
+            for comb in itertools.combinations(splitted[i: i + window], 2):
                 if comb in document_cooc_tf_dict:
                     document_cooc_tf_dict[comb] += 1
                 else:
@@ -88,7 +88,6 @@ def _calculate_cooc_tf_dict(data: list, vocab: List[str], window: int = 10) -> d
         counter = Counter(document_cooc_tf_dict)
         counter.update(cooc_tf_dict)
         cooc_tf_dict = dict(counter)
-        k = 0
     return cooc_tf_dict, term_freq_dict
     # local_num_of_pairs += 2
     # pass
@@ -157,11 +156,11 @@ def convert_to_vw_format_and_save(cooc_dict, vocab_words, vw_path):
     for item in sorted(t_cooc_dict.items(), key=lambda key: key[0]):
         if item == RESERVED_TUPLE:
             continue
-        word_1 = item[0][0]  # TODO: check this
-        word_2 = item[0][1]
-        if vocab_words.index(item[0][0]) > vocab_words.index(item[0][1]):
-            word_2 = item[0][0]
-            word_1 = item[0][1]
+        # word_1 = item[0][0]  # TODO: check this
+        # word_2 = item[0][1]
+        # if vocab_words.index(item[0][0]) > vocab_words.index(item[0][1]):
+        #     word_2 = item[0][0]
+        #     word_1 = item[0][1]
         if item[0][0] in data_dict:
             data_dict[item[0][0]].append(f"{item[0][1]}:{item[1]}")
         else:
@@ -337,7 +336,7 @@ def prepare_all_artifacts(save_path: str):
     DOCUMENTS_TO_BATCH_PATH = os.path.join(save_path, "ppp.csv")
 
     # TODO: check why batch vectorizer is returned (unused further)
-    batch_vectorizer = prepare_batch_vectorizer(
+    prepare_batch_vectorizer(
         BATCHES_DIR, WV_PATH, DOCUMENTS_TO_BATCH_PATH
     )
 

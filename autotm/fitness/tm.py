@@ -1,23 +1,22 @@
 import logging
 import multiprocessing
+import multiprocessing as mp
 import os
 import pickle
-import sys
 import time
 import uuid
 from collections import OrderedDict
 from contextlib import contextmanager
-from typing import Dict, Optional, Tuple, ContextManager, List, Any
-import multiprocessing as mp
+from typing import Dict, Optional, Tuple, ContextManager, List
 
 import artm
 import gensim.corpora as corpora
 import numpy as np
 import pandas as pd
 from billiard.exceptions import SoftTimeLimitExceeded
-from gensim.models.coherencemodel import CoherenceModel
 from tqdm import tqdm
 
+from autotm.batch_vect_utils import SampleBatchVectorizer
 from autotm.fitness.external_scores import ts_bground, ts_uniform, ts_vacuous, switchp
 from autotm.utils import (
     MetricsScores,
@@ -25,7 +24,6 @@ from autotm.utils import (
     TimeMeasurements,
     log_exec_timer,
 )
-from autotm.batch_vect_utils import SampleBatchVectorizer
 
 logger = logging.getLogger()
 logging.basicConfig(level="INFO")
@@ -34,8 +32,8 @@ logging.basicConfig(level="INFO")
 def extract_topics(model: artm.ARTM):
     if "TopTokensScore" not in model.score_tracker:
         logger.warning(
-            f"Key 'TopTokensScore' is not presented in the model's score_tracker. "
-            f"Returning empty dict of topics."
+            "Key 'TopTokensScore' is not presented in the model's score_tracker. "
+            "Returning empty dict of topics."
         )
         return dict()
     res = model.score_tracker["TopTokensScore"].last_tokens
@@ -688,7 +686,7 @@ class TopicModel:
         tokens = tokens[:top]
         total_sum = 0
         for ix, token_1 in enumerate(tokens[:-1]):
-            for ij, token_2 in enumerate(tokens[(ix + 1) :]):
+            for ij, token_2 in enumerate(tokens[(ix + 1):]):
                 try:
                     total_sum += self.dataset.mutual_info_dict[
                         "{}_{}".format(token_1, token_2)
@@ -783,8 +781,7 @@ class TopicModel:
                 np.min(list(coherences_main.values())),
             )
             avg_coherence_score = (
-                np.mean(list(coherences_main.values()))
-                + np.min(list(coherences_main.values())) * coeff
+                np.mean(list(coherences_main.values())) + np.min(list(coherences_main.values())) * coeff
             )
         else:
             avg_coherence_score = np.mean(list(coherences_main.values())) * coeff
@@ -868,10 +865,10 @@ class TopicModel:
 
         else:
             npmis = {
-                f"npmi_50": None,
-                f"npmi_15": None,
-                f"npmi_25": None,
-                f"npmi_50_list": None,
+                "npmi_50": None,
+                "npmi_15": None,
+                "npmi_25": None,
+                "npmi_50_list": None,
             }
 
         if calculate_switchp:

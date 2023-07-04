@@ -48,10 +48,10 @@ logger = logging.getLogger("GA_algo")
 # TODO: Add fitness type
 def set_surrogate_fitness(value, fitness_type="avg_coherence_score"):
     npmis = {
-        f"npmi_50": None,
-        f"npmi_15": None,
-        f"npmi_25": None,
-        f"npmi_50_list": None,
+        "npmi_50": None,
+        "npmi_15": None,
+        "npmi_25": None,
+        "npmi_50_list": None,
     }
     scores_dict = {
         fitness_type: value,
@@ -752,7 +752,7 @@ class GA:
                 children_num=self.crossover_children,
             )
 
-            logger.info(f"PAIRS ARE CREATED")
+            logger.info("PAIRS ARE CREATED")
 
             # Crossover
             new_generation, crossover_changes = self.run_crossover(
@@ -768,10 +768,7 @@ class GA:
                 # TODO: implement Nelder-Mead here
                 pass
 
-            if (
-                self.num_fitness_evaluations
-                and self.evaluations_counter >= self.num_fitness_evaluations
-            ):
+            if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 bparams = "".join([str(i) for i in population[0].params])
                 self.metric_collector.save_fitness(
                     generation=ii,
@@ -804,8 +801,7 @@ class GA:
 
             new_generation_n = min(
                 (
-                    self.num_individuals
-                    - int(np.ceil(self.num_individuals * self.best_proc))
+                    self.num_individuals - int(np.ceil(self.num_individuals * self.best_proc))
                 ),
                 len(new_generation),
             )
