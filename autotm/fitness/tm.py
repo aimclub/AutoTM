@@ -399,7 +399,7 @@ class TopicModel:
         self.decor_test = decor_test
 
         self.__set_params(params)
-        self.back = ["back{}".format(i) for i in range(self.B)]
+        self.back = ["back{}".format(i) for i in range(int(self.B))]
 
     def init_model(self):
         self.model = artm.ARTM(
@@ -946,7 +946,7 @@ def fit_tm(preproc_data_path: str, topic_count: int, params: list, train_option:
         topic_count,
         num_processors=multiprocessing.cpu_count(),
         dataset=dataset,
-        params=params,
+        params=type_check(params),
         train_option=train_option,
     )
 

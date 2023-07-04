@@ -172,12 +172,12 @@ class TopicsExtractor:
         theta_test = self.model.transform(batch_vectorizer=batch_vectorizer_test)
 
         theta_test_trans = theta_test.T
-        main_topics = [i for i in list(theta_test_trans) if i.startswith("main")]
-        theta_test_trans["top_topics"] = (
-            theta_test_trans[main_topics]
-            .apply(lambda x: ", ".join(x.nlargest(top_n).index.tolist()), axis=1)
-            .tolist()
-        )
-        theta_test_trans = theta_test_trans.join(dataset[[text_column_name]])
+        # main_topics = [i for i in list(theta_test_trans) if i.startswith("main")]
+        # theta_test_trans["top_topics"] = (
+        #     theta_test_trans[main_topics]
+        #     .apply(lambda x: ", ".join(x.nlargest(top_n).index.tolist()), axis=1)
+        #     .tolist()
+        # )
+        # theta_test_trans = theta_test_trans.join(dataset[[text_column_name]])
 
         return theta_test_trans

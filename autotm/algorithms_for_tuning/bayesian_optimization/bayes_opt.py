@@ -41,36 +41,42 @@ warnings.filterwarnings("ignore")
 
 logger = logging.getLogger("BO")
 
+# TODO: refactor this part
 # getting config vars
 if "FITNESS_CONFIG_PATH" in os.environ:
     filepath = os.environ["FITNESS_CONFIG_PATH"]
+    with open(filepath, "r") as file:
+        config = yaml.load(file, Loader=Loader)
 else:
-    filepath = "../../algorithms_for_tuning/bo_algorithm/config.yaml"
+    config = {
+        "testMode": False,
+        "boAlgoParams": {
+            "numEvals": 100
+        }
+    }
 
-with open(filepath, "r") as file:
-    config = yaml.load(file, Loader=Loader)
 
-    def estimate_fitness(
-        population: List[IndividualDTO], _: bool = False, __: int = 2
-    ) -> List[IndividualDTO]:
-        results = []
+def estimate_fitness(
+    population: List[IndividualDTO], _: bool = False, __: int = 2
+) -> List[IndividualDTO]:
+    results = []
 
-        tqdm_out = TqdmToLogger(logger, level=logging.INFO)
-        for p in tqdm(population, file=tqdm_out):
-            individual = copy.deepcopy(p)
-            individual.fitness_value = random.random()
-            results.append(individual)
+    tqdm_out = TqdmToLogger(logger, level=logging.INFO)
+    for p in tqdm(population, file=tqdm_out):
+        individual = copy.deepcopy(p)
+        individual.fitness_value = random.random()
+        results.append(individual)
 
-        return results
+    return results
 
-    def log_best_solution(
-        individual: IndividualDTO,
-        wait_for_result_timeout: Optional[float] = None,
-        alg_args: Optional[str] = None,
-    ) -> Union[IndividualDTO, AsyncResult]:
-        ind = copy.deepcopy(individual)
-        ind.fitness_value = random.random()
-        return ind
+def log_best_solution(
+    individual: IndividualDTO,
+    wait_for_result_timeout: Optional[float] = None,
+    alg_args: Optional[str] = None,
+) -> Union[IndividualDTO, AsyncResult]:
+    ind = copy.deepcopy(individual)
+    ind.fitness_value = random.random()
+    return ind
 
 
 NUM_FITNESS_EVALUATIONS = config["boAlgoParams"]["numEvals"]

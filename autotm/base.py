@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class AutoTM(BaseEstimator):
     _ARTM_MODEL_FILENAME = "artm_model"
     _AUTOTM_DATA_FILENAME = "autotm_data"
-    _SUPPORTED_ALGS = ["ga", "baeys"]
+    _SUPPORTED_ALGS = ["ga", "bayes"]
 
     @classmethod
     def load(cls, path: str) -> 'AutoTM':
@@ -137,7 +137,7 @@ class AutoTM(BaseEstimator):
         prepare_all_artifacts(processed_dataset_path)
         logger.info("Stage 2: Tuning the topic model")
 
-        if self.alg_name in self._SUPPORTED_ALGS:
+        if self.alg_name not in self._SUPPORTED_ALGS:
             raise ValueError(f"Alg {self.alg_name} is not supported. "
                              f"Only the following algorithms are supported: {self._SUPPORTED_ALGS}")
 

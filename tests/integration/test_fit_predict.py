@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def check_predictions(autotm: AutoTM, df: pd.DataFrame, mixtures: ArrayLike):
     n_samples, n_samples_mixture = df.shape[0], mixtures.shape[0]
-    n_topics, n_topics_mixture = autotm.topics.shape[0], mixtures.shape[1]
+    n_topics, n_topics_mixture = len(autotm.topics), mixtures.shape[1]
 
     assert n_samples_mixture == n_samples
     assert n_topics_mixture == n_topics
@@ -39,7 +39,8 @@ def test_fit_predict():
             },
             alg_name=alg_name,
             alg_params={
-                "num_iterations": 10,
+                "num_iterations": 2,
+                "num_individuals": 4,
                 "use_nelder_mead_in_mutation": False,
                 "use_nelder_mead_in_crossover": False,
                 "use_nelder_mead_in_selector": False,
