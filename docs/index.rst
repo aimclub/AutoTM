@@ -10,10 +10,10 @@ Welcome to AutoTM's documentation!
    :maxdepth: 1
    :caption: Contents:
 
-   algorithms_for_tuning
-   fitness
-   preprocessing
-   visualization
+   pages/algorithms_for_tuning
+   pages/fitness
+   pages/preprocessing
+   pages/visualization
 
 
 Indices and tables

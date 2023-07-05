@@ -10,7 +10,9 @@ import os
 import sys
 
 
-LIB_PATH = os.path.abspath(os.path.dirname(__file__))
+CURR_PATH = os.path.abspath(os.path.dirname(__file__))
+LIB_PATH = os.path.join(CURR_PATH, os.path.pardir)
+print(LIB_PATH)
 sys.path.insert(0, LIB_PATH)
 
 project = "AutoTM"
@@ -21,7 +23,7 @@ release = "0.1.0"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["sphinx.ext.autosummary"]
+extensions = ["sphinx.ext.napoleon", "sphinx.ext.autosummary"]
 
 # Delete external references
 autosummary_mock_imports = [
@@ -36,15 +38,21 @@ autosummary_mock_imports = [
     "sklearn",
     "spacy",
     "pymystem3",
-    # "nltk"
+    "tqdm",
+    "nltk"
 ]
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
-
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "alabaster"
-html_static_path = ["_static"]
+
+html_static_path = ['_static']
+
+# Autosummary true if you want to generate it from very beginning
+# autosummary_generate = True
+
+# set_type_checking_flag = True

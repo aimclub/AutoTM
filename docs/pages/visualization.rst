@@ -11,7 +11,7 @@ Visualization.
 .. autosummary::
     :toctree: ./generated
     :nosignatures:
-    :template: classtemplate.rst
+    :template: autosummary/class.rst
 
     MetricsCollector
 

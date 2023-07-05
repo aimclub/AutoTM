@@ -68,7 +68,15 @@ def crossover_blend(parent_1, parent_2, **kwargs):
     return child
 
 
-def crossover(crossover_type="crossover_one_point"):
+def crossover(crossover_type: str = "crossover_one_point"):
+    """
+    Crossover function
+
+    Parameters
+    ----------
+    crossover_type : str, default="crossover_one_point"
+        Crossover to be used in the genetic algorithm
+    """
     if crossover_type == "crossover_pmx":
         return crossover_pmx
     if crossover_type == "crossover_one_point":
