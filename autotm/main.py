@@ -102,6 +102,7 @@ def fit(
 
     logger.debug(f"Running AutoTM with params: {pprint.pformat(config, indent=4)}")
 
+    logger.info(f"Loading data from {os.path.abspath(in_)}")
     df = pd.read_csv(in_)
 
     with prepare_working_dir(working_dir) as work_dir:
@@ -121,8 +122,24 @@ def fit(
 
 
 @cli.command()
-def predict():
-    click.echo('Dropped the database')
+@click.option('--model', type=str, required=True, help="A path to fitted saved ARTM model")
+@click.option('--in', 'in_', type=str, required=True, help="A file in csv format with text corpus to build model on")
+@click.option(
+    '--out',
+    type=str,
+    default="mixtures.csv",
+    help="A path to a file in csv format that will contain topic mixtures for texts from the incoming corpus"
+)
+def predict(model: str, in_: str, out: str):
+    logger.info(f"Loading model from {os.path.abspath(model)}")
+    autotm_loaded = AutoTM.load(model)
+
+    logger.info(f"Predicting mixtures for data from {os.path.abspath(in_)}")
+    df = pd.read_csv(in_)
+    mixtures = autotm_loaded.predict(df)
+
+    logger.info(f"Saving mixtures to {os.path.abspath(out)}")
+    mixtures.to_csv(out)
 
 
 if __name__ == "__main__":
