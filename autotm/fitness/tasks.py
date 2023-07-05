@@ -50,11 +50,11 @@ def calculate_fitness(
 ) -> str:
     try:
         return do_fitness_calculating(
-            individual, log_artifact_and_parameters, log_run_stats, is_tmp
+            individual, log_artifact_and_parameters, log_run_stats, alg_args, is_tmp
         )
     except Exception as e:
         print(str(e))
-        raise Exception(f"Some exception")
+        raise Exception("Some exception")
 
 
 def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
@@ -76,7 +76,7 @@ def log_best_solution(
     alg_args: Optional[str] = None,
     is_tmp: bool = False,
 ):
-    logger.info(f"Sending a best individual to be logged")
+    logger.info("Sending a best individual to be logged")
     res = make_individual(
         fitness_from_json(
             calculate_fitness(

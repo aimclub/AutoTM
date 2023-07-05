@@ -13,7 +13,6 @@ import pandas as pd
 import pytest
 
 
-
 DATASET_PROCESSED_TINY = pd.DataFrame(
     {
         "processed_text": [
@@ -35,19 +34,3 @@ def tiny_dataset_(tmpdir):
 def test__add_word_to_dict():
     test_dict = {}
     assert _add_word_to_dict('test', test_dict) == {'test': 1}
-
-
-
-
-# def test_write_vw_dict(mocker):
-#     mocker.patch("builtins.open", mocker.mock_open())
-#     res_dict = {"test": test}
-#     fpath = "test.txt"
-#
-#     write_vw_dict(res_dict, vocab_words, fpath)
-#     handle = open(fpath)
-#     handle.write.assert_called_once_with("test test1 test2\n")
-#
-#
-# def test_cooc_df_build():
-#     loaded_document = load_documents(filepath=tiny_dataset_fio)

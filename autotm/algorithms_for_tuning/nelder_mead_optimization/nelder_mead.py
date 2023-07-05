@@ -1,7 +1,7 @@
-from scipy.optimize import minimize
-from typing import Union
-from autotm.fitness.tm import FitnessCalculatorWrapper
 import numpy as np
+from scipy.optimize import minimize
+
+from autotm.fitness.tm import FitnessCalculatorWrapper
 
 
 class NelderMeadOptimization:

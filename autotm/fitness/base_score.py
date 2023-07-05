@@ -8,7 +8,7 @@ from typing import (
     Dict,
 )
 
-from autotm.fitness import scores as tn_scores
+# from autotm.fitness import scores as tn_scores
 
 
 class BaseScore:
@@ -83,8 +83,8 @@ class BaseScore:
         self._should_compute = should_compute
         self.value = []
 
-        if not hasattr(tn_scores, self.__class__.__name__):
-            setattr(tn_scores, self.__class__.__name__, self.__class__)
+        # if not hasattr(tn_scores, self.__class__.__name__):
+        #     setattr(tn_scores, self.__class__.__name__, self.__class__)
 
     @staticmethod
     def compute_always(fit_iteration: int) -> bool:

@@ -107,12 +107,27 @@ def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type="df", **k
 def make_log_config_dict(
     filename: str = "/var/log/tm-alg.txt", uid: Optional[str] = None
 ) -> Dict[str, Any]:
-    if uid:
-        dirname = os.path.dirname(filename)
-        file, ext = os.path.splitext(os.path.basename(filename))
-        log_filename = os.path.join(dirname, f"{file}-{uid}.{ext}")
+    if filename is not None:
+        if uid:
+            dirname = os.path.dirname(filename)
+            file, ext = os.path.splitext(os.path.basename(filename))
+            log_filename = os.path.join(dirname, f"{file}-{uid}.{ext}")
+        else:
+            log_filename = filename
+
+        logfile_handler = {
+            "logfile": {
+                "level": "DEBUG",
+                "formatter": "standard",
+                "class": "logging.FileHandler",
+                "filename": log_filename,
+            }
+        }
+        handlers = ["default", "logfile"]
     else:
-        log_filename = filename
+        logfile_handler = dict()
+        handlers = ["default"]
+
     return {
         "version": 1,
         "disable_existing_loggers": True,
@@ -128,31 +143,26 @@ def make_log_config_dict(
                 "class": "logging.StreamHandler",
                 "stream": "ext://sys.stderr",
             },
-            "logfile": {
-                "level": "DEBUG",
-                "formatter": "standard",
-                "class": "logging.FileHandler",
-                "filename": log_filename,
-            },
+            **logfile_handler
         },
         "loggers": {
             "root": {
-                "handlers": ["default", "logfile"],
+                "handlers": handlers,
                 "level": "DEBUG",
                 "propagate": False,
             },
             "GA": {
-                "handlers": ["default", "logfile"],
+                "handlers": handlers,
                 "level": "DEBUG",
                 "propagate": False,
             },
             "GA_algo": {
-                "handlers": ["default", "logfile"],
+                "handlers": handlers,
                 "level": "DEBUG",
                 "propagate": False,
             },
             "GA_surrogate": {
-                "handlers": ["default", "logfile"],
+                "handlers": handlers,
                 "level": "DEBUG",
                 "propagate": False,
             },

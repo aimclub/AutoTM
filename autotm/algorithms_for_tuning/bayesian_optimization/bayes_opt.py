@@ -6,18 +6,17 @@ import random
 import sys
 import uuid
 import warnings
-from logging import config
 from multiprocessing.pool import AsyncResult
 from typing import List, Optional, Union
 
 import click
 import yaml
-import tqdm
 from hyperopt import STATUS_OK, fmin, hp, tpe
-from kube_fitness.tasks import IndividualDTO, TqdmToLogger
+from tqdm import tqdm
 from yaml import Loader
 
-from algorithms_for_tuning.utils import make_log_config_dict
+from autotm.algorithms_for_tuning.individuals import IndividualDTO
+from autotm.utils import TqdmToLogger, make_log_config_dict
 
 ALG_ID = "bo"
 
@@ -41,36 +40,43 @@ warnings.filterwarnings("ignore")
 
 logger = logging.getLogger("BO")
 
+# TODO: refactor this part
 # getting config vars
 if "FITNESS_CONFIG_PATH" in os.environ:
     filepath = os.environ["FITNESS_CONFIG_PATH"]
+    with open(filepath, "r") as file:
+        config = yaml.load(file, Loader=Loader)
 else:
-    filepath = "../../algorithms_for_tuning/bo_algorithm/config.yaml"
+    config = {
+        "testMode": False,
+        "boAlgoParams": {
+            "numEvals": 100
+        }
+    }
 
-with open(filepath, "r") as file:
-    config = yaml.load(file, Loader=Loader)
 
-    def estimate_fitness(
-        population: List[IndividualDTO], _: bool = False, __: int = 2
-    ) -> List[IndividualDTO]:
-        results = []
+def estimate_fitness(
+    population: List[IndividualDTO], _: bool = False, __: int = 2
+) -> List[IndividualDTO]:
+    results = []
 
-        tqdm_out = TqdmToLogger(logger, level=logging.INFO)
-        for p in tqdm(population, file=tqdm_out):
-            individual = copy.deepcopy(p)
-            individual.fitness_value = random.random()
-            results.append(individual)
+    tqdm_out = TqdmToLogger(logger, level=logging.INFO)
+    for p in tqdm(population, file=tqdm_out):
+        individual = copy.deepcopy(p)
+        individual.fitness_value = random.random()
+        results.append(individual)
 
-        return results
+    return results
 
-    def log_best_solution(
-        individual: IndividualDTO,
-        wait_for_result_timeout: Optional[float] = None,
-        alg_args: Optional[str] = None,
-    ) -> Union[IndividualDTO, AsyncResult]:
-        ind = copy.deepcopy(individual)
-        ind.fitness_value = random.random()
-        return ind
+
+def log_best_solution(
+    individual: IndividualDTO,
+    wait_for_result_timeout: Optional[float] = None,
+    alg_args: Optional[str] = None,
+) -> Union[IndividualDTO, AsyncResult]:
+    ind = copy.deepcopy(individual)
+    ind.fitness_value = random.random()
+    return ind
 
 
 NUM_FITNESS_EVALUATIONS = config["boAlgoParams"]["numEvals"]
@@ -137,7 +143,6 @@ def run_algorithm(dataset, log_file, exp_id):
     logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
     logging.config.dictConfig(logging_config)
 
-    prepare_fitness_estimator()
     fitness = BigartmFitness(dataset, exp_id)
     best_params = fmin(
         fitness, SPACE, algo=tpe.suggest, max_evals=NUM_FITNESS_EVALUATIONS

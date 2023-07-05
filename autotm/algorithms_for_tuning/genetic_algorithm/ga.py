@@ -8,12 +8,9 @@ import sys
 import time
 import uuid
 import warnings
-from os.path import abspath, exists
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
-import random
+from typing import Optional
 
 import numpy as np
-from sklearn.svm import SVR
 from sklearn.ensemble import BaggingRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -27,21 +24,19 @@ from sklearn.gaussian_process.kernels import (
 )
 from sklearn.metrics import mean_squared_error
 from sklearn.neural_network import MLPRegressor
+from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 
-from autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from autotm.algorithms_for_tuning.genetic_algorithm.crossover import crossover
+from autotm.algorithms_for_tuning.genetic_algorithm.mutation import mutation
 from autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
-from autotm.algorithms_for_tuning.individuals import make_individual, IndividualDTO
+from autotm.algorithms_for_tuning.individuals import make_individual, IndividualDTO, Individual
 from autotm.algorithms_for_tuning.nelder_mead_optimization.nelder_mead import (
     NelderMeadOptimization,
 )
-
-from autotm.utils import AVG_COHERENCE_SCORE
-from scipy.optimize import minimize
-from autotm.visualization.dynamic_tracker import MetricsCollector
-
 from autotm.fitness.tasks import estimate_fitness, log_best_solution
+from autotm.utils import AVG_COHERENCE_SCORE
+from autotm.visualization.dynamic_tracker import MetricsCollector
 
 ALG_ID = "ga"
 SPEEDUP = True
@@ -53,10 +48,10 @@ logger = logging.getLogger("GA_algo")
 # TODO: Add fitness type
 def set_surrogate_fitness(value, fitness_type="avg_coherence_score"):
     npmis = {
-        f"npmi_50": None,
-        f"npmi_15": None,
-        f"npmi_25": None,
-        f"npmi_50_list": None,
+        "npmi_50": None,
+        "npmi_15": None,
+        "npmi_25": None,
+        "npmi_50_list": None,
     }
     scores_dict = {
         fitness_type: value,
@@ -706,7 +701,7 @@ class GA:
             new_population.append(make_individual(dto=solution_dto))
         return new_population
 
-    def run(self, verbose=False):
+    def run(self, verbose=False, visualize_results=False) -> Individual:
         self.evaluations_counter = 0
         ftime = str(int(time.time()))
 
@@ -757,7 +752,7 @@ class GA:
                 children_num=self.crossover_children,
             )
 
-            logger.info(f"PAIRS ARE CREATED")
+            logger.info("PAIRS ARE CREATED")
 
             # Crossover
             new_generation, crossover_changes = self.run_crossover(
@@ -773,10 +768,7 @@ class GA:
                 # TODO: implement Nelder-Mead here
                 pass
 
-            if (
-                self.num_fitness_evaluations
-                and self.evaluations_counter >= self.num_fitness_evaluations
-            ):
+            if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 bparams = "".join([str(i) for i in population[0].params])
                 self.metric_collector.save_fitness(
                     generation=ii,
@@ -809,8 +801,7 @@ class GA:
 
             new_generation_n = min(
                 (
-                    self.num_individuals
-                    - int(np.ceil(self.num_individuals * self.best_proc))
+                    self.num_individuals - int(np.ceil(self.num_individuals * self.best_proc))
                 ),
                 len(new_generation),
             )
@@ -945,10 +936,7 @@ class GA:
                         )
                         population[i] = elem
 
-            if (
-                self.num_fitness_evaluations
-                and self.evaluations_counter >= self.num_fitness_evaluations
-            ):
+            if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
                 self.metric_collector.save_fitness(
                     generation=ii,
                     params=[i.params for i in population],
@@ -1023,7 +1011,10 @@ class GA:
             best_solution = population[0]
             log_best_solution(best_solution, alg_args=" ".join(sys.argv), is_tmp=True)
 
-        self.metric_collector.save_and_visualise_trace()
+        if visualize_results:
+            self.metric_collector.save_and_visualise_trace()
+        else:
+            self.metric_collector.save_trace()
 
         logger.info(f"Y: {y}")
         best_individual = population[0]
@@ -1032,7 +1023,7 @@ class GA:
             f"Logged the best solution. Obtained fitness is {ind.fitness_value}"
         )
 
-        return ind.fitness_value
+        return ind
 
 
 # multistage bag of regularizers approach

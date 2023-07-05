@@ -12,10 +12,9 @@ import gridfs
 import mlflow
 from pymongo import MongoClient
 
-from autotm.utils import TimeMeasurements
-from autotm.schemas import IndividualDTO, fitness_to_json
 from autotm.fitness.tm import TopicModel
-
+from autotm.schemas import IndividualDTO
+from autotm.utils import TimeMeasurements
 
 logger = logging.getLogger()
 
@@ -75,9 +74,9 @@ def make_readable_topics(tm: TopicModel) -> str:
     def topic_seq_num(pair: Tuple[str, List[str]]) -> int:
         tname, _ = pair
         if tname.startswith("main"):
-            return int(tname[len("main") :])
+            return int(tname[len("main"):])
         if tname.startswith("back"):
-            return tm.topic_count + int(tname[len("back") :])
+            return tm.topic_count + int(tname[len("back"):])
         return -1
 
     ordered_topics = sorted(topics.items(), key=topic_seq_num)

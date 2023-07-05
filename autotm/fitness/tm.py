@@ -1,4 +1,6 @@
 import logging
+import multiprocessing
+import multiprocessing as mp
 import os
 import pickle
 import time
@@ -6,16 +8,15 @@ import uuid
 from collections import OrderedDict
 from contextlib import contextmanager
 from typing import Dict, Optional, Tuple, ContextManager, List
-import multiprocessing as mp
 
 import artm
 import gensim.corpora as corpora
 import numpy as np
 import pandas as pd
 from billiard.exceptions import SoftTimeLimitExceeded
-from gensim.models.coherencemodel import CoherenceModel
 from tqdm import tqdm
 
+from autotm.batch_vect_utils import SampleBatchVectorizer
 from autotm.fitness.external_scores import ts_bground, ts_uniform, ts_vacuous, switchp
 from autotm.utils import (
     MetricsScores,
@@ -23,10 +24,28 @@ from autotm.utils import (
     TimeMeasurements,
     log_exec_timer,
 )
-from autotm.batch_vect_utils import SampleBatchVectorizer
 
 logger = logging.getLogger()
 logging.basicConfig(level="INFO")
+
+
+def extract_topics(model: artm.ARTM):
+    if "TopTokensScore" not in model.score_tracker:
+        logger.warning(
+            "Key 'TopTokensScore' is not presented in the model's score_tracker. "
+            "Returning empty dict of topics."
+        )
+        return dict()
+    res = model.score_tracker["TopTokensScore"].last_tokens
+    topics = {topic: tokens[:50] for topic, tokens in res.items()}
+    return topics
+
+
+def print_topics(model: artm.ARTM):
+    for i, (topic, top_tokens) in enumerate(extract_topics(model).items()):
+        print(topic)
+        print(top_tokens)
+        print()
 
 
 class Dataset:
@@ -235,7 +254,6 @@ class TopicModelFactory:
             )
             self.tm = TopicModel(
                 uid,
-                self.experiments_path,
                 self.topic_count,
                 self.num_processors,
                 dataset,
@@ -360,7 +378,6 @@ class TopicModel:
     def __init__(
         self,
         uid: uuid.UUID,
-        experiments_path: str,
         topic_count: int,
         num_processors: int,
         dataset: Dataset,
@@ -369,7 +386,6 @@ class TopicModel:
         train_option: str = "offline",
     ):
         self.uid = uid
-        self.experiments_path: str = experiments_path
         self.topic_count: int = topic_count
         self.num_processors: int = num_processors
         self.dataset = dataset
@@ -378,15 +394,10 @@ class TopicModel:
         self.model = None
         self.S = self.topic_count
         self.specific = ["main{}".format(i) for i in range(self.S)]
-
-        self.save_path = os.path.join(self.experiments_path, "best_model")
         self.decor_test = decor_test
 
-        if not os.path.exists(self.save_path):
-            os.makedirs(self.save_path)
-
         self.__set_params(params)
-        self.back = ["back{}".format(i) for i in range(self.B)]
+        self.back = ["back{}".format(i) for i in range(int(self.B))]
 
     def init_model(self):
         self.model = artm.ARTM(
@@ -548,28 +559,14 @@ class TopicModel:
             )
         )
 
-    def dump_model(self, ii):
-        self.model.dump_artm_model(os.path.join(self.save_path, "model_{}".format(ii)))
-
     def save_model(self, path):
         self.model.dump_artm_model(path)
 
     def print_topics(self):
-        for i, (topic, top_tokens) in enumerate(self.get_topics().items()):
-            print(topic)
-            print(top_tokens)
-            print()
+        print_topics(self.model)
 
     def get_topics(self):
-        if "TopTokensScore" not in self.model.score_tracker:
-            logger.warning(
-                f"Key 'TopTokensScore' is not presented in the model's (uid={self.uid}) score_tracker. "
-                f"Returning empty dict of topics."
-            )
-            return dict()
-        res = self.model.score_tracker["TopTokensScore"].last_tokens
-        topics = {topic: tokens[:50] for topic, tokens in res.items()}
-        return topics
+        return extract_topics(self.model)
 
     def _get_avg_coherence_score(self, for_individ_fitness=False):
         coherences_main, coherences_back = self.__return_all_tokens_coherence(
@@ -616,7 +613,7 @@ class TopicModel:
         self.model.dispose()
         self.model = None
 
-        log_files = [file for file in os.listdir("") if file.startswith("bigartm.")]
+        log_files = [file for file in os.listdir(".") if file.startswith("bigartm.")]
         logging.info(f"Deleting bigartm logs: {log_files}")
         for file in log_files:
             os.remove(file)
@@ -689,7 +686,7 @@ class TopicModel:
         tokens = tokens[:top]
         total_sum = 0
         for ix, token_1 in enumerate(tokens[:-1]):
-            for ij, token_2 in enumerate(tokens[(ix + 1) :]):
+            for ij, token_2 in enumerate(tokens[(ix + 1):]):
                 try:
                     total_sum += self.dataset.mutual_info_dict[
                         "{}_{}".format(token_1, token_2)
@@ -784,8 +781,7 @@ class TopicModel:
                 np.min(list(coherences_main.values())),
             )
             avg_coherence_score = (
-                np.mean(list(coherences_main.values()))
-                + np.min(list(coherences_main.values())) * coeff
+                np.mean(list(coherences_main.values())) + np.min(list(coherences_main.values())) * coeff
             )
         else:
             avg_coherence_score = np.mean(list(coherences_main.values())) * coeff
@@ -869,10 +865,10 @@ class TopicModel:
 
         else:
             npmis = {
-                f"npmi_50": None,
-                f"npmi_15": None,
-                f"npmi_25": None,
-                f"npmi_50_list": None,
+                "npmi_50": None,
+                "npmi_15": None,
+                "npmi_25": None,
+                "npmi_50_list": None,
             }
 
         if calculate_switchp:
@@ -935,3 +931,25 @@ class TopicModel:
         }
 
         return scores_dict
+
+
+def fit_tm(preproc_data_path: str, topic_count: int, params: list, train_option: str) -> TopicModel:
+    with log_exec_timer("Loading dataset: "):
+        dataset = Dataset(base_path=preproc_data_path, topic_count=topic_count)
+        dataset.load_dataset()
+
+    tm = TopicModel(
+        uuid.uuid4(),
+        topic_count,
+        num_processors=multiprocessing.cpu_count(),
+        dataset=dataset,
+        params=type_check(params),
+        train_option=train_option,
+    )
+
+    tm.init_model()
+
+    with log_exec_timer("TM Training"):
+        tm.train()
+
+    return tm

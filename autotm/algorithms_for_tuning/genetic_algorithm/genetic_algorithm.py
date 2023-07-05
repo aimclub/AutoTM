@@ -1,20 +1,17 @@
 #!/usr/bin/env python3
 import logging
 import sys
-from logging import config
+import uuid
 import warnings
-import yaml
-from yaml import Loader
 from typing import Union
 
-import uuid
-
 from autotm.algorithms_for_tuning.genetic_algorithm.ga import GA
+from autotm.fitness.tm import fit_tm, TopicModel
 from autotm.utils import make_log_config_dict
 
 warnings.filterwarnings("ignore")
 
-logger = logging.getLogger("GA")
+logger = logging.getLogger(__name__)
 
 NUM_FITNESS_EVALUATIONS = 150
 
@@ -43,7 +40,7 @@ def run_algorithm(
     use_nelder_mead_in_crossover: bool = False,
     use_nelder_mead_in_selector: bool = False,
     train_option: str = "offline",
-):
+) -> TopicModel:
     """
 
     :param dataset: Dataset name that is being processed. The name will be used to store results
@@ -121,9 +118,14 @@ def run_algorithm(
         use_nelder_mead_in_selector=use_nelder_mead_in_selector,
         train_option=train_option,
     )
-    best_value = g.run(verbose=True)
-    print(best_value * (-1))
+    best_individual = g.run(verbose=True)
+    logger.info(f"Best individual fitness_value: {best_individual.fitness_value * (-1)}")
 
+    best_topic_model = fit_tm(
+        preproc_data_path=data_path,
+        topic_count=topic_count,
+        params=best_individual.params,
+        train_option=train_option
+    )
 
-if __name__ == "__main__":
-    run_algorithm()
+    return best_topic_model
