@@ -163,5 +163,8 @@ tests/integration/metrics
 autotm_workdir_*
 requirements.txt
 
+mixtures.csv
+model.artm
+
 # sphinx docs
 docs/_build

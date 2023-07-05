@@ -1,0 +1,13 @@
+---
+preprocessing_params:
+  lang: "ru"
+  min_tokens_count: 3
+
+alg_name: "ga"
+alg_params:
+  num_iterations: 2
+  num_individuals: 4
+  use_nelder_mead_in_mutation: no
+  use_nelder_mead_in_crossover: no
+  use_nelder_mead_in_selector: no
+  train_option: "offline"

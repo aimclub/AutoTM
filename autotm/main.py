@@ -86,6 +86,13 @@ def cli(verbose: bool):
 @click.option('--alg', type=str, help="Hyperparameters tuning algorithm. Available: ga, bayes")
 @click.option('--surrogate-alg', type=str, help="Surrogate algorithm to use.")
 @click.option('--log-file', type=str, help="Log file path")
+@click.option(
+    '--overwrite',
+    is_flag=True,
+    show_default=True,
+    default=False,
+    help="Overwrite if model or/and mixture files already exist"
+)
 def fit(
         config_path: Optional[str],
         working_dir: Optional[str],
@@ -96,7 +103,8 @@ def fit(
         lang: Optional[str],
         alg: Optional[str],
         surrogate_alg: Optional[str],
-        log_file: Optional[str]
+        log_file: Optional[str],
+        overwrite: bool
 ):
     config = obtain_autotm_params(config_path, topic_count, lang, alg, surrogate_alg, log_file)
 
@@ -114,9 +122,9 @@ def fit(
         mixtures = autotm.fit_predict(df)
 
         logger.info(f"Saving model to {os.path.abspath(model)}")
-        autotm.save(model)
+        autotm.save(model, overwrite=overwrite)
         logger.info(f"Saving mixtures to {os.path.abspath(out)}")
-        mixtures.to_csv(out)
+        mixtures.to_csv(out, mode='w' if overwrite else 'x')
 
     logger.info("Finished AutoTM")
 
@@ -130,7 +138,14 @@ def fit(
     default="mixtures.csv",
     help="A path to a file in csv format that will contain topic mixtures for texts from the incoming corpus"
 )
-def predict(model: str, in_: str, out: str):
+@click.option(
+    '--overwrite',
+    is_flag=True,
+    show_default=True,
+    default=False,
+    help="Overwrite if the mixture file already exists"
+)
+def predict(model: str, in_: str, out: str, overwrite: bool):
     logger.info(f"Loading model from {os.path.abspath(model)}")
     autotm_loaded = AutoTM.load(model)
 
@@ -139,7 +154,7 @@ def predict(model: str, in_: str, out: str):
     mixtures = autotm_loaded.predict(df)
 
     logger.info(f"Saving mixtures to {os.path.abspath(out)}")
-    mixtures.to_csv(out)
+    mixtures.to_csv(out, mode='w' if overwrite else 'x')
 
 
 if __name__ == "__main__":

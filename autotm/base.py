@@ -188,6 +188,8 @@ class AutoTM(BaseEstimator):
         """
         self._check_if_already_fitted()
 
+        os.makedirs(self.working_dir_path, exist_ok=True)
+
         with tempfile.TemporaryDirectory(dir=self.working_dir_path) as extractor_working_dir:
             topics_extractor = TopicsExtractor(self._model)
             mixtures = topics_extractor.get_prob_mixture(dataset=dataset, working_dir=extractor_working_dir)
