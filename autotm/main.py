@@ -1,5 +1,6 @@
 import logging
 import tempfile
+from contextlib import contextmanager
 from typing import Optional
 
 import click
@@ -9,14 +10,26 @@ from autotm.base import AutoTM
 import pandas as pd
 
 
+# TODO: add proper logging format initialization
 logger = logging.getLogger()
 
 
+@contextmanager
+def prepare_working_dir(working_dir: Optional[str] = None):
+    if working_dir is None:
+        with tempfile.TemporaryDirectory(prefix="autotm_wd_") as tmp_working_dir:
+            yield tmp_working_dir
+    else:
+        yield working_dir
+
+
+# TODO: add logging level
 @click.group()
 def cli():
     pass
 
 
+# TODO: add lang and log_file params
 @cli.command()
 @click.option('--config', type=str, help="A path to config for fitting the model")
 @click.option(
@@ -71,10 +84,10 @@ def fit(
 
     df = pd.read_csv(in_)
 
-    with tempfile.TemporaryDirectory(prefix="autotm_wd_", dir=working_dir) as tmp_working_dir:
+    with prepare_working_dir(working_dir) as work_dir:
         autotm = AutoTM(
             **config,
-            working_dir_path=tmp_working_dir
+            working_dir_path=work_dir
         )
         mixtures = autotm.fit_predict(df)
 
