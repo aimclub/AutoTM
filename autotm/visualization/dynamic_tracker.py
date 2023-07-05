@@ -1,5 +1,6 @@
 import os
 import time
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -189,7 +190,11 @@ class MetricsCollector:
                 cur_df = pd.DataFrame(cur_df_dict)
                 cur_df[GENERATION_COL] = gen
                 dfs.append(cur_df)
-            self.mutation_df = pd.concat(dfs)
+            if len(dfs) > 0:
+                self.mutation_df = pd.concat(dfs)
+            else:
+                warnings.warn("No mutations changes have been found to save", RuntimeWarning)
+                self.mutation_df = pd.DataFrame([])
         if self.crossover_df is not None:
             print("Crossover df already exists")
         else:
@@ -227,10 +232,12 @@ class MetricsCollector:
             )
         )
 
-    def save_and_visualise_trace(self, plot_mutation_effectiveness=False):
+    def save_trace(self):
         self.get_metric_df()
-        # save params
         self.write_metrics_to_file()
+
+    def save_and_visualise_trace(self, plot_mutation_effectiveness=False):
+        self.save_trace()
 
         # traces vis
         graph_template = "plotly_white"

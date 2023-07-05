@@ -1,5 +1,6 @@
+import logging
 import os
-from typing import List
+from typing import List, Union
 
 import artm
 import math
@@ -12,6 +13,7 @@ from collections import Counter
 
 RESERVED_TUPLE = ("_SERVICE_", "total_pairs_count")
 
+logger = logging.getLogger(__name__)
 
 # TODO: add inter-text coherence metrics (SemantiC, TopLen and FoCon)
 
@@ -53,7 +55,7 @@ def _calculate_cooc_df_dict(data: list, vocab: List[str], window: int = 10) -> d
         document_cooc_df_dict = {}
         splitted = [word for word in text.split() if word in existing_vocab]
         for i in range(0, len(splitted) - window):
-            for comb in itertools.combinations(splitted[i : i + window], 2):  # speed up
+            for comb in itertools.combinations(splitted[i: i + window], 2):  # speed up
                 comb = tuple(sorted(comb))  # adding comb sorting
                 if comb in document_cooc_df_dict:
                     continue
@@ -73,7 +75,7 @@ def _calculate_cooc_tf_dict(data: list, vocab: List[str], window: int = 10) -> d
         document_cooc_tf_dict = {}
         splitted = [word for word in text.split() if word in existing_vocab]
         for i in range(0, len(splitted) - window):
-            for comb in itertools.combinations(splitted[i : i + window], 2):
+            for comb in itertools.combinations(splitted[i: i + window], 2):
                 if comb in document_cooc_tf_dict:
                     document_cooc_tf_dict[comb] += 1
                 else:
@@ -86,7 +88,6 @@ def _calculate_cooc_tf_dict(data: list, vocab: List[str], window: int = 10) -> d
         counter = Counter(document_cooc_tf_dict)
         counter.update(cooc_tf_dict)
         cooc_tf_dict = dict(counter)
-        k = 0
     return cooc_tf_dict, term_freq_dict
     # local_num_of_pairs += 2
     # pass
@@ -155,11 +156,11 @@ def convert_to_vw_format_and_save(cooc_dict, vocab_words, vw_path):
     for item in sorted(t_cooc_dict.items(), key=lambda key: key[0]):
         if item == RESERVED_TUPLE:
             continue
-        word_1 = item[0][0]  # TODO: check this
-        word_2 = item[0][1]
-        if vocab_words.index(item[0][0]) > vocab_words.index(item[0][1]):
-            word_2 = item[0][0]
-            word_1 = item[0][1]
+        # word_1 = item[0][0]  # TODO: check this
+        # word_2 = item[0][1]
+        # if vocab_words.index(item[0][0]) > vocab_words.index(item[0][1]):
+        #     word_2 = item[0][0]
+        #     word_1 = item[0][1]
         if item[0][0] in data_dict:
             data_dict[item[0][0]].append(f"{item[0][1]}:{item[1]}")
         else:
@@ -257,47 +258,51 @@ def return_string_part(name_type, text):
     )
 
 
-def prepare_voc(batches_dir, vw_path, data_path, column_name="processed_text.txt"):
+def prepare_voc(batches_dir, vw_path, dataset: Union[pd.DataFrame, str], column_name="processed_text.txt"):
     print("Starting...")
     with open(vw_path, "w", encoding="utf8") as ofile:
-        num_parts = 0
-        try:
-            for file in os.listdir(data_path):
-                if file.startswith("part"):
-                    print("part_{}".format(num_parts), end="\r")
-                    if file.split(".")[-1] == "csv":
-                        part = pd.read_csv(os.path.join(data_path, file))
-                    else:
-                        part = pd.read_parquet(os.path.join(data_path, file))
-                    part_processed = part[column_name].tolist()
-                    for text in part_processed:
-                        result = return_string_part("@default_class", text)
-                        ofile.write(result + "\n")
-                    num_parts += 1
+        if isinstance(dataset, str):
+            num_parts = 0
+            try:
+                for file in os.listdir(dataset):
+                    if file.startswith("part"):
+                        print("part_{}".format(num_parts), end="\r")
+                        if file.split(".")[-1] == "csv":
+                            part = pd.read_csv(os.path.join(dataset, file))
+                        else:
+                            part = pd.read_parquet(os.path.join(dataset, file))
+                        part_processed = part[column_name].tolist()
+                        for text in part_processed:
+                            result = return_string_part("@default_class", text)
+                            ofile.write(result + "\n")
+                        num_parts += 1
 
-        except NotADirectoryError:
-            print("part 1/1")
-            part = pd.read_csv(data_path)
-            part_processed = part[column_name].tolist()
+            except NotADirectoryError:
+                print("part 1/1")
+                part = pd.read_csv(dataset)
+                part_processed = part[column_name].tolist()
+                for text in part_processed:
+                    result = return_string_part("@default_class", text)
+                    ofile.write(result + "\n")
+        else:
+            part_processed = dataset[column_name].tolist()
             for text in part_processed:
                 result = return_string_part("@default_class", text)
                 ofile.write(result + "\n")
 
-    print(" batches {} \n vocabulary {} \n are ready".format(batches_dir, vw_path))
+    logger.info(" batches {} \n vocabulary {} \n are ready".format(batches_dir, vw_path))
 
 
 def prepare_batch_vectorizer(
-    batches_dir: str, vw_path: str, data_path: str, column_name: str = "processed_text"
+    batches_dir: str, vw_path: str, dataset: Union[pd.DataFrame, str], column_name: str = "processed_text"
 ):
-    prepare_voc(batches_dir, vw_path, data_path, column_name=column_name)
+    prepare_voc(batches_dir, vw_path, dataset, column_name=column_name)
     batch_vectorizer = artm.BatchVectorizer(
         data_path=vw_path,
         data_format="vowpal_wabbit",
         target_folder=batches_dir,
         batch_size=100,
     )
-    #     else:
-    #         batch_vectorizer = artm.BatchVectorizer(data_path=batches_dir, data_format='batches')
 
     return batch_vectorizer
 
@@ -331,7 +336,7 @@ def prepare_all_artifacts(save_path: str):
     DOCUMENTS_TO_BATCH_PATH = os.path.join(save_path, "ppp.csv")
 
     # TODO: check why batch vectorizer is returned (unused further)
-    batch_vectorizer = prepare_batch_vectorizer(
+    prepare_batch_vectorizer(
         BATCHES_DIR, WV_PATH, DOCUMENTS_TO_BATCH_PATH
     )
 

@@ -1,11 +1,11 @@
 import os
+from typing import Union, cast
+
 import pandas as pd
 import pymystem3
 from nltk.corpus import stopwords, wordnet
 from autotm.utils import parallelize_dataframe
 import nltk
-
-nltk.download("stopwords")
 import re
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -13,6 +13,12 @@ import spacy
 from spacy.language import Language
 from spacy_langdetect import LanguageDetector
 from nltk.stem import WordNetLemmatizer
+
+
+# TODO: make transformer class and prep function to download all files
+
+nltk.download("stopwords")
+nltk.download("wordnet")
 
 stop = stopwords.words("russian") + [" "] + stopwords.words("english")
 
@@ -140,7 +146,7 @@ def lemmatize_text(df, **kwargs):
 
 
 def process_dataset(
-        fname: str,
+        fname: Union[pd.DataFrame, str],
         col_to_process: str,
         save_path: str,
         lang: str = "ru",
@@ -159,7 +165,7 @@ def process_dataset(
     """
     os.makedirs(save_path, exist_ok=True)
     save_path = os.path.join(save_path, "ppp.csv")
-    data = pd.read_csv(fname)
+    data = pd.read_csv(fname) if isinstance(fname, str) else cast(pd.DataFrame, fname)
     data = parallelize_dataframe(
         data, lemmatize_text, n_cores, lang=lang, col_to_process=col_to_process
     )

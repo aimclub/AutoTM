@@ -2,9 +2,10 @@
 
 # CMA-ES (Covariance Matrix Adaptation Evolution Strategy)
 
+from math import sqrt, log
+
 # code source: https://github.com/DEAP/deap/blob/master/deap/cma.py
 import numpy
-from math import sqrt, log, exp
 
 
 class Strategy(object):
@@ -56,7 +57,7 @@ class Strategy(object):
         population.sort(key=lambda ind: ind.fitness, reverse=True)
 
         old_centroid = self.centroid
-        self.centroid = numpy.dot(self.weights, population[0 : self.mu])
+        self.centroid = numpy.dot(self.weights, population[0: self.mu])
 
         c_diff = self.centroid - old_centroid
 
@@ -83,7 +84,7 @@ class Strategy(object):
         ) / self.sigma * c_diff
 
         # Update covariance matrix
-        artmp = population[0 : self.mu] - old_centroid
+        artmp = population[0: self.mu] - old_centroid
         self.C = (
             (
                 1
@@ -133,14 +134,10 @@ class Strategy(object):
         self.ccov1 = params.get("ccov1", 2.0 / ((self.dim + 1.3) ** 2 + self.mueff))
         self.ccovmu = params.get(
             "ccovmu",
-            2.0
-            * (self.mueff - 2.0 + 1.0 / self.mueff)
-            / ((self.dim + 2.0) ** 2 + self.mueff),
+            2.0 * (self.mueff - 2.0 + 1.0 / self.mueff) / ((self.dim + 2.0) ** 2 + self.mueff),
         )
         self.ccovmu = min(1 - self.ccov1, self.ccovmu)
         self.damps = (
-            1.0
-            + 2.0 * max(0, sqrt((self.mueff - 1.0) / (self.dim + 1.0)) - 1.0)
-            + self.cs
+            1.0 + 2.0 * max(0.0, sqrt((self.mueff - 1.0) / (self.dim + 1.0)) - 1.0) + self.cs
         )
         self.damps = params.get("damps", self.damps)

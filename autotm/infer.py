@@ -1,4 +1,7 @@
+import logging
 import os
+from typing import Union
+
 import yaml
 import json
 
@@ -11,6 +14,8 @@ PATH_TO_EXPERIMENT_ID = ""
 
 PROCESSED_TEXT_COL = "processed_text"
 TOP_TOPICS_COL = "SER_top_topics"
+
+logger = logging.getLogger(__name__)
 
 
 def get_experiment_path(
@@ -116,9 +121,13 @@ def get_most_probable_words_from_phi(df, phi_df):
 
 
 class TopicsExtractor:
-    def __init__(self, model_path):
-        self.__tm_model_path = model_path
-        self.model = self.__load_model()
+    def __init__(self, model: Union[str, artm.ARTM]):
+        if isinstance(model, str):
+            self.__tm_model_path = model
+            self.model = self.__load_model()
+        else:
+            self.__tm_model_path = None
+            self.model = model
         self.__tmp_batches_path = "./tmp/tmp_batches/"
         self.__tmp_dict_path = "./tmp/tmp_dict/"
         self.topics_dict = self.model.score_tracker["TopTokensScore"].last_tokens
@@ -134,53 +143,41 @@ class TopicsExtractor:
 
     def get_prob_mixture(
         self,
-        data_path,
-        TMP_BATCHES_PATH="./tmp/tmp_batches/",
-        TMP_DICT_PATH="./tmp/tmp_dict/",
-        OUTPUT_DIR="./out",
+        dataset: pd.DataFrame,
+        working_dir: str,
         text_column_name="processed_text",
-        input_format="csv",
         top_n=2,
-    ):
-        try:
-            os.makedirs(TMP_BATCHES_PATH)
-            os.makedirs(TMP_DICT_PATH)
-        except:
-            print("folders already exist")
+    ) -> pd.DataFrame:
+        tmp_batch_dir = os.path.join(working_dir, "tmp_batch_dir")
+        tmp_vw_path = os.path.join(working_dir, "tmp_wv.txt")
 
-        for tmp_batch in os.listdir(TMP_BATCHES_PATH):
-            os.remove(os.path.join(TMP_BATCHES_PATH, tmp_batch))
+        assert not os.path.exists(tmp_batch_dir), "Tmp batch should not exist beforehand"
+        assert not os.path.exists(tmp_vw_path), "Tmp vw filw should not exist beforehand"
 
-        if input_format == "csv":
-            posts = pd.read_csv(data_path)
-        else:
-            posts = pd.read_parquet(data_path)
+        os.makedirs(tmp_batch_dir)
 
-        posts = posts[~posts[text_column_name].isna()]
-        posts = posts.reset_index(drop=True)
+        dataset = dataset[~dataset[text_column_name].isna()]
+        dataset = dataset.reset_index(drop=True)
+        texts = dataset[text_column_name].tolist()
 
-        texts = posts[text_column_name].tolist()
-
-        print("LEN {}".format(len(texts)))
+        logger.info("LEN {}".format(len(texts)))
 
         batch_vectorizer_test = prepare_batch_vectorizer(
-            batches_dir=TMP_DICT_PATH,
-            vw_path="./tmp/tmp_wv.txt",
-            data_path=data_path,
+            batches_dir=tmp_batch_dir,
+            vw_path=tmp_vw_path,
+            dataset=dataset,
             column_name=text_column_name,
         )
 
         theta_test = self.model.transform(batch_vectorizer=batch_vectorizer_test)
-        theta_test_trans = theta_test.T
-        main_topics = [i for i in list(theta_test_trans) if i.startswith("main")]
-        theta_test_trans["top_topics"] = (
-            theta_test_trans[main_topics]
-            .apply(lambda x: ", ".join(x.nlargest(top_n).index.tolist()), axis=1)
-            .tolist()
-        )
-        theta_test_trans = theta_test_trans.join(posts[[text_column_name]])
-        theta_test_trans.to_csv(
-            os.path.join(OUTPUT_DIR, "data_with_theta.csv"), index=None
-        )
 
-        print("All is saved to {} !".format(OUTPUT_DIR))
+        theta_test_trans = theta_test.T
+        # main_topics = [i for i in list(theta_test_trans) if i.startswith("main")]
+        # theta_test_trans["top_topics"] = (
+        #     theta_test_trans[main_topics]
+        #     .apply(lambda x: ", ".join(x.nlargest(top_n).index.tolist()), axis=1)
+        #     .tolist()
+        # )
+        # theta_test_trans = theta_test_trans.join(dataset[[text_column_name]])
+
+        return theta_test_trans

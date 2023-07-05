@@ -114,9 +114,10 @@ class LearnedModel:
 class LearnedScorerFitnessIndividual(BaseIndividual):
     @property
     def fitness_value(self) -> float:
-        dataset_name = self.dto.dataset  # TODO: check namings
-        m = LearnedModel(save_path=PATH_TO_LEARNED_SCORING, dataset_name=dataset_name)
+        # dataset_name = self.dto.dataset  # TODO: check namings
+        # m = LearnedModel(save_path=PATH_TO_LEARNED_SCORING, dataset_name=dataset_name)
         # TODO: predict from metrics df
+        raise NotImplementedError()
 
 
 class SparsityScalerBasedFitnessIndividual(BaseIndividual):
