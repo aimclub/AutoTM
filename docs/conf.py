@@ -52,6 +52,6 @@ html_theme = "alabaster"
 html_static_path = ['_static']
 
 # Autosummary true if you want to generate it from very beginning
-autosummary_generate = True
+# autosummary_generate = True
 
-set_type_checking_flag = True
+# set_type_checking_flag = True
