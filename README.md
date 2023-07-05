@@ -1,5 +1,5 @@
 
-<img align="left" src="docs/img/MyLogo.png" alt="Library scheme" height="180"/>
+<img align="left" src="docs/img/MyLogo.png" alt="Library scheme" height="200"/>
 
 # AutoTM
 
@@ -7,6 +7,7 @@
 ![build](https://github.com/ngc436/AutoTM/actions/workflows/build.yaml/badge.svg)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![PyPI version](https://badge.fury.io/py/autotm.svg)](https://badge.fury.io/py/autotm)
+[![Documentation Status](https://readthedocs.org/projects/autotm/badge/?version=latest)](https://autotm.readthedocs.io/en/latest/?badge=latest)
 
 Automatic parameters selection for topic models (ARTM approach) using evolutionary algorithms. 
 AutoTM provides necessary tools to preprocess english and russian text datasets and tune topic models.
