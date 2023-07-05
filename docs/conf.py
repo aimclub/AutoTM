@@ -10,7 +10,7 @@ import os
 import sys
 
 
-LIB_PATH = os.path.abspath(os.path.dirname(__file__))
+LIB_PATH = os.path.join(os.path.dirname(__file__), '..')
 sys.path.insert(0, LIB_PATH)
 
 project = "AutoTM"
@@ -42,8 +42,11 @@ autosummary_mock_imports = [
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
-
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "alabaster"
+
+html_static_path = ['_static']
+
+autosummary_generate = True
