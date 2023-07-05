@@ -10,7 +10,7 @@ import os
 import sys
 
 
-LIB_PATH = os.path.join(os.path.dirname(__file__), '..')
+LIB_PATH = os.path.join(os.path.dirname(__file__))
 sys.path.insert(0, LIB_PATH)
 
 project = "AutoTM"
@@ -21,7 +21,7 @@ release = "0.1.0"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["sphinx.ext.autosummary"]
+extensions = ["sphinx.ext.napoleon", "sphinx.ext.autosummary"]
 
 # Delete external references
 autosummary_mock_imports = [
