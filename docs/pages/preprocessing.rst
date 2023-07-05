@@ -13,4 +13,3 @@ Preprocessing.
     :nosignatures:
 
     dictionaries_preparation.get_words_dict
-    text_preprocessing.new_html

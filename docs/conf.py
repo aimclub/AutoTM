@@ -38,6 +38,7 @@ autosummary_mock_imports = [
     "sklearn",
     "spacy",
     "pymystem3",
+    "tqdm",
     "nltk"
 ]
 
