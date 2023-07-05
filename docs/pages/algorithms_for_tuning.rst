@@ -12,7 +12,7 @@ Algorithms for tuning.
 .. autosummary::
     :toctree: ./generated
     :nosignatures:
-    :template: classtemplate.rst
+    :template: autosummary/class.rst
 
     crossover.crossover_pmx
     crossover.crossover_one_point
