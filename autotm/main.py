@@ -6,13 +6,13 @@ from contextlib import contextmanager
 from typing import Optional
 
 import click
+import pandas as pd
 import yaml
 
 from autotm.base import AutoTM
-import pandas as pd
-
 
 # TODO: add proper logging format initialization
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
 
@@ -57,10 +57,11 @@ def prepare_working_dir(working_dir: Optional[str] = None):
         yield working_dir
 
 
-# TODO: add logging level
 @click.group()
-def cli():
-    pass
+@click.option('-v', '--verbose', is_flag=True, show_default=True, default=False, help="Verbose output")
+def cli(verbose: bool):
+    if verbose:
+        logging.basicConfig(level=logging.DEBUG, force=True)
 
 
 @cli.command()
