@@ -10,7 +10,8 @@ import os
 import sys
 
 
-LIB_PATH = os.path.join(os.path.dirname(__file__))
+CURR_PATH = os.path.abspath(os.path.dirname(__file__))
+LIB_PATH = os.path.join(CURR_PATH, os.path.pardir)
 print(LIB_PATH)
 sys.path.insert(0, LIB_PATH)
 
@@ -50,4 +51,7 @@ html_theme = "alabaster"
 
 html_static_path = ['_static']
 
+# Autosummary true if you want to generate it from very beginning
 autosummary_generate = True
+
+set_type_checking_flag = True
