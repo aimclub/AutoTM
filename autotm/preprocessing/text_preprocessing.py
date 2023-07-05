@@ -14,6 +14,9 @@ from spacy.language import Language
 from spacy_langdetect import LanguageDetector
 from nltk.stem import WordNetLemmatizer
 
+
+# TODO: make transformer class and prep function to download all files
+
 nltk.download("stopwords")
 nltk.download("wordnet")
 
