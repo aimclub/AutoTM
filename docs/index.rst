@@ -11,7 +11,7 @@ Welcome to AutoTM's documentation!
 The goal of the library is to provide a simple-to-use interface to perform fast EDA or create interpretable text embeddings.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
    Installation <pages/installation>
