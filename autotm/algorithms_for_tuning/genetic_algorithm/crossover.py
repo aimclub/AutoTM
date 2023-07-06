@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from typing import List, Tuple
+from typing import List, Tuple, Callable
 
 
 def crossover_pmx(parent_1: List[float], parent_2: List[float], **kwargs) -> Tuple[List[float], List[float]]:
@@ -35,7 +35,23 @@ def crossover_pmx(parent_1: List[float], parent_2: List[float], **kwargs) -> Tup
 
 
 # discrete crossover
-def crossover_one_point(parent_1, parent_2, **kwargs):
+def crossover_one_point(parent_1: List[float], parent_2: List[float], **kwargs) -> Tuple[List[float], List[float]]:
+    """
+    One-point crossover
+
+    Exchange points between chromosomes
+
+    Parameters
+    ----------
+    parent_1: List[float]
+        The first individual to be processed
+    parent_2: List[float]
+        The second individual to be processed
+
+    Returns
+    ----------
+    Updated individuals with exchanged chromosome parts
+    """
     elem_cross_prob = kwargs["elem_cross_prob"]
     for i in range(len(parent_1)):
         # removed mutation preservation
@@ -46,7 +62,25 @@ def crossover_one_point(parent_1, parent_2, **kwargs):
     return parent_1, parent_2
 
 
-def crossover_blend_new(parent_1, parent_2, **kwargs):
+def crossover_blend_new(parent_1: List[float], parent_2: List[float], **kwargs) -> Tuple[List[float], List[float]]:
+    """
+    Blend crossover
+
+    Making combination of parents solution with coefficient
+
+    Parameters
+    ----------
+    parent_1: List[float]
+        The first individual to be processed
+    parent_2: List[float]
+        The second individual to be processed
+    alpha: float
+        Blending coefficient
+
+    Returns
+    ----------
+    Updated individuals with exchanged chromosome parts
+    """
     alpha = kwargs["alpha"]
     child_1 = []
     child_2 = []
@@ -59,19 +93,28 @@ def crossover_blend_new(parent_1, parent_2, **kwargs):
     # TODO: reconsider this
     child_1[12:15] = parent_1[12:15]
     child_2[12:15] = parent_2[12:15]
-    # if random.random() > 0.5:
-    #     child_1[12:15] = parent_1[12:15]
-    # else:
-    #     child_1[12:15] = parent_2[12:15]
-    #
-    # if random.random() > 0.5:
-    #     child_2[12:15] = parent_1[12:15]
-    # else:
-    #     child_2[12:15] = parent_2[12:15]
     return child_1, child_2
 
 
-def crossover_blend(parent_1, parent_2, **kwargs):
+def crossover_blend(parent_1: List[float], parent_2: List[float], **kwargs) -> Tuple[List[float], List[float]]:
+    """
+    Blend crossover
+
+    Making combination of parents solution with coefficient
+
+    Parameters
+    ----------
+    parent_1: List[float]
+        The first individual to be processed
+    parent_2: List[float]
+        The second individual to be processed
+    alpha: float
+        Blending coefficient
+
+    Returns
+    ----------
+    Updated individuals with exchanged chromosome parts
+    """
     alpha = kwargs["alpha"]
     child = []
     u = random.random()
@@ -85,7 +128,7 @@ def crossover_blend(parent_1, parent_2, **kwargs):
     return child
 
 
-def crossover(crossover_type: str = "crossover_one_point"):
+def crossover(crossover_type: str = "crossover_one_point") -> Callable:
     """
     Crossover function
 

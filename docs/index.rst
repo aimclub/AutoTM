@@ -15,6 +15,7 @@ The goal of the library is to provide a simple-to-use interface to perform fast 
    :caption: Contents:
 
    Installation <pages/installation>
+   Data preprocessing <pages/preprocessing>
    Optimization algorithms <pages/algorithms_for_tuning>
    Fitness <pages/fitness>
    Data preprocessing <pages/preprocessing>
