@@ -1,0 +1,28 @@
+{
+	"quality": {
+		"type": "string",
+		"hidden": false,
+		"required": true
+	},
+	"bad_words": {
+		"type": "json",
+		"hidden": false,
+		"required": true
+	},
+	"topic_name": {
+		"type": "string",
+		"hidden": false,
+		"required": false
+	},
+	"golden_bad_words": {
+		"type": "boolean",
+		"hidden": false,
+		"required": true
+	},
+	"golden_binary_quality": {
+		"type": "boolean",
+		"hidden": false,
+		"required": true
+	}
+}
+
