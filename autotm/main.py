@@ -1,21 +1,3 @@
-import warnings
-import pprint
-
-import pkg_resources
-
-warnings.resetwarnings()
-
-warnings.filterwarnings('ignore')
-warnings.filterwarnings('ignore', category=PendingDeprecationWarning, append=True)
-warnings.filterwarnings('ignore', category=ImportWarning, append=True)
-warnings.filterwarnings('ignore', category=ResourceWarning, append=True)
-warnings.filterwarnings('ignore', category=pkg_resources.PEP440Warning, append=True)
-warnings.filterwarnings('ignore', category=DeprecationWarning, append=True)
-
-pprint.pprint(warnings.filters)
-
-warnings.warn("Some shitty warning")
-
 import logging
 import os
 import pprint
@@ -27,11 +9,7 @@ import click
 import pandas as pd
 import yaml
 
-warnings.warn("Some shitty warning #2")
-
 from autotm.base import AutoTM
-
-warnings.warn("Some shitty warning #3")
 
 # TODO: add proper logging format initialization
 logging.basicConfig(level=logging.INFO)
