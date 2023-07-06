@@ -1,20 +1,21 @@
 import random
 import numpy as np
+from typing import List
 
 
 def mutation_one_param(
-    individ,
-    low_spb,
-    high_spb,
-    low_spm,
-    high_spm,
-    low_n,
-    high_n,
-    low_back,
-    high_back,
-    low_decor,
-    high_decor,
-    elem_mutation_prob=0.1,
+        individ: List[float],
+        low_spb: float,
+        high_spb: float,
+        low_spm: float,
+        high_spm: float,
+        low_n: int,
+        high_n: int,
+        low_back: float,
+        high_back: float,
+        low_decor: float,
+        high_decor: float,
+        elem_mutation_prob: float = 0.1,
 ):
     for i in range(len(individ)):
         if random.random() <= elem_mutation_prob:
