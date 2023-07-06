@@ -128,7 +128,9 @@ def crossover_blend(parent_1: List[float], parent_2: List[float], **kwargs) -> T
     return child
 
 
+
 def crossover(crossover_type: str = "crossover_one_point") -> Callable:
+
     """
     Crossover function
 

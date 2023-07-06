@@ -1,0 +1,32 @@
+{
+	"exp_id": {
+		"type": "string",
+		"hidden": true,
+		"required": true
+	},
+	"wordset": {
+		"type": "string",
+		"hidden": false,
+		"required": true
+	},
+	"model_id": {
+		"type": "string",
+		"hidden": true,
+		"required": true
+	},
+	"topic_id": {
+		"type": "string",
+		"hidden": true,
+		"required": true
+	},
+	"dataset_name": {
+		"type": "string",
+		"hidden": true,
+		"required": true
+	},
+	"correct_bad_words": {
+		"type": "json",
+		"hidden": false,
+		"required": false
+	}
+}

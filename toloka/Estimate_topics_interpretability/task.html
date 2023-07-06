@@ -1,0 +1,29 @@
+<div class="tsk-block obj-text">
+    <!-- Text of comment. The component in triple curly brackets allows you to upload the task with formatted text (HTML tags and styles) -->
+    <div class="quote-sign"></div>
+    {{{wordset}}}
+</div>
+
+<!-- Radio buttons -->
+<div class="tsk-block">
+    <fieldset>
+        <legend>Can you name a single topic that is represented by this set of words?</legend>
+        {{field type="radio" name="quality" value="good" size="L" label="Yes" hotkey="1" class="yes"}}
+        {{field type="radio" name="quality" value="rather_good" size="L" label="Rather yes" hotkey="1" class="yes"}}
+        {{field type="radio" name="quality" value="rather_bad" size="L" label="Rather no" hotkey="3" class="no"}}
+        {{field type="radio" name="quality" value="bad" size="L" label="No" hotkey="4" class="no"}}
+    </fieldset>
+</div>
+
+<!-- Checkboxes -->
+<div class="tsk-block second_scale">
+    <legend>Give a name in one or few words to the topic described with the wordset</legend>
+    {{field type="input" name="topic_name" value="" placeholder="Topic name" validation-show="right-center"}}
+    
+    <fieldset>
+        <legend>Which words are out of the topic?</legend>
+        {{#each words}}
+            {{field type="checkbox" name=(concat "bad_words." this.name) label=this.title}}
+        {{/each}}
+    </fieldset>
+</div>

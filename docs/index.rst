@@ -14,6 +14,7 @@ The goal of the library is to provide a simple-to-use interface to perform fast 
    :maxdepth: 1
    :caption: Contents:
 
+
    Installation <pages/installation>
    Python api <pages/api/index>
    User guide <pages/userguide/index>
