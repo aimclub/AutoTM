@@ -15,8 +15,8 @@ The goal of the library is to provide a simple-to-use interface to perform fast 
    :caption: Contents:
 
    Installation <pages/installation>
-   Python api <pages/api>
-   User guide <pages/userguide>
+   Python api <pages/api/index>
+   User guide <pages/userguide/index>
 
 
 Indices and tables
