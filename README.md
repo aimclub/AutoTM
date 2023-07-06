@@ -58,10 +58,6 @@ To fit a model:
 To predict with a fitted model:
 ```autotmctl predict --in data/sample_corpora/sample_dataset_lenta.csv --model model.artm```
 
-## Distributed version
-
-Distributed version to run experiments on kubernetes is available in ```autotm-distributed``` brunch. Still this version is in development stage and will be transfered to separate repository.
-
 ## Backlog:
 - [ ] Add tests
 - [ ] Add new multi-stage 
