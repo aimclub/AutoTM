@@ -1,0 +1,32 @@
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: fitness-worker-health-checker
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          annotations:
+            "sidecar.istio.io/inject": "false"
+        spec:
+          serviceAccountName: default-editor
+          containers:
+          - name: health-checker
+            image: node2.bdcl:5000/fitness-worker-health-checker:latest
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - >
+              kube_ns=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace) &&
+              kubectl -n ${kube_ns} logs --prefix --tail=100 -l=app=fitness-worker 2>1 |
+              grep -i 'Could not create logging file: File exists' |
+              perl -n -e'/pod\/(.+)\/worker/ && print "$1\n"' |
+              sort |
+              uniq |
+              xargs -n 1 -t -I {} -P8 kubectl -n ${kube_ns} delete pod {} --ignore-not-found
+          restartPolicy: Never

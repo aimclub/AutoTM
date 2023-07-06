@@ -1,0 +1,7 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mkhodorchenko
+  labels:
+    istio-injection: disabled

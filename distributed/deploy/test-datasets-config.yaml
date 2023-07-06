@@ -1,0 +1,13 @@
+datasets:
+  first_dataset:
+    base_path: "/storage/tiny_20newsgroups"
+    dictionary_path: "dictionary.txt"
+    batches_dir: "batches"
+    mutual_info_dict_path: "mutual_info_dict.pkl"
+    experiments_path: "/tmp/tm_experiments"
+    topic_count: 10
+
+  # the rest settings will be the same as for the first dataset but will be added automatically
+  second_dataset:
+    base_path: "/storage/tiny_20newsgroups_2"
+    topic_count: 10

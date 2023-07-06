@@ -1,0 +1,31 @@
+datasets:
+  # the rest settings will be the same as for the first dataset but will be added automatically
+  books_stroyitelstvo_2030:
+    base_path: "/storage/books_stroyitelstvo_2030_sample"
+    topic_count: 10
+
+  20newsgroups:
+    base_path: "/storage/20newsgroups_sample"
+    topic_count: 20
+
+  clickhouse_issues:
+    base_path: "/storage/clickhouse_issues_sample"
+    labels: yes
+    topic_count: 50
+
+  # the rest settings will be the same as for the first dataset but will be added automatically
+  banners:
+    base_path: "/storage/banners_sample"
+    topic_count: 20
+
+  amazon_food:
+    base_path: "/storage/amazon_food_sample"
+    topic_count: 20
+
+  hotel-reviews:
+    base_path: "/storage/hotel-reviews_sample"
+    topic_count: 20
+
+  lenta_ru:
+    base_path: "/storage/lenta_ru_sample"
+    topic_count: 20

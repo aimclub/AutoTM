@@ -1,0 +1,549 @@
+#!/usr/bin/env bash
+
+set -ex
+
+PROJECT_MODE_NAME="project"
+
+if [[ -z "${KUBE_NAMESPACE}" ]]
+then
+  kubectl_args=""
+else
+  kubectl_args="-n ${KUBE_NAMESPACE}"
+fi
+
+if [[ -z "${DIST_MODE}" ]]
+then
+  DIST_MODE="project"
+fi
+
+if [ "${DIST_MODE}" = "${PROJECT_MODE_NAME}" ]
+then
+  base_dir="./"
+  generator_exe="python3 ./kube_fitness/kube_fitness/deploy_config_generator.py"
+else
+  base_dir="$HOME/.local/share/kube-fitness-data/"
+  # should be made executable too
+  generator_exe="deploy-config-generator"
+fi
+
+registry="node2.bdcl:5000"
+deploy_files_dir="${base_dir}/deploy/"
+default_cfg_path="${deploy_files_dir}/kube-fitness-workers.yaml"
+docker_files_dir="${base_dir}/docker/"
+
+function check_if_in_project_mode() {
+  if [ "${DIST_MODE}" != "${PROJECT_MODE_NAME}" ]
+  then
+    echo "This operation can be executed only in the project mode."
+    exit 1
+  fi
+}
+
+function check_not_if_in_project_mode() {
+  if [ "${DIST_MODE}" = "${PROJECT_MODE_NAME}" ]
+  then
+    echo "This operation cannot be executed in the project mode."
+    exit 1
+  fi
+}
+
+function init() {
+  check_not_if_in_project_mode
+
+  if [ ! -d "${base_dir}" ]
+  then
+    echo "Creating directory ${base_dir}"
+    mkdir -p "${base_dir}"
+    # TODO: make importing from the data folder
+    # $(python3 'import kube_fitness; print(kube_fitness.__path__)')
+  else
+    echo "Directory ${base_dir} already exists"
+  fi
+}
+
+function build_app() {
+  check_if_in_project_mode
+
+  python3 setup.py clean --all sdist bdist_wheel --verbose
+  python3 setup.py clean --all --verbose
+}
+
+function create_mlflow() {
+    kubectl ${kubectl_args} apply -f deploy/mlflow.yaml
+}
+
+function delete_mlflow() {
+    kubectl ${kubectl_args} delete -f deploy/mlflow.yaml --ignore-not-found=true
+}
+
+function build_mlflow_image() {
+    docker build -f "${docker_files_dir}/mlflow-webserver.dockerfile" -t mlflow-webserver:latest .
+}
+
+function push_mlflow_image() {
+    docker tag mlflow-webserver:latest ${registry}/mlflow-webserver:latest
+    docker push ${registry}/mlflow-webserver:latest
+}
+
+function build_health_checker_image() {
+    docker build -f "${docker_files_dir}/health-checker.dockerfile" -t fitness-worker-health-checker:latest .
+}
+
+function push_health_checker_image() {
+    docker tag fitness-worker-health-checker:latest ${registry}/fitness-worker-health-checker:latest
+    docker push ${registry}/fitness-worker-health-checker:latest
+}
+
+function create_health_checker() {
+    kubectl ${kubectl_args} apply -f deploy/fitness-worker-health-checker.yaml
+}
+
+function delete_health_checker() {
+    kubectl ${kubectl_args} delete -f deploy/fitness-worker-health-checker.yaml --ignore-not-found=true
+}
+
+function deploy_health_checker() {
+    build_health_checker_image
+    push_health_checker_image
+    create_health_checker
+}
+
+function build_images() {
+  check_if_in_project_mode
+
+  echo "Building images..."
+
+  docker build -f "${docker_files_dir}/flower.dockerfile" -t flower:1.0 -t flower:latest .
+  docker build -f "${docker_files_dir}/base.dockerfile" -t fitness-base:1.0 -t fitness-base:latest .
+  docker build -f "${docker_files_dir}/worker.dockerfile" -t fitness-worker:1 -t fitness-worker:latest .
+  docker build -f "${docker_files_dir}/client.dockerfile" -t fitness-client:1 -t fitness-client:latest .
+#  docker build -f "${docker_files_dir}/cli.dockerfile" -t fitness-cli:1 -t fitness-cli:latest .
+  build_mlflow_image
+  build_health_checker_image
+
+  echo "Build is finished"
+}
+
+function push_images() {
+  check_if_in_project_mode
+
+  echo "Pushing images into registry ${registry}"
+
+  docker tag flower:latest ${registry}/flower:latest
+  docker tag fitness-base:latest ${registry}/fitness-base:latest
+  docker tag fitness-worker:latest ${registry}/fitness-worker:latest
+  docker tag fitness-client:latest ${registry}/fitness-client:latest
+#  docker tag fitness-cli:latest ${registry}/fitness-cli:latest
+
+  docker push ${registry}/flower:latest
+  docker push ${registry}/fitness-base:latest
+  docker push ${registry}/fitness-worker:latest
+  docker push ${registry}/fitness-client:latest
+#  docker push ${registry}/fitness-cli:latest
+
+  push_mlflow_image
+  push_health_checker_image
+
+  echo "Pushing is ended"
+}
+
+function install() {
+  check_if_in_project_mode
+
+  build_app
+  build_images
+  push_images
+}
+
+
+function gencfg() {
+  echo "Generating config.."
+
+#  python3 ./kube_fitness/kube_fitness/deploy_config_generator.py "${@}"
+  $generator_exe \
+    --config_template_dir "${deploy_files_dir}" \
+    "${@}"
+
+  echo "Config generated"
+}
+
+function testcfg() {
+  echo "Generating test config..."
+
+#  python3 ./kube_fitness/kube_fitness/deploy_config_generator.py \
+  $generator_exe \
+    --config_template_dir "${deploy_files_dir}" \
+    --host-data-dir /mnt/ess_storage/DN_1/storage/home/nbutakov/ \
+    --host-data-dir-mount-path /storage \
+    --datasets-config test-datasets-config.yaml \
+    --worker_mem "5G" \
+    --worker_count 4 \
+    --mongo_collection test_app_tm_stats \
+    --registry "${registry}"
+
+  echo "Test config is generated"
+}
+
+function minikubecfg() {
+  echo "Generating config for local minikube..."
+
+#  python3 ./kube_fitness/kube_fitness/deploy_config_generator.py \
+  $generator_exe \
+    --config_template_dir "${deploy_files_dir}" \
+    --host-data-dir /wspace \
+    --host-data-dir-mount-path /storage \
+    --datasets-config test-datasets-config.yaml \
+    --worker_mem "5G"
+
+  echo "Local minikube config has been generated"
+}
+
+function prodcfg() {
+  echo "Generating config for prod cluster"
+
+  $generator_exe \
+    --config_template_dir "${deploy_files_dir}" \
+    --host-data-dir /mnt/ess_storage/DN_1/storage/home/khodorchenko/GOTM/datasets_TM_scoring \
+    --host-data-dir-mount-path /storage \
+    --datasets-config ess-small-datasets-config.yaml \
+    --registry=node2.bdcl:5000 \
+    --worker_cpu=4 \
+    --worker_mem="24G" \
+    --worker_count=125
+
+  echo "Prod config has been generated"
+}
+
+function create() {
+  echo "Creating kube entities..."
+
+  if [ -z "$1" ]
+  then
+    file="${default_cfg_path}"
+  else
+    file="$1"
+  fi
+
+  kubectl ${kubectl_args} create -f "$file"
+}
+
+function delete() {
+  echo "Deleting kube entities..."
+
+  if [ -z "$1" ]
+  then
+    file="${default_cfg_path}"
+  else
+    file="$1"
+  fi
+
+  if [ -z "$2" ]
+  then
+    kubectl ${kubectl_args} delete -f "$file" --ignore-not-found=true
+  else
+    kubectl ${kubectl_args} delete -f "$file" --ignore-not-found=true --grace-period 0
+  fi
+
+  echo "Deleting command executed"
+}
+
+function recreate() {
+  echo "Recreating kube entities..."
+
+  if [ -z "$1" ]
+  then
+    file="${default_cfg_path}"
+  else
+    file="$1"
+  fi
+
+  delete "$file" "force"
+
+  timeout="80"
+  echo "Waiting deleting to complete in ${timeout}"
+  sleep ${timeout}
+#  out=$(kubectl -v9 wait -f "${file}" --for=delete --timeout=${timeout} 2>&1 || true)
+#  echo $?
+
+#  if [ "$out" != 'error: no matching resources found' ]; then
+#    echo "Error in timeout"
+#    exit 1
+#  fi
+
+  create "$file"
+}
+
+function recreate_client() {
+  echo "Recreating client..."
+
+  set +e
+  kubectl ${kubectl_args} delete -f "${deploy_files_dir}/kube-fitness-client-job.yaml" --ignore-not-found=true --grace-period 0
+  kubectl ${kubectl_args} create -f "${deploy_files_dir}/kube-fitness-client-job.yaml"
+  set -e
+}
+
+function test() {
+  test_type=$1
+  echo "Executing ${test_type} test..."
+
+  case "${test_type}" in
+  "minikube")
+    build_images
+    minikubecfg
+    ;;
+
+  "kube")
+    testcfg
+    ;;
+
+  *)
+    echo "Unknown test type"
+    exit 1
+    ;;
+  esac
+
+  recreate
+
+#  kubectl wait -f "${file}" --for=condition=ready --timeout="15s"
+  sleep 15
+  recreate_client
+
+  # waiting for client
+  sleep 5
+  max_retry=12
+  counter=0
+
+  set +e
+  until (kubectl ${kubectl_args} logs job.batch/fitness-client client | grep "Test run succeded")
+  do
+     [[ counter -eq $max_retry ]] && echo "Failed!" && exit 1
+     echo "Trying again. Try #${counter} / ${max_retry}"
+     ((counter++))
+     sleep 5
+  done
+  set -e
+
+  echo "${test_type} test succeded"
+
+}
+
+function clean() {
+  echo "Deleting everything using generated configs..."
+
+  set +e
+  kubectl ${kubectl_args} delete -f "${deploy_files_dir}/kube-fitness-client-job.yaml" --ignore-not-found=true
+  kubectl ${kubectl_args} delete -f "${deploy_files_dir}/kube-fitness-workers.yaml" --ignore-not-found=true
+  set -e
+}
+
+function get_flower_port() {
+    set +e
+    port_num=$(kubectl ${kubectl_args} get svc celery-flower-service -o jsonpath="{.spec.ports[?(@.port == 5555)].nodePort}")
+    exit_code=$?
+    set -e
+
+    if [ ${exit_code} -ne 0 ]; then
+        echo "Cannot obtain the port for Flower UI. Probably, the service doesn't exist."
+    else
+        echo "Flower UI is running on ${port_num} port (NodePort service)"
+    fi
+}
+
+function client_logs() {
+    exec kubectl logs job/fitness-client
+}
+
+function show_cfg() {
+    echo "Printing config from default location: ${default_cfg_path}"
+    echo -e ""
+
+    cat ${default_cfg_path}
+
+    echo -e ""
+}
+
+function deploy() {
+    build_app
+    install
+    prodcfg
+    recreate
+}
+
+function create_wait_for_configmap() {
+    wget https://raw.githubusercontent.com/eficode/wait-for/master/wait-for -O wait-for.sh
+    kubectl ${kubectl_args} create configmap wait-for-script --from-file=wait-for.sh
+    rm wait-for.sh
+}
+
+function help() {
+  echo "
+  Supported env variables:
+    KUBE_NAMESPACE - a kubernetes namespace to make actions in
+
+  List of commands.
+    init - initialize base directory to store config files (not for project mode)
+    deploy - a command that do everything (build app, install images, generate prod cfg, recreate)
+      to make deployment with prodcfg
+    build-app - build the app as a .whl distribution
+    build-images - build all required docker images
+    push-images - push all required docker images to the private registry on node2.bdcl
+    install-images - build-images and push-images
+    build-mlflow - build mlflow image
+    push-mlflow - push mlflow image
+    create-mlflow - create mlflow entities
+    delete-mlflow - delete mlflow entities
+    deploy-hc - deploy health checker for fitness workers (including build, push, create actions)
+    delete-hc - delete health checker for fitness workers
+    gencfg <args> [OPTIONS] - generate a config file to create kubernetes entities (gen-cfg -h to learn about entities)
+    testcfg - generate a config file for test purposes
+    minikubecfg - generate a config file for test purposes
+    create <cfg> - create kubernetes entities according to <cfg> file
+    delete <cfg> - delete kubernetes entities according to <cfg> file
+    recreate <cfg> - delete <cfg> and create <cfg>
+    recreate-client - delete and create client (for testing purposes)
+    minikube-test - perform test on local minikube (one should execute this script on a machine with deployed minikube)
+    kube-test - perform test on kubernetes (one should execute this script on a machine with kubectl able to access the cluster)
+    clean - delete everything according to generated configs
+    get-flower-port - prints Flower UI port if the service exists
+    clogs - print client logs
+    show-cfg - print content of the default config
+    create-wait-for-configmap - create a configmap required for functioning of mongo express
+    help - prints this message
+  "
+}
+
+function main () {
+    cmd="$1"
+
+    if [ -z "${cmd}" ]
+    then
+      echo "No command is provided."
+      help
+      exit 1
+    fi
+
+    shift 1
+
+    echo "Executing command: ${cmd}"
+
+    case "${cmd}" in
+    "init")
+        init
+        ;;
+
+    "deploy")
+        deploy
+        ;;
+
+    "build-app")
+        build_app
+        ;;
+
+    "build-images")
+        build_images
+        ;;
+
+    "push-images")
+        push_images
+        ;;
+
+    "install-images")
+        install
+        ;;
+
+    "create-mlflow")
+        create_mlflow
+        ;;
+
+    "delete-mlflow")
+        delete_mlflow
+        ;;
+
+    "build-mlflow")
+        build_mlflow_image
+        ;;
+
+    "push-mlflow")
+        push_mlflow_image
+        ;;
+
+    "deploy-hc")
+        deploy_health_checker
+        ;;
+
+    "delete-hc")
+        delete_health_checker
+        ;;
+
+    "gencfg")
+        gencfg "${@}"
+        ;;
+
+    "testcfg")
+        testcfg "${@}"
+        ;;
+
+    "minikubecfg")
+        minikubecfg "${@}"
+        ;;
+
+    "prodcfg")
+        prodcfg "${@}"
+        ;;
+
+    "create")
+        create "$1"
+        ;;
+
+    "delete")
+        delete "$1"
+        ;;
+
+    "recreate")
+        recreate "$1"
+        ;;
+
+    "recreate-client")
+        recreate_client
+        ;;
+
+    "minikube-test")
+        test "minikube"
+        ;;
+
+    "kube-test")
+        test "kube"
+        ;;
+
+    "clean")
+        clean
+        ;;
+
+    "get-flower-port")
+        get_flower_port
+        ;;
+
+    "clogs")
+        client_logs
+        ;;
+
+    "show-cfg")
+        show_cfg
+        ;;
+
+    "create-wait-for-configmap")
+        create_wait_for_configmap
+        ;;
+
+    "help")
+        help
+        ;;
+
+    *)
+        echo "Unknown command: ${cmd}"
+        ;;
+
+    esac
+}
+
+main "${@}"
