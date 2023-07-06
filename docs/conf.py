@@ -9,7 +9,6 @@
 import os
 import sys
 
-
 CURR_PATH = os.path.abspath(os.path.dirname(__file__))
 LIB_PATH = os.path.join(CURR_PATH, os.path.pardir)
 print(LIB_PATH)
@@ -48,9 +47,12 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "alabaster"
+html_theme = "sphinx_rtd_theme"
 
 html_static_path = ['_static']
+
+napoleon_google_docstring = True
+napoleon_numpy_docstring = False
 
 # Autosummary true if you want to generate it from very beginning
 # autosummary_generate = True

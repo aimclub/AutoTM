@@ -6,14 +6,19 @@
 Welcome to AutoTM's documentation!
 ==================================
 
+`AutoTM <https://github.com/aimclub/AutoTM>`_ is am open-source Python library for topic modeling on texts.
+
+The goal of the library is to provide a simple-to-use interface to perform fast EDA or create interpretable text embeddings.
+
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
 
-   pages/algorithms_for_tuning
-   pages/fitness
-   pages/preprocessing
-   pages/visualization
+   Installation <pages/installation>
+   Optimization algorithms <pages/algorithms_for_tuning>
+   Fitness <pages/fitness>
+   Data preprocessing <pages/preprocessing>
+   Visualization <pages/visualization>
 
 
 Indices and tables
