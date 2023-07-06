@@ -4,9 +4,11 @@
 autotm.algorithms_for_tuning
 ======================
 
-Algorithms for tuning.
+Provides an internal interface for working with optimization algorithms.
 
-.. .. currentmodule:: autotm.algorithms_for_tuning.bayesian_optimization
+Genetic Algorithm
+---------------------
+
 .. currentmodule:: autotm.algorithms_for_tuning.genetic_algorithm
 
 .. autosummary::
@@ -19,4 +21,10 @@ Algorithms for tuning.
     crossover.crossover_blend_new
     crossover.crossover_blend
     crossover.crossover
+    mutation.mutation_one_param
+    mutation.positioning_mutation
+    mutation.mutation_combined
+    mutation.mutation_psm
+    mutation.mutation
 
+.. .. currentmodule:: autotm.algorithms_for_tuning.bayesian_optimization

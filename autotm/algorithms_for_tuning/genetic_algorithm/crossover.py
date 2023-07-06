@@ -1,8 +1,24 @@
 import random
 import numpy as np
+from typing import List, Tuple
 
 
-def crossover_pmx(parent_1, parent_2, **kwargs):
+def crossover_pmx(parent_1: List[float], parent_2: List[float], **kwargs) -> Tuple[List[float], List[float]]:
+    """
+    Pmx crossover
+    Exchange chromosome parts
+
+    Parameters
+    ----------
+    parent_1: List[float]
+        The first individual to be processed
+    parent_2: List[float]
+        The second individual to be processed
+
+    Returns
+    ----------
+    Updated individuals with exchanged chromosome parts
+    """
     points_num = len(parent_1)
     flag = False
     while not flag:
