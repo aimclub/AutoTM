@@ -4,14 +4,18 @@ import pickle
 import shutil
 import tempfile
 import uuid
+import warnings
 from typing import Union, Optional, Any, Dict, List
 
 import artm
 import pandas as pd
-from numpy.typing import ArrayLike
 from sklearn.base import BaseEstimator
 
+warnings.warn("Some shitty warning #4")
+
 from autotm.algorithms_for_tuning.bayesian_optimization import bayes_opt
+warnings.warn("Some shitty warning #5")
+
 from autotm.algorithms_for_tuning.genetic_algorithm import genetic_algorithm
 from autotm.fitness.tm import extract_topics, print_topics
 from autotm.infer import TopicsExtractor

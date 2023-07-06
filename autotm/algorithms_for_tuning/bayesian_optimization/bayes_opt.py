@@ -6,8 +6,10 @@ import random
 import sys
 import uuid
 import warnings
+
 from multiprocessing.pool import AsyncResult
 from typing import List, Optional, Union
+warnings.warn("Some shitty warning #6")
 
 import click
 import yaml
@@ -15,8 +17,12 @@ from hyperopt import STATUS_OK, fmin, hp, tpe
 from tqdm import tqdm
 from yaml import Loader
 
+warnings.warn("Some shitty warning #8")
+
 from autotm.algorithms_for_tuning.individuals import IndividualDTO
 from autotm.utils import TqdmToLogger, make_log_config_dict
+
+warnings.warn("Some shitty warning #9")
 
 ALG_ID = "bo"
 
@@ -35,8 +41,6 @@ SPACE = {
     "B": hp.quniform("B", 0, 8, 1),
     "decor_2": hp.quniform("decor_2", 0, 1e5, 0.05),
 }
-
-warnings.filterwarnings("ignore")
 
 logger = logging.getLogger("BO")
 
