@@ -11,15 +11,12 @@ Welcome to AutoTM's documentation!
 The goal of the library is to provide a simple-to-use interface to perform fast EDA or create interpretable text embeddings.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
 
    Installation <pages/installation>
-   Data preprocessing <pages/preprocessing>
-   Optimization algorithms <pages/algorithms_for_tuning>
-   Fitness <pages/fitness>
-   Data preprocessing <pages/preprocessing>
-   Visualization <pages/visualization>
+   Python api <pages/api>
+   User guide <pages/userguide>
 
 
 Indices and tables

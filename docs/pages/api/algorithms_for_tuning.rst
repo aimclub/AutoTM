@@ -18,7 +18,6 @@ Genetic Algorithm
 
     crossover.crossover_pmx
     crossover.crossover_one_point
-    crossover.crossover_blend_new
     crossover.crossover_blend
     crossover.crossover
     mutation.mutation_one_param
