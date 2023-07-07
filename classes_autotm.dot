@@ -1,0 +1,50 @@
+digraph "classes_autotm" {
+charset="utf-8"
+rankdir=BT
+"0" [label="{AutoTM|alg_name : str\lalg_params : Optional[Dict[str, Any]]\lartm_train_options : Optional[Dict[str, Any]]\lexp_dataset_name : Optional[str]\lexp_id : Optional[str]\lexp_tag : Optional[str]\llog_file_path : Optional[str]\lpreprocessing_params : Optional[Dict[str, Any]]\lsurrogate_alg_name : Optional[str]\lsurrogate_alg_params : Optional[Dict[str, Any]]\ltexts_column_name : str\ltopic_count : int\ltopics\lworking_dir_path : Optional[str]\l|fit(dataset: Union[pd.DataFrame, pd.Series]): \lfit_predict(dataset: Union[pd.DataFrame, pd.Series]): \lload(cls: str, path): \lpredict(dataset: Union[pd.DataFrame, pd.Series]): \lprint_topics()\lsave(path: str, overwrite: bool)\l}", shape="record"];
+"1" [label="{BaseIndividual|dto\lparams\l|}", shape="record"];
+//"2" [label="{BaseScore|value : list\l|call(model, precomputed_data: Dict[str, Any])\lcompute_always(fit_iteration): bool\lcompute_on_last(fit_iteration): bool\lload(cls, path)\lsave(path)\lupdate(score)\l}", shape="record"];
+//"3" [label="{BigartmFitness|dataset : str\lexp_id : Optional[int]\l|make_individ()\lparse_kwargs()\l}", shape="record"];
+//"4" [label="{Config|arbitrary_types_allowed : bool\l|}", shape="record"];
+"5" [label="{Dataset|base_path\lbatches\ldictionary\llabels\lmutual_info_dict\lsample_batches\ltexts\ltopic_count\ltotal_tokens\l|load_dataset()\lverify_dataset_files()\l}", shape="record"];
+"6" [label="{FitnessCalculatorWrapper|data_path\ldataset\ltopic_count\ltrain_option\l|run(params)\l}", shape="record"];
+"7" [label="{GA|all_fitness : list\lall_params : list\lalpha : NoneType\lbest_proc : float\lcalc_scheme : str\lcrossover\lcrossover_changes_dict : dict\lcrossover_children : int\ldata_path\ldataset\learly_stopping_iterations : Optional[int]\lelem_cross_prob : float\levaluations_counter : int\lexp_id : Optional[int]\lfitness_obj_type : str\lhigh_back : int\lhigh_decor : float\lhigh_n : int\lhigh_prob : int\lhigh_sp_phi : float\lhigh_spb : float\lhigh_spm : float\llow_back : int\llow_decor : int\llow_n : int\llow_prob : int\llow_sp_phi : float\llow_spb : int\llow_spm : float\lmetric_collector\lmutation\lnum_fitness_evaluations : Optional[int]\lnum_individuals\lnum_iterations\lselection\lsurrogate : NoneType\ltag : Optional[str]\ltopic_count : Optional[int]\ltrain_option : str\luse_nelder_mead : bool\luse_nelder_mead_in_crossover : bool\luse_nelder_mead_in_mutation : bool\luse_nelder_mead_in_selectior : bool\l|apply_nelder_mead(starting_points_set, num_gen, num_iterations)\lcheck_params_bounds(params)\linit_individ(base_model)\linit_population()\lrun(verbose, visualize_results): Individual\lrun_crossover(pairs_generator, surrogate_iteration, iteration_num: int)\lsave_params(population)\lset_regularizer_limits(low_decor, high_decor, low_n, high_n, low_back, high_back, low_spb, high_spb, low_spm, high_spm, low_sp_phi, high_sp_phi, low_prob, high_prob)\lsurrogate_calculation(population)\l}", shape="record"];
+//"8" [label="{GAmultistage|bag_of_regularizers : list\ldataset\lhigh_back : int\lhigh_decor : float\lhigh_n : int\lhigh_sp_phi : float\lhigh_spb : float\lhigh_spm : float\linitial_element_stage_probability : float\llow_back : int\llow_decor : int\llow_n : int\llow_sp_phi : float\llow_spb : int\llow_spm : float\lmax_stages : int\lnum_individuals\lpositioning_matrix : ndarray\l|init_individ()\linit_population()\lset_regularizer_limits(low_decor, high_decor, low_n, high_n, low_back, high_back, low_spb, high_spb, low_spm, high_spm, low_sp_phi, high_sp_phi)\l}", shape="record"];
+"9" [label="{Individual|dto\lfitness_value\lparams\l|}", shape="record"];
+"10" [label="{IndividualDTO|alg_id : Optional[str]\ldata_path : str\ldataset : str\lexp_id : Optional[int]\lfitness_name : str\lfitness_value : Optional[MetricsScores]\lforce_dataset_settings_checkout : bool\lid : str\literation_id : int\lparams : List[object]\ltag : Optional[str]\ltopic_count : Optional[int]\ltrain_option : str\l|make_params_dict()\l}", shape="record"];
+//"11" [label="{LearnedModel|general_model\lnative_model : list\l|general_predict(df)\lnative_predict(df)\l}", shape="record"];
+"12" [label="{LearnedScorerFitnessIndividual|fitness_value\l|}", shape="record"];
+"13" [label="{MetricsCollector|crossover_changes : dict\lcrossover_df : NoneType\ldict_of_population : dict\lmetric_df : NoneType, DataFrame\lmutation_changes : dict\lmutation_df : NoneType, DataFrame\lnum_generations : int\lsave_fname\lsave_path\l|get_metric_df()\lsave_and_visualise_trace(plot_mutation_effectiveness)\lsave_crossover(generation: int, parent_1: list, parent_2: list, child_1: list, parent_1_fitness: float, parent_2_fitness: float, child_1_fitness: float, child_2: list, child_2_fitness: list)\lsave_fitness(generation: int, params: list, fitness: float)\lsave_mutation(generation: int, original_params: list, mutated_params: list, original_fitness: float, mutated_fitness: float)\lsave_trace()\lwrite_metrics_to_file()\l}", shape="record"];
+//"14" [label="{ModelStorage|stage_1_components : dict\lstage_1_hyperp : dict\l|model_search(model)\l}", shape="record"];
+"15" [label="{NelderMeadOptimization|data_path\ldataset : tuple\lexp_id\lhigh_back : int\lhigh_decor : float\lhigh_n : int\lhigh_prob : int\lhigh_sp_phi : float\lhigh_spb : float\lhigh_spm : float\llow_back : int\llow_decor : int\llow_n : int\llow_prob : int\llow_sp_phi : float\llow_spb : int\llow_spm : float\ltopic_count\ltrain_option\l|initialize_params()\lrun_algorithm(num_iterations: int, ini_point: list)\l}", shape="record"];
+"16" [label="{RegularFitnessIndividual|fitness_value\l|}", shape="record"];
+"17" [label="{SampleBatchVectorizer|sample_size : int\l|}", shape="record"];
+"18" [label="{SparsityScalerBasedFitnessIndividual|fitness_value\l|}", shape="record"];
+//"19" [label="{Strategy|B\lBD\lC\lcc\lccov1\lccovmu\lcentroid : ndarray\lchiN\lcond\lcs\ldamps\ldiagD\ldim\llambda_\lmu\lmueff\lparams : dict\lpc : ndarray\lps : ndarray\lsigma\lupdate_count : int\lweights : ndarray\l|computeParams(params)\lgenerate(ind_init)\lupdate(population)\l}", shape="record"];
+"20" [label="{Surrogate|br_n_estimators : NoneType\lbr_n_jobs : NoneType\lgpr_kernel : Product, RationalQuadratic, Sum, NoneType, ExpSineSquared\lkwargs : dict\lname\lsurrogate : RandomForestRegressor, BaggingRegressor, GaussianProcessRegressor, SVR, DecisionTreeRegressor, NoneType\l|create()\lfit(X, y)\lpredict(X)\lscore(X, y)\l}", shape="record"];
+"21" [label="{TopicModel|B\lS\lback\ldataset : Dataset\ldecor\ldecor_2\ldecor_test : bool\lmodel : NoneType\ln1\ln2\ln3\ln4\lnum_processors : int\lsp1\lsp2\lspb\lspecific\lst1\lst2\lstb\ltopic_count : int\ltrain_option : str\luid\l|decor_train()\ldispose()\lget_topics()\linit_model()\lmetrics_get_avg_coherence_score(for_individ_fitness): MetricsScores\lmetrics_get_last_avg_vals(texts, total_tokens, calculate_significance, calculate_npmi, calculate_switchp): MetricsScores\lprint_topics()\lsave_model(path)\ltrain(option)\l}", shape="record"];
+"22" [label="{TopicModelFactory|cached_dataset_settings : Dict[str, Dataset]\ldata_path : str\ldataset_name : str\lexperiments_path : str\lfitness_name : str\lforced_update : bool\lnum_processors : Optional[int]\lparams : list\ltm : NoneType\ltopic_count : Optional[int]\ltrain_option : str\l|init_dataset(cls, settings): Dataset\linit_factory_settings(cls: Optional[int], num_processors: Dict[str, Dict[str, object]], dataset_settings)\l}", shape="record"];
+//"23" [label="{TopicModelFiles|files\l|}", shape="record"];
+"24" [label="{TopicsExtractor|model\ltopics_dict\l|get_prob_mixture(dataset, working_dir: str, text_column_name, top_n): \linfo()\lreturn_topics()\l}", shape="record"];
+//"25" [label="{TqdmToLogger|buf : str\llevel : int\llogger\l|flush()\lwrite(buf)\l}", shape="record"];
+//"26" [label="{log_exec_timer|duration\lname : Optional[str]\l|}", shape="record"];
+"1" -> "9" [arrowhead="empty", arrowtail="none"];
+"8" -> "7" [arrowhead="empty", arrowtail="none"];
+"12" -> "1" [arrowhead="empty", arrowtail="none"];
+"16" -> "1" [arrowhead="empty", arrowtail="none"];
+"18" -> "1" [arrowhead="empty", arrowtail="none"];
+"13" -> "7" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="metric_collector", style="solid"];
+"20" -> "7" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="surrogate", style="solid"];
+"21" -> "22" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="tm", style="solid"];
+"9" -> "10" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="dto", style="solid"];
+"1" -> "10" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="dto", style="solid"];
+"7" -> "9" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="dto", style="solid"];
+"0" -> "7" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="dto", style="solid"];
+"0" -> "17" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="dto", style="solid"];
+"0" -> "24" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="dto", style="solid"];
+"7" -> "15" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="dto", style="solid"];
+"7" -> "22" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="dto", style="solid"];
+"21" -> "5" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="dto", style="solid"];
+"22" -> "5" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="dto", style="solid"];
+"15" -> "6" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="dto", style="solid"];
+}
