@@ -5,7 +5,6 @@ import os
 import random
 import sys
 import uuid
-import warnings
 from multiprocessing.pool import AsyncResult
 from typing import List, Optional, Union
 
@@ -35,8 +34,6 @@ SPACE = {
     "B": hp.quniform("B", 0, 8, 1),
     "decor_2": hp.quniform("decor_2", 0, 1e5, 0.05),
 }
-
-warnings.filterwarnings("ignore")
 
 logger = logging.getLogger("BO")
 
