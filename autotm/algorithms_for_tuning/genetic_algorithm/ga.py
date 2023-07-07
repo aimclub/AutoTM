@@ -41,7 +41,6 @@ from autotm.visualization.dynamic_tracker import MetricsCollector
 ALG_ID = "ga"
 SPEEDUP = True
 
-warnings.filterwarnings("ignore")
 logger = logging.getLogger("GA_algo")
 
 

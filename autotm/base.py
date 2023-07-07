@@ -8,10 +8,15 @@ from typing import Union, Optional, Any, Dict, List
 
 import artm
 import pandas as pd
-from numpy.typing import ArrayLike
 from sklearn.base import BaseEstimator
 
-from autotm.algorithms_for_tuning.bayesian_optimization import bayes_opt
+import warnings
+
+# TODO: Suppressing of DeprecationWarnings that are raise if we are running with __main__, need to research further
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from autotm.algorithms_for_tuning.bayesian_optimization import bayes_opt
+
 from autotm.algorithms_for_tuning.genetic_algorithm import genetic_algorithm
 from autotm.fitness.tm import extract_topics, print_topics
 from autotm.infer import TopicsExtractor

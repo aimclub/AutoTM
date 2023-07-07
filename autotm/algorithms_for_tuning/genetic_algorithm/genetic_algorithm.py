@@ -9,8 +9,6 @@ from autotm.algorithms_for_tuning.genetic_algorithm.ga import GA
 from autotm.fitness.tm import fit_tm, TopicModel
 from autotm.utils import make_log_config_dict
 
-warnings.filterwarnings("ignore")
-
 logger = logging.getLogger(__name__)
 
 NUM_FITNESS_EVALUATIONS = 150
