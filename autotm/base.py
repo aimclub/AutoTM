@@ -21,7 +21,7 @@ from autotm.algorithms_for_tuning.genetic_algorithm import genetic_algorithm
 from autotm.fitness.tm import extract_topics, print_topics
 from autotm.infer import TopicsExtractor
 from autotm.preprocessing.dictionaries_preparation import prepare_all_artifacts
-from autotm.preprocessing.text_preprocessing import process_dataset
+from autotm.preprocessing.text_preprocessing import DataTransformer
 
 logger = logging.getLogger(__name__)
 
@@ -135,13 +135,18 @@ class AutoTM(BaseEstimator):
         os.makedirs(self.working_dir_path, exist_ok=True)
 
         logger.info("Stage 1: Dataset preparation")
+        data_transformer = DataTransformer(self.texts_column_name,
+                                           processed_dataset_path,
+                                           **self.preprocessing_params)
+        data_transformer.fit_transform(dataset)
+
         # TODO: convert Series to DataFrame
-        process_dataset(
-            dataset,
-            self.texts_column_name,
-            processed_dataset_path,
-            **self.preprocessing_params
-        )
+        # process_dataset(
+        #     dataset,
+        #     self.texts_column_name,
+        #     processed_dataset_path,
+        #     **self.preprocessing_params
+        # )
         prepare_all_artifacts(processed_dataset_path)
         logger.info("Stage 2: Tuning the topic model")
 
@@ -254,12 +259,12 @@ class AutoTM(BaseEstimator):
         self._check_if_already_fitted()
         return extract_topics(self._model)
 
-    def print_topics(self):
+    def print_topics(self, output_type: str = 'stdout', save_path: Optional[str] = 'topics.csv'):
         """
         Print topics in a human readable form in stdout
         """
         self._check_if_already_fitted()
-        print_topics(self._model)
+        print_topics(self._model, output_type, save_path)
 
     def _check_if_already_fitted(self, fit_is_ok=True):
         if fit_is_ok and self._model is None:

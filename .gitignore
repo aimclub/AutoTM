@@ -165,6 +165,8 @@ requirements.txt
 
 mixtures.csv
 model.artm
+topics.csv
+*.bak
 
 # sphinx docs
 docs/_build

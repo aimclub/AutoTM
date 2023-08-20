@@ -41,11 +41,20 @@ def extract_topics(model: artm.ARTM):
     return topics
 
 
-def print_topics(model: artm.ARTM):
+def print_topics(model: artm.ARTM, output_type: str = 'stdout', save_path: str = 'topics.csv'):
+
+    topics_out = {}
+
     for i, (topic, top_tokens) in enumerate(extract_topics(model).items()):
-        print(topic)
-        print(top_tokens)
-        print()
+        if output_type == 'csv':
+            topics_out[topic] = top_tokens
+        else:
+            print(topic)
+            print(top_tokens)
+            print()
+
+    if output_type == 'csv':
+        pd.DataFrame.from_dict(topics_out).to_csv(save_path)
 
 
 class Dataset:
