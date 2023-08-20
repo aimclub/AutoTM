@@ -93,7 +93,7 @@ def cli(verbose: bool):
     default=False,
     help="Overwrite if model or/and mixture files already exist"
 )
-def fit(
+def fit_predict(
         config_path: Optional[str],
         working_dir: Optional[str],
         in_: str,
@@ -126,7 +126,65 @@ def fit(
         logger.info(f"Saving mixtures to {os.path.abspath(out)}")
         mixtures.to_csv(out, mode='w' if overwrite else 'x')
 
-    logger.info("Finished AutoTM")
+    logger.info("Finished training AutoTM model")
+
+
+
+@cli.command()
+@click.option('--config', 'config_path', type=str, help="A path to config for fitting the model")
+@click.option(
+    '--working-dir',
+    type=str,
+    help="A path to working directory used by AutoTM for storing intermediate files. "
+         "If not specified temporary directory will be created in the current directory "
+         "and will be deleted upon successful finishing."
+)
+@click.option('--in', 'in_', type=str, required=True, help="A file in csv format with text corpus to build model on")
+@click.option('--model', type=str, default='model.artm', help="A path that will contain fitted ARTM model")
+@click.option('-t', '--topic-count', type=int, help="Number of topics to fit model with")
+@click.option('--lang', type=str, help='Language of the dataset')
+@click.option('--alg', type=str, help="Hyperparameters tuning algorithm. Available: ga, bayes")
+@click.option('--surrogate-alg', type=str, help="Surrogate algorithm to use.")
+@click.option('--log-file', type=str, help="Log file path")
+@click.option(
+    '--overwrite',
+    is_flag=True,
+    show_default=True,
+    default=False,
+    help="Overwrite if model or/and mixture files already exist"
+)
+def fit(
+    config_path: Optional[str],
+    working_dir: Optional[str],
+    in_: str,
+    model: str,
+    topic_count: Optional[int],
+    lang: Optional[str],
+    alg: Optional[str],
+    surrogate_alg: Optional[str],
+    log_file: Optional[str],
+    overwrite: bool
+):
+    config = obtain_autotm_params(config_path, topic_count, lang, alg, surrogate_alg, log_file)
+
+    logger.debug(f"Running AutoTM with params: {pprint.pformat(config, indent=4)}")
+
+    logger.info(f"Loading data from {os.path.abspath(in_)}")
+    df = pd.read_csv(in_)
+
+    with prepare_working_dir(working_dir) as work_dir:
+        logger.info(f"Using working directory {os.path.abspath(work_dir)} for AutoTM")
+        autotm = AutoTM(
+            **config,
+            working_dir_path=work_dir
+        )
+
+        autotm.fit(df)
+        logger.info(f"Saving model to {os.path.abspath(model)}")
+        autotm.save(model, overwrite=overwrite)
+
+    logger.info("Finished training AutoTM model.")
+
 
 
 @cli.command()
@@ -155,6 +213,26 @@ def predict(model: str, in_: str, out: str, overwrite: bool):
 
     logger.info(f"Saving mixtures to {os.path.abspath(out)}")
     mixtures.to_csv(out, mode='w' if overwrite else 'x')
+
+
+@cli.command()
+@click.option('--model', type=str, required=True, help="A path to fitted saved ARTM model")
+@click.option(
+    '--out',
+    type=str,
+    default="topics.csv",
+    help="A path to a file in csv format that will contain topics obtained from trained model"
+)
+@click.option('--type', 'type_',
+              type=str, 
+              default="stdout",
+              help="Define how the topics will be outputted. If stdout, then topics will be printed on the console only. If csv, then topics will be saved as csv file")
+def get_topics(model: str, out: Optional[str] = None, type_: str = 'stdout'):
+    logger.info(f"Getting topics from model {os.path.abspath(model)}")
+
+    autotm_loaded = AutoTM.load(model)
+    autotm_loaded.print_topics(output_type=type_, save_path=out)
+
 
 
 if __name__ == "__main__":
