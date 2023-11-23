@@ -1,7 +1,14 @@
 
-<img align="left" src="docs/img/MyLogo.png" alt="Library scheme" height="200"/>
+<p align="center">
+<picture>
+<img src="docs/img/MyLogo.png" alt="Library scheme" height="200"/>
+</picture>
+</p>
 
-# AutoTM
+<h2 align="center">
+AutoTM
+</h2>
+
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![build](https://github.com/ngc436/AutoTM/actions/workflows/build.yaml/badge.svg)
@@ -9,6 +16,10 @@
 [![PyPI version](https://badge.fury.io/py/autotm.svg)](https://badge.fury.io/py/autotm)
 [![Documentation Status](https://readthedocs.org/projects/autotm/badge/?version=latest)](https://autotm.readthedocs.io/en/latest/?badge=latest)
 [![Downloads](https://static.pepy.tech/personalized-badge/autotm?period=total&units=international_system&left_color=grey&right_color=orange&left_text=Downloads)](https://pepy.tech/project/autotm)
+
+<p>
+</p>
+
 Automatic parameters selection for topic models (ARTM approach) using evolutionary algorithms. 
 AutoTM provides necessary tools to preprocess english and russian text datasets and tune topic models.
 
