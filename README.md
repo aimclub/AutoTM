@@ -9,15 +9,23 @@
 AutoTM
 </h2>
 
-
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-![build](https://github.com/ngc436/AutoTM/actions/workflows/build.yaml/badge.svg)
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-[![PyPI version](https://badge.fury.io/py/autotm.svg)](https://badge.fury.io/py/autotm)
-[![Documentation Status](https://readthedocs.org/projects/autotm/badge/?version=latest)](https://autotm.readthedocs.io/en/latest/?badge=latest)
-[![Downloads](https://static.pepy.tech/personalized-badge/autotm?period=total&units=international_system&left_color=grey&right_color=orange&left_text=Downloads)](https://pepy.tech/project/autotm)
-
-<p>
+<p align="center">
+    <a href="https://www.repostatus.org/#active">
+    <img alt="Project Status: Active – The project has reached a stable, usable state and is being actively developed." src="https://www.repostatus.org/badges/latest/active.svg">
+    </a>
+    <img alt="build" src="https://github.com/ngc436/AutoTM/actions/workflows/build.yaml/badge.svg">
+    <a href="https://opensource.org/licenses/BSD-3-Clause">
+    <img alt="License" src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg">
+    </a>
+    <a href="https://badge.fury.io/py/autotm">
+    <img alt="PyPI version" src="https://badge.fury.io/py/autotm.svg">
+    </a>
+    <a href="https://autotm.readthedocs.io/en/latest/?badge=latest">
+    <img alt="Documentation Status" src="https://readthedocs.org/projects/autotm/badge/?version=latest">
+    </a>
+    <a href="https://pepy.tech/project/autotm">
+    <img alt="Downloads" src="https://static.pepy.tech/personalized-badge/autotm?period=total&units=international_system&left_color=grey&right_color=orange&left_text=Downloads">
+    </a>
 </p>
 
 Automatic parameters selection for topic models (ARTM approach) using evolutionary algorithms. 
