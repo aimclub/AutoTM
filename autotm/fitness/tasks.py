@@ -16,6 +16,7 @@ def do_fitness_calculating(
     alg_args: Optional[str] = None,
     is_tmp: bool = False,
 ) -> str:
+    logger.info("Doing fitness calculating with individual %s" % individual)
     individual: IndividualDTO = IndividualDTO.parse_raw(individual)
 
     with fit_tm_of_individual(

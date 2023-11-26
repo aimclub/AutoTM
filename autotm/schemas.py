@@ -32,7 +32,7 @@ class IndividualDTO(BaseModel):
     fitness_name: str = "default"
     dataset: str = "default"
     force_dataset_settings_checkout: bool = False
-    fitness_value: MetricsScores = None
+    fitness_value: Optional[MetricsScores] = None
     exp_id: Optional[int] = None
     alg_id: Optional[str] = None
     tag: Optional[str] = None
