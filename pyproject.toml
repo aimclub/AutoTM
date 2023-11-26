@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "autotm"
-version = "0.1.1"
+version = "0.2.1"
 description = "Automatic hyperparameters tuning for topic models (ARTM approach) using evolutionary algorithms"
 authors = [
     "Khodorchenko Maria <mariyaxod@yandex.ru>",
