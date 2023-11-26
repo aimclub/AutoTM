@@ -11,12 +11,43 @@ def mutation_one_param(
         high_spm: float,
         low_n: int,
         high_n: int,
-        low_back: float,
-        high_back: float,
+        low_back: int,
+        high_back: int,
         low_decor: float,
         high_decor: float,
         elem_mutation_prob: float = 0.1,
 ):
+    """
+    One-point mutation
+
+    Checking the probability of mutation for each of the elements
+
+    Parameters
+    ----------
+    individ: List[float]
+        Individual to be processed
+    low_spb: float
+        The lower possible bound for sparsity regularizer of back topics
+    high_spb: float
+        The higher possible bound for sparsity regularizer of back topics
+    low_spm: float
+        The lower possible bound for sparsity regularizer of specific topics
+    high_spm: float
+        The higher possible bound for sparsity regularizer of specific topics
+    low_n: int
+        The lower possible bound for amount of iterations between stages
+    high_n: int
+        The higher possible bound for amount of iterations between stages
+    low_back:
+        The lower possible bound for amount of back topics
+    high_back:
+        The higher possible bound for amount of back topics
+
+
+    Returns
+    ----------
+    Updated individuals with exchanged chromosome parts
+    """
     for i in range(len(individ)):
         if random.random() <= elem_mutation_prob:
             if i in [2, 3]:

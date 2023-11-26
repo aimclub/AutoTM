@@ -1,8 +1,6 @@
 
 <p align="center">
-<picture>
 <img src="docs/img/MyLogo.png" alt="Library scheme" height="200"/>
-</picture>
 </p>
 
 <h2 align="center">

@@ -322,7 +322,7 @@ def mutual_info_dict_preparation(fname):
 
 
 def prepare_all_artifacts(save_path: str):
-    DATASET_PATH = os.path.join(save_path, "ppp.csv")
+    DATASET_PATH = os.path.join(save_path, "prep_df.csv")
     BATCHES_DIR = os.path.join(save_path, "batches")
     WV_PATH = os.path.join(save_path, "test_set_data_voc.txt")
     COOC_DICTIONARY_PATH = os.path.join(save_path, "cooc_dictionary.txt")
@@ -333,7 +333,7 @@ def prepare_all_artifacts(save_path: str):
     ppmi_dict_df = os.path.join(save_path, "ppmi_df.txt")
     ppmi_dict_tf = os.path.join(save_path, "ppmi_tf.txt")
     MUTUAL_INFO_DICT_PATH = os.path.join(save_path, "mutual_info_dict.pkl")
-    DOCUMENTS_TO_BATCH_PATH = os.path.join(save_path, "ppp.csv")
+    DOCUMENTS_TO_BATCH_PATH = os.path.join(save_path, "prep_df.csv")
 
     # TODO: check why batch vectorizer is returned (unused further)
     prepare_batch_vectorizer(
