@@ -1,0 +1,8 @@
+ns_cpu_limit: '16'
+ns_mem_limit: '64Gi'
+
+jupyter_cpu_limits: '2'
+jupyter_mem_limits: '8Gi'
+
+# On install one also need to set
+# user: 'tutor'
