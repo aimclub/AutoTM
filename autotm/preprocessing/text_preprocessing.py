@@ -164,7 +164,7 @@ def process_dataset(
     :return:
     """
     os.makedirs(save_path, exist_ok=True)
-    save_path = os.path.join(save_path, "ppp.csv")
+    save_path = os.path.join(save_path, "prep_df.csv")
     data = pd.read_csv(fname) if isinstance(fname, str) else cast(pd.DataFrame, fname)
     data = parallelize_dataframe(
         data, lemmatize_text, n_cores, lang=lang, col_to_process=col_to_process
