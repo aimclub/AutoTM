@@ -18,4 +18,4 @@ metadata:
   name: fitness-worker-config
 data:
   datasets-config.yaml: |
-    {{ datasets_config_content | indent( width=4, first=False) }}
+    {{ .Values.datasets_config_content }}

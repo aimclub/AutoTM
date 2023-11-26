@@ -21,8 +21,8 @@ spec:
             name: rabbitmq-config
       containers:
       - name: rabbitmq
-        image: node2.bdcl:5000/rabbitmq:3.8-management-alpine
-        imagePullPolicy: IfNotPresent
+        image: {{ .Values.rabbitmq_image }}
+        imagePullPolicy: {{ .Values.pull_policy }}
         ports:
         - containerPort: 5672
         volumeMounts:
@@ -48,8 +48,8 @@ spec:
     spec:
       containers:
       - name: redis
-        image: node2.bdcl:5000/redis:6.2
-        imagePullPolicy: IfNotPresent
+        image: {{ .Values.redis_image }}
+        imagePullPolicy: {{ .Values.pull_policy }}
         resources:
           requests:
             cpu: 100m
@@ -75,8 +75,8 @@ spec:
     spec:
       containers:
       - name: flower
-        image: {{ flower_image }}
-        imagePullPolicy: {{ pull_policy }}
+        image: {{ .Values.flower_image }}
+        imagePullPolicy: {{ .Values.pull_policy }}
         ports:
         - containerPort: 5555
         env:
@@ -92,7 +92,7 @@ metadata:
   labels:
     app: fitness-worker
 spec:
-  replicas: {{ worker_count }}
+  replicas: {{ .Values.worker_count }}
   selector:
     matchLabels:
       app: fitness-worker
@@ -104,10 +104,13 @@ spec:
         app: fitness-worker
     spec:
       volumes:
+#        - name: dataset
+#          hostPath:
+#            path: {{ host_data_dir }}
+#            type: Directory
         - name: dataset
-          hostPath:
-            path: {{ host_data_dir }}
-            type: Directory
+          persistentVolumeClaim:
+            claimName: autotm-datasets
         - name: config-volume
           configMap:
             name: fitness-worker-config
@@ -116,11 +119,11 @@ spec:
             claimName: mlflow-artifact-store-pvc
       containers:
       - name: worker
-        image: {{ image }}
-        imagePullPolicy: {{ pull_policy }}
+        image: {{ .Values.worker_image }}
+        imagePullPolicy: {{ .Values.pull_policy }}
         volumeMounts:
           - name: dataset
-            mountPath: {{ host_data_dir_mount_path }}
+            mountPath: {{ .Values.worker_datasets_dir_path }}
           - name: config-volume
             mountPath: /etc/fitness/datasets-config.yaml
             subPath: datasets-config.yaml
@@ -132,7 +135,7 @@ spec:
           - name: CELERY_RESULT_BACKEND
             value: "redis://redis:6379/1" # "rpc://"
           - name: NUM_PROCESSORS
-            value: "{{ worker_cpu }}"
+            value: {{ .Values.worker_cpu }}
           - name: DATASETS_CONFIG
             value: /etc/fitness/datasets-config.yaml
           - name: MLFLOW_TRACKING_URI
@@ -141,11 +144,11 @@ spec:
           - name: MONGO_URI
             value: mongodb://mongoadmin:secret@mongo-tm-experiments-db:27017
           - name: MONGO_COLLECTION
-            value: "{{ mongo_collection or 'tm_stats' }}"
+            value: {{ .Values.worker_mongo_collection }}
         resources:
           requests:
-            memory: "{{ worker_mem }}"
-            cpu: "{{ worker_cpu }}"
+            memory: {{ .Values.worker_mem }}
+            cpu: {{ .Values.worker_cpu }}
           limits:
-            memory: "{{ worker_mem }}"
-            cpu: "{{ worker_cpu }}"
+            memory: {{ .Values.worker_mem }}
+            cpu: {{ .Values.worker_cpu }}

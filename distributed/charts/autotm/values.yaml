@@ -1,8 +1,19 @@
-ns_cpu_limit: '16'
-ns_mem_limit: '64Gi'
+# General section
+pull_policy: "Always"
 
-jupyter_cpu_limits: '2'
-jupyter_mem_limits: '8Gi'
+# Rabbitmq section
+rabbitmq_image: "node2:bdcl:5000/rabbitmq:3:8-management-alpine"
 
-# On install one also need to set
-# user: 'tutor'
+# Redis section
+redis_image: "node2.bdcl:5000/redis:6.2"
+
+# Flower section
+flower_image: ""
+
+# Fitness worker section
+worker_image: ""
+worker_datasets_dir_path: "/storage"
+worker_count: 1
+worker_cpu: 1
+worker_mem: "8Gi"
+worker_mongo_collection: "tm_stats"
