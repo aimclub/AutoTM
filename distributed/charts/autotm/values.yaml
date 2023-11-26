@@ -1,6 +1,8 @@
 # General section
-autotm_prefix: "autotm-"
+autotm_prefix: &autom_prefix "autotm"
 pull_policy: "Always"
+required_labels:
+  owner: *autom_prefix
 
 # Rabbitmq section
 rabbitmq_image: "node2:bdcl:5000/rabbitmq:3:8-management-alpine"
