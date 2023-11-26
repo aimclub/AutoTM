@@ -30,7 +30,7 @@ spec:
             mountPath: /etc/rabbitmq/conf.d/consumer-settings.conf
             subPath: consumer-settings.conf
 ---
-apiVersion: apps/v1 #  for k8s versions before 1.9.0 use apps/v1beta2  and before 1.8.0 use extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
@@ -104,19 +104,15 @@ spec:
         app: fitness-worker
     spec:
       volumes:
-#        - name: dataset
-#          hostPath:
-#            path: {{ host_data_dir }}
-#            type: Directory
         - name: dataset
           persistentVolumeClaim:
             claimName: autotm-datasets
         - name: config-volume
           configMap:
-            name: fitness-worker-config
+            name: autotm-worker-config
         - name: mlflow-vol
           persistentVolumeClaim:
-            claimName: mlflow-artifact-store-pvc
+            claimName: autotm-mlflow-artifact-store
       containers:
       - name: worker
         image: {{ .Values.worker_image }}
@@ -139,10 +135,10 @@ spec:
           - name: DATASETS_CONFIG
             value: /etc/fitness/datasets-config.yaml
           - name: MLFLOW_TRACKING_URI
-            value: mysql+pymysql://mlflow:mlflow@mlflow-db:3306/mlflow
+            value: {{ .Values.worker_mlflow_url }}
           # see: https://github.com/mongodb/mongo-python-driver/blob/c8d920a46bfb7b054326b3e983943bfc794cb676/pymongo/mongo_client.py
           - name: MONGO_URI
-            value: mongodb://mongoadmin:secret@mongo-tm-experiments-db:27017
+            value: {{ .Values.worker_mongo_url }}
           - name: MONGO_COLLECTION
             value: {{ .Values.worker_mongo_collection }}
         resources:

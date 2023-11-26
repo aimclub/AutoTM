@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: rabbitmq-config
+  name: autotm-rabbitmq-config
 data:
   consumer-settings.conf: |
     ## Consumer timeout
@@ -15,7 +15,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: fitness-worker-config
+  name: autotm-worker-config
 data:
   datasets-config.yaml: |
     {{ .Values.datasets_config_content }}
