@@ -196,8 +196,16 @@ class AutoTM(BaseEstimator):
         os.makedirs(self.working_dir_path, exist_ok=True)
 
         with tempfile.TemporaryDirectory(dir=self.working_dir_path) as extractor_working_dir:
+            processed_dataset_path = os.path.join(extractor_working_dir, "preprocessed_dataset.csv")
+            process_dataset(
+                dataset,
+                self.texts_column_name,
+                processed_dataset_path,
+                **self.preprocessing_params
+            )
+            processed_dataset = pd.read_csv(processed_dataset_path)
             topics_extractor = TopicsExtractor(self._model)
-            mixtures = topics_extractor.get_prob_mixture(dataset=dataset, working_dir=extractor_working_dir)
+            mixtures = topics_extractor.get_prob_mixture(dataset=processed_dataset, working_dir=extractor_working_dir)
 
         return mixtures
 
