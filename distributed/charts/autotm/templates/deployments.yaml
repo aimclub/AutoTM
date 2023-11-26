@@ -110,9 +110,11 @@ spec:
         - name: config-volume
           configMap:
             name: autotm-worker-config
+        {{- if .Values.worker_mlflow_url -}}
         - name: mlflow-vol
           persistentVolumeClaim:
             claimName: autotm-mlflow-artifact-store
+        {{- end -}}
       containers:
       - name: worker
         image: {{ .Values.worker_image }}
@@ -123,8 +125,10 @@ spec:
           - name: config-volume
             mountPath: /etc/fitness/datasets-config.yaml
             subPath: datasets-config.yaml
+          {{- if .Values.worker_mlflow_url -}}
           - mountPath: "/var/lib/mlruns"
             name: mlflow-vol
+          {{- end -}}
         env:
           - name: CELERY_BROKER_URL
             value: "amqp://guest:guest@rabbitmq-service:5672"
@@ -134,13 +138,17 @@ spec:
             value: {{ .Values.worker_cpu }}
           - name: DATASETS_CONFIG
             value: /etc/fitness/datasets-config.yaml
+          {{- if .Values.worker_mlflow_url -}}
           - name: MLFLOW_TRACKING_URI
             value: {{ .Values.worker_mlflow_url }}
+          {{- end -}}
           # see: https://github.com/mongodb/mongo-python-driver/blob/c8d920a46bfb7b054326b3e983943bfc794cb676/pymongo/mongo_client.py
+          {{- if .Values.worker_mongo_url -}}
           - name: MONGO_URI
             value: {{ .Values.worker_mongo_url }}
           - name: MONGO_COLLECTION
             value: {{ .Values.worker_mongo_collection }}
+          {{- end -}}
         resources:
           requests:
             memory: {{ .Values.worker_mem }}

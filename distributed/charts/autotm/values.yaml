@@ -1,4 +1,5 @@
 # General section
+autotm_prefix: "autotm-"
 pull_policy: "Always"
 
 # Rabbitmq section
