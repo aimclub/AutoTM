@@ -21,7 +21,7 @@ from autotm.algorithms_for_tuning.genetic_algorithm import genetic_algorithm
 from autotm.fitness.tm import extract_topics, print_topics
 from autotm.infer import TopicsExtractor
 from autotm.preprocessing.dictionaries_preparation import prepare_all_artifacts
-from autotm.preprocessing.text_preprocessing import process_dataset
+from autotm.preprocessing.text_preprocessing import process_dataset, PROCESSED_TEXT_COLUMN
 
 logger = logging.getLogger(__name__)
 
@@ -109,7 +109,7 @@ class AutoTM(BaseEstimator):
         self.exp_dataset_name = exp_dataset_name
         self._model: Optional[artm.ARTM] = None
 
-    def fit(self, dataset: Union[pd.DataFrame, pd.Series]) -> 'AutoTM':
+    def fit(self, dataset: Union[pd.DataFrame, pd.Series], processed_dataset_path: Optional[str] = None) -> 'AutoTM':
         """
         Preprocess texts in the datasets, looks for the best hyperparameters for ARTM model and fits the model
         with these parameters. The instance will contain topics with the most probable words belonging to them.
@@ -124,11 +124,12 @@ class AutoTM(BaseEstimator):
         -------
         self : object
             Fitted Estimator.
+            :param processed_dataset_path: optional path where to write intermediate processed dataset
 
         """
         self._check_if_already_fitted(fit_is_ok=False)
 
-        processed_dataset_path = os.path.join(self.working_dir_path, f"{uuid.uuid4()}")
+        processed_dataset_path = processed_dataset_path or os.path.join(self.working_dir_path, f"{uuid.uuid4()}")
 
         logger.info(f"Stage 0: Create working dir {self.working_dir_path} if not exists")
 
@@ -196,16 +197,20 @@ class AutoTM(BaseEstimator):
         os.makedirs(self.working_dir_path, exist_ok=True)
 
         with tempfile.TemporaryDirectory(dir=self.working_dir_path) as extractor_working_dir:
-            processed_dataset_path = os.path.join(extractor_working_dir, "preprocessed_dataset.csv")
-            process_dataset(
-                dataset,
-                self.texts_column_name,
-                processed_dataset_path,
-                **self.preprocessing_params
-            )
-            processed_dataset = pd.read_csv(processed_dataset_path)
+            if PROCESSED_TEXT_COLUMN not in dataset.columns:
+                process_dataset(
+                    dataset,
+                    self.texts_column_name,
+                    extractor_working_dir,
+                    **self.preprocessing_params
+                )
+                preprocessed_dataset = pd.read_csv(os.path.join(extractor_working_dir, "prep_df.csv"))
+            else:
+                preprocessed_dataset = dataset
             topics_extractor = TopicsExtractor(self._model)
-            mixtures = topics_extractor.get_prob_mixture(dataset=processed_dataset, working_dir=extractor_working_dir)
+            mixtures = topics_extractor.get_prob_mixture(
+                dataset=preprocessed_dataset, working_dir=extractor_working_dir
+            )
 
         return mixtures
 
@@ -229,8 +234,11 @@ class AutoTM(BaseEstimator):
         """
         self._check_if_already_fitted(fit_is_ok=False)
 
-        self.fit(dataset)
-        return self.predict(dataset)
+        processed_dataset_path = os.path.join(self.working_dir_path, f"{uuid.uuid4()}")
+        self.fit(dataset, processed_dataset_path=processed_dataset_path)
+
+        preprocessed_dataset = pd.read_csv(os.path.join(processed_dataset_path, "prep_df.csv"))
+        return self.predict(preprocessed_dataset)
 
     def save(self, path: str, overwrite: bool = False):
         """

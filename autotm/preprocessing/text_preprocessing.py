@@ -14,6 +14,7 @@ from spacy.language import Language
 from spacy_langdetect import LanguageDetector
 from nltk.stem import WordNetLemmatizer
 
+PROCESSED_TEXT_COLUMN = "processed_text"
 
 # TODO: make transformer class and prep function to download all files
 
@@ -169,7 +170,7 @@ def process_dataset(
     data = parallelize_dataframe(
         data, lemmatize_text, n_cores, lang=lang, col_to_process=col_to_process
     )
-    data["tokens_len"] = data["processed_text"].apply(tokens_num)
+    data["tokens_len"] = data[PROCESSED_TEXT_COLUMN].apply(tokens_num)
     data = data[data["tokens_len"] > min_tokens_count]
     data.to_csv(save_path, index=None)
     print("Saved to {}".format(save_path))
