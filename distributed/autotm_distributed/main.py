@@ -2,8 +2,8 @@ import os
 
 import yaml
 
-from kube_fitness.tasks import make_celery_app
-from kube_fitness.tm import TopicModelFactory
+from autotm_distributed.tasks import make_celery_app
+from autotm_distributed.tm import TopicModelFactory
 
 if __name__ == '__main__':
     if "DATASETS_CONFIG" in os.environ:

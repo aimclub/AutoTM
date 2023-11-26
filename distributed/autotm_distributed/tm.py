@@ -18,8 +18,8 @@ from billiard.exceptions import SoftTimeLimitExceeded
 from gensim.models.coherencemodel import CoherenceModel
 from tqdm import tqdm
 
-from kube_fitness.metrics import MetricsScores, AVG_COHERENCE_SCORE, TimeMeasurements
-from kube_fitness.utils import log_exec_timer
+from autotm_distributed import MetricsScores, AVG_COHERENCE_SCORE, TimeMeasurements
+from autotm_distributed import log_exec_timer
 
 logger = logging.getLogger()
 logging.basicConfig(level="INFO")

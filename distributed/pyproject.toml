@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "autotm-distributed"
+version = "0.1.0"
+description = ""
+authors = ["fonhorst <fonhorst@alipoov.nb@gmail.com>"]
+readme = "README.md"
+packages = [{include = "autotm_distributed"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+bigartm = "0.9.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

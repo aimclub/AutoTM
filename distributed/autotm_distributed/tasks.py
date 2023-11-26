@@ -13,11 +13,11 @@ from celery.result import GroupResult, AsyncResult
 from celery.utils.log import get_task_logger
 from tqdm import tqdm
 
-from kube_fitness.metrics import AVG_COHERENCE_SCORE
-from kube_fitness.params_logging_utils import log_params_and_artifacts, log_stats, model_files
-from kube_fitness.schemas import IndividualDTO
-from kube_fitness.tm import fit_tm_of_individual, calculate_fitness_of_individual
-from kube_fitness.utils import TqdmToLogger
+from autotm_distributed import AVG_COHERENCE_SCORE
+from autotm_distributed.params_logging_utils import log_params_and_artifacts, log_stats, model_files
+from autotm_distributed.schemas import IndividualDTO
+from autotm_distributed.tm import fit_tm_of_individual, calculate_fitness_of_individual
+from autotm_distributed import TqdmToLogger
 
 logger = logging.getLogger("root")
 task_logger = get_task_logger(__name__)

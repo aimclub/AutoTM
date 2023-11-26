@@ -1,6 +1,6 @@
 import unittest
 
-from kube_fitness.metrics import AVG_COHERENCE_SCORE
+from kube_fitness import AVG_COHERENCE_SCORE
 from kube_fitness.tm import TopicModelFactory, calculate_fitness_of_individual
 
 
