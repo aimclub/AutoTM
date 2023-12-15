@@ -1,3 +1,22 @@
+##################
+#### MLFlow
+##################
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mlflow-mysql-cnf
+data:
+  # file-like keys
+  my.cnf: |
+    [mysqld]
+    max_connections=500
+    wait_timeout=15
+    interactive_timeout=15
+#    thread_pool_size=32
+##################
+#### Celery & Fitness Workers
+##################
 ---
 apiVersion: v1
 kind: ConfigMap

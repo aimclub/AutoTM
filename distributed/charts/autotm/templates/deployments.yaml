@@ -1,3 +1,214 @@
+##################
+#### MLFlow
+##################
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlflow
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        app: mlflow
+    spec:
+      volumes:
+        - name: mlflow-vol
+          persistentVolumeClaim:
+            claimName: mlflow-artifact-store-pvc
+      containers:
+      - name: mlflow
+        image: node2.bdcl:5000/mlflow-webserver:latest
+        args: [
+            "--backend-store-uri", "mysql+pymysql://mlflow:mlflow@mlflow-db:3306/mlflow",
+            "--default-artifact-root", "/var/lib/mlruns",
+            "--host", "0.0.0.0"
+        ]
+        volumeMounts:
+          - mountPath: "/var/lib/mlruns"
+            name: mlflow-vol
+        ports:
+        - containerPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlflow-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        app: mlflow-db
+    spec:
+      volumes:
+        - name: mlflow-db-vol
+          persistentVolumeClaim:
+            claimName: mlflow-db-pvc
+        - name: mysql-cnf
+          configMap:
+            name: mlflow-mysql-cnf
+            items:
+              - key: my.cnf
+                path: my.cnf
+      containers:
+      - name: mlflow-db
+        image: mysql/mysql-server:5.7.28
+        env:
+          - name: MYSQL_DATABASE
+            value: mlflow
+          - name: MYSQL_USER
+            value: mlflow
+          - name: MYSQL_PASSWORD
+            value: mlflow
+          - name: MYSQL_ROOT_PASSWORD
+            value: mlflow
+        volumeMounts:
+          - mountPath: "/var/lib/mysql"
+            name: mlflow-db-vol
+          - mountPath: /etc/mysql/my.cnf
+            name: mysql-cnf
+            subPath: my.cnf
+        ports:
+        - containerPort: 3306
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: mlflow-db-phpmyadmin
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: mlflow-db-phpmyadmin
+#  template:
+#    metadata:
+#      annotations:
+#        "sidecar.istio.io/inject": "false"
+#      labels:
+#        app: mlflow-db-phpmyadmin
+#    spec:
+#      containers:
+#      - name: phpmyadmin
+#        image: phpmyadmin:5.1.1
+#        imagePullPolicy: IfNotPresent
+#        env:
+#          - name: PMA_HOST
+#            value: mlflow-db
+#          - name: PMA_PORT
+#            value: 3306
+#          - name: PMA_USER
+#            value: mlflow
+#          - name: PMA_PASSWORD
+#            value: mlflow
+#        ports:
+#        - containerPort: 80
+
+##################
+#### Mongo
+##################
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-tm-experiments-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-tm-experiments-db
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        app: mongo-tm-experiments-db
+    spec:
+      tolerations:
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoSchedule"
+      volumes:
+        - name: mongo-vol
+          persistentVolumeClaim:
+            claimName: mongo-tm-experiments-pvc
+      containers:
+      - name: mongo
+        image: mongo:4.4.6-bionic
+        imagePullPolicy: IfNotPresent
+        args: [
+            "--dbpath", "/var/lib/mongodb",
+            "--bind_ip_all"
+        ]
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: mongoadmin
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            value: secret
+        volumeMounts:
+          - mountPath: "/var/lib/mongodb"
+            name: mongo-vol
+        ports:
+        - containerPort: 27017
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-express-tm-experiments
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-express-tm-experiments
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        app: mongo-express-tm-experiments
+    spec:
+#      volumes:
+#        - name: wait-for-vol
+#          configMap:
+#            name: wait-for-script
+#            defaultMode: 0777
+      containers:
+      - name: mongo-express
+        image: mongo-express:latest
+        imagePullPolicy: IfNotPresent
+#        command: [ "/bin/sh" ]
+#        args: [ "/wait-for.sh", "$ME_CONFIG_MONGODB_SERVER:$ME_CONFIG_MONGODB_PORT", "--", "tini", "--", "/docker-entrypoint.sh" ]
+        env:
+          - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+            value: mongoadmin
+          - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+            value: secret
+          - name: ME_CONFIG_MONGODB_SERVER
+            value: mongo-tm-experiments-db
+          - name: ME_CONFIG_MONGODB_PORT
+            value: "27017"
+        ports:
+        - containerPort: 8081
+#        volumeMounts:
+#          - mountPath: "/wait-for.sh"
+#            name: wait-for-vol
+#            subPath: wait-for.sh
+##################
+#### Celery & Fitness Workers
+##################
 ---
 apiVersion: apps/v1
 kind: Deployment

@@ -1,3 +1,55 @@
+##################
+#### MLFlow
+##################
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: mlflow-db-phpmyadmin
+#spec:
+#  type: NodePort
+#  ports:
+#  - port: 80
+#  selector:
+#    app: mlflow-db-phpmyadmin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow-db
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mlflow-db
+##################
+#### Mongo
+##################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-tm-experiments-db
+spec:
+  type: NodePort
+  ports:
+  - port: 27017
+  selector:
+    app: mongo-tm-experiments-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-express
+spec:
+  type: NodePort
+  ports:
+  - port: 8081
+  selector:
+    app: mongo-express-tm-experiments
+##################
+#### Celery & Fitness Workers
+##################
 ---
 apiVersion: v1
 kind: Service
