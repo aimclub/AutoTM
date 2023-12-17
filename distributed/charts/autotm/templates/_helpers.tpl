@@ -96,3 +96,21 @@ Celery result backend url
 {{- define "autotm.celery_result_backend" -}}
 {{- printf "redis://%sredis:6379/1" (include "autotm.prefix" .) -}}
 {{- end -}}
+
+{{/*
+Check if required persistent volume exists.
+One should invoke it like '{{ include "autotm.find_pv" (list . "pv_mlflow_db") }}', where 'pv_mlflow_db' is a variable from values.yaml
+See:
+- https://stackoverflow.com/questions/70803242/helm-pass-single-string-to-a-template
+- https://austindewey.com/2021/06/02/writing-function-based-templates-in-helm/
+*/}}
+{{- define "autotm.find_pv" -}}
+{{- $root := index . 0 -}}
+{{- $pv_var := index . 1 -}}
+{{- $pv_name := (printf "%s%s" (include "autotm.prefix" $root) (get $root.Values $pv_var)) -}}
+{{- $result := (lookup "v1" "PersistentVolume" "" $pv_name) -}}
+{{- if empty $result -}}
+{{- (printf "Persistent volume with name '%s' not found" $pv_name) | fail -}}
+{{- end -}}
+{{- $result.metadata.name -}}
+{{- end -}}

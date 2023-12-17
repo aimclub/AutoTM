@@ -11,8 +11,8 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
 spec:
-  storageClassName: manual
-  volumeName: {{ .Values.pv_mlflow_db }}
+  storageClassName: {{ .Values.storage_class }}
+  volumeName: {{ include "autotm.find_pv" (list . "pv_mlflow_db") }}
   accessModes:
     - ReadWriteOnce
   resources:
@@ -28,8 +28,8 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
 spec:
-  storageClassName: manual
-  volumeName: {{ .Values.pv_mlflow_artifact_store }}
+  storageClassName: {{ .Values.storage_class }}
+  volumeName: {{ include "autotm.find_pv" (list . "pv_mlflow_artifact_store") }}
   accessModes:
     - ReadWriteMany
   resources:
@@ -48,8 +48,8 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
 spec:
-  storageClassName: manual
-  volumeName: {{ .Values.pv_mongo_db }}
+  storageClassName: {{ .Values.storage_class }}
+  volumeName: {{ include "autotm.find_pv" (list . "pv_mongo_db") }}
   accessModes:
     - ReadWriteOnce
   resources:
@@ -68,8 +68,8 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
 spec:
-  storageClassName: manual
-  volumeName: {{ .Values.pv_dataset_store }}
+  storageClassName: {{ .Values.storage_class }}
+  volumeName: {{ include "autotm.find_pv" (list . "pv_dataset_store") }}
   accessModes:
     - ReadOnly
   resources:
