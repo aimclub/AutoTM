@@ -1,27 +1,27 @@
 ##################
 #### MLFlow
 ##################
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: mlflow-db-phpmyadmin
-#spec:
-#  type: NodePort
-#  ports:
-#  - port: 80
-#  selector:
-#    app: mlflow-db-phpmyadmin
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mlflow-db
+  name: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+  selector:
+    app: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "autotm.prefix" . }}mlflow-db
 spec:
   ports:
   - port: 3306
   selector:
-    app: mlflow-db
+    app: {{ include "autotm.prefix" . }}mlflow-db
 ##################
 #### Mongo
 ##################
@@ -29,24 +29,24 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongo-tm-experiments-db
+  name: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
 spec:
   type: NodePort
   ports:
   - port: 27017
   selector:
-    app: mongo-tm-experiments-db
+    app: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mongo-express
+  name: {{ include "autotm.prefix" . }}mongo-express
 spec:
   type: NodePort
   ports:
   - port: 8081
   selector:
-    app: mongo-express-tm-experiments
+    app: {{ include "autotm.prefix" . }}mongo-express-tm-experiments
 ##################
 #### Celery & Fitness Workers
 ##################
@@ -54,30 +54,30 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: rabbitmq-service
+  name: {{ include "autotm.prefix" . }}rabbitmq-service
 spec:
   ports:
   - port: 5672
   selector:
-    app: rabbitmq
+    app: {{ include "autotm.prefix" . }}rabbitmq
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: redis
+  name: {{ include "autotm.prefix" . }}redis
 spec:
   ports:
   - port: 6379
   selector:
-    app: redis
+    app: {{ include "autotm.prefix" . }}redis
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: celery-flower-service
+  name: {{ include "autotm.prefix" . }}celery-flower-service
 spec:
   type: NodePort
   ports:
   - port: 5555
   selector:
-    app: celery-flower
+    app: {{ include "autotm.prefix" . }}celery-flower

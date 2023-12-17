@@ -5,7 +5,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mlflow-db-pvc
+  name: {{ include "autotm.prefix" . }}mlflow-db-pvc
 spec:
   storageClassName: manual
   volumeName: mlflow-db-pv
@@ -18,7 +18,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mlflow-artifact-store-pvc
+  name: {{ include "autotm.prefix" . }}mlflow-artifact-store-pvc
 spec:
   storageClassName: manual
   volumeName: mlflow-artifact-store-pv
@@ -34,7 +34,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mongo-tm-experiments-pvc
+  name: {{ include "autotm.prefix" . }}mongo-tm-experiments-pvc
 spec:
   storageClassName: manual
   volumeName: mongo-tm-experiments-pv-part3
@@ -43,33 +43,3 @@ spec:
   resources:
     requests:
       storage: 50Gi
-##################
-#### Celery & Fitness Workers
-##################
-# TODO: redis & rabbitmq
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: rabbitmq-pvc
-spec:
-  storageClassName: manual
-  volumeName: rabbitmq-pv
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: redis-pvc
-spec:
-  storageClassName: manual
-  volumeName: redis-pv
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 25Gi

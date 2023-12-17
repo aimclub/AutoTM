@@ -21,7 +21,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.autotm_prefix -}}rabbitmq-config
+  name: {{ include "autotm.prefix" . }}rabbitmq-config
   labels:
     {{- range $key, $val := .Values.required_labels }}
     {{ $key }}: {{ $val | quote }}
@@ -38,7 +38,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.autotm_prefix -}}worker-config
+  name: {{ include "autotm.prefix" . }}worker-config
   labels:
     {{- range $key, $val := .Values.required_labels }}
     {{ $key }}: {{ $val | quote }}

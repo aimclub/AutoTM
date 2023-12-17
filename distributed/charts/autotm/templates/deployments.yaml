@@ -5,18 +5,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlflow
+  name: {{ include "autotm.prefix" . }}mlflow
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mlflow
+      app: {{ include "autotm.prefix" . }}mlflow
   template:
     metadata:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: mlflow
+        app: {{ include "autotm.prefix" . }}mlflow
     spec:
       volumes:
         - name: mlflow-vol
@@ -39,12 +39,12 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mlflow-db
+  name: {{ include "autotm.prefix" . }}mlflow-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mlflow-db
+      app: {{ include "autotm.prefix" . }}mlflow-db
   strategy:
     type: Recreate
   template:
@@ -52,7 +52,7 @@ spec:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: mlflow-db
+        app: {{ include "autotm.prefix" . }}mlflow-db
     spec:
       volumes:
         - name: mlflow-db-vol
@@ -84,39 +84,38 @@ spec:
             subPath: my.cnf
         ports:
         - containerPort: 3306
-#---
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: mlflow-db-phpmyadmin
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: mlflow-db-phpmyadmin
-#  template:
-#    metadata:
-#      annotations:
-#        "sidecar.istio.io/inject": "false"
-#      labels:
-#        app: mlflow-db-phpmyadmin
-#    spec:
-#      containers:
-#      - name: phpmyadmin
-#        image: phpmyadmin:5.1.1
-#        imagePullPolicy: IfNotPresent
-#        env:
-#          - name: PMA_HOST
-#            value: mlflow-db
-#          - name: PMA_PORT
-#            value: 3306
-#          - name: PMA_USER
-#            value: mlflow
-#          - name: PMA_PASSWORD
-#            value: mlflow
-#        ports:
-#        - containerPort: 80
-
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        app: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
+    spec:
+      containers:
+      - name: phpmyadmin
+        image: phpmyadmin:5.1.1
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: PMA_HOST
+            value: mlflow-db
+          - name: PMA_PORT
+            value: 3306
+          - name: PMA_USER
+            value: mlflow
+          - name: PMA_PASSWORD
+            value: mlflow
+        ports:
+        - containerPort: 80
 ###################
 ##### Mongo
 ###################
@@ -124,18 +123,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mongo-tm-experiments-db
+  name: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mongo-tm-experiments-db
+      app: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
   template:
     metadata:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: mongo-tm-experiments-db
+        app: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
     spec:
       tolerations:
         - key: "node.kubernetes.io/disk-pressure"
@@ -167,18 +166,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mongo-express-tm-experiments
+  name: {{ include "autotm.prefix" . }}mongo-express-tm-experiments
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mongo-express-tm-experiments
+      app: {{ include "autotm.prefix" . }}mongo-express-tm-experiments
   template:
     metadata:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: mongo-express-tm-experiments
+        app: {{ include "autotm.prefix" . }}mongo-express-tm-experiments
     spec:
 #      volumes:
 #        - name: wait-for-vol
@@ -213,18 +212,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rabbitmq
+  name: {{ include "autotm.prefix" . }}rabbitmq
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: rabbitmq
+      app: {{ include "autotm.prefix" . }}rabbitmq
   template:
     metadata:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: rabbitmq
+        app: {{ include "autotm.prefix" . }}rabbitmq
     spec:
       volumes:
         - name: config-volume
@@ -244,18 +243,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis
+  name: {{ include "autotm.prefix" . }}redis
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: redis
+      app: {{ include "autotm.prefix" . }}redis
   template:
     metadata:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: redis
+        app: {{ include "autotm.prefix" . }}redis
     spec:
       containers:
       - name: redis
@@ -271,18 +270,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: celery-flower
+  name: {{ include "autotm.prefix" . }}celery-flower
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: celery-flower
+      app: {{ include "autotm.prefix" . }}celery-flower
   template:
     metadata:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: celery-flower
+        app: {{ include "autotm.prefix" . }}celery-flower
     spec:
       containers:
       - name: flower
@@ -299,20 +298,20 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fitness-worker
+  name: {{ include "autotm.prefix" . }}fitness-worker
   labels:
     app: fitness-worker
 spec:
   replicas: {{ .Values.worker_count }}
   selector:
     matchLabels:
-      app: fitness-worker
+      app: {{ include "autotm.prefix" . }}fitness-worker
   template:
     metadata:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: fitness-worker
+        app: {{ include "autotm.prefix" . }}fitness-worker
     spec:
       volumes:
         - name: dataset

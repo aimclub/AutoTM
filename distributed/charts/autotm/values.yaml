@@ -11,10 +11,10 @@ rabbitmq_image: "node2:bdcl:5000/rabbitmq:3:8-management-alpine"
 redis_image: "node2.bdcl:5000/redis:6.2"
 
 # Flower section
-flower_image: "node2.bdcl:5000/redis:6.2"
+flower_image: ""
 
 # Fitness worker section
-worker_image: "node2.bdcl:5000/redis:6.2"
+worker_image: ""
 worker_datasets_dir_path: "/storage"
 worker_count: 1
 worker_cpu: 1
