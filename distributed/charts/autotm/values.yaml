@@ -23,7 +23,7 @@ storage_class: "manual"
 pv_mlflow_db: "mlflow-db-pv"
 pv_mlflow_artifact_store: "mlflow-artifact-store-pv"
 pv_mongo_db: "mongo-tm-experiments-pv-part3"
-pv_dataset_store: "fitness-dataset-store=pv"
+pv_dataset_store: "spark-datasets-experiment-pv"
 
 ### Mlflow
 mlflow_mysql_database: "mlflow"

@@ -111,6 +111,7 @@ See:
 {{- $result := (lookup "v1" "PersistentVolume" "" $pv_name) -}}
 {{- if empty $result -}}
 {{- (printf "Persistent volume with name '%s' not found" $pv_name) | fail -}}
-{{- end -}}
+{{- else -}}
 {{- $result.metadata.name -}}
+{{- end -}}
 {{- end -}}
