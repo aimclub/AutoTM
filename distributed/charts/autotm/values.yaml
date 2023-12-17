@@ -24,6 +24,13 @@ pv_mlflow_db: "mlflow-db-pv"
 pv_mlflow_artifact_store: "mlflow-artifact-store-pv"
 pv_mongo_db: "mongo-tm-experiments-pv-part3"
 
+
+### Mlflow
+mlflow_mysql_database: "mlflow"
+mlflow_mysql_user: "mlflow"
+mlflow_mysql_password: "mlflow"
+mlflow_mysql_root_password: "mlflow"
+
 ### Fitness Worker settings
 worker_datasets_dir_path: "/storage"
 worker_count: 1

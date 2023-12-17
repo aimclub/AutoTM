@@ -26,15 +26,15 @@ spec:
         app: {{ include "autotm.prefix" . }}mlflow
     spec:
       volumes:
-        - name: mlflow-vol
-          persistentVolumeClaim:
-            claimName: {{ include "autotm.prefix" . }}mlflow-artifact-store-pvc
+      - name: mlflow-vol
+        persistentVolumeClaim:
+          claimName: {{ include "autotm.prefix" . }}mlflow-artifact-store-pvc
       containers:
       - name: mlflow
         image: {{ .Values.mlflow_image }}
         imagePullPolicy: {{ .Values.pull_policy }}
         args: [
-            "--backend-store-uri", "mysql+pymysql://mlflow:mlflow@mlflow-db:3306/mlflow",
+            "--backend-store-uri", {{ include "autotm.mlflow_db_url" . }},
             "--default-artifact-root", "/var/lib/mlruns",
             "--host", "0.0.0.0"
         ]
@@ -85,13 +85,13 @@ spec:
         imagePullPolicy: {{ .Values.pull_policy }}
         env:
           - name: MYSQL_DATABASE
-            value: mlflow
+            value: {{ .Values.mlflow_mysql_database }}
           - name: MYSQL_USER
-            value: mlflow
+            value: {{ .Values.mlflow_mysql_user }}
           - name: MYSQL_PASSWORD
-            value: mlflow
+            value: {{ .Values.mlflow_mysql_password }}
           - name: MYSQL_ROOT_PASSWORD
-            value: mlflow
+            value: {{ .Values.mlflow_mysql_root_password }}
         volumeMounts:
           - mountPath: "/var/lib/mysql"
             name: mlflow-db-vol
@@ -100,45 +100,6 @@ spec:
             subPath: my.cnf
         ports:
         - containerPort: 3306
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
-  labels:
-    {{- range $key, $val := .Values.required_labels }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
-  template:
-    metadata:
-      annotations:
-        "sidecar.istio.io/inject": "false"
-      labels:
-        {{- range $key, $val := .Values.required_labels }}
-        {{ $key }}: {{ $val | quote }}
-        {{- end }}
-        app: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
-    spec:
-      containers:
-      - name: phpmyadmin
-        image: {{ .Values.phpmyadmin_image }}
-        imagePullPolicy: {{ .Values.pull_policy }}
-        env:
-          - name: PMA_HOST
-            value: mlflow-db
-          - name: PMA_PORT
-            value: 3306
-          - name: PMA_USER
-            value: mlflow
-          - name: PMA_PASSWORD
-            value: mlflow
-        ports:
-        - containerPort: 80
 ###################
 ##### Mongo
 ###################

@@ -20,21 +20,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
-  labels:
-    {{- range $key, $val := .Values.required_labels }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
-spec:
-  type: NodePort
-  ports:
-  - port: 80
-  selector:
-    app: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
----
-apiVersion: v1
-kind: Service
-metadata:
   name: {{ include "autotm.prefix" . }}mlflow-db
   labels:
     {{- range $key, $val := .Values.required_labels }}

@@ -68,3 +68,7 @@ Helper function to define prefix for all entities
 {{- $prefix := default .Values.autotm_prefix "" | trunc 16  -}}
 {{- ternary $prefix (printf "%s-" $prefix) (empty $prefix) -}}
 {{- end -}}
+
+{{- define "autotm.mlflow_db_url" -}}
+{{- printf "mysql+pymysql://%s:%s@%smlflow-db:3306/%s" (.Values.mlflow_mysql_user) (.Values.mlflow_mysql_password) (include "autotm.prefix" . ) (.Values.mlflow_mysql_database) -}}
+{{- end -}}
