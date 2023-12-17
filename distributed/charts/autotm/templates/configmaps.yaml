@@ -5,7 +5,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mlflow-mysql-cnf
+  name: {{ .Values.autotm_prefix -}}mlflow-mysql-cnf
 data:
   # file-like keys
   my.cnf: |
@@ -13,7 +13,7 @@ data:
     max_connections=500
     wait_timeout=15
     interactive_timeout=15
-#    thread_pool_size=32
+    thread_pool_size=32
 ##################
 #### Celery & Fitness Workers
 ##################
@@ -21,7 +21,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.autotm_prefix -}}-rabbitmq-config
+  name: {{ .Values.autotm_prefix -}}rabbitmq-config
   labels:
     {{- range $key, $val := .Values.required_labels }}
     {{ $key }}: {{ $val | quote }}
@@ -38,11 +38,11 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.autotm_prefix -}}-worker-config
+  name: {{ .Values.autotm_prefix -}}worker-config
   labels:
-    {{ - range $key, $val := .Values.required_labels }}
+    {{- range $key, $val := .Values.required_labels }}
     {{ $key }}: {{ $val | quote }}
-    {{ - end } }
+    {{- end }}
 data:
   datasets-config.yaml: |
     {{ .Values.datasets_config_content }}

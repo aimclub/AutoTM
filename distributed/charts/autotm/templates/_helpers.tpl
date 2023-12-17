@@ -60,3 +60,11 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Helper function to define prefix for all entities
+*/}}
+{{- define "autotm.prefix" -}}
+{{- $prefix := default .Values.autotm_prefix "" | trunc 16 -}}
+{{- ternary (printf "%s-%" $prefix) $prefix (empty $prefix) -}}
+{{- end -}}
