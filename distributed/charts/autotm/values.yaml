@@ -22,6 +22,7 @@ worker_image: "node2.bdcl:5000/fitness-worker:latest"
 pv_mlflow_db: "mlflow-db-pv"
 pv_mlflow_artifact_store: "mlflow-artifact-store-pv"
 pv_mongo_db: "mongo-tm-experiments-pv-part3"
+pv_dataset_store: "fitness-dataset-store=pv"
 
 ### Mlflow
 mlflow_mysql_database: "mlflow"

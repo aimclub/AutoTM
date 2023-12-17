@@ -55,3 +55,23 @@ spec:
   resources:
     requests:
       storage: 50Gi
+###################
+##### Celery & Fitness Workers
+###################
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "autotm.prefix" . }}autotm-datasets
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  storageClassName: manual
+  volumeName: {{ .Values.pv_dataset_store }}
+  accessModes:
+    - ReadOnly
+  resources:
+    requests:
+      storage: 50Gi
