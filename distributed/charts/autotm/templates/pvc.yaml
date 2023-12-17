@@ -8,7 +8,7 @@ metadata:
   name: {{ include "autotm.prefix" . }}mlflow-db-pvc
 spec:
   storageClassName: manual
-  volumeName: mlflow-db-pv
+  volumeName: {{ .Values.pv_mlflow_db }}
   accessModes:
     - ReadWriteOnce
   resources:
@@ -21,7 +21,7 @@ metadata:
   name: {{ include "autotm.prefix" . }}mlflow-artifact-store-pvc
 spec:
   storageClassName: manual
-  volumeName: mlflow-artifact-store-pv
+  volumeName: {{ .Values.pv_mlflow_artifact_store }}
   accessModes:
     - ReadWriteMany
   resources:
@@ -37,7 +37,7 @@ metadata:
   name: {{ include "autotm.prefix" . }}mongo-tm-experiments-pvc
 spec:
   storageClassName: manual
-  volumeName: mongo-tm-experiments-pv-part3
+  volumeName: {{ .Values.pv_mongo_db }}
   accessModes:
     - ReadWriteOnce
   resources:

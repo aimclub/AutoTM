@@ -19,7 +19,12 @@ mlflow_image: "node2.bdcl:5000/mlflow-webserver:latest"
 flower_image: "node2.bdcl:5000/flower:latest"
 worker_image: "node2.bdcl:5000/fitness-worker:latest"
 
-# Other
+### Volumes
+pv_mlflow_db: "mlflow-db-pv"
+pv_mlflow_artifact_store: "mlflow-artifact-store-pv"
+pv_mongo_db: "mongo-tm-experiments-pv-part3"
+
+### Other
 worker_datasets_dir_path: "/storage"
 worker_count: 1
 worker_cpu: 1
