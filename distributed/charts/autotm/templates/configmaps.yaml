@@ -48,4 +48,4 @@ metadata:
     {{- end }}
 data:
   datasets-config.yaml: |
-    {{ .Values.worker_datasets_config_content }}
+{{ .Values.worker_datasets_config_content | indent 4}}

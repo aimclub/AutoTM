@@ -33,7 +33,6 @@ worker_mongo_collection: "tm_stats"
 worker_mlflow_url: "mysql+pymysql://mlflow:mlflow@mlflow-db:3306/mlflow"
 worker_mongo_url: "mongodb://mongoadmin:secret@mongo-tm-experiments-db:27017"
 worker_datasets_config_content: |
-  ---
   datasets:
     # the rest settings will be the same as for the first dataset but will be added automatically
     books_stroyitelstvo_2030:
