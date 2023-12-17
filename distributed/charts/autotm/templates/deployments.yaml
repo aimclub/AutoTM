@@ -20,10 +20,10 @@ spec:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: {{ include "autotm.prefix" . }}mlflow
         {{- range $key, $val := .Values.required_labels }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}
+        app: {{ include "autotm.prefix" . }}mlflow
     spec:
       volumes:
         - name: mlflow-vol
@@ -64,10 +64,10 @@ spec:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: {{ include "autotm.prefix" . }}mlflow-db
         {{- range $key, $val := .Values.required_labels }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}
+        app: {{ include "autotm.prefix" . }}mlflow-db
     spec:
       volumes:
         - name: mlflow-db-vol
@@ -119,10 +119,10 @@ spec:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
         {{- range $key, $val := .Values.required_labels }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}
+        app: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
     spec:
       containers:
       - name: phpmyadmin
@@ -161,10 +161,10 @@ spec:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
         {{- range $key, $val := .Values.required_labels }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}
+        app: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
     spec:
       tolerations:
         - key: "node.kubernetes.io/disk-pressure"
@@ -211,10 +211,10 @@ spec:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: {{ include "autotm.prefix" . }}mongo-express-tm-experiments
         {{- range $key, $val := .Values.required_labels }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}
+        app: {{ include "autotm.prefix" . }}mongo-express-tm-experiments
     spec:
 #      volumes:
 #        - name: wait-for-vol
@@ -264,10 +264,10 @@ spec:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: {{ include "autotm.prefix" . }}rabbitmq
         {{- range $key, $val := .Values.required_labels }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}
+        app: {{ include "autotm.prefix" . }}rabbitmq
     spec:
       volumes:
         - name: config-volume
@@ -302,10 +302,10 @@ spec:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: {{ include "autotm.prefix" . }}redis
         {{- range $key, $val := .Values.required_labels }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}
+        app: {{ include "autotm.prefix" . }}redis
     spec:
       containers:
       - name: redis
@@ -336,10 +336,10 @@ spec:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: {{ include "autotm.prefix" . }}celery-flower
         {{- range $key, $val := .Values.required_labels }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}
+        app: {{ include "autotm.prefix" . }}celery-flower
     spec:
       containers:
       - name: flower
@@ -372,10 +372,10 @@ spec:
       annotations:
         "sidecar.istio.io/inject": "false"
       labels:
-        app: {{ include "autotm.prefix" . }}fitness-worker
         {{- range $key, $val := .Values.required_labels }}
         {{ $key }}: {{ $val | quote }}
         {{- end }}
+        app: {{ include "autotm.prefix" . }}fitness-worker
     spec:
       volumes:
         - name: dataset
