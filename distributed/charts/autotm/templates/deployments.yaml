@@ -24,7 +24,7 @@ spec:
             claimName: {{ include "autotm.prefix" . }}mlflow-artifact-store-pvc
       containers:
       - name: mlflow
-        image: node2.bdcl:5000/mlflow-webserver:latest
+        image: {{ .Values.mlflow_image }}
         args: [
             "--backend-store-uri", "mysql+pymysql://mlflow:mlflow@mlflow-db:3306/mlflow",
             "--default-artifact-root", "/var/lib/mlruns",
@@ -66,7 +66,7 @@ spec:
                 path: my.cnf
       containers:
       - name: mlflow-db
-        image: mysql/mysql-server:5.7.28
+        image: {{ .Values.mysql_image }}
         env:
           - name: MYSQL_DATABASE
             value: mlflow
@@ -103,7 +103,7 @@ spec:
     spec:
       containers:
       - name: phpmyadmin
-        image: phpmyadmin:5.1.1
+        image: {{ .Values.phpmyadmin_image }}
         imagePullPolicy: IfNotPresent
         env:
           - name: PMA_HOST
@@ -146,7 +146,7 @@ spec:
             claimName: {{ include "autotm.prefix" . }}mongo-tm-experiments-pvc
       containers:
       - name: mongo
-        image: mongo:4.4.6-bionic
+        image: {{ .Values.mongo_image }}
         imagePullPolicy: IfNotPresent
         args: [
             "--dbpath", "/var/lib/mongodb",
@@ -186,7 +186,7 @@ spec:
 #            defaultMode: 0777
       containers:
       - name: mongo-express
-        image: mongo-express:latest
+        image: {{ .Values.mongoexpress_image }}
         imagePullPolicy: IfNotPresent
 #        command: [ "/bin/sh" ]
 #        args: [ "/wait-for.sh", "$ME_CONFIG_MONGODB_SERVER:$ME_CONFIG_MONGODB_PORT", "--", "tini", "--", "/docker-entrypoint.sh" ]

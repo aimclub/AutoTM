@@ -4,17 +4,18 @@ pull_policy: "Always"
 required_labels:
   owner: *autom_prefix
 
-# Rabbitmq section
+# Images
+mlflow_image: "node2.bdcl:5000/mlflow-webserver:latest"
+mysql_image: "mysql/mysql-server:5.7.28"
+phpmyadmin_image: "phpmyadmin:5.1.1"
+mongo_image: "mongo:4.4.6-bionic"
+mongoexpress_image: "mongo-express:latest"
 rabbitmq_image: "node2:bdcl:5000/rabbitmq:3:8-management-alpine"
-
-# Redis section
 redis_image: "node2.bdcl:5000/redis:6.2"
+flower_image: "flower:latest"
+worker_image: "fitness-worker:latest"
 
-# Flower section
-flower_image: ""
-
-# Fitness worker section
-worker_image: ""
+# Other
 worker_datasets_dir_path: "/storage"
 worker_count: 1
 worker_cpu: 1
