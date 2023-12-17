@@ -24,7 +24,7 @@ pv_mlflow_db: "mlflow-db-pv"
 pv_mlflow_artifact_store: "mlflow-artifact-store-pv"
 pv_mongo_db: "mongo-tm-experiments-pv-part3"
 
-### Other
+### Fitness Worker settings
 worker_datasets_dir_path: "/storage"
 worker_count: 1
 worker_cpu: 1

@@ -6,6 +6,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "autotm.prefix" . }}mlflow-db-phpmyadmin
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
   type: NodePort
   ports:
@@ -17,6 +21,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "autotm.prefix" . }}mlflow-db
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
   ports:
   - port: 3306
@@ -30,6 +38,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
   type: NodePort
   ports:
@@ -41,6 +53,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "autotm.prefix" . }}mongo-express
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
   type: NodePort
   ports:
@@ -55,6 +71,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "autotm.prefix" . }}rabbitmq-service
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
   ports:
   - port: 5672
@@ -65,6 +85,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "autotm.prefix" . }}redis
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
   ports:
   - port: 6379
@@ -75,6 +99,10 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "autotm.prefix" . }}celery-flower-service
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
 spec:
   type: NodePort
   ports:
