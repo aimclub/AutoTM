@@ -25,6 +25,7 @@ spec:
       containers:
       - name: mlflow
         image: {{ .Values.mlflow_image }}
+        imagePullPolicy: {{ .Values.pull_policy }}
         args: [
             "--backend-store-uri", "mysql+pymysql://mlflow:mlflow@mlflow-db:3306/mlflow",
             "--default-artifact-root", "/var/lib/mlruns",
@@ -67,6 +68,7 @@ spec:
       containers:
       - name: mlflow-db
         image: {{ .Values.mysql_image }}
+        imagePullPolicy: {{ .Values.pull_policy }}
         env:
           - name: MYSQL_DATABASE
             value: mlflow
@@ -104,7 +106,7 @@ spec:
       containers:
       - name: phpmyadmin
         image: {{ .Values.phpmyadmin_image }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ .Values.pull_policy }}
         env:
           - name: PMA_HOST
             value: mlflow-db
@@ -147,7 +149,7 @@ spec:
       containers:
       - name: mongo
         image: {{ .Values.mongo_image }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ .Values.pull_policy }}
         args: [
             "--dbpath", "/var/lib/mongodb",
             "--bind_ip_all"
@@ -187,7 +189,7 @@ spec:
       containers:
       - name: mongo-express
         image: {{ .Values.mongoexpress_image }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: {{ .Values.pull_policy }}
 #        command: [ "/bin/sh" ]
 #        args: [ "/wait-for.sh", "$ME_CONFIG_MONGODB_SERVER:$ME_CONFIG_MONGODB_PORT", "--", "tini", "--", "/docker-entrypoint.sh" ]
         env:
@@ -328,7 +330,7 @@ spec:
       containers:
       - name: worker
         image: {{ .Values.worker_image }}
-        imagePullPolicy: {{ .Values.pull_policy }}
+        imagePullPolicy: {{ .Values.worker_image_pull_policy }}
         volumeMounts:
           - name: dataset
             mountPath: {{ .Values.worker_datasets_dir_path }}
