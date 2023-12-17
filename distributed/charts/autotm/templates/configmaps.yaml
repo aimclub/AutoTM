@@ -5,7 +5,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.autotm_prefix -}}mlflow-mysql-cnf
+  name: {{ include "autotm.prefix" . }}mlflow-mysql-cnf
 data:
   # file-like keys
   my.cnf: |
