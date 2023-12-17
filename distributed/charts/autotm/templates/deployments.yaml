@@ -21,7 +21,7 @@ spec:
       volumes:
         - name: mlflow-vol
           persistentVolumeClaim:
-            claimName: mlflow-artifact-store-pvc
+            claimName: {{ include "autotm.prefix" . }}mlflow-artifact-store-pvc
       containers:
       - name: mlflow
         image: node2.bdcl:5000/mlflow-webserver:latest
@@ -57,7 +57,7 @@ spec:
       volumes:
         - name: mlflow-db-vol
           persistentVolumeClaim:
-            claimName: mlflow-db-pvc
+            claimName: {{ include "autotm.prefix" . }}mlflow-db-pvc
         - name: mysql-cnf
           configMap:
             name: mlflow-mysql-cnf
@@ -143,7 +143,7 @@ spec:
       volumes:
         - name: mongo-vol
           persistentVolumeClaim:
-            claimName: mongo-tm-experiments-pvc
+            claimName: {{ include "autotm.prefix" . }}mongo-tm-experiments-pvc
       containers:
       - name: mongo
         image: mongo:4.4.6-bionic
@@ -316,14 +316,14 @@ spec:
       volumes:
         - name: dataset
           persistentVolumeClaim:
-            claimName: autotm-datasets
+            claimName: {{ include "autotm.prefix" . }}autotm-datasets
         - name: config-volume
           configMap:
             name: autotm-worker-config
         {{- if .Values.worker_mlflow_url }}
         - name: mlflow-vol
           persistentVolumeClaim:
-            claimName: autotm-mlflow-artifact-store
+            claimName: {{ include "autotm.prefix" . }}autotm-mlflow-artifact-store
         {{- end }}
       containers:
       - name: worker
