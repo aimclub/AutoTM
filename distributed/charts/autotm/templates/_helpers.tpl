@@ -69,6 +69,30 @@ Helper function to define prefix for all entities
 {{- ternary $prefix (printf "%s-" $prefix) (empty $prefix) -}}
 {{- end -}}
 
+{{/*
+Mlflow db url
+*/}}
 {{- define "autotm.mlflow_db_url" -}}
 {{- printf "mysql+pymysql://%s:%s@%smlflow-db:3306/%s" (.Values.mlflow_mysql_user) (.Values.mlflow_mysql_password) (include "autotm.prefix" . ) (.Values.mlflow_mysql_database) -}}
+{{- end -}}
+
+{{/*
+Mongo url
+*/}}
+{{- define "autotm.mongo_url" -}}
+{{- printf "mongodb://%s:%s@%smongo-tm-experiments-db:27017" (.Values.mongo_user) (.Values.mongo_password) (include "autotm.prefix" .) -}}
+{{- end -}}
+
+{{/*
+Celery broker url
+*/}}
+{{- define "autotm.celery_broker_url" -}}
+{{- printf "amqp://guest:guest@%srabbitmq-service:5672" (include "autotm.prefix" .) -}}
+{{- end -}}
+
+{{/*
+Celery result backend url
+*/}}
+{{- define "autotm.celery_result_backend" -}}
+{{- printf "redis://%sredis:6379/1" (include "autotm.prefix" .) -}}
 {{- end -}}

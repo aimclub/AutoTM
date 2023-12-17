@@ -145,9 +145,9 @@ spec:
         ]
         env:
           - name: MONGO_INITDB_ROOT_USERNAME
-            value: mongoadmin
+            value: {{ .Values.mongo_user }}
           - name: MONGO_INITDB_ROOT_PASSWORD
-            value: secret
+            value: {{ .Values.mongo_password }}
         volumeMounts:
           - mountPath: "/var/lib/mongodb"
             name: mongo-vol
@@ -190,11 +190,11 @@ spec:
 #        args: [ "/wait-for.sh", "$ME_CONFIG_MONGODB_SERVER:$ME_CONFIG_MONGODB_PORT", "--", "tini", "--", "/docker-entrypoint.sh" ]
         env:
           - name: ME_CONFIG_MONGODB_ADMINUSERNAME
-            value: mongoadmin
+            value: {{ .Values.mongo_user }}
           - name: ME_CONFIG_MONGODB_ADMINPASSWORD
-            value: secret
+            value: {{ .Values.mongo_password }}
           - name: ME_CONFIG_MONGODB_SERVER
-            value: mongo-tm-experiments-db
+            value: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
           - name: ME_CONFIG_MONGODB_PORT
             value: "27017"
         ports:
@@ -274,8 +274,8 @@ spec:
         imagePullPolicy: {{ .Values.pull_policy }}
         resources:
           requests:
-            cpu: 100m
-            memory: 100Mi
+            cpu: 1
+            memory: 500Mi
         ports:
         - containerPort: 6379
 ---
@@ -310,9 +310,9 @@ spec:
         - containerPort: 5555
         env:
           - name: CELERY_BROKER_URL
-            value: "amqp://guest:guest@rabbitmq-service:5672"
+            value: {{ include "autotm.celery_broker_url" . }}
           - name: CELERY_RESULT_BACKEND
-            value: "redis://redis:6379/1" # "rpc://"
+            value: {{ include "autotm.celery_result_backend" . }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -345,7 +345,7 @@ spec:
         - name: config-volume
           configMap:
             name: autotm-worker-config
-        {{- if .Values.worker_mlflow_url }}
+        {{- if (include "autotm.mlflow_db_url" .) }}
         - name: mlflow-vol
           persistentVolumeClaim:
             claimName: {{ include "autotm.prefix" . }}autotm-mlflow-artifact-store
@@ -360,27 +360,27 @@ spec:
           - name: config-volume
             mountPath: /etc/fitness/datasets-config.yaml
             subPath: datasets-config.yaml
-          {{- if .Values.worker_mlflow_url }}
+          {{- if (include "autotm.mlflow_db_url" .) }}
           - mountPath: "/var/lib/mlruns"
             name: mlflow-vol
           {{- end }}
         env:
           - name: CELERY_BROKER_URL
-            value: "amqp://guest:guest@rabbitmq-service:5672"
+            value: {{ include "autotm.celery_broker_url" . }}
           - name: CELERY_RESULT_BACKEND
-            value: "redis://redis:6379/1" # "rpc://"
+            value: {{ include "autotm.celery_result_backend" . }}
           - name: NUM_PROCESSORS
             value: {{ .Values.worker_cpu }}
           - name: DATASETS_CONFIG
             value: /etc/fitness/datasets-config.yaml
-          {{- if .Values.worker_mlflow_url }}
+          {{- if (include "autotm.mlflow_db_url" .) }}
           - name: MLFLOW_TRACKING_URI
-            value: {{ .Values.worker_mlflow_url }}
+            value: {{ include "autotm.mlflow_db_url" . }}
           {{- end }}
           # see: https://github.com/mongodb/mongo-python-driver/blob/c8d920a46bfb7b054326b3e983943bfc794cb676/pymongo/mongo_client.py
-          {{- if .Values.worker_mongo_url }}
+          {{- if (include "autotm.mongo_url" .) }}
           - name: MONGO_URI
-            value: {{ .Values.worker_mongo_url }}
+            value: {{ include "autotm.mongo_url" . }}
           - name: MONGO_COLLECTION
             value: {{ .Values.worker_mongo_collection }}
           {{- end }}
