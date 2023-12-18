@@ -22,8 +22,8 @@ worker_image: "node2.bdcl:5000/fitness-worker:latest"
 storage_class: "manual"
 pv_mlflow_db: "mlflow-db-pv"
 pv_mlflow_artifact_store: "mlflow-artifact-store-pv"
-pv_mongo_db: "mongo-tm-experiments-pv-part3"
-pv_dataset_store: "spark-datasets-experiment-pv"
+pv_mongo_db: "mongo-tm-experiments-pv"
+pv_dataset_store: "datasets"
 
 ### Mlflow
 mlflow_enabled: "true"

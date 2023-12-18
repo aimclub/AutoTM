@@ -12,7 +12,7 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   local:
-    path: /data/hdd/mlflow-db
+    path: /data/hdd/autotm-mlflow-db
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -20,7 +20,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - node3.bdcl
+                - node5.bdcl
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -35,13 +35,13 @@ spec:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: /mnt/ess_storage/DN_1/storage/home/khodorchenko/mlflow-tm-experiments/mlflow-artifact-store
-    type: Directory
+    path: /mnt/ess_storage/DN_1/storage/home/khodorchenko/mlflow-tm-experiments/autotm-mlflow-artifact-store
+    type: DirectoryOrCreate
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: autotm-mongo-tm-experiments-pv-part3
+  name: autotm-mongo-tm-experiments-pv
 spec:
   storageClassName: manual
   capacity:
@@ -51,7 +51,7 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   local:
-    path: /data/hdd/mongo-db-tm-experiments-part3
+    path: /data/hdd/autotm-mongo-db-tm-experiments
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -59,7 +59,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - node11.bdcl
+                - node5.bdcl
 ---
 apiVersion: v1
 kind: PersistentVolume
