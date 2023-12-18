@@ -1,3 +1,4 @@
+{{ if .Values.mlflow_enabled }}
 ##################
 #### MLFlow
 ##################
@@ -30,6 +31,8 @@ spec:
   - port: 3306
   selector:
     app: {{ include "autotm.prefix" . }}mlflow-db
+{{ end }}
+{{ if .Values.mongo_enabled }}
 ##################
 #### Mongo
 ##################
@@ -63,6 +66,7 @@ spec:
   - port: 8081
   selector:
     app: {{ include "autotm.prefix" . }}mongo-express-tm-experiments
+{{ end }}
 ##################
 #### Celery & Fitness Workers
 ##################

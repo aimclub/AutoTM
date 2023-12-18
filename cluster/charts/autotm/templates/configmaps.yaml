@@ -1,3 +1,4 @@
+{{ if .Values.mlflow_enabled }}
 ##################
 #### MLFlow
 ##################
@@ -17,6 +18,7 @@ data:
     wait_timeout=15
     interactive_timeout=15
     thread_pool_size=32
+{{ end }}
 ##################
 #### Celery & Fitness Workers
 ##################

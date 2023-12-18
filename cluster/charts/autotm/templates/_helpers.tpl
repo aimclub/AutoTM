@@ -73,14 +73,22 @@ Helper function to define prefix for all entities
 Mlflow db url
 */}}
 {{- define "autotm.mlflow_db_url" -}}
+{{- if .Values.mlflow_enabled -}}
 {{- printf "mysql+pymysql://%s:%s@%smlflow-db:3306/%s" (.Values.mlflow_mysql_user) (.Values.mlflow_mysql_password) (include "autotm.prefix" . ) (.Values.mlflow_mysql_database) -}}
+{{- else -}}
+""
+{{- end -}}
 {{- end -}}
 
 {{/*
 Mongo url
 */}}
 {{- define "autotm.mongo_url" -}}
+{{- if .Values.mongo_enabled -}}
 {{- printf "mongodb://%s:%s@%smongo-tm-experiments-db:27017" (.Values.mongo_user) (.Values.mongo_password) (include "autotm.prefix" .) -}}
+{{- else -}}
+""
+{{- end -}}
 {{- end -}}
 
 {{/*

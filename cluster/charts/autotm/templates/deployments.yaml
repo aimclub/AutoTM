@@ -1,6 +1,7 @@
 ##################
 #### MLFlow
 ##################
+{{ if .Values.mlflow_enabled }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -100,6 +101,8 @@ spec:
             subPath: my.cnf
         ports:
         - containerPort: 3306
+{{ end }}
+{{ if .Values.mongo_enabled }}
 ###################
 ##### Mongo
 ###################
@@ -203,6 +206,7 @@ spec:
 #          - mountPath: "/wait-for.sh"
 #            name: wait-for-vol
 #            subPath: wait-for.sh
+{{ end }}
 ###################
 ##### Celery & Fitness Workers
 ###################
@@ -345,7 +349,7 @@ spec:
         - name: config-volume
           configMap:
             name: autotm-worker-config
-        {{- if (include "autotm.mlflow_db_url" .) }}
+        {{- if .Values.mlflow_enabled }}
         - name: mlflow-vol
           persistentVolumeClaim:
             claimName: {{ include "autotm.prefix" . }}autotm-mlflow-artifact-store
@@ -360,7 +364,7 @@ spec:
           - name: config-volume
             mountPath: /etc/fitness/datasets-config.yaml
             subPath: datasets-config.yaml
-          {{- if (include "autotm.mlflow_db_url" .) }}
+          {{- if .Values.mlflow_enabled }}
           - mountPath: "/var/lib/mlruns"
             name: mlflow-vol
           {{- end }}
@@ -377,12 +381,12 @@ spec:
             value: worker
           - name: DATASETS_CONFIG
             value: /etc/fitness/datasets-config.yaml
-          {{- if (include "autotm.mlflow_db_url" .) }}
+          {{- if .Values.mlflow_enabled }}
           - name: MLFLOW_TRACKING_URI
             value: {{ include "autotm.mlflow_db_url" . }}
           {{- end }}
           # see: https://github.com/mongodb/mongo-python-driver/blob/c8d920a46bfb7b054326b3e983943bfc794cb676/pymongo/mongo_client.py
-          {{- if (include "autotm.mongo_url" .) }}
+          {{- if .Values.mongo_enabled }}
           - name: MONGO_URI
             value: {{ include "autotm.mongo_url" . }}
           - name: MONGO_COLLECTION

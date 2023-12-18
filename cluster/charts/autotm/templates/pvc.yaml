@@ -1,3 +1,4 @@
+{{ if .Values.mlflow_enabled }}
 ##################
 #### MLFlow
 ##################
@@ -35,6 +36,8 @@ spec:
   resources:
     requests:
       storage: 25Gi
+{{ end }}
+{{ if .Values.mongo_enabled }}
 ##################
 #### Mongo
 ##################
@@ -55,6 +58,7 @@ spec:
   resources:
     requests:
       storage: 50Gi
+{{ end }}
 ###################
 ##### Celery & Fitness Workers
 ###################
