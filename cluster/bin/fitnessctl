@@ -33,7 +33,7 @@ function build_app() {
 function build_images(){
   echo "Building images..."
 
-#  build_app
+  build_app
 
   docker build -f "${docker_files_dir}/mlflow-webserver.dockerfile" -t ${mlflow_image} .
   docker build -f "${docker_files_dir}/flower.dockerfile" -t ${flower_image} .
