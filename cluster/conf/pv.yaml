@@ -71,7 +71,7 @@ spec:
     storage: 50Gi
   volumeMode: Filesystem
   accessModes:
-    - ReadOnly
+    - ReadOnlyMany
   persistentVolumeReclaimPolicy: Retain
   hostPath:
     path: /mnt/ess_storage/DN_1/storage/home/khodorchenko/GOTM/datasets_TM_scoring

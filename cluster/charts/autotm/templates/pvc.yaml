@@ -75,7 +75,7 @@ spec:
   storageClassName: {{ .Values.storage_class }}
   volumeName: {{ include "autotm.find_pv" (list . "pv_dataset_store") }}
   accessModes:
-    - ReadOnly
+    - ReadOnlyMany
   resources:
     requests:
       storage: 50Gi
