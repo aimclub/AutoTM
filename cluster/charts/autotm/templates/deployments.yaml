@@ -1,3 +1,46 @@
+{{ if .Values.jupyter_enabled }}
+##################
+#### Jupyter
+##################
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "autotm.prefix" . }}jupyter
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}:{{ $val | quote }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "autotm.prefix" . }}jupyter
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        {{- range $key, $val := .Values.required_labels }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+        app: {{ include "autotm.prefix" . }}jupyter
+    spec:
+      containers:
+      - name: jupyter
+        image: {{ .Values.jupyter_image }}
+        imagePullPolicy: {{ .Values.worker_image_pull_policy }}
+        ports:
+        - containerPort: 8888
+        args: [ "--NotebookApp.token=''" ]
+        resources:
+          requests:
+            memory: {{ quote .Values.jupyter_mem_limits }}
+            cpu: {{ quote .Values.jupyter_cpu_limits }}
+          limits:
+            memory: {{ quote .Values.jupyter_mem_limits }}
+            cpu: {{ quote .Values.jupyter_cpu_limits }}
+{{ end }}
 ##################
 #### MLFlow
 ##################

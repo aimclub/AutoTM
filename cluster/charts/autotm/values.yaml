@@ -8,6 +8,7 @@ required_labels:
 pull_policy: "IfNotPresent"
 worker_image_pull_policy: "Always"
 # images
+jupyter_image: "python:3.9"
 mysql_image: "mysql/mysql-server:5.7.28"
 phpmyadmin_image: "phpmyadmin:5.1.1"
 mongo_image: "mongo:4.4.6-bionic"
@@ -25,6 +26,11 @@ pv_mlflow_db: "mlflow-db-pv"
 pv_mlflow_artifact_store: "mlflow-artifact-store-pv"
 pv_mongo_db: "mongo-tm-experiments-pv"
 pv_dataset_store: "datasets"
+
+### Jupyter
+jupyter_enabled: "true"
+jupyter_cpu_limits: "4"
+jupyter_mem_limits: "16Gi"
 
 ### Mlflow
 mlflow_enabled: "true"

@@ -1,3 +1,28 @@
+{{ if .Values.jupyter_enabled }}
+##################
+#### Jupyter
+##################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "autotm.prefix" . }}jupyter
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}:{{ $val | quote }}
+    {{- end }}
+spec:
+  type: NodePort
+  ports:
+    - port: 8888
+      protocol: TCP
+      name: jupyter
+    - port: 4040
+      protocol: TCP
+      name: spark
+  selector:
+    app: {{ include "autotm.prefix" . }}jupyter
+{{ end }}
 {{ if .Values.mlflow_enabled }}
 ##################
 #### MLFlow
