@@ -33,7 +33,7 @@ spec:
       containers:
       - name: mlflow
         image: {{ .Values.mlflow_image }}
-        imagePullPolicy: {{ .Values.pull_policy }}
+        imagePullPolicy: {{ .Values.worker_image_pull_policy }}
         args: [
             "--backend-store-uri", {{ include "autotm.mlflow_db_url" . }},
             "--default-artifact-root", "/var/lib/mlruns",
@@ -309,7 +309,7 @@ spec:
       containers:
       - name: flower
         image: {{ .Values.flower_image }}
-        imagePullPolicy: {{ .Values.pull_policy }}
+        imagePullPolicy: {{ .Values.worker_image_pull_policy }}
         ports:
         - containerPort: 5555
         env:

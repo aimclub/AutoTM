@@ -23,6 +23,7 @@ def main():
     model_path = os.path.join(working_dir_path, "autotm_model")
 
     autotm = AutoTM(
+        topic_count=20,
         preprocessing_params={
             "lang": "ru",
             "min_tokens_count": 3
