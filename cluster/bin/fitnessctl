@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+
+set -ex
+
+if [[ -z "${KUBE_NAMESPACE}" ]]
+then
+  kubectl_args=""
+else
+  kubectl_args="-n ${KUBE_NAMESPACE}"
+fi
+
+registry="node2.bdcl:5000"
+
+mlflow_image="${registry}/mlflow-webserver:latest"
+flower_image="${registry}/flower:latest"
+fitness_worker_image="${registry}/fitness-worker:latest"
+deploy_files_dir="${base_dir}/deploy/"
+default_cfg_path="${deploy_files_dir}/kube-fitness-workers.yaml"
+docker_files_dir="./cluster/docker/"
+
+
+function build_app() {
+  echo "Building app..."
+
+  poetry export --without-hashes > requirements.txt
+  poetry build
+
+  echo "Finished app building"
+}
+
+function build_images(){
+  echo "Building images..."
+
+  docker build -f "${docker_files_dir}/mlflow-webserver.dockerfile" -t ${mlflow_image} .
+  docker build -f "${docker_files_dir}/flower.dockerfile" -t ${flower_image} .
+  docker build -f "${docker_files_dir}/worker.dockerfile" -t ${fitness_worker_image} .
+
+  echo "Finished images building"
+}
+
+function push_images() {
+  echo "Pushing images..."
+
+  docker push ${mlflow_image}
+  docker push ${flower_image}
+  docker push ${fitness_worker_image}
+
+  echo "Finished pushing images"
+}
+
+function install() {
+  echo "Installing images..."
+
+  build_app
+  build_images
+  push_images
+
+  echo "Finished installing images"
+}
+
+
+
+
+function help() {
+  echo "
+  Supported env variables:
+    KUBE_NAMESPACE - a kubernetes namespace to make actions in
+
+  List of commands.
+    build-app - build the app as a .whl distribution
+    build-images - build all required docker images
+    push-images - push all required docker images to the private registry on node2.bdcl
+    install-images - build-images and push-images
+    help - prints this message
+  "
+}
+
+function main () {
+    cmd="$1"
+
+    if [ -z "${cmd}" ]
+    then
+      echo "No command is provided."
+      help
+      exit 1
+    fi
+
+    shift 1
+
+    echo "Executing command: ${cmd}"
+
+    case "${cmd}" in
+    "build-app")
+        build_app
+        ;;
+
+    "build-images")
+        build_images
+        ;;
+
+    "push-images")
+        push_images
+        ;;
+
+    "install-images")
+        install
+        ;;
+
+    "help")
+        help
+        ;;
+
+    *)
+        echo "Unknown command: ${cmd}"
+        ;;
+
+    esac
+}
+
+main "${@}"
