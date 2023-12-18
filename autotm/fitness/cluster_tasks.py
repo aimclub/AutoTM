@@ -106,7 +106,7 @@ def calculate_fitness(self: Task,
     except SoftTimeLimitExceeded as ex:
         raise Exception(f"Soft time limit encountered") from ex
     except Exception:
-        self.retry(max_retries=3, countdown=5)
+        self.retry(max_retries=1, countdown=5)
 
 
 def parallel_fitness(population: List[Individual],
@@ -185,7 +185,7 @@ def log_best_solution(individual: Individual,
     ind = individual.dto.json()
     logger.info(f"Sending a best individual to be logged: {ind}")
     task: Task = calculate_fitness.signature(
-        (ind, True, True, alg_args),
+        (ind, True, False, alg_args),
         options={"queue": "fitness_tasks"}
     )
 
