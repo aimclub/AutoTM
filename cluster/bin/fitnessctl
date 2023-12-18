@@ -60,7 +60,7 @@ function install() {
 }
 
 function create_pv() {
-  kubectl ${kubectl_args} create -f "${base_dir}/conf/pv.yaml"
+  kubectl ${kubectl_args} apply -f "${base_dir}/conf/pv.yaml"
 }
 
 function install_chart() {

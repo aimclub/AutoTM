@@ -19,6 +19,7 @@ flower_image: "node2.bdcl:5000/flower:latest"
 worker_image: "node2.bdcl:5000/fitness-worker:latest"
 
 ### Volumes
+pvc_create_enabled: "true"
 storage_class: "manual"
 pv_mlflow_db: "mlflow-db-pv"
 pv_mlflow_artifact_store: "mlflow-artifact-store-pv"

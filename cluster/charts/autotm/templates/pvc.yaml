@@ -1,3 +1,4 @@
+{{ if .Values.pvc_create_enabled }}
 {{ if .Values.mlflow_enabled }}
 ##################
 #### MLFlow
@@ -79,3 +80,4 @@ spec:
   resources:
     requests:
       storage: 50Gi
+{{ end }}
