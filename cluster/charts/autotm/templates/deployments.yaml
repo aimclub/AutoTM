@@ -32,7 +32,6 @@ spec:
         imagePullPolicy: {{ .Values.worker_image_pull_policy }}
         ports:
         - containerPort: 8888
-        args: [ "--NotebookApp.token=''" ]
         resources:
           requests:
             memory: {{ quote .Values.jupyter_mem_limits }}
@@ -40,6 +39,13 @@ spec:
           limits:
             memory: {{ quote .Values.jupyter_mem_limits }}
             cpu: {{ quote .Values.jupyter_cpu_limits }}
+        env:
+          - name: CELERY_BROKER_URL
+            value: {{ include "autotm.celery_broker_url" . }}
+          - name: CELERY_RESULT_BACKEND
+            value: {{ include "autotm.celery_result_backend" . }}
+          - name: NUM_PROCESSORS
+            value: {{ quote .Values.jupyter_cpu_limits }}
 {{ end }}
 ##################
 #### MLFlow
