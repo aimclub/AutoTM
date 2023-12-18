@@ -29,14 +29,15 @@ def main():
         },
         alg_name=alg_name,
         alg_params={
-            "num_iterations": 10,
-            "num_individuals": 10,
+            "num_iterations": 2,
+            "num_individuals": 2,
             "use_nelder_mead_in_mutation": False,
             "use_nelder_mead_in_crossover": False,
             "use_nelder_mead_in_selector": False,
             "train_option": "offline"
         },
-        working_dir_path=working_dir_path
+        working_dir_path=working_dir_path,
+        exp_dataset_name="lenta_ru"
     )
     mixtures = autotm.fit_predict(train_df)
 
