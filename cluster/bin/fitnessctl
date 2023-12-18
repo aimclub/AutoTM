@@ -88,7 +88,8 @@ function uninstall_chart() {
 }
 
 function upgrade_chart() {
-    helm upgrade --namespace="${release_name}" --reuse-values autotm ${chart_path}
+#    helm upgrade --namespace="${release_name}" --reuse-values autotm ${chart_path}
+    helm upgrade --namespace="${release_name}" autotm ${chart_path}
 }
 
 function dry_run_chart() {

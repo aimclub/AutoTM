@@ -9,7 +9,7 @@ metadata:
   name: {{ include "autotm.prefix" . }}jupyter
   labels:
     {{- range $key, $val := .Values.required_labels }}
-    {{ $key }}:{{ $val | quote }}
+    {{ $key }}: {{ $val | quote }}
     {{- end }}
 spec:
   replicas: 1

@@ -40,7 +40,7 @@ mlflow_mysql_password: "mlflow"
 mlflow_mysql_root_password: "mlflow"
 
 ### Mongo
-mongo_enabled: "true"
+mongo_enabled: "false"
 mongo_user: "mongoadmin"
 mongo_password: "secret"
 
