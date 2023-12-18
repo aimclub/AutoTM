@@ -371,6 +371,10 @@ spec:
             value: {{ include "autotm.celery_result_backend" . }}
           - name: NUM_PROCESSORS
             value: {{ .Values.worker_cpu }}
+          - name: AUTOTM_EXEC_MODE
+            value: cluster
+          - name: AUTOTM_COMPONENT
+            value: worker
           - name: DATASETS_CONFIG
             value: /etc/fitness/datasets-config.yaml
           {{- if (include "autotm.mlflow_db_url" .) }}

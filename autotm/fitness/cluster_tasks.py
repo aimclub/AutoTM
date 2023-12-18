@@ -123,7 +123,7 @@ def parallel_fitness(population: List[IndividualDTO],
     for individual in population:
         task = cast(
             Task,
-            calculate_fitness.signature((individual.json(), False, True), options={"queue": "fitness_tasks"})
+            calculate_fitness.signature((individual.json(), False, False), options={"queue": "fitness_tasks"})
         )
         if app is not None:
             task.bind(app)
