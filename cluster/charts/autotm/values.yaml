@@ -1,7 +1,7 @@
 ### General section
-autotm_prefix: &autom_prefix "autotm"
+autotm_prefix: ""
 required_labels:
-  owner: *autom_prefix
+  owner: "autotm"
 
 ### Images
 # pull policy

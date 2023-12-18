@@ -10,14 +10,13 @@ else
 fi
 
 registry="node2.bdcl:5000"
-
 mlflow_image="${registry}/mlflow-webserver:latest"
 flower_image="${registry}/flower:latest"
 fitness_worker_image="${registry}/fitness-worker:latest"
-deploy_files_dir="${base_dir}/deploy/"
-default_cfg_path="${deploy_files_dir}/kube-fitness-workers.yaml"
-docker_files_dir="./cluster/docker/"
 
+base_dir="./cluster"
+docker_files_dir="${base_dir}/docker/"
+chart_path="${base_dir}/charts/autotm"
 
 function build_app() {
   echo "Building app..."
@@ -60,8 +59,21 @@ function install() {
   echo "Finished installing images"
 }
 
+function create_pv() {
+  kubectl ${kubectl_args} create -f "${base_dir}/conf/pv.yaml"
+}
 
+function install_chart() {
+    helm install --create-namespace --set=autotm_prefix='autotm' --set=mongo_enabled="false" autotm ${chart_path} --wait
+}
 
+function uninstall_chart() {
+    helm uninstall autotm --ignore-not-found --wait
+}
+
+function upgrade_chart() {
+    helm upgrade --reuse-values autotm ${chart_path} --wait
+}
 
 function help() {
   echo "
@@ -73,6 +85,10 @@ function help() {
     build-images - build all required docker images
     push-images - push all required docker images to the private registry on node2.bdcl
     install-images - build-images and push-images
+    create-pv - creates persistent volumes required for functioning of the chart
+    install-chart - install autotm deployment
+    uninstall-chart - uninstall autotm deployment
+    upgrade-chart - upgrade autotm deployment
     help - prints this message
   "
 }
@@ -106,6 +122,22 @@ function main () {
 
     "install-images")
         install
+        ;;
+
+    "create-pv")
+        create_pv
+        ;;
+
+    "install-chart")
+        install_chart
+        ;;
+
+    "uninstall-chart")
+        uninstall_chart
+        ;;
+
+    "upgrade-chart")
+        upgrade_chart
         ;;
 
     "help")

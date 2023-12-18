@@ -65,7 +65,7 @@ Create the name of the service account to use
 Helper function to define prefix for all entities
 */}}
 {{- define "autotm.prefix" -}}
-{{- $prefix := default .Values.autotm_prefix "" | trunc 16  -}}
+{{- $prefix := default .Values.autotm_prefix .Release.Name | trunc 16  -}}
 {{- ternary $prefix (printf "%s-" $prefix) (empty $prefix) -}}
 {{- end -}}
 
