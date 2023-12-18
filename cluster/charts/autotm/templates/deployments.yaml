@@ -76,7 +76,7 @@ spec:
             claimName: {{ include "autotm.prefix" . }}mlflow-db-pvc
         - name: mysql-cnf
           configMap:
-            name: mlflow-mysql-cnf
+            name: {{ include "autotm.prefix" . }}mlflow-mysql-cnf
             items:
               - key: my.cnf
                 path: my.cnf
@@ -237,7 +237,7 @@ spec:
       volumes:
         - name: config-volume
           configMap:
-            name: rabbitmq-config
+            name: {{ include "autotm.prefix" . }}rabbitmq-config
       containers:
       - name: rabbitmq
         image: {{ .Values.rabbitmq_image }}
@@ -348,11 +348,11 @@ spec:
             claimName: {{ include "autotm.prefix" . }}datasets
         - name: config-volume
           configMap:
-            name: autotm-worker-config
+            name: {{ include "autotm.prefix" . }}worker-config
         {{- if .Values.mlflow_enabled }}
         - name: mlflow-vol
           persistentVolumeClaim:
-            claimName: {{ include "autotm.prefix" . }}autotm-mlflow-artifact-store
+            claimName: {{ include "autotm.prefix" . }}mlflow-artifact-store-pvc
         {{- end }}
       containers:
       - name: worker

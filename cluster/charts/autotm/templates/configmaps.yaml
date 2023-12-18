@@ -17,7 +17,6 @@ data:
     max_connections=500
     wait_timeout=15
     interactive_timeout=15
-    thread_pool_size=32
 {{ end }}
 ##################
 #### Celery & Fitness Workers
