@@ -19,6 +19,7 @@ from tqdm import tqdm
 from autotm.batch_vect_utils import SampleBatchVectorizer
 from autotm.fitness import AUTOTM_COMPONENT
 from autotm.fitness.external_scores import ts_bground, ts_uniform, ts_vacuous, switchp
+from autotm.preprocessing import PREPOCESSED_DATASET_FILENAME
 from autotm.utils import (
     MetricsScores,
     AVG_COHERENCE_SCORE,
@@ -60,7 +61,7 @@ class Dataset:
     _ppmi_dict_df_path: str = "ppmi_df.txt"
     _ppmi_dict_tf_path: str = "ppmi_tf.txt"
     _mutual_info_dict_path: str = "mutual_info_dict.pkl"
-    _texts_path: str = "prep_df.csv"
+    _texts_path: str = "ppp.csv"
     _labels_path = "labels.pkl"
 
     def __init__(self, base_path: str, topic_count: int):
