@@ -35,7 +35,7 @@ spec:
         image: {{ .Values.mlflow_image }}
         imagePullPolicy: {{ .Values.worker_image_pull_policy }}
         args: [
-            "--backend-store-uri", {{ include "autotm.mlflow_db_url" . }},
+            "--backend-store-uri", {{ quote (include "autotm.mlflow_db_url" .) }},
             "--default-artifact-root", "/var/lib/mlruns",
             "--host", "0.0.0.0"
         ]
@@ -374,7 +374,7 @@ spec:
           - name: CELERY_RESULT_BACKEND
             value: {{ include "autotm.celery_result_backend" . }}
           - name: NUM_PROCESSORS
-            value: {{ .Values.worker_cpu }}
+            value: {{ quote .Values.worker_cpu }}
           - name: AUTOTM_EXEC_MODE
             value: cluster
           - name: AUTOTM_COMPONENT
@@ -394,8 +394,8 @@ spec:
           {{- end }}
         resources:
           requests:
-            memory: {{ .Values.worker_mem }}
-            cpu: {{ .Values.worker_cpu }}
+            memory: {{ quote .Values.worker_mem }}
+            cpu: {{ quote .Values.worker_cpu }}
           limits:
-            memory: {{ .Values.worker_mem }}
-            cpu: {{ .Values.worker_cpu }}
+            memory: {{ quote .Values.worker_mem }}
+            cpu: {{ quote .Values.worker_cpu }}

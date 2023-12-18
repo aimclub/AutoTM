@@ -40,8 +40,8 @@ mongo_password: "secret"
 
 ### Fitness Worker settings
 worker_datasets_dir_path: "/storage"
-worker_count: 1
-worker_cpu: 1
+worker_count: "1"
+worker_cpu: "1"
 worker_mem: "8Gi"
 worker_mongo_collection: "tm_stats"
 worker_datasets_config_content: |

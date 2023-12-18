@@ -9,6 +9,8 @@ else
   kubectl_args="-n ${KUBE_NAMESPACE}"
 fi
 
+release_name="autotm"
+
 registry="node2.bdcl:5000"
 mlflow_image="${registry}/mlflow-webserver:latest"
 flower_image="${registry}/flower:latest"
@@ -63,8 +65,20 @@ function create_pv() {
   kubectl ${kubectl_args} apply -f "${base_dir}/conf/pv.yaml"
 }
 
+function delete_pv() {
+    kubectl ${kubectl_args} delete -f "${base_dir}/conf/pv.yaml" --ignore-not-found
+}
+
+function recreate_pv() {
+    delete_pv
+    create_pv
+}
+
 function install_chart() {
-    helm install --create-namespace --set=autotm_prefix='autotm' --set=mongo_enabled="false" autotm ${chart_path} --wait
+    helm install \
+      --create-namespace --namespace="${release_name}" \
+      --set=autotm_prefix='autotm' --set=mongo_enabled="false" \
+      ${release_name} ${chart_path} --wait
 }
 
 function uninstall_chart() {
@@ -73,6 +87,14 @@ function uninstall_chart() {
 
 function upgrade_chart() {
     helm upgrade --reuse-values autotm ${chart_path} --wait
+}
+
+function dry_run_chart() {
+    helm install \
+      --create-namespace --namespace=${release_name} \
+      --dry-run=server \
+      --set=autotm_prefix='autotm' --set=mongo_enabled="false" \
+      ${release_name} ${chart_path} --wait
 }
 
 function help() {
@@ -128,6 +150,14 @@ function main () {
         create_pv
         ;;
 
+    "delete-pv")
+        delete_pv
+        ;;
+
+    "recreate-pv")
+        recreate_pv
+        ;;
+
     "install-chart")
         install_chart
         ;;
@@ -138,6 +168,10 @@ function main () {
 
     "upgrade-chart")
         upgrade_chart
+        ;;
+
+    "dry-run-chart")
+        dry_run_chart
         ;;
 
     "help")
