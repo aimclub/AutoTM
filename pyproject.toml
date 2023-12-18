@@ -53,6 +53,7 @@ flake8 = "*"
 
 [tool.poetry.scripts]
 autotmctl = 'autotm.main:cli'
+fitness-worker = 'autotm.main_fitness_worker:main'
 
 [build-system]
 requires = ["poetry-core"]
