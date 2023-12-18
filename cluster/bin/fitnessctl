@@ -15,6 +15,7 @@ registry="node2.bdcl:5000"
 mlflow_image="${registry}/mlflow-webserver:latest"
 flower_image="${registry}/flower:latest"
 fitness_worker_image="${registry}/fitness-worker:latest"
+jupyter_image="${registry}/autotm-jupyter:latest"
 
 base_dir="./cluster"
 docker_files_dir="${base_dir}/docker/"
@@ -37,6 +38,7 @@ function build_images(){
   docker build -f "${docker_files_dir}/mlflow-webserver.dockerfile" -t ${mlflow_image} .
   docker build -f "${docker_files_dir}/flower.dockerfile" -t ${flower_image} .
   docker build -f "${docker_files_dir}/worker.dockerfile" -t ${fitness_worker_image} .
+  docker build -f "${docker_files_dir}/jupyter.dockerfile" -t ${jupyter_image} .
 
   echo "Finished images building"
 }
@@ -47,6 +49,7 @@ function push_images() {
   docker push ${mlflow_image}
   docker push ${flower_image}
   docker push ${fitness_worker_image}
+  docker push ${jupyter_image}
 
   echo "Finished pushing images"
 }

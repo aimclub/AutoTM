@@ -8,7 +8,6 @@ required_labels:
 pull_policy: "IfNotPresent"
 worker_image_pull_policy: "Always"
 # images
-jupyter_image: "python:3.9"
 mysql_image: "mysql/mysql-server:5.7.28"
 phpmyadmin_image: "phpmyadmin:5.1.1"
 mongo_image: "mongo:4.4.6-bionic"
@@ -18,6 +17,7 @@ redis_image: "node2.bdcl:5000/redis:6.2"
 mlflow_image: "node2.bdcl:5000/mlflow-webserver:latest"
 flower_image: "node2.bdcl:5000/flower:latest"
 worker_image: "node2.bdcl:5000/fitness-worker:latest"
+jupyter_image: "node2.bdcl:5000/autotm-jupyter:latest"
 
 ### Volumes
 pvc_create_enabled: "true"
