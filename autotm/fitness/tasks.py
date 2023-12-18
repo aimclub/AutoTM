@@ -4,7 +4,7 @@ from typing import List, Optional
 from autotm.params_logging_utils import log_params_and_artifacts, log_stats, model_files
 from autotm.fitness.tm import fit_tm_of_individual
 from autotm.schemas import IndividualDTO, fitness_to_json, fitness_from_json
-from autotm.algorithms_for_tuning.individuals import make_individual
+from autotm.algorithms_for_tuning.individuals import make_individual, Individual
 
 logger = logging.getLogger("root")
 
@@ -58,7 +58,7 @@ def calculate_fitness(
         raise Exception("Some exception")
 
 
-def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
+def estimate_fitness(population: List[Individual]) -> List[Individual]:
     logger.info("Calculating fitness...")
     population_with_fitness = []
     for individual in population:
@@ -72,11 +72,11 @@ def estimate_fitness(population: List[IndividualDTO]) -> List[IndividualDTO]:
 
 
 def log_best_solution(
-    individual: IndividualDTO,
+    individual: Individual,
     wait_for_result_timeout: Optional[float] = None,
     alg_args: Optional[str] = None,
     is_tmp: bool = False,
-):
+) -> Individual:
     logger.info("Sending a best individual to be logged")
     res = make_individual(
         fitness_from_json(
