@@ -44,6 +44,10 @@ spec:
             value: {{ include "autotm.celery_broker_url" . }}
           - name: CELERY_RESULT_BACKEND
             value: {{ include "autotm.celery_result_backend" . }}
+          - name: AUTOTM_COMPONENT
+            value: "head"
+          - name: AUTOTM_EXEC_MODE
+            value: "cluster"
           - name: NUM_PROCESSORS
             value: {{ quote .Values.jupyter_cpu_limits }}
 {{ end }}
