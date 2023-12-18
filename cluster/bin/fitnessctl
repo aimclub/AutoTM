@@ -77,7 +77,7 @@ function install_chart() {
     helm install \
       --create-namespace --namespace="${release_name}" \
       --set=autotm_prefix='autotm' --set=mongo_enabled="false" \
-      ${release_name} ${chart_path} --wait
+      ${release_name} ${chart_path}
 }
 
 function uninstall_chart() {
@@ -85,7 +85,7 @@ function uninstall_chart() {
 }
 
 function upgrade_chart() {
-    helm upgrade --reuse-values autotm ${chart_path} --wait
+    helm upgrade --reuse-values autotm ${chart_path}
 }
 
 function dry_run_chart() {

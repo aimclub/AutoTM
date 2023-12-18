@@ -80,6 +80,7 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
 spec:
+  type: NodePort
   ports:
   - port: 5672
   selector:
@@ -94,6 +95,7 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
 spec:
+  type: NodePort
   ports:
   - port: 6379
   selector:
