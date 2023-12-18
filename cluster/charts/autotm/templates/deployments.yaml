@@ -341,7 +341,7 @@ spec:
       volumes:
         - name: dataset
           persistentVolumeClaim:
-            claimName: {{ include "autotm.prefix" . }}autotm-datasets
+            claimName: {{ include "autotm.prefix" . }}datasets
         - name: config-volume
           configMap:
             name: autotm-worker-config
