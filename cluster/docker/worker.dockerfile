@@ -10,7 +10,7 @@ RUN pip3 install -r  /tmp/requirements.txt
 
 COPY dist/autotm-0.1.0-py3-none-any.whl /tmp
 
-RUN pip3 install /tmp/autotm-0.1.0-py3-none-any.whl
+RUN pip3 install --no-deps /tmp/autotm-0.1.0-py3-none-any.whl
 
 ENTRYPOINT fitness-worker \
     --concurrency 1 \
