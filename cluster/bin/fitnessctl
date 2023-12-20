@@ -1,0 +1,191 @@
+#!/usr/bin/env bash
+
+set -ex
+
+if [[ -z "${KUBE_NAMESPACE}" ]]
+then
+  kubectl_args=""
+else
+  kubectl_args="-n ${KUBE_NAMESPACE}"
+fi
+
+release_name="autotm"
+
+registry="node2.bdcl:5000"
+mlflow_image="${registry}/mlflow-webserver:latest"
+flower_image="${registry}/flower:latest"
+fitness_worker_image="${registry}/fitness-worker:latest"
+jupyter_image="${registry}/autotm-jupyter:latest"
+
+base_dir="./cluster"
+docker_files_dir="${base_dir}/docker/"
+chart_path="${base_dir}/charts/autotm"
+
+function build_app() {
+  echo "Building app..."
+
+  poetry export --without-hashes > requirements.txt
+  poetry build
+
+  echo "Finished app building"
+}
+
+function build_images(){
+  echo "Building images..."
+
+  build_app
+
+  docker build -f "${docker_files_dir}/mlflow-webserver.dockerfile" -t ${mlflow_image} .
+  docker build -f "${docker_files_dir}/flower.dockerfile" -t ${flower_image} .
+  docker build -f "${docker_files_dir}/worker.dockerfile" -t ${fitness_worker_image} .
+  docker build -f "${docker_files_dir}/jupyter.dockerfile" -t ${jupyter_image} .
+
+  echo "Finished images building"
+}
+
+function push_images() {
+  echo "Pushing images..."
+
+  docker push ${mlflow_image}
+  docker push ${flower_image}
+  docker push ${fitness_worker_image}
+  docker push ${jupyter_image}
+
+  echo "Finished pushing images"
+}
+
+function install() {
+  echo "Installing images..."
+
+  build_images
+  push_images
+
+  echo "Finished installing images"
+}
+
+function create_pv() {
+  kubectl ${kubectl_args} apply -f "${base_dir}/conf/pv.yaml"
+}
+
+function delete_pv() {
+    kubectl ${kubectl_args} delete -f "${base_dir}/conf/pv.yaml" --ignore-not-found
+}
+
+function recreate_pv() {
+    delete_pv
+    create_pv
+}
+
+function install_chart() {
+    helm install \
+      --create-namespace --namespace="${release_name}" \
+      --set=autotm_prefix='autotm' --set=mongo_enabled="false" \
+      ${release_name} ${chart_path}
+}
+
+function uninstall_chart() {
+    helm uninstall autotm --ignore-not-found --wait
+}
+
+function upgrade_chart() {
+#    helm upgrade --namespace="${release_name}" --reuse-values autotm ${chart_path}
+    helm upgrade --namespace="${release_name}" autotm ${chart_path}
+}
+
+function dry_run_chart() {
+    helm install \
+      --create-namespace --namespace=${release_name} \
+      --dry-run=server \
+      --set=autotm_prefix='autotm' --set=mongo_enabled="false" \
+      ${release_name} ${chart_path} --wait
+}
+
+function help() {
+  echo "
+  Supported env variables:
+    KUBE_NAMESPACE - a kubernetes namespace to make actions in
+
+  List of commands.
+    build-app - build the app as a .whl distribution
+    build-images - build all required docker images
+    push-images - push all required docker images to the private registry on node2.bdcl
+    install-images - build-images and push-images
+    create-pv - creates persistent volumes required for functioning of the chart
+    install-chart - install autotm deployment
+    uninstall-chart - uninstall autotm deployment
+    upgrade-chart - upgrade autotm deployment
+    help - prints this message
+  "
+}
+
+function main () {
+    cmd="$1"
+
+    if [ -z "${cmd}" ]
+    then
+      echo "No command is provided."
+      help
+      exit 1
+    fi
+
+    shift 1
+
+    echo "Executing command: ${cmd}"
+
+    case "${cmd}" in
+    "build-app")
+        build_app
+        ;;
+
+    "build-images")
+        build_images
+        ;;
+
+    "push-images")
+        push_images
+        ;;
+
+    "install-images")
+        install
+        ;;
+
+    "create-pv")
+        create_pv
+        ;;
+
+    "delete-pv")
+        delete_pv
+        ;;
+
+    "recreate-pv")
+        recreate_pv
+        ;;
+
+    "install-chart")
+        install_chart
+        ;;
+
+    "uninstall-chart")
+        uninstall_chart
+        ;;
+
+    "upgrade-chart")
+        upgrade_chart
+        ;;
+
+    "dry-run-chart")
+        dry_run_chart
+        ;;
+
+    "help")
+        help
+        ;;
+
+    *)
+        echo "Unknown command: ${cmd}"
+        ;;
+
+    esac
+}
+
+main "${@}"

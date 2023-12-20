@@ -2,13 +2,17 @@ import os
 
 import yaml
 
-from kube_fitness.tasks import make_celery_app
-from kube_fitness.tm import TopicModelFactory
 
-if __name__ == '__main__':
+def main():
+    os.environ['AUTOTM_COMPONENT'] = 'worker'
+    os.environ['AUTOTM_EXEC_MODE'] = 'cluster'
+
+    from autotm.fitness import make_celery_app
+    from autotm.fitness.tm import TopicModelFactory
+
     if "DATASETS_CONFIG" in os.environ:
         with open(os.environ["DATASETS_CONFIG"], "r") as f:
-            config = yaml.load(f)
+            config = yaml.safe_load(f)
             dataset_settings = config["datasets"]
     else:
         dataset_settings = None
@@ -20,3 +24,7 @@ if __name__ == '__main__':
 
     celery_app = make_celery_app()
     celery_app.worker_main()
+
+
+if __name__ == '__main__':
+    main()

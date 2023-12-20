@@ -1,0 +1,234 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        app: rabbitmq
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: rabbitmq-config
+      containers:
+      - name: rabbitmq
+        image: node2.bdcl:5000/rabbitmq:3.8-management-alpine
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5672
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/rabbitmq/conf.d/consumer-settings.conf
+            subPath: consumer-settings.conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-service
+spec:
+  ports:
+  - port: 5672
+  selector:
+    app: rabbitmq
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq-config
+data:
+  consumer-settings.conf: |
+    ## Consumer timeout
+    ## If a message delivered to a consumer has not been acknowledge before this timer
+    ## triggers the channel will be force closed by the broker. This ensure that
+    ## faultly consumers that never ack will not hold on to messages indefinitely.
+    ##
+    consumer_timeout = 1800000
+---
+apiVersion: apps/v1 #  for k8s versions before 1.9.0 use apps/v1beta2  and before 1.8.0 use extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: node2.bdcl:5000/redis:6.2
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 6379
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  ports:
+  - port: 6379
+  selector:
+    app: redis
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-flower
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-flower
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        app: celery-flower
+    spec:
+      containers:
+      - name: flower
+        image: node2.bdcl:5000/flower:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5555
+        env:
+          - name: CELERY_BROKER_URL
+            value: "amqp://guest:guest@rabbitmq-service:5672"
+          - name: CELERY_RESULT_BACKEND
+            value: "redis://redis:6379/1" # "rpc://"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: celery-flower-service
+spec:
+  type: NodePort
+  ports:
+  - port: 5555
+  selector:
+    app: celery-flower
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fitness-worker-config
+data:
+  datasets-config.yaml: |
+    datasets:
+      # the rest settings will be the same as for the first dataset but will be added automatically
+      books_stroyitelstvo_2030:
+        base_path: "/storage/books_stroyitelstvo_2030_sample"
+        topic_count: 10
+
+      20newsgroups:
+        base_path: "/storage/20newsgroups_sample"
+        topic_count: 20
+
+      clickhouse_issues:
+        base_path: "/storage/clickhouse_issues_sample"
+        labels: yes
+        topic_count: 50
+
+      # the rest settings will be the same as for the first dataset but will be added automatically
+      banners:
+        base_path: "/storage/banners_sample"
+        topic_count: 20
+
+      amazon_food:
+        base_path: "/storage/amazon_food_sample"
+        topic_count: 20
+
+      hotel-reviews:
+        base_path: "/storage/hotel-reviews_sample"
+        topic_count: 20
+
+      lenta_ru:
+        base_path: "/storage/lenta_ru_sample"
+        topic_count: 20
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fitness-worker
+  labels:
+    app: fitness-worker
+spec:
+  replicas: 125
+  selector:
+    matchLabels:
+      app: fitness-worker
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        app: fitness-worker
+    spec:
+      volumes:
+        - name: dataset
+          hostPath:
+            path: /mnt/ess_storage/DN_1/storage/home/khodorchenko/GOTM/datasets_TM_scoring
+            type: Directory
+        - name: config-volume
+          configMap:
+            name: fitness-worker-config
+        - name: mlflow-vol
+          persistentVolumeClaim:
+            claimName: mlflow-artifact-store-pvc
+      containers:
+      - name: worker
+        image: node2.bdcl:5000/fitness-worker:latest
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: dataset
+            mountPath: /storage
+          - name: config-volume
+            mountPath: /etc/fitness/datasets-config.yaml
+            subPath: datasets-config.yaml
+          - mountPath: "/var/lib/mlruns"
+            name: mlflow-vol
+        env:
+          - name: CELERY_BROKER_URL
+            value: "amqp://guest:guest@rabbitmq-service:5672"
+          - name: CELERY_RESULT_BACKEND
+            value: "redis://redis:6379/1" # "rpc://"
+          - name: NUM_PROCESSORS
+            value: "4"
+          - name: DATASETS_CONFIG
+            value: /etc/fitness/datasets-config.yaml
+          - name: MLFLOW_TRACKING_URI
+            value: mysql+pymysql://mlflow:mlflow@mlflow-db:3306/mlflow
+          # see: https://github.com/mongodb/mongo-python-driver/blob/c8d920a46bfb7b054326b3e983943bfc794cb676/pymongo/mongo_client.py
+          - name: MONGO_URI
+            value: mongodb://mongoadmin:secret@mongo-tm-experiments-db:27017
+          - name: MONGO_COLLECTION
+            value: "main_tm_stats"
+        resources:
+          requests:
+            memory: "24G"
+            cpu: "4"
+          limits:
+            memory: "24G"
+            cpu: "4"

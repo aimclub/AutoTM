@@ -12,9 +12,9 @@ import gridfs
 import mlflow
 from pymongo import MongoClient
 
-from kube_fitness.metrics import TimeMeasurements
-from kube_fitness.schemas import IndividualDTO
-from kube_fitness.tm import TopicModel
+from autotm_distributed import TimeMeasurements
+from autotm_distributed.schemas import IndividualDTO
+from autotm_distributed.tm import TopicModel
 
 logger = logging.getLogger()
 
