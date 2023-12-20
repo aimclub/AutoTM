@@ -170,3 +170,5 @@ model.artm
 docs/_build
 
 rsync-repo.sh
+
+tmp
