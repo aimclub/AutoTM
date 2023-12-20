@@ -212,9 +212,11 @@ def prepearing_cooc_dict(
     data = pd.read_csv(path_to_dataset)
     docs_count = data.shape[0]
 
+    logger.debug("Performing calculate_cooc_dicts")
     df_dicts, tf_dicts = calculate_cooc_dicts(
         vocab_words, data, n_cores=n_cores, window=cooc_window
     )
+    logger.debug("Performed calculate_cooc_dicts")
 
     cooc_df_dict, cooc_df_term_dict = df_dicts[0], df_dicts[1]
     cooc_tf_dict, cooc_tf_term_dict = tf_dicts[0], tf_dicts[1]
@@ -228,8 +230,10 @@ def prepearing_cooc_dict(
     convert_to_vw_format_and_save(cooc_df_dict, vocab_words, cooc_file_path_df)
     convert_to_vw_format_and_save(cooc_tf_dict, vocab_words, cooc_file_path_tf)
 
+    logger.debug("Performing calculate_ppmi")
     ppmi_df = calculate_ppmi(cooc_file_path_df, docs_count, cooc_df_term_dict)
     ppmi_tf = calculate_ppmi(cooc_file_path_tf, pairs_count, cooc_tf_term_dict)
+    logger.debug("Performed calculate_ppmi")
 
     write_vw_dict(ppmi_tf, vocab_words, ppmi_dict_tf)
     write_vw_dict(ppmi_df, vocab_words, ppmi_dict_df)
@@ -338,16 +342,21 @@ def prepare_all_artifacts(save_path: str):
     DOCUMENTS_TO_BATCH_PATH = os.path.join(save_path, PREPOCESSED_DATASET_FILENAME)
 
     # TODO: check why batch vectorizer is returned (unused further)
+    logger.debug("Starting batch vectorizer...")
     prepare_batch_vectorizer(
         BATCHES_DIR, WV_PATH, DOCUMENTS_TO_BATCH_PATH
     )
 
+    logger.debug("Preparing artm.Dictionary...")
     my_dictionary = artm.Dictionary()
     my_dictionary.gather(data_path=BATCHES_DIR, vocab_file_path=WV_PATH)
     my_dictionary.filter(min_df=3, class_id="text")
     my_dictionary.save_text(DICTIONARY_PATH)
 
+    logger.debug("Vocabulary preparing...")
     vocab_preparation(VOCAB_PATH, DICTIONARY_PATH)
+
+    logger.debug("Cooc dictionary preparing...")
     prepearing_cooc_dict(
         BATCHES_DIR,
         WV_PATH,
@@ -360,6 +369,7 @@ def prepare_all_artifacts(save_path: str):
         ppmi_dict_df,
     )
 
+    logger.debug("Mutual info dictionary preparing...")
     mutual_info_dict = mutual_info_dict_preparation(ppmi_dict_tf)
     with open(MUTUAL_INFO_DICT_PATH, "wb") as handle:
         pickle.dump(mutual_info_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
