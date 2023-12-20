@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from kube_fitness.metrics import MetricsScores
+from autotm_distributed import MetricsScores
 
 PARAM_NAMES = [
     'val_decor', 'var_n_0', 'var_sm_0', 'var_sm_1', 'var_n_1',

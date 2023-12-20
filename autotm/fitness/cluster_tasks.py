@@ -3,7 +3,7 @@ import os
 import time
 import uuid
 from multiprocessing.process import current_process
-from typing import List, Optional, Union
+from typing import List, Optional, Union, cast
 
 import celery
 from billiard.exceptions import SoftTimeLimitExceeded
@@ -13,11 +13,11 @@ from celery.result import GroupResult, AsyncResult
 from celery.utils.log import get_task_logger
 from tqdm import tqdm
 
-from kube_fitness.metrics import AVG_COHERENCE_SCORE
-from kube_fitness.params_logging_utils import log_params_and_artifacts, log_stats, model_files
-from kube_fitness.schemas import IndividualDTO
-from kube_fitness.tm import fit_tm_of_individual, calculate_fitness_of_individual
-from kube_fitness.utils import TqdmToLogger
+from autotm.algorithms_for_tuning.individuals import Individual, make_individual
+from autotm.fitness.tm import fit_tm_of_individual
+from autotm.params_logging_utils import model_files, log_params_and_artifacts, log_stats
+from autotm.schemas import IndividualDTO
+from autotm.utils import TqdmToLogger, AVG_COHERENCE_SCORE
 
 logger = logging.getLogger("root")
 task_logger = get_task_logger(__name__)
@@ -66,6 +66,7 @@ def do_fitness_calculating(individual: str,
 
     with fit_tm_of_individual(
             dataset=individual.dataset,
+            data_path=individual.data_path,
             params=individual.params,
             fitness_name=individual.fitness_name,
             topic_count=individual.topic_count,
@@ -105,26 +106,30 @@ def calculate_fitness(self: Task,
     except SoftTimeLimitExceeded as ex:
         raise Exception(f"Soft time limit encountered") from ex
     except Exception:
-        self.retry(max_retries=3, countdown=5)
+        self.retry(max_retries=1, countdown=5)
 
 
-def parallel_fitness(population: List[IndividualDTO],
+def parallel_fitness(population: List[Individual],
                      use_tqdm: bool = False,
-                     tqdm_check_period: int = 2) -> List[IndividualDTO]:
-    ids = [ind.id for ind in population]
+                     tqdm_check_period: int = 2,
+                     app: Optional[celery.Celery] = None) -> List[Individual]:
+    ids = [ind.dto.id for ind in population]
     assert len(set(ids)) == len(population), \
         f"There are individuals with duplicate ids: {ids}"
 
     logger.info("Calculating fitness...")
-    logger.info(f"Sending individuals to be calculated with uids: {[p.id for p in population]}")
+    logger.info(f"Sending individuals to be calculated with uids: {[p.dto.id for p in population]}")
 
-    fitness_tasks = [
-        calculate_fitness.signature(
-            # (fitness_to_json(individual), False, True),
-            (individual.json(), False, True),
-            options={"queue": "fitness_tasks"}
-        ) for individual in population
-    ]
+    fitness_tasks = []
+    for individual in population:
+        task = cast(
+            Task,
+            calculate_fitness.signature((individual.dto.json(), False, False), options={"queue": "fitness_tasks"})
+        )
+        # todo: add it later
+        # if app is not None:
+        #     task.bind(app)
+        fitness_tasks.append(task)
 
     g: GroupResult = group(*fitness_tasks).apply_async()
 
@@ -165,34 +170,46 @@ def parallel_fitness(population: List[IndividualDTO],
     # restoring the order in the resulting population according to the initial population
     # results_by_id = {ind.id: ind for ind in (fitness_from_json(r) for r in results)}
     results_by_id = {ind.id: ind for ind in (IndividualDTO.parse_raw(r) for r in results)}
-    return [results_by_id[ind.id] for ind in population]
+    return [make_individual(results_by_id[ind.dto.id]) for ind in population]
 
 
-def log_best_solution(individual: IndividualDTO,
+def log_best_solution(individual: Individual,
                       wait_for_result_timeout: Optional[float] = None,
-                      alg_args: Optional[str] = None) \
-        -> Union[IndividualDTO, AsyncResult]:
+                      alg_args: Optional[str] = None,
+                      is_tmp: bool = False,
+                      app: Optional[celery.Celery] = None) \
+        -> Individual:
+    if is_tmp:
+        return make_individual(individual.dto)
     # ind = fitness_to_json(individual)
-    ind = individual.json()
+    ind = individual.dto.json()
     logger.info(f"Sending a best individual to be logged: {ind}")
     task: Task = calculate_fitness.signature(
-        (ind, True, True, alg_args),
+        (ind, True, False, alg_args),
         options={"queue": "fitness_tasks"}
     )
+
+    # todo: add it later
+    # if app is not None:
+    #     task.bind(app)
 
     result: AsyncResult = task.apply_async()
     logger.debug(f"Started a task for best individual logging with id: {result.task_id}")
 
-    if wait_for_result_timeout:
-        # it may block forever
-        timeout = wait_for_result_timeout if wait_for_result_timeout > 0 else None
-        r = result.get(timeout=timeout)
-        # r = fitness_from_json(r)
-        r = IndividualDTO.parse_raw(r)
-    else:
-        r = result
+    # if wait_for_result_timeout:
+    #     # it may block forever
+    #     timeout = wait_for_result_timeout if wait_for_result_timeout > 0 else None
+    #     r = result.get(timeout=timeout)
+    #     # r = fitness_from_json(r)
+    #     r = IndividualDTO.parse_raw(r)
+    # else:
+    #     r = result
 
-    return r
+    r = result.get(timeout=wait_for_result_timeout)
+    r = IndividualDTO.parse_raw(r)
+    ind = make_individual(r)
+
+    return ind
 
 
 class FitnessCalculatorWrapper:

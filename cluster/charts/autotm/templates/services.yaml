@@ -1,0 +1,142 @@
+{{ if .Values.jupyter_enabled }}
+##################
+#### Jupyter
+##################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "autotm.prefix" . }}jupyter
+#  labels:
+#    {{- range $key, $val := .Values.required_labels }}
+#    {{ $key }}:{{ $val | quote }}
+#    {{- end }}
+spec:
+  type: NodePort
+  ports:
+    - port: 8888
+      protocol: TCP
+      name: jupyter
+    - port: 4040
+      protocol: TCP
+      name: spark
+  selector:
+    app: {{ include "autotm.prefix" . }}jupyter
+{{ end }}
+{{ if .Values.mlflow_enabled }}
+##################
+#### MLFlow
+##################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "autotm.prefix" . }}mlflow
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  type: NodePort
+  ports:
+  - port: 5000
+  selector:
+    app: {{ include "autotm.prefix" . }}mlflow
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "autotm.prefix" . }}mlflow-db
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: {{ include "autotm.prefix" . }}mlflow-db
+{{ end }}
+{{ if .Values.mongo_enabled }}
+##################
+#### Mongo
+##################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  type: NodePort
+  ports:
+  - port: 27017
+  selector:
+    app: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "autotm.prefix" . }}mongo-express
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  type: NodePort
+  ports:
+  - port: 8081
+  selector:
+    app: {{ include "autotm.prefix" . }}mongo-express-tm-experiments
+{{ end }}
+##################
+#### Celery & Fitness Workers
+##################
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "autotm.prefix" . }}rabbitmq-service
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  type: NodePort
+  ports:
+  - port: 5672
+  selector:
+    app: {{ include "autotm.prefix" . }}rabbitmq
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "autotm.prefix" . }}redis
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  type: NodePort
+  ports:
+  - port: 6379
+  selector:
+    app: {{ include "autotm.prefix" . }}redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "autotm.prefix" . }}celery-flower-service
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  type: NodePort
+  ports:
+  - port: 5555
+  selector:
+    app: {{ include "autotm.prefix" . }}celery-flower

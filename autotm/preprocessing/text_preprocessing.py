@@ -4,6 +4,8 @@ from typing import Union, cast
 import pandas as pd
 import pymystem3
 from nltk.corpus import stopwords, wordnet
+
+from autotm.preprocessing import PREPOCESSED_DATASET_FILENAME
 from autotm.utils import parallelize_dataframe
 import nltk
 import re
@@ -165,7 +167,7 @@ def process_dataset(
     :return:
     """
     os.makedirs(save_path, exist_ok=True)
-    save_path = os.path.join(save_path, "prep_df.csv")
+    save_path = os.path.join(save_path, PREPOCESSED_DATASET_FILENAME)
     data = pd.read_csv(fname) if isinstance(fname, str) else cast(pd.DataFrame, fname)
     data = parallelize_dataframe(
         data, lemmatize_text, n_cores, lang=lang, col_to_process=col_to_process

@@ -34,7 +34,7 @@ from autotm.algorithms_for_tuning.individuals import make_individual, Individual
 from autotm.algorithms_for_tuning.nelder_mead_optimization.nelder_mead import (
     NelderMeadOptimization,
 )
-from autotm.fitness.tasks import estimate_fitness, log_best_solution
+from autotm.fitness import estimate_fitness, log_best_solution
 from autotm.utils import AVG_COHERENCE_SCORE
 from autotm.visualization.dynamic_tracker import MetricsCollector
 

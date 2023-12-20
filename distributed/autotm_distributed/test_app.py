@@ -4,12 +4,12 @@ from typing import Optional
 
 import click
 
-from kube_fitness.metrics import AVG_COHERENCE_SCORE
+from autotm_distributed import AVG_COHERENCE_SCORE
 
 logging.basicConfig(level=logging.DEBUG)
 
-from kube_fitness.tasks import make_celery_app, parallel_fitness, log_best_solution
-from kube_fitness.schemas import IndividualDTO
+from autotm_distributed.tasks import make_celery_app, parallel_fitness, log_best_solution
+from autotm_distributed.schemas import IndividualDTO
 
 logger = logging.getLogger("TEST_APP")
 

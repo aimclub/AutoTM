@@ -17,7 +17,9 @@ from billiard.exceptions import SoftTimeLimitExceeded
 from tqdm import tqdm
 
 from autotm.batch_vect_utils import SampleBatchVectorizer
+from autotm.fitness import AUTOTM_COMPONENT
 from autotm.fitness.external_scores import ts_bground, ts_uniform, ts_vacuous, switchp
+from autotm.preprocessing import PREPOCESSED_DATASET_FILENAME
 from autotm.utils import (
     MetricsScores,
     AVG_COHERENCE_SCORE,
@@ -59,7 +61,7 @@ class Dataset:
     _ppmi_dict_df_path: str = "ppmi_df.txt"
     _ppmi_dict_tf_path: str = "ppmi_tf.txt"
     _mutual_info_dict_path: str = "mutual_info_dict.pkl"
-    _texts_path: str = "prep_df.csv"
+    _texts_path: str = PREPOCESSED_DATASET_FILENAME
     _labels_path = "labels.pkl"
 
     def __init__(self, base_path: str, topic_count: int):
@@ -234,27 +236,30 @@ class TopicModelFactory:
         self.tm = None
 
     def __enter__(self) -> "TopicModel":
-        # if self.dataset_name not in self.cached_dataset_settings:
-        #     raise Exception(f"No settings for dataset {self.dataset_name}")
+        # local or cluster
+        if AUTOTM_COMPONENT == "worker":
+            if self.dataset_name not in self.cached_dataset_settings:
+                raise Exception(f"No settings for dataset {self.dataset_name}")
 
-        # dataset = self.cached_dataset_settings[self.dataset_name]
-        # t_count = self.topic_count if self.topic_count else dataset.topic_count
-        #
-        # logging.debug(f"Using the following settings: \n{dataset.base_path}")
+            dataset = self.cached_dataset_settings[self.dataset_name]
+            t_count = self.topic_count if self.topic_count else dataset.topic_count
 
-        dataset = Dataset(base_path=self.data_path, topic_count=self.topic_count)
-        dataset.load_dataset()
+            logging.debug(f"Using the following settings: \n{dataset.base_path}")
+        else:
+            t_count = self.topic_count
+            dataset = Dataset(base_path=self.data_path, topic_count=t_count)
+            dataset.load_dataset()
 
         uid = uuid.uuid4()
 
         if self.fitness_name == "default":
             logging.info(
                 f"Using TM model: {TopicModel} according "
-                f"to fitness name: {self.fitness_name}, topics count: {self.topic_count}"
+                f"to fitness name: {self.fitness_name}, topics count: {t_count}"
             )
             self.tm = TopicModel(
                 uid,
-                self.topic_count,
+                t_count,
                 self.num_processors,
                 dataset,
                 self.params,

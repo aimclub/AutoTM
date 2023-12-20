@@ -168,3 +168,5 @@ model.artm
 
 # sphinx docs
 docs/_build
+
+rsync-repo.sh

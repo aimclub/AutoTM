@@ -45,6 +45,8 @@ PATH_TO_LEARNED_SCORING = "./scoring_func"
 
 
 class Individual(ABC):
+    id: str
+
     @property
     @abstractmethod
     def dto(self) -> IndividualDTO:

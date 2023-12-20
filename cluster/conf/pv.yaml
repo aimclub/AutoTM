@@ -1,0 +1,78 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: autotm-mlflow-db-pv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 25Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  local:
+    path: /data/hdd/autotm-mlflow-db
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - node5.bdcl
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: autotm-mlflow-artifact-store-pv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 50Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/ess_storage/DN_1/storage/home/khodorchenko/mlflow-tm-experiments/autotm-mlflow-artifact-store
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: autotm-mongo-tm-experiments-pv
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 50Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  local:
+    path: /data/hdd/autotm-mongo-db-tm-experiments
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - node5.bdcl
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: autotm-datasets
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 50Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/ess_storage/DN_1/storage/home/khodorchenko/GOTM/datasets_TM_scoring
+    type: Directory

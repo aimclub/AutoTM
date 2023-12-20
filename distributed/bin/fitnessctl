@@ -19,7 +19,7 @@ fi
 if [ "${DIST_MODE}" = "${PROJECT_MODE_NAME}" ]
 then
   base_dir="./"
-  generator_exe="python3 ./kube_fitness/kube_fitness/deploy_config_generator.py"
+  generator_exe="python3 ./autotm_distributed/deploy_config_generator.py"
 else
   base_dir="$HOME/.local/share/kube-fitness-data/"
   # should be made executable too
