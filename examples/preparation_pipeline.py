@@ -51,6 +51,22 @@ def prepare_all_artifacts_debug(save_path: str):
 if __name__ == "__main__":
     prepare_all_artifacts_debug(SAVE_PATH)
 
+# Run bigartm from cli
+# bigartm \
+#         -c vw \  # Raw corpus in Vowpal Wabbit format
+#         -v vocab \  # vocab file in UCI format
+#         --cooc-window 10 \
+#         --cooc-min-tf 200 \
+#         --write-cooc-tf cooc_tf_ \
+#         --cooc-min-df 200 \
+#         --write-cooc-df cooc_df_ \
+#         --write-ppmi-tf ppmi_tf_ \
+#         --write-ppmi-df ppmi_df_
+
+
+# run container: docker run -it -v /home/nikolay/wspace/AutoTM/tmp/train-00000-of-00001-processed-corpora:/dataset artm:3.9 /bin/bash
+# bigartm -c /dataset/test_set_data_voc.txt -v /dataset/vocab.txt --cooc-window 10 --cooc-min-tf 200 --write-cooc-tf cooc_tf_ --cooc-min-df 200 --write-cooc-df cooc_df_ --write-ppmi-tf ppmi_tf_ --write-ppmi-df ppmi_df_
+
 
 # Normal version. DO NOT DELETE!!!
 # if __name__ == "__main__":
