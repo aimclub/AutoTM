@@ -39,7 +39,8 @@ def __process_batch(
         global_cooc_df_term_dictionary,
         global_cooc_tf_term_dictionary,
         batch,
-        window_size):
+        window_size,
+        vocab: Set[str]):
     batch_dictionary = __create_batch_dictionary(batch)
 
     def __process_window_df(global_cooc_dict, global_word_dict, token_ids,
@@ -47,6 +48,9 @@ def __process_batch(
         for j in range(1, len(token_ids)):
             token_index_1 = batch_dictionary[token_ids[0]]
             token_index_2 = batch_dictionary[token_ids[j]]
+
+            if token_index_1 not in vocab or token_index_2 not in vocab:
+                continue
 
             token_pair = (min(token_index_1, token_index_2), max(token_index_1, token_index_2))
 
@@ -66,6 +70,9 @@ def __process_batch(
 
             token_index_1 = batch_dictionary[token_ids[0]]
             token_index_2 = batch_dictionary[token_ids[j]]
+
+            if token_index_1 not in vocab or token_index_2 not in vocab:
+                continue
 
             token_pair = (min(token_index_1, token_index_2), max(token_index_1, token_index_2))
             global_cooc_dict[token_pair] = global_cooc_dict.get(token_pair, 0.0) + value
@@ -91,7 +98,7 @@ def __size(global_cooc_dictionary):
     return result
 
 
-def calculate_cooc(batches_path: str, window_size: int=10) -> CoocDictionaries:
+def calculate_cooc(batches_path: str, vocab: List[str], window_size: int=10) -> CoocDictionaries:
     global_time_start = time.time()
     batches_list = glob.glob(os.path.join(batches_path, '*.batch'))
 
@@ -113,7 +120,8 @@ def calculate_cooc(batches_path: str, window_size: int=10) -> CoocDictionaries:
         __process_batch(
             global_cooc_df_dictionary, global_cooc_tf_dictionary,
             global_cooc_df_term_dictionary, global_cooc_tf_term_dictionary,
-            current_batch, window_size
+            current_batch, window_size,
+            set(vocab)
         )
 
         logger.debug('Finished batch, elapsed time: %s' % (time.time() - local_time_start))
