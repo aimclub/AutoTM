@@ -95,6 +95,19 @@ def _calculate_cooc_tf_dict(data: list, vocab: List[str], window: int = 10) -> d
     # pass
 
 
+def read_vocab(vocab_path: str) -> List[str]:
+    # TODO: rewrite this part in case of several modalities
+    vocab_words = []
+    with open(vocab_path) as vpath:
+        for line in vpath:
+            splitted_line = line.split()
+            if len(splitted_line) > 2:
+                raise Exception("There are more than 2 modalities!")
+            vocab_words.append(splitted_line[0].strip())
+
+    return vocab_words
+
+
 def calculate_ppmi(cooc_dict_path, n, term_freq_dict):
     print("Calculating pPMI...")
     ppmi_dict = {}
@@ -200,14 +213,7 @@ def prepearing_cooc_dict(
     :return:
     """
 
-    # TODO: rewrite this part in case of several modalities
-    vocab_words = []
-    with open(VOCAB_PATH) as vpath:
-        for line in vpath:
-            splitted_line = line.split()
-            if len(splitted_line) > 2:
-                raise Exception("There are more than 2 modalities!")
-            vocab_words.append(splitted_line[0].strip())
+    vocab_words = read_vocab(VOCAB_PATH)
 
     data = pd.read_csv(path_to_dataset)
     docs_count = data.shape[0]
