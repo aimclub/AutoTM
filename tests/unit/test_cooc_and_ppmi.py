@@ -12,6 +12,7 @@ def test_cooc(test_corpora_path: str):
         # input data paths
         batches_path = os.path.join(test_corpora_path, "batches")
         vocab_path = os.path.join(test_corpora_path, "vocab.txt")
+        dictionary_path = os.path.join(test_corpora_path, "dictionary.txt")
 
         # reading correct samples produced by old version of code
         cooc_df_vw = parse_vw(os.path.join(test_corpora_path, "cooc_df.txt"))
@@ -25,7 +26,7 @@ def test_cooc(test_corpora_path: str):
         cooc_file_path_tf = os.path.join(tmpdir, "cooc_tf.txt")
 
         # calculating
-        cooc_dicts = calculate_cooc(batches_path=batches_path, vocab_path=vocab_path, window_size=10)
+        cooc_dicts = calculate_cooc(batches_path=batches_path, dictionary_path=dictionary_path, window_size=10)
 
         convert_to_vw_format_and_save(cooc_dicts.cooc_df, vocab_words, cooc_file_path_df)
         convert_to_vw_format_and_save(cooc_dicts.cooc_tf, vocab_words, cooc_file_path_tf)

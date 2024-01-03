@@ -8,12 +8,11 @@ import sys
 import tempfile
 import time
 from dataclasses import dataclass
-from typing import Dict, Tuple, Optional, List, Set
+from typing import Dict, Tuple, List, Set
 
 import artm
 from six import iteritems
 from six.moves import range
-
 
 logger = logging.getLogger(__name__)
 
@@ -86,31 +85,27 @@ def __process_batch(
 
 
 def __size(global_cooc_dictionary):
-    result = sys.getsizeof(global_cooc_dictionary)
-    for k_1, internal in iteritems(global_cooc_dictionary):
-        result += sys.getsizeof(k_1)
-        for t, v in iteritems(internal):
-            result += sys.getsizeof(t)
-            result += sys.getsizeof(v)
+    result = sys.getsizeof(global_cooc_dictionary) \
+             + sum(sys.getsizeof(k) + sys.getsizeof(v) for k, v in global_cooc_dictionary.items())
 
     return result
 
 
-def calculate_cooc(batches_path: str, vocab_path: str, window_size: int=10) -> CoocDictionaries:
+def calculate_cooc(batches_path: str, dictionary_path: str, window_size: int=10) -> CoocDictionaries:
     encoding = 'utf-8'
     global_time_start = time.time()
     batches_list = glob.glob(os.path.join(batches_path, '*.batch'))
 
     logger.info(
         "Calculating cooc: %s batches were found in %s, start processing using vocab from %s"
-        % (len(batches_list), batches_path, vocab_path)
+        % (len(batches_list), batches_path, dictionary_path)
     )
 
     with tempfile.NamedTemporaryFile(mode='w+', delete=False) as fp:
         fp.close()
 
         temp_dict = artm.Dictionary()
-        temp_dict.load_text(vocab_path, encoding)
+        temp_dict.load_text(dictionary_path, encoding)
         temp_dict.save_text(fp.name)
 
         dictionary = {}
