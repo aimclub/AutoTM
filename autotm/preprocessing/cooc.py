@@ -46,38 +46,40 @@ def __process_batch(
     def __process_window_df(global_cooc_dict, global_word_dict, token_ids,
                             doc_seen_pairs: Set[Tuple[int, int]], doc_seen_words: Set[int]):
         for j in range(1, len(token_ids)):
-            token_index_1 = batch_dictionary[token_ids[0]]
-            token_index_2 = batch_dictionary[token_ids[j]]
+            token_1 = batch_dictionary[token_ids[0]]
+            token_2 = batch_dictionary[token_ids[j]]
 
-            if token_index_1 not in vocab or token_index_2 not in vocab:
+            if token_1 not in vocab or token_2 not in vocab:
                 continue
 
-            token_pair = (min(token_index_1, token_index_2), max(token_index_1, token_index_2))
+            token_pair = (min(token_1, token_2), max(token_1, token_2))
 
             if token_pair not in doc_seen_pairs:
                 global_cooc_dict[token_pair] = global_cooc_dict.get(token_pair, 0.0) + 1.0
                 doc_seen_pairs.add(token_pair)
 
-            if token_index_1 not in doc_seen_words:
-                global_word_dict[token_index_1] = global_word_dict.get(token_index_1, 0.0) + 1.0
+            if token_1 not in doc_seen_words:
+                global_word_dict[token_1] = global_word_dict.get(token_1, 0.0) + 1.0
+                doc_seen_words.add(token_1)
 
-            if token_index_2 not in doc_seen_words:
-                global_word_dict[token_index_2] = global_word_dict.get(token_index_2, 0.0) + 1.0
+            if token_2 not in doc_seen_words:
+                global_word_dict[token_2] = global_word_dict.get(token_2, 0.0) + 1.0
+                doc_seen_words.add(token_2)
 
     def __process_window_tf(global_cooc_dict, global_word_dict, token_ids, token_weights: List[float]):
         for j in range(1, len(token_ids)):
             value = min(token_weights[0], token_weights[j])
 
-            token_index_1 = batch_dictionary[token_ids[0]]
-            token_index_2 = batch_dictionary[token_ids[j]]
+            token_1 = batch_dictionary[token_ids[0]]
+            token_2 = batch_dictionary[token_ids[j]]
 
-            if token_index_1 not in vocab or token_index_2 not in vocab:
+            if token_1 not in vocab or token_2 not in vocab:
                 continue
 
-            token_pair = (min(token_index_1, token_index_2), max(token_index_1, token_index_2))
+            token_pair = (min(token_1, token_2), max(token_1, token_2))
             global_cooc_dict[token_pair] = global_cooc_dict.get(token_pair, 0.0) + value
-            global_word_dict[token_index_1] = global_word_dict.get(token_index_1, 0.0) + 1.0
-            global_word_dict[token_index_2] = global_word_dict.get(token_index_2, 0.0) + 1.0
+            global_word_dict[token_1] = global_word_dict.get(token_1, 0.0) + 1.0
+            global_word_dict[token_2] = global_word_dict.get(token_2, 0.0) + 1.0
 
     for item in batch.item:
         doc_seen_pairs = set()
