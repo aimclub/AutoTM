@@ -1,19 +1,26 @@
+import itertools
 import os.path
 from typing import List, Dict, Tuple
 
 import pytest
 
 
-def parse_vw(path: str) -> List[Tuple[str, Dict[str, float]]]:
-    result = []
+def parse_vw(path: str) -> Dict[str, Dict[str, float]]:
+    result = dict()
 
     with open(path, "r") as f:
         for line in f.readlines():
             elements = line.split(" ")
             word, tokens = elements[0], elements[1:]
-            result.append((word, {token.split(':')[0]: float(token.split(':')[1]) for token in tokens}))
+            if word in result:
+                raise ValueError("The word is repeated")
+            result[word] = {token.split(':')[0]: float(token.split(':')[1]) for token in tokens}
 
-    return result\
+    pairs = ((min(word_1, word_2), max(word_1, word_2), value) for word_1, pairs in result.items() for word_2, value in pairs.items())
+    pairs = sorted(pairs, key=lambda x: x[0])
+    gpairs = itertools.groupby(pairs, key=lambda x: x[0])
+    ordered_result = {word_1: {word_2: value for _, word_2, value in pps} for word_1, pps in gpairs}
+    return ordered_result
 
 
 @pytest.fixture(scope="session")

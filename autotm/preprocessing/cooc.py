@@ -92,7 +92,6 @@ def __size(global_cooc_dictionary):
 
 
 def calculate_cooc(batches_path: str, window_size: int=10) -> CoocDictionaries:
-    encoding = 'utf-8'
     global_time_start = time.time()
     batches_list = glob.glob(os.path.join(batches_path, '*.batch'))
 

@@ -25,7 +25,7 @@ def test_cooc(test_corpora_path: str):
         cooc_file_path_tf = os.path.join(tmpdir, "cooc_tf.txt")
 
         # calculating
-        cooc_dicts = calculate_cooc(batches_path=batches_path, window_size=10)
+        cooc_dicts = calculate_cooc(batches_path=batches_path, window_size=20)
 
         convert_to_vw_format_and_save(cooc_dicts.cooc_df, vocab_words, cooc_file_path_df)
         convert_to_vw_format_and_save(cooc_dicts.cooc_tf, vocab_words, cooc_file_path_tf)
