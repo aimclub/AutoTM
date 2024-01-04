@@ -49,6 +49,9 @@ def __process_batch(
             token_1 = batch_dictionary[token_ids[0]]
             token_2 = batch_dictionary[token_ids[j]]
 
+            if token_1 == token_2:
+                continue
+
             if token_1 not in vocab or token_2 not in vocab:
                 continue
 
@@ -72,6 +75,9 @@ def __process_batch(
 
             token_1 = batch_dictionary[token_ids[0]]
             token_2 = batch_dictionary[token_ids[j]]
+
+            if token_1 == token_2:
+                continue
 
             if token_1 not in vocab or token_2 not in vocab:
                 continue

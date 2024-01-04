@@ -19,7 +19,6 @@ logger = logging.getLogger(__name__)
 # first 5 docs lenta_ru sample, window_size == 10
 CORRECT_COOC_TF = {
     'объект': {
-        'площадь': 1.0,
         'участок': 1.0,
         'тысяча': 1.0,
         'квадрат': 1.0,
@@ -35,8 +34,6 @@ CORRECT_COOC_TF = {
         'приобретать': 1.0,
         'назад': 1.0,
         'пора': 1.0,
-        'особняк': 1.0,
-        'перепродаваться': 1.0,
         'звезда': 5.0,
         'утверждение': 1.0,
         'ученый': 5.0,
@@ -49,7 +46,7 @@ CORRECT_COOC_TF = {
         'предел': 1.0,
         'солнечный': 1.0,
         'система': 1.0,
-        'свой': 4.0,
+        'свой': 1.0,
         'результат': 2.0,
         'британский': 1.0,
         'астроном': 1.0,
@@ -108,6 +105,8 @@ CORRECT_COOC_TF = {
         'мочь': 1.0,
         'работа': 1.0,
         'спутник': 1.0,
+        'сад': 1.0,
+        'это': 3.0
     },
 
     'astrophysical': {
@@ -159,13 +158,13 @@ CORRECT_COOC_TF = {
         'необычный': 1.0,
         'кривая': 1.0,
         'блеск': 1.0,
-        'объясняться': 1.0
+        'объясняться': 1.0,
+        'это': 1.0
     }
 }
 
 CORRECT_COOC_DF = {
     'объект': {
-        'площадь': 1.0,
         'участок': 1.0,
         'тысяча': 1.0,
         'квадрат': 1.0,
@@ -181,8 +180,6 @@ CORRECT_COOC_DF = {
         'приобретать': 1.0,
         'назад': 1.0,
         'пора': 1.0,
-        'особняк': 1.0,
-        'перепродаваться': 1.0,
         'звезда': 1.0,
         'утверждение': 1.0,
         'ученый': 1.0,
@@ -254,6 +251,8 @@ CORRECT_COOC_DF = {
         'мочь': 1.0,
         'работа': 1.0,
         'спутник': 1.0,
+        'сад': 1.0,
+        'это': 1.0
     },
 
     'astrophysical': {
@@ -305,7 +304,8 @@ CORRECT_COOC_DF = {
         'необычный': 1.0,
         'кривая': 1.0,
         'блеск': 1.0,
-        'объясняться': 1.0
+        'объясняться': 1.0,
+        'это': 1.0
     }
 }
 
@@ -321,7 +321,10 @@ def test_cooc(pytestconfig):
     col_to_process = 'text'
     dataset_path = os.path.join(pytestconfig.rootpath, "../data/sample_corpora/sample_dataset_lenta.csv")
     df = pd.read_csv(dataset_path)
+    cnames = [c for c in ['processed_text', 'tokens_len', 'tokens_num_proc', 'vw_text'] if c in df.columns]
+    df = df.drop(columns=cnames)
     df = df.iloc[:5]
+
 
     with tempfile.TemporaryDirectory() as tmpdir:
         save_path = os.path.join(tmpdir, "processed_sample_corpora")
@@ -329,7 +332,7 @@ def test_cooc(pytestconfig):
         wv_path = os.path.join(tmpdir, "test_set_data_voc.txt")
         dictionary_path = os.path.join(tmpdir, "dictionary.txt")
         vocab_path = os.path.join(tmpdir, "vocab.txt")
-        documents_to_batch_path = os.path.join(save_path, PREPOCESSED_DATASET_FILENAME)
+        preproccessed_dataset = os.path.join(save_path, PREPOCESSED_DATASET_FILENAME)
 
         process_dataset(
             df,
@@ -340,12 +343,12 @@ def test_cooc(pytestconfig):
 
         logger.debug("Starting batch vectorizer...")
         prepare_batch_vectorizer(
-            batches_path, wv_path, documents_to_batch_path
+            batches_path, wv_path, preproccessed_dataset
         )
 
         logger.debug("Preparing artm.Dictionary...")
         my_dictionary = artm.Dictionary()
-        my_dictionary.gather(data_path=batches_path, vocab_file_path=wv_path)
+        my_dictionary.gather(data_path=batches_path)#, vocab_file_path=wv_path)
         my_dictionary.save_text(dictionary_path)
 
         logger.debug("Vocabulary preparing...")
@@ -367,8 +370,19 @@ def test_cooc(pytestconfig):
         produced_cooc_df_vw = parse_vw(cooc_file_path_df)
         produced_cooc_tf_vw = parse_vw(cooc_file_path_tf)
 
+        # due to manual calculating, we recorded all pairs counts for specific words (e.g. astrophysical, etc)
+        # but some words in this pairs should be in registered as pairs with words reversed
+        # due to the second word is actually smaller than the first one
+        # that's why we perform dictionary standartazing for manually obtained dictionaries
+        # we may for comparing only 3 words we throughly checked manually for
+        # other words in "reversed" pairs are not complete in manually checked version
+        # and thus cannot be compared directly
+        correct_cooc_df = _standardize_cooc_dict(CORRECT_COOC_DF)
+        correct_cooc_tf = _standardize_cooc_dict(CORRECT_COOC_TF)
         reduced_cooc_df_vw = {word: produced_cooc_df_vw[word] for word in CORRECT_COOC_DF}
         reduced_cooc_tf_vw = {word: produced_cooc_tf_vw[word] for word in CORRECT_COOC_TF}
+        correct_cooc_df = {word: correct_cooc_df[word] for word in CORRECT_COOC_DF}
+        correct_cooc_tf = {word: correct_cooc_tf[word] for word in CORRECT_COOC_TF}
 
-        assert reduced_cooc_df_vw == CORRECT_COOC_DF
-        assert reduced_cooc_tf_vw == CORRECT_COOC_TF
+        assert reduced_cooc_df_vw == correct_cooc_df
+        assert reduced_cooc_tf_vw == correct_cooc_tf

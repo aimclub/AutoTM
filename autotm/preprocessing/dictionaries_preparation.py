@@ -269,14 +269,17 @@ def prepearing_cooc_dict(
 def return_string_part(name_type, text):
     tokens = text.split()
     tokens = [item for item in tokens if item != ""]
-    tokens_dict = get_words_dict(tokens, set())
 
-    return (
-        " |"
-        + name_type
-        + " "
-        + " ".join(["{}:{}".format(k, v) for k, v in tokens_dict.items()])
-    )
+    return " |" + name_type + " " + " ".join(["{}:1".format(token) for token in tokens])
+
+    # tokens_dict = get_words_dict(tokens, set())
+
+    # return (
+    #     " |"
+    #     + name_type
+    #     + " "
+    #     + " ".join(["{}:{}".format(k, v) for k, v in tokens_dict.items()])
+    # )
 
 
 def prepare_voc(batches_dir, vw_path, dataset: Union[pd.DataFrame, str], column_name="processed_text.txt"):
