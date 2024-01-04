@@ -1,17 +1,8 @@
-from autotm.preprocessing.dictionaries_preparation import (
-    calculate_cooc_dicts, write_vw_dict,
-    _add_word_to_dict)
-
-import json
-from contextlib import nullcontext as do_not_raise_exception
-from json import JSONDecodeError
-from getpass import getpass
-from unittest.mock import patch, MagicMock
-
 import pandas as pd
-
 import pytest
 
+from autotm.preprocessing.dictionaries_preparation import (
+    _add_word_to_dict)
 
 DATASET_PROCESSED_TINY = pd.DataFrame(
     {

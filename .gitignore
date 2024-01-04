@@ -158,8 +158,8 @@ bigartm.*
 coverage_re/
 tests/integration/mlruns/*
 tests/integration/metrics
-*mlruns/*
-*metrics/*
+**/mlruns/*
+**/metrics/*
 autotm_workdir_*
 requirements.txt
 
@@ -170,3 +170,5 @@ model.artm
 docs/_build
 
 rsync-repo.sh
+
+tmp

@@ -1,4 +1,5 @@
 # input example_data padas df with 'text' column
+import logging
 import time
 
 import pandas as pd
@@ -8,6 +9,11 @@ from autotm.algorithms_for_tuning.genetic_algorithm.genetic_algorithm import (
 )
 from autotm.preprocessing.dictionaries_preparation import prepare_all_artifacts
 from autotm.preprocessing.text_preprocessing import process_dataset
+
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 
 PATH_TO_DATASET = "../data/sample_corpora/sample_dataset_lenta.csv"  # dataset with corpora to be processed
 SAVE_PATH = (
@@ -30,7 +36,7 @@ use_nelder_mead_in_selector = False
 train_option = "offline"
 
 if __name__ == "__main__":
-    print("Stage 1: Dataset preparation")
+    logger.info("Stage 1: Dataset preparation")
     process_dataset(
         PATH_TO_DATASET,
         col_to_process,
@@ -38,9 +44,11 @@ if __name__ == "__main__":
         lang,
         min_tokens_count=min_tokens_num,
     )
-    prepare_all_artifacts(SAVE_PATH)
-    print("Stage 2: Tuning the topic model")
 
+    logger.info("Stage 2: Prepare all artefacts")
+    prepare_all_artifacts(SAVE_PATH)
+
+    logger.info("Stage 3: Tuning the topic model")
     # exp_id and dataset_name will be needed further to store results in mlflow
     best_result = run_algorithm(
         data_path=SAVE_PATH,
@@ -54,3 +62,4 @@ if __name__ == "__main__":
         use_nelder_mead_in_selector=use_nelder_mead_in_selector,
         train_option=train_option,
     )
+    logger.info("All finished")
