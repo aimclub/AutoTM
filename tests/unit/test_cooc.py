@@ -319,7 +319,7 @@ def _standardize_cooc_dict(dictionary: Dict[str, Dict[str, float]]) -> Dict[str,
 
 def test_cooc(pytestconfig):
     col_to_process = 'text'
-    dataset_path = os.path.join(pytestconfig.rootpath, "../data/sample_corpora/sample_dataset_lenta.csv")
+    dataset_path = os.path.join(pytestconfig.rootpath, "data/sample_corpora/sample_dataset_lenta.csv")
     df = pd.read_csv(dataset_path)
     cnames = [c for c in ['processed_text', 'tokens_len', 'tokens_num_proc', 'vw_text'] if c in df.columns]
     df = df.drop(columns=cnames)
