@@ -358,7 +358,7 @@ def test_cooc(pytestconfig):
         cooc_file_path_tf = os.path.join(tmpdir, "cooc_tf.txt")
 
         # calculating
-        cooc_dicts = calculate_cooc(batches_path=batches_path, vocab=vocab_words, window_size=20)
+        cooc_dicts = calculate_cooc(batches_path=batches_path, vocab=vocab_words, window_size=10)
 
         convert_to_vw_format_and_save(cooc_dicts.cooc_df, vocab_words, cooc_file_path_df)
         convert_to_vw_format_and_save(cooc_dicts.cooc_tf, vocab_words, cooc_file_path_tf)
