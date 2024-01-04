@@ -8,13 +8,11 @@ import pickle
 import pandas as pd
 import re
 
-from autotm.preprocessing import PREPOCESSED_DATASET_FILENAME
+from autotm.preprocessing import PREPOCESSED_DATASET_FILENAME, RESERVED_TUPLE
 from autotm.preprocessing.cooc import calculate_cooc
 from autotm.utils import parallelize_dataframe
 import itertools
 from collections import Counter
-
-RESERVED_TUPLE = ("_SERVICE_", "total_pairs_count")
 
 logger = logging.getLogger(__name__)
 
@@ -116,7 +114,7 @@ def calculate_ppmi(cooc_dict_path, n, term_freq_dict):
         for line in fopen:
             splitted_line = line.split()
             ppmi_dict[splitted_line[0]] = [
-                f'{word.split(":")[0].strip()}:{max(math.log2((int(word.split(":")[1]) / n) / (term_freq_dict[word.split(":")[0].strip()] / n * term_freq_dict[splitted_line[0]] / n)), 0)}'
+                f'{word.split(":")[0].strip()}:{max(math.log2((float(word.split(":")[1]) / n) / (term_freq_dict[word.split(":")[0].strip()] / n * term_freq_dict[splitted_line[0]] / n)), 0)}'
                 for word in splitted_line[1:]
             ]
     return ppmi_dict
@@ -220,25 +218,12 @@ def prepearing_cooc_dict(
     docs_count = data.shape[0]
 
     logger.debug("Performing calculate_cooc_dicts")
-    cooc_dicts = calculate_cooc(batches_path=BATCHES_DIR, window_size=10)
+    cooc_dicts = calculate_cooc(batches_path=BATCHES_DIR, vocab=vocab_words, window_size=cooc_window)
     logger.debug("Performed calculate_cooc_dicts")
     cooc_df_dict, cooc_df_term_dict = cooc_dicts.cooc_df, cooc_dicts.cooc_df_term
     cooc_tf_dict, cooc_tf_term_dict = cooc_dicts.cooc_tf, cooc_dicts.cooc_tf_term
-    return
-
-    # logger.debug("Performing calculate_cooc_dicts")
-    # df_dicts, tf_dicts = calculate_cooc_dicts(
-    #     vocab_words, data, n_cores=n_cores, window=cooc_window
-    # )
-    #
-    # logger.debug("Performed calculate_cooc_dicts")
-    #
-    # cooc_df_dict, cooc_df_term_dict = df_dicts[0], df_dicts[1]
-    # cooc_tf_dict, cooc_tf_term_dict = tf_dicts[0], tf_dicts[1]
 
     pairs_count = cooc_tf_dict[RESERVED_TUPLE]
-
-    # print(docs_count, pairs_count)
 
     del cooc_tf_dict[RESERVED_TUPLE]
 
@@ -271,15 +256,6 @@ def return_string_part(name_type, text):
     tokens = [item for item in tokens if item != ""]
 
     return " |" + name_type + " " + " ".join(["{}:1".format(token) for token in tokens])
-
-    # tokens_dict = get_words_dict(tokens, set())
-
-    # return (
-    #     " |"
-    #     + name_type
-    #     + " "
-    #     + " ".join(["{}:{}".format(k, v) for k, v in tokens_dict.items()])
-    # )
 
 
 def prepare_voc(batches_dir, vw_path, dataset: Union[pd.DataFrame, str], column_name="processed_text.txt"):

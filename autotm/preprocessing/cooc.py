@@ -1,18 +1,17 @@
 from __future__ import print_function
 
-import codecs
 import glob
 import logging
 import os
 import sys
-import tempfile
 import time
 from dataclasses import dataclass
 from typing import Dict, Tuple, List, Set
 
 import artm
-from six import iteritems
 from six.moves import range
+
+from autotm.preprocessing import RESERVED_TUPLE
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +40,8 @@ def __process_batch(
         batch,
         window_size,
         vocab: Set[str]):
+
+    global_cooc_tf_dictionary[RESERVED_TUPLE] = 0.0
     batch_dictionary = __create_batch_dictionary(batch)
 
     def __process_window_df(global_cooc_dict, global_word_dict, token_ids,
@@ -86,6 +87,7 @@ def __process_batch(
             global_cooc_dict[token_pair] = global_cooc_dict.get(token_pair, 0.0) + value
             global_word_dict[token_1] = global_word_dict.get(token_1, 0.0) + 1.0
             global_word_dict[token_2] = global_word_dict.get(token_2, 0.0) + 1.0
+            global_cooc_dict[RESERVED_TUPLE] += 2
 
     for item in batch.item:
         doc_seen_pairs = set()

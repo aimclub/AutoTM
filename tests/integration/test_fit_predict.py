@@ -22,9 +22,9 @@ def check_predictions(autotm: AutoTM, df: pd.DataFrame, mixtures: ArrayLike):
     assert (~mixtures.isnull()).all().all()
 
 
-def test_fit_predict():
+def test_fit_predict(pytestconfig):
     # dataset with corpora to be processed
-    path_to_dataset = "data/sample_corpora/sample_dataset_lenta.csv"
+    path_to_dataset = os.path.join(pytestconfig.rootpath, "../data/sample_corpora/sample_dataset_lenta.csv")
     alg_name = "ga"
 
     df = pd.read_csv(path_to_dataset)
