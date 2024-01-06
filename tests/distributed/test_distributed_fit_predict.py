@@ -24,6 +24,7 @@ def test_distributed_fit_predict(pytestconfig, distributed_worker_setup: Contain
     df = pd.read_csv(path_to_dataset)
     train_df, test_df = train_test_split(df, test_size=0.1)
 
+    # todo: ensure somehow that the results have been calculated on remote fitness-worker
     with tempfile.TemporaryDirectory(prefix="fp_tmp_working_dir_") as tmp_working_dir:
         model_path = os.path.join(tmp_working_dir, "autotm_model")
 

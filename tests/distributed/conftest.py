@@ -1,9 +1,17 @@
+import logging
+import shutil
+import subprocess
+from typing import cast
+
 import docker
 import pytest
 import os
 
 from docker.models.containers import Container
 from docker.models.volumes import Volume
+
+
+logger = logging.getLogger(__name__)
 
 
 ################## Docker compose fixtures ##################
@@ -47,23 +55,81 @@ def shared_mlflow_runs_volume(pytestconfig, docker_setup) -> Volume:
     yield mlflow_volume
 
 
-@pytest.fixture(scope='function')
-def distributed_worker_setup(pytestconfig, shared_mlflow_runs_volume: Volume) -> Container:
-    distributed_dataset_cache_path = os.path.join(pytestconfig.rootpath, 'tmp', 'distributed_dataset_cache')
-    mlflow_runs_path = shared_mlflow_runs_volume.attrs['Options']['device']
+@pytest.fixture(scope="session")
+def fitness_worker_image(pytestconfig, wms_installation, k8s_testing_config) -> str:
+    image_name = "fitness-worker:test-autotm"
+    dockerfile_path = os.path.join(pytestconfig.rootpath, 'cluster', 'docker', 'worker.dockerfile')
 
-    os.makedirs(distributed_dataset_cache_path, exist_ok=True)
+    logger.info(f"Building image {image_name}")
+
+    proc = subprocess.run(
+        f"poetry build "
+        f"&& poetry export --without-hashes > requirements.txt"
+        f"&& docker build -t {image_name} -f {dockerfile_path} .",
+        shell=True,
+        cwd=pytestconfig.rootpath
+    )
+
+    if proc.returncode != 0:
+        raise RuntimeError(f"Failed to build interactive worker image {image_name}")
+
+    logger.info(f"Image {image_name} has been built")
+
+    return image_name
+
+
+@pytest.fixture(scope='function')
+def distributed_worker_setup(pytestconfig, shared_mlflow_runs_volume: Volume, fitness_worker_image: str) -> Container:
+    labels = {'autotm': 'fitness_worker'}
+    filter_label = ','.join([f'{k}={v}' for k, v in labels.items()])
+    distributed_dataset_cache_path = os.path.join(pytestconfig.rootpath, 'tmp', 'distributed_dataset_cache')
+    # to find a path the volume points to
+    # mlflow_runs_path = shared_mlflow_runs_volume.attrs['Options']['device']
 
     client = docker.from_env()
 
-    # todo: clean existing containers
+    def clean_env():
+        containers = client.containers.list(all=True, filters={'label': [filter_label]})
+        for cnt in containers:
+            cnt = cast(Container, cnt)
+            cnt.stop()
+            cnt.remove()
 
-    # todo: create container with fitness worker
-    # 1. use correctly built docker image
-    # 2. mount mlflow runs folder
-    # 3. mount shared folder for dataset artifacts
-    fitness_worker_container = client.containers.create(image='', command='', )
+        if os.path.exists(distributed_dataset_cache_path):
+            shutil.rmtree(distributed_dataset_cache_path)
+
+    # prepare folders
+    os.makedirs(distributed_dataset_cache_path)
+
+    # remove old containers if exist
+    clean_env()
+
+    # create fitness worker
+    fitness_worker_container = client.containers.run(
+        detach=True,
+        network="deploy_test_autotm_net",
+        ports={"5000": "5000"},
+        image=fitness_worker_image,
+        hostname="fitness_worker",
+        environment={
+            "CELERY_BROKER_URL": "amqp://guest:guest@rabbitmq:5672",
+            "CELERY_RESULT_BACKEND": "redis://redis:6379/1",
+            "NUM_PROCESSORS": "4",
+            "AUTOTM_COMPONENT": "worker",
+            "AUTOTM_EXEC_MODE": "cluster",
+            "DATASETS_CONFIG": "/etc/fitness/datasets-config.yaml",
+            "MLFLOW_TRACKING_URI": "mysql+pymysql://mlflow:mlflow@mlflow-db:3306/mlflow",
+            "MONGO_URI": "mongodb://mongoadmin:secret@monngo:27017",
+            "MONGO_COLLECTION": "tm_stats"
+        },
+        volumes=[
+            f"{shared_mlflow_runs_volume.id}:/var/lib/mlruns",
+            f"{distributed_dataset_cache_path}:/distributed_dataset_cache"
+        ],
+        labels=labels
+    )
 
     yield fitness_worker_container
 
-    # todo: clean existing containers
+    # remove containers if exist
+    clean_env()
