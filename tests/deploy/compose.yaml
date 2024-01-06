@@ -58,7 +58,7 @@ services:
       - source: mysql_conf
         target: /etc/mysql/my.cnf
     volumes:
-      - mlflow-db-data:/var/lib/mysql
+      - test-autotm-mlflow-db-data:/var/lib/mysql
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       timeout: 20s
@@ -81,7 +81,7 @@ services:
     networks:
       - test_autotm_net
     volumes:
-      - mlflow-runs-data:/var/lib/mlruns
+      - test-autotm-mlflow-runs-data:/var/lib/mlruns
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://localhost:5000 || exit 1" ]
       timeout: 10s
@@ -101,7 +101,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: "mongoadmin"
       MONGO_INITDB_ROOT_PASSWORD: "secret"
     volumes:
-      - mongodb-data:/var/lib/mongodb
+      - test-autotm-mongodb-data:/var/lib/mongodb
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet 1
       timeout: 10s
@@ -124,10 +124,10 @@ services:
       retries: 10
 
 volumes:
-  mlflow-db-data:
-  mlflow-runs-data:
+  test-autotm-mlflow-db-data:
+  test-autotm-mlflow-runs-data:
     external: true
-  mongodb-data:
+  test-autotm-mongodb-data:
 
 configs:
   rabbitmq_consumer_settings:
