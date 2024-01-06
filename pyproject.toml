@@ -23,7 +23,7 @@ tqdm = "4.50.2"
 numpy = "*"
 PyYAML = "5.3.1"
 dataclasses-json = "*"
-mlflow = "*"
+mlflow = ">=2.9,<3"
 click = "8.0.1"
 scipy = "*"
 hyperopt = "*"
@@ -53,6 +53,7 @@ flake8 = "*"
 
 [tool.poetry.group.dev.dependencies]
 pytest-docker = "^2.0.1"
+docker = "<=7.0.0"
 
 [tool.pytest.ini_options]
 log_cli = true
