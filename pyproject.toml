@@ -51,6 +51,9 @@ black = "*"
 sphinx = "*"
 flake8 = "*"
 
+[tool.poetry.group.dev.dependencies]
+pytest-docker = "^2.0.1"
+
 [tool.pytest.ini_options]
 log_cli = true
 log_cli_level = "DEBUG"
