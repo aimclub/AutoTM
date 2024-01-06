@@ -218,20 +218,11 @@ def prepearing_cooc_dict(
     docs_count = data.shape[0]
 
     logger.debug("Performing calculate_cooc_dicts")
-<<<<<<< Updated upstream
+
     cooc_dicts = calculate_cooc(batches_path=BATCHES_DIR, vocab=vocab_words, window_size=cooc_window)
     logger.debug("Performed calculate_cooc_dicts")
     cooc_df_dict, cooc_df_term_dict = cooc_dicts.cooc_df, cooc_dicts.cooc_df_term
     cooc_tf_dict, cooc_tf_term_dict = cooc_dicts.cooc_tf, cooc_dicts.cooc_tf_term
-=======
-    df_dicts, tf_dicts = calculate_cooc_dicts(
-        vocab_words, data, n_cores=n_cores, window=cooc_window
-    )
-    logger.debug("Performed calculate_cooc_dicts")
-
-    cooc_df_dict, cooc_df_term_dict = df_dicts[0], df_dicts[1]
-    cooc_tf_dict, cooc_tf_term_dict = tf_dicts[0], tf_dicts[1]
->>>>>>> Stashed changes
 
     pairs_count = cooc_tf_dict[RESERVED_TUPLE]
 

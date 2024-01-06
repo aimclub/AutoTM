@@ -3,23 +3,13 @@ import os
 import tempfile
 
 import pandas as pd
-from numpy.typing import ArrayLike
 from sklearn.model_selection import train_test_split
 
 from autotm.base import AutoTM
+from ..utils import check_predictions
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-
-def check_predictions(autotm: AutoTM, df: pd.DataFrame, mixtures: ArrayLike):
-    n_samples, n_samples_mixture = df.shape[0], mixtures.shape[0]
-    n_topics, n_topics_mixture = len(autotm.topics), mixtures.shape[1]
-
-    assert n_samples_mixture == n_samples
-    assert n_topics_mixture == n_topics
-    assert (~mixtures.isna()).all().all()
-    assert (~mixtures.isnull()).all().all()
 
 
 def test_fit_predict(pytestconfig):
