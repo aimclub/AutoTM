@@ -18,6 +18,7 @@ from tqdm import tqdm
 
 from autotm.batch_vect_utils import SampleBatchVectorizer
 from autotm.fitness.external_scores import ts_bground, ts_uniform, ts_vacuous, switchp
+from autotm.abstract_params import AbstractParams
 from autotm.utils import (
     MetricsScores,
     AVG_COHERENCE_SCORE,
@@ -189,6 +190,7 @@ class TopicModelFactory:
     num_processors: Optional[int] = mp.cpu_count()
     experiments_path: str = "/tmp/tm_experiments"
     cached_dataset_settings: Dict[str, Dataset] = dict()
+    cached_datasets: Dict[Tuple, Dataset] = dict()
 
     @classmethod
     def init_factory_settings(
@@ -213,14 +215,14 @@ class TopicModelFactory:
         return dataset
 
     def __init__(
-        self,
-        dataset_name: str,
-        data_path: str,
-        fitness_name: str,
-        params: list,
-        topic_count: Optional[int] = None,
-        forced_update: bool = False,
-        train_option: str = "offline",
+            self,
+            dataset_name: str,
+            data_path: str,
+            fitness_name: str,
+            params: AbstractParams,
+            topic_count: Optional[int] = None,
+            forced_update: bool = False,
+            train_option: str = "offline",
     ):
         self.dataset_name = dataset_name
         self.data_path = data_path
@@ -242,7 +244,11 @@ class TopicModelFactory:
         # logging.debug(f"Using the following settings: \n{dataset.base_path}")
 
         dataset = Dataset(base_path=self.data_path, topic_count=self.topic_count)
-        dataset.load_dataset()
+        if (self.data_path, self.topic_count) in self.cached_datasets:
+            dataset = self.cached_datasets[(self.data_path, self.topic_count)]
+        else:
+            dataset.load_dataset()
+            self.cached_datasets[(self.data_path, self.topic_count)] = dataset
 
         uid = uuid.uuid4()
 
@@ -272,25 +278,16 @@ class TopicModelFactory:
         self.tm.dispose()
 
 
-def type_check(res):
-    res = list(res)
-    for i in [1, 4, 7, 10, 11]:
-        res[i] = int(res[i])
-    return res
-
-
 @contextmanager
 def fit_tm_of_individual(
-    dataset: str,
-    data_path: str,
-    params: list,
-    fitness_name: str = "default",
-    topic_count: Optional[int] = None,
-    force_dataset_settings_checkout: bool = False,
-    train_option: str = "offline",
+        dataset: str,
+        data_path: str,
+        params: AbstractParams,
+        fitness_name: str = "default",
+        topic_count: Optional[int] = None,
+        force_dataset_settings_checkout: bool = False,
+        train_option: str = "offline",
 ) -> ContextManager[Tuple[TimeMeasurements, MetricsScores, "TopicModel"]]:
-    params = type_check(params)
-
     start = time.time()
 
     with TopicModelFactory(
@@ -334,10 +331,9 @@ class FitnessCalculatorWrapper:
         self.topic_count = topic_count
         self.train_option = train_option
 
-    def run(self, params):
-        params = list(params)
-        params = params[:-1] + [0, 0, 0] + [params[-1]]
+    def run(self, params: AbstractParams):
         logging.info(params)
+        # params = params[:-1] + [0, 0, 0] + [params[-1]]
         fitness = calculate_fitness_of_individual(
             dataset=self.dataset,
             data_path=self.data_path,
@@ -351,13 +347,13 @@ class FitnessCalculatorWrapper:
 
 
 def calculate_fitness_of_individual(
-    dataset: str,
-    data_path: str,
-    params: list,
-    fitness_name: str = "default",
-    topic_count: Optional[int] = None,
-    force_dataset_settings_checkout: bool = False,
-    train_option: str = "offline",
+        dataset: str,
+        data_path: str,
+        params: AbstractParams,
+        fitness_name: str = "default",
+        topic_count: Optional[int] = None,
+        force_dataset_settings_checkout: bool = False,
+        train_option: str = "offline",
 ) -> MetricsScores:
     with fit_tm_of_individual(
             dataset,
@@ -375,14 +371,13 @@ def calculate_fitness_of_individual(
 
 class TopicModel:
     def __init__(
-        self,
-        uid: uuid.UUID,
-        topic_count: int,
-        num_processors: int,
-        dataset: Dataset,
-        params: list,
-        decor_test=False,
-        train_option: str = "offline",
+            self,
+            uid: uuid.UUID,
+            topic_count: int,
+            num_processors: int,
+            dataset: Dataset,
+            params: AbstractParams,
+            train_option: str = "offline",
     ):
         self.uid = uid
         self.topic_count: int = topic_count
@@ -393,14 +388,14 @@ class TopicModel:
         self.model = None
         self.S = self.topic_count
         self.specific = ["main{}".format(i) for i in range(self.S)]
-        self.decor_test = decor_test
 
-        self.__set_params(params)
-        self.back = ["back{}".format(i) for i in range(int(self.B))]
+        self.params = params
+        self.back = ["back{}".format(i) for i in range(int(self.params.basic_topics))]
+        self._total_iterations = 0
 
     def init_model(self):
         self.model = artm.ARTM(
-            num_topics=self.S + self.B,
+            num_topics=self.S + self.params.basic_topics,
             class_ids=["@default_class"],
             dictionary=self.dataset.dictionary,
             show_progress_bars=False,
@@ -413,139 +408,43 @@ class TopicModel:
 
     def _early_stopping(self):
         coherences_main, coherences_back = self.__return_all_tokens_coherence(
-            self.model, s=self.S, b=self.B
+            self.model, s=self.S, b=self.params.basic_topics
         )
-        if len(coherences_main) < self.S or not any(coherences_main):
-            return True
-        return False
+        return len(coherences_main) < self.S or not any(coherences_main)
+
+    def check_early_stop(self) -> bool:
+        return self._total_iterations > 0 and self._early_stopping()
 
     # TODO: refactor option
     def train(self, option="online_v1"):
         if self.model is None:
             logging.error("Initialise the model first!")
             return
+        self._total_iterations = 0
+        self.params.run_train(self, option)
+        logging.info("Training is complete")
 
-        self.model.regularizers.add(
-            artm.DecorrelatorPhiRegularizer(
-                name="decorr", topic_names=self.specific, tau=self.decor
-            )
-        )
-        self.model.regularizers.add(
-            artm.DecorrelatorPhiRegularizer(
-                name="decorr_2", topic_names=self.back, tau=self.decor_2
-            )
-        )
+    def do_fit(self, n, option):
+        n = int(n)
+        self._total_iterations += n
         if option == "offline":
             self.model.fit_offline(
-                batch_vectorizer=self.dataset.batches, num_collection_passes=self.n1
+                batch_vectorizer=self.dataset.batches,
+                num_collection_passes=n
             )
         elif option == "online_v1":
             self.model.fit_offline(
                 batch_vectorizer=self.dataset.sample_batches,
-                num_collection_passes=self.n1,
+                num_collection_passes=n,
             )
         elif option == "online_v2":
-            self.model.num_document_passes = self.n1
+            self.model.num_document_passes = n
             self.model.fit_online(
                 batch_vectorizer=self.dataset.sample_batches,
                 update_every=self.num_processors,
             )
-
-        if self.n1 > 0:
-            if self._early_stopping():
-                print("Early stopping is triggered")
-                return
-
-        #         if ((self.n2 != 0) and (self.B != 0)):
-        if self.B != 0:
-            self.model.regularizers.add(
-                artm.SmoothSparseThetaRegularizer(
-                    name="SmoothPhi", topic_names=self.back, tau=self.spb
-                )
-            )
-            self.model.regularizers.add(
-                artm.SmoothSparseThetaRegularizer(
-                    name="SmoothTheta", topic_names=self.back, tau=self.stb
-                )
-            )
-            if option == "offline":
-                self.model.fit_offline(
-                    batch_vectorizer=self.dataset.batches, num_collection_passes=self.n2
-                )
-            elif option == "online_v1":
-                self.model.fit_offline(
-                    batch_vectorizer=self.dataset.sample_batches,
-                    num_collection_passes=self.n2,
-                )
-            elif option == "online_v2":
-                self.model.num_document_passes = self.n2
-                self.model.fit_online(
-                    batch_vectorizer=self.dataset.sample_batches,
-                    update_every=self.num_processors,
-                )
-
-        if self.n1 + self.n2 > 0:
-            if self._early_stopping():
-                print("Early stopping is triggered")
-                return
-
-        if self.n3 != 0:
-            self.model.regularizers.add(
-                artm.SmoothSparseThetaRegularizer(
-                    name="SparsePhi", topic_names=self.specific, tau=self.sp1
-                )
-            )
-            self.model.regularizers.add(
-                artm.SmoothSparseThetaRegularizer(
-                    name="SparseTheta", topic_names=self.specific, tau=self.st1
-                )
-            )
-            if option == "offline":
-                self.model.fit_offline(
-                    batch_vectorizer=self.dataset.batches, num_collection_passes=self.n3
-                )
-            elif option == "online":
-                self.model.fit_offline(
-                    batch_vectorizer=self.dataset.sample_batches,
-                    num_collection_passes=self.n3,
-                )
-            elif option == "online_v2":
-                self.model.num_document_passes = self.n3
-                self.model.fit_online(
-                    batch_vectorizer=self.dataset.sample_batches,
-                    update_every=self.num_processors,
-                )
-
-        if self.n1 + self.n2 + self.n3 > 0:
-            if self._early_stopping():
-                print("Early stopping is triggered")
-                return
-
-        if self.n4 != 0:
-            self.model.regularizers["SparsePhi"].tau = self.sp2
-            self.model.regularizers["SparseTheta"].tau = self.st2
-            if option == "offline":
-                self.model.fit_offline(
-                    batch_vectorizer=self.dataset.batches, num_collection_passes=self.n4
-                )
-            elif option == "online_v1":
-                self.model.fit_offline(
-                    batch_vectorizer=self.dataset.sample_batches,
-                    num_collection_passes=self.n4,
-                )
-            elif option == "online_v2":
-                self.model.num_document_passes = self.n4
-                self.model.fit_online(
-                    batch_vectorizer=self.dataset.sample_batches,
-                    update_every=self.num_processors,
-                )
-
-        if self.n1 + self.n2 + self.n3 > 0:
-            if self._early_stopping():
-                print("Early stopping is triggered")
-                return
-
-        print("Training is complete")
+        else:
+            raise ValueError(f"Unknown option {option}")
 
     def decor_train(self):
         if self.model is None:
@@ -569,7 +468,7 @@ class TopicModel:
 
     def _get_avg_coherence_score(self, for_individ_fitness=False):
         coherences_main, coherences_back = self.__return_all_tokens_coherence(
-            self.model, s=self.S, b=self.B
+            self.model, s=self.S, b=self.params.basic_topics
         )
         if for_individ_fitness:
             # print('COMPONENTS: ', np.mean(list(coherences_main.values())), np.min(list(coherences_main.values())))
@@ -616,25 +515,6 @@ class TopicModel:
         logging.info(f"Deleting bigartm logs: {log_files}")
         for file in log_files:
             os.remove(file)
-
-    def __set_params(self, params_string):
-        self.decor = params_string[0]
-        self.n1 = params_string[1]
-
-        if self.decor_test:
-            return
-
-        self.spb = params_string[2]
-        self.stb = params_string[3]
-        self.n2 = params_string[4]
-        self.sp1 = params_string[5]
-        self.st1 = params_string[6]
-        self.n3 = params_string[7]
-        self.sp2 = params_string[8]
-        self.st2 = params_string[9]
-        self.n4 = params_string[10]
-        self.B = params_string[11]
-        self.decor_2 = params_string[15]
 
     def __set_model_scores(self):
         self.model.scores.add(
@@ -768,7 +648,7 @@ class TopicModel:
             self, for_individ_fitness=False
     ) -> MetricsScores:
         coherences_main, coherences_back = self.__return_all_tokens_coherence(
-            self.model, s=self.S, b=self.B
+            self.model, s=self.S, b=self.params.basic_topics
         )
         # commented after Masha's consultation
         # coeff = self._calculate_labels_coeff()
@@ -928,7 +808,7 @@ class TopicModel:
         return scores_dict
 
 
-def fit_tm(preproc_data_path: str, topic_count: int, params: list, train_option: str) -> TopicModel:
+def fit_tm(preproc_data_path: str, topic_count: int, params: AbstractParams, train_option: str) -> TopicModel:
     with log_exec_timer("Loading dataset: "):
         dataset = Dataset(base_path=preproc_data_path, topic_count=topic_count)
         dataset.load_dataset()
@@ -938,7 +818,7 @@ def fit_tm(preproc_data_path: str, topic_count: int, params: list, train_option:
         topic_count,
         num_processors=multiprocessing.cpu_count(),
         dataset=dataset,
-        params=type_check(params),
+        params=params,
         train_option=train_option,
     )
 

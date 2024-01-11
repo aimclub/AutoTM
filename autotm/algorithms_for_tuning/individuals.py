@@ -1,12 +1,13 @@
-from abc import ABC, abstractmethod
 import os
 import pickle
-from typing import List
+from abc import ABC, abstractmethod
+
 import numpy as np
 import pandas as pd
 
-from autotm.utils import AVG_COHERENCE_SCORE
+from autotm.abstract_params import AbstractParams
 from autotm.schemas import IndividualDTO
+from autotm.utils import AVG_COHERENCE_SCORE
 
 SPARSITY_PHI = "sparsity_phi"
 SPARSITY_THETA = "sparsity_theta"
@@ -57,7 +58,7 @@ class Individual(ABC):
 
     @property
     @abstractmethod
-    def params(self) -> List:
+    def params(self) -> AbstractParams:
         ...
 
 
@@ -70,7 +71,7 @@ class BaseIndividual(Individual, ABC):
         return self._dto
 
     @property
-    def params(self) -> List:
+    def params(self) -> AbstractParams:
         return self.dto.params
 
 
