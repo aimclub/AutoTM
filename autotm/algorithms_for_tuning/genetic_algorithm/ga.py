@@ -460,9 +460,7 @@ class GA:
         clean_params_and_f = []
         for p, f in params_and_f:
             if not check_params(p) or not check_val(f):
-                logger.warning(
-                    f"Bad params or fitness found. Fitness: {f}. Params: {p}."
-                )
+                logger.warning(f"Bad params or fitness found. Fitness: {f}. Params: {p}.")
             else:
                 clean_params_and_f.append((p, f))
 
@@ -679,9 +677,7 @@ class GA:
                 num_iterations=num_iterations, ini_point=st_point
             )
             solution = list(res["x"])
-            solution = (
-                solution[:-1] + point[12:15] + [solution[-1]]
-            )  # TODO: check mutation ids
+            solution = (solution[:-1] + point[12:15] + [solution[-1]])  # TODO: check mutation ids
             fitness = -res.fun
             solution_dto = IndividualDTO(
                 id=str(uuid.uuid4()),
@@ -930,7 +926,7 @@ class GA:
                 nm_population = self.apply_nelder_mead(starting_points, num_gen=ii)
                 for i, elem in enumerate(nm_population):
                     if population[i].fitness_value < elem.fitness_value:
-                        print(
+                        logging.info(
                             f"NM found better solution! {elem.fitness_value} vs {population[i].fitness_value}"
                         )
                         population[i] = elem
@@ -951,7 +947,6 @@ class GA:
                     f"THE BEST PARAMS {bparams}."
                     f"ITERATION TIME {time.time() - iteration_start_time}."
                 )
-                # return population[0].fitness_value
                 break
 
             current_fitness = population[0].fitness_value

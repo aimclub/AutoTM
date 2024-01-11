@@ -43,9 +43,8 @@ def extract_topics(model: artm.ARTM):
 
 def print_topics(model: artm.ARTM):
     for i, (topic, top_tokens) in enumerate(extract_topics(model).items()):
-        print(topic)
-        print(top_tokens)
-        print()
+        logging.info(topic)
+        logging.info(top_tokens)
 
 
 class Dataset:
@@ -59,7 +58,7 @@ class Dataset:
     _ppmi_dict_df_path: str = "ppmi_df.txt"
     _ppmi_dict_tf_path: str = "ppmi_tf.txt"
     _mutual_info_dict_path: str = "mutual_info_dict.pkl"
-    _texts_path: str = "prep_df.csv"
+    _texts_path: str = "dataset_processed.csv"
     _labels_path = "labels.pkl"
 
     def __init__(self, base_path: str, topic_count: int):
@@ -193,9 +192,9 @@ class TopicModelFactory:
 
     @classmethod
     def init_factory_settings(
-        cls,
-        num_processors: Optional[int] = mp.cpu_count(),
-        dataset_settings: Dict[str, Dict[str, object]] = None,
+            cls,
+            num_processors: Optional[int] = mp.cpu_count(),
+            dataset_settings: Dict[str, Dict[str, object]] = None,
     ):
         cls.num_processors = num_processors
         cls.cached_dataset_settings = (
@@ -295,13 +294,13 @@ def fit_tm_of_individual(
     start = time.time()
 
     with TopicModelFactory(
-        dataset,
-        data_path,
-        fitness_name,
-        params,
-        topic_count,
-        force_dataset_settings_checkout,
-        train_option,
+            dataset,
+            data_path,
+            fitness_name,
+            params,
+            topic_count,
+            force_dataset_settings_checkout,
+            train_option,
     ) as tm:
         try:
             with log_exec_timer("TM Training") as train_timer:
@@ -317,8 +316,9 @@ def fit_tm_of_individual(
             }
         except SoftTimeLimitExceeded as ex:
             raise ex
-        except Exception:
-            logger.warning(msg="Fitness calculation problem")
+        except Exception as e:
+            logger.warning("Fitness calculation problem")
+            logger.exception(e)
             fitness = {AVG_COHERENCE_SCORE: 0.0}
             time_metrics = {"train": -1, "metrics": -1}
 
@@ -335,9 +335,9 @@ class FitnessCalculatorWrapper:
         self.train_option = train_option
 
     def run(self, params):
-        print(params)
         params = list(params)
         params = params[:-1] + [0, 0, 0] + [params[-1]]
+        logging.info(params)
         fitness = calculate_fitness_of_individual(
             dataset=self.dataset,
             data_path=self.data_path,
@@ -346,8 +346,7 @@ class FitnessCalculatorWrapper:
             train_option=self.train_option,
         )
         result = fitness[AVG_COHERENCE_SCORE]
-        print("Fitness: ", result)
-        print()
+        logging.info("Fitness: ", result)
         return -result
 
 
@@ -361,13 +360,13 @@ def calculate_fitness_of_individual(
     train_option: str = "offline",
 ) -> MetricsScores:
     with fit_tm_of_individual(
-        dataset,
-        data_path,
-        params,
-        fitness_name,
-        topic_count,
-        force_dataset_settings_checkout,
-        train_option,
+            dataset,
+            data_path,
+            params,
+            fitness_name,
+            topic_count,
+            force_dataset_settings_checkout,
+            train_option,
     ) as result:
         time_metrics, fitness, tm = result
 
@@ -423,7 +422,7 @@ class TopicModel:
     # TODO: refactor option
     def train(self, option="online_v1"):
         if self.model is None:
-            print("Initialise the model first!")
+            logging.error("Initialise the model first!")
             return
 
         self.model.regularizers.add(
@@ -550,7 +549,7 @@ class TopicModel:
 
     def decor_train(self):
         if self.model is None:
-            print("Initialise the model first")
+            logging.error("Initialise the model first")
             return
 
         self.model.regularizers.add(
@@ -742,7 +741,7 @@ class TopicModel:
 
     # TODO: fix
     def __return_all_coherence_types(
-        self, model, S, only_specific=True, top=(10, 15, 20, 25, 30, 35, 40, 45, 50, 55)
+            self, model, S, only_specific=True, top=(10, 15, 20, 25, 30, 35, 40, 45, 50, 55)
     ):
         topics = list(model.score_tracker["TopTokensScore"].last_tokens.keys())
         coh_vals = {}
@@ -766,7 +765,7 @@ class TopicModel:
         return coh_vals
 
     def metrics_get_avg_coherence_score(
-        self, for_individ_fitness=False
+            self, for_individ_fitness=False
     ) -> MetricsScores:
         coherences_main, coherences_back = self.__return_all_tokens_coherence(
             self.model, s=self.S, b=self.B
@@ -775,13 +774,9 @@ class TopicModel:
         # coeff = self._calculate_labels_coeff()
         coeff = 1.0
         if for_individ_fitness:
-            print(
-                "COMPONENTS: ",
-                np.mean(list(coherences_main.values())),
-                np.min(list(coherences_main.values())),
-            )
+            logging.info(f"COMPONENTS {np.mean(list(coherences_main.values()))} {np.min(list(coherences_main.values()))}")
             avg_coherence_score = (
-                np.mean(list(coherences_main.values())) + np.min(list(coherences_main.values())) * coeff
+                    np.mean(list(coherences_main.values())) + np.min(list(coherences_main.values())) * coeff
             )
         else:
             avg_coherence_score = np.mean(list(coherences_main.values())) * coeff
@@ -790,12 +785,12 @@ class TopicModel:
 
     # TODO: fix
     def metrics_get_last_avg_vals(
-        self,
-        texts,
-        total_tokens,
-        calculate_significance=False,
-        calculate_npmi=False,
-        calculate_switchp=False,
+            self,
+            texts,
+            total_tokens,
+            calculate_significance=False,
+            calculate_npmi=False,
+            calculate_switchp=False,
     ) -> MetricsScores:
         if calculate_significance:
             # turn off significance calculation
@@ -812,13 +807,13 @@ class TopicModel:
                 ts_vacuous(doc_topic_dist, topic_word_dist, total_tokens)
             )
             topic_significance_back = np.mean(ts_bground(doc_topic_dist))
-            print(
+            logging.info(
                 f"Topic Significance - Uniform Distribution Over Words: {topic_significance_uni}"
             )
-            print(
+            logging.info(
                 f"Topic Significance - Vacuous Semantic Distribution: {topic_significance_vacuous}"
             )
-            print(
+            logging.info(
                 f"Topic Significance - Background Distribution: {topic_significance_back}"
             )
         else:
@@ -835,7 +830,7 @@ class TopicModel:
 
         all_topics_flag = False
         if len(specific_topics) == self.S:
-            print("Wow! all topics")
+            logging.info("Wow! all topics")
             all_topics_flag = True
 
         logger.info("Building dictionary")
@@ -879,7 +874,7 @@ class TopicModel:
                 switchp_scores = [
                     score if score is not None else 0 for score in switchp_scores
                 ]
-                print(f"SwitchP mean: {np.mean(switchp_scores)}")
+                logging.info(f"SwitchP mean: {np.mean(switchp_scores)}")
             else:
                 switchp_scores = None
         else:
@@ -924,7 +919,7 @@ class TopicModel:
             "topic_significance_vacuous": topic_significance_vacuous,
             "topic_significance_back": topic_significance_back,
             "switchP_list": switchp_scores,
-            "switchP": np.nanmean(switchp_scores),
+            "switchP": np.nan if np.isnan(switchp_scores).all() else np.nanmean(switchp_scores),
             "all_topics": all_topics_flag,
             **coherence_scores,
             **npmis,

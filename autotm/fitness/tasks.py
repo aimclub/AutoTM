@@ -20,13 +20,13 @@ def do_fitness_calculating(
     individual: IndividualDTO = IndividualDTO.parse_raw(individual)
 
     with fit_tm_of_individual(
-        dataset=individual.dataset,
-        data_path=individual.data_path,
-        params=individual.params,
-        fitness_name=individual.fitness_name,
-        topic_count=individual.topic_count,
-        force_dataset_settings_checkout=individual.force_dataset_settings_checkout,
-        train_option=individual.train_option,
+            dataset=individual.dataset,
+            data_path=individual.data_path,
+            params=individual.params,
+            fitness_name=individual.fitness_name,
+            topic_count=individual.topic_count,
+            force_dataset_settings_checkout=individual.force_dataset_settings_checkout,
+            train_option=individual.train_option,
     ) as (time_metrics, metrics, tm):
         individual.fitness_value = metrics
 

@@ -336,8 +336,9 @@ def fit_tm_of_individual(dataset: str,
             }
         except SoftTimeLimitExceeded as ex:
             raise ex
-        except Exception:
-            logger.exception(msg="Fitness calculation problem")
+        except Exception as e:
+            logger.error("Fitness calculation problem")
+            logger.exception(e)
             fitness = {AVG_COHERENCE_SCORE: 0.0}
             time_metrics = {
                 "train": -1,
@@ -413,7 +414,7 @@ class TopicModel:
 
     def train(self, option='offline'):
         if self.model is None:
-            print('Initialise the model first!')
+            logging.error('Initialise the model first!')
             return
 
         self.model.regularizers.add(artm.DecorrelatorPhiRegularizer(name='decorr',
@@ -451,7 +452,7 @@ class TopicModel:
 
         if self.n1 + self.n2 > 0:
             if self._early_stopping():
-                print('Early stopping is triggered')
+                logging.info('Early stopping is triggered')
                 return
 
         if self.n3 != 0:
@@ -487,14 +488,14 @@ class TopicModel:
 
         if self.n1 + self.n2 + self.n3 > 0:
             if self._early_stopping():
-                print('Early stopping is triggered')
+                logging.info('Early stopping is triggered')
                 return
 
-        print('Training is complete')
+        logging.info('Training is complete')
 
     def decor_train(self):
         if self.model is None:
-            print('Initialise the model first')
+            logging.error('Initialise the model first')
             return
 
         self.model.regularizers.add(artm.DecorrelatorPhiRegularizer(name='decorr',
