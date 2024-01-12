@@ -93,10 +93,11 @@ def fitness_worker_image(pytestconfig) -> str:
 def distributed_worker_setup(pytestconfig, shared_mlflow_runs_volume: Optional[Volume], fitness_worker_image: str) \
         -> Dict[str, str]:
     if check_if_remote_test():
-        fitness_computing_settings = {
-            k: os.environ[k]
-            for k in ['AUTOTM_COMPONENT', 'AUTOTM_EXEC_MODE', 'CELERY_BROKER_URL', 'CELERY_RESULT_BACKEND']
-        }
+        # fitness_computing_settings = {
+        #     k: os.environ[k]
+        #     for k in ['AUTOTM_COMPONENT', 'AUTOTM_EXEC_MODE', 'CELERY_BROKER_URL', 'CELERY_RESULT_BACKEND']
+        # }
+        fitness_computing_settings = dict()
         yield fitness_computing_settings
         return
 
