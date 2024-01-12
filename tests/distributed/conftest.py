@@ -13,6 +13,8 @@ from docker.models.volumes import Volume
 
 logger = logging.getLogger(__name__)
 
+REMOTE_REPO = 'node2.bdcl:5000'
+
 
 ################## Docker compose fixtures ##################
 @pytest.fixture(scope="session")
@@ -35,14 +37,15 @@ def docker_cleanup():
     return None
 #########################################
 def check_if_remote_test() -> bool:
-    # return os.environ.get('AUTOTM_PYTEST_REMOTE', 'no').lower() == 'yes'
-    return True
+    return os.environ.get('AUTOTM_PYTEST_REMOTE', 'no').lower() == 'yes'
 
 
 @pytest.fixture(scope="session")
 def shared_mlflow_runs_volume(pytestconfig, docker_setup) -> Optional[Volume]:
-    if check_if_remote_test():
-        return None
+    # if check_if_remote_test():
+    #     return None
+    # todo: temporarily
+    return None
 
     mlflow_volume_id = 'test-autotm-mlflow-runs-data'
     client = docker.from_env()
@@ -78,14 +81,24 @@ def fitness_worker_image(pytestconfig) -> str:
     )
 
     if proc.returncode != 0:
-        raise RuntimeError(f"Failed to build interactive worker image {image_name}")
+        raise RuntimeError(f"Failed to build the worker image {image_name}")
 
     logger.info(f"Image {image_name} has been built")
 
     if check_if_remote_test():
-        # todo: image pushing
-        # todo: update image name
-        pass
+        repo_image = f"{REMOTE_REPO}/{image_name}"
+
+        logger.info(f"Pushing image {image_name} to repo {REMOTE_REPO} as {repo_image}")
+        proc = subprocess.run(
+            f"docker tag {image_name} {repo_image} && docker push {repo_image}",
+            shell=True,
+            cwd=pytestconfig.rootpath
+        )
+
+        if proc.returncode != 0:
+            raise RuntimeError(f"Failed to push the worker image {repo_image}")
+
+        logger.info(f"{repo_image} has been successfully pushed")
 
     return image_name
 
@@ -93,24 +106,26 @@ def fitness_worker_image(pytestconfig) -> str:
 @pytest.fixture(scope='function')
 def distributed_worker_setup(pytestconfig, shared_mlflow_runs_volume: Optional[Volume], fitness_worker_image: str) \
         -> Dict[str, str]:
-    if check_if_remote_test():
+    # if check_if_remote_test():
+    if True:
         # fitness_computing_settings = {
         #     k: os.environ[k]
         #     for k in ['AUTOTM_COMPONENT', 'AUTOTM_EXEC_MODE', 'CELERY_BROKER_URL', 'CELERY_RESULT_BACKEND']
         # }
-        fitness_computing_settings = {
-            'AUTOTM_COMPONENT': 'head',
-            'AUTOTM_EXEC_MODE': 'cluster',
-            'CELERY_BROKER_URL': 'amqp://guest:guest@node2.bdcl:30531',
-            'CELERY_RESULT_BACKEND': 'redis://node2.bdcl:32737/1'
-        }
-
-        # fitness_computing_settings = {
-        #     'AUTOTM_COMPONENT': 'head',
-        #     'AUTOTM_EXEC_MODE': 'cluster',
-        #     'CELERY_BROKER_URL': 'amqp://guest:guest@localhost:5672',
-        #     'CELERY_RESULT_BACKEND': 'redis://localhost:6379/1'
-        # }
+        if check_if_remote_test():
+            fitness_computing_settings = {
+                'AUTOTM_COMPONENT': 'head',
+                'AUTOTM_EXEC_MODE': 'cluster',
+                'CELERY_BROKER_URL': 'amqp://guest:guest@node2.bdcl:30531',
+                'CELERY_RESULT_BACKEND': 'redis://node2.bdcl:32737/1'
+            }
+        else:
+            fitness_computing_settings = {
+                'AUTOTM_COMPONENT': 'head',
+                'AUTOTM_EXEC_MODE': 'cluster',
+                'CELERY_BROKER_URL': 'amqp://guest:guest@localhost:5672',
+                'CELERY_RESULT_BACKEND': 'redis://localhost:6379/1'
+            }
 
         if 'localhost' in fitness_computing_settings['CELERY_BROKER_URL']:
             logger.info(
