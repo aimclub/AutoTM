@@ -1,7 +1,7 @@
 import logging
 import shutil
 import subprocess
-from typing import cast, Dict
+from typing import cast, Dict, Optional
 
 import docker
 import pytest
@@ -34,9 +34,15 @@ def docker_setup():
 def docker_cleanup():
     return None
 #########################################
+def check_if_remote_test() -> bool:
+    return os.environ.get('AUTOTM_PYTEST_REMOTE', 'no').lower() == 'yes'
+
 
 @pytest.fixture(scope="session")
-def shared_mlflow_runs_volume(pytestconfig, docker_setup) -> Volume:
+def shared_mlflow_runs_volume(pytestconfig, docker_setup) -> Optional[Volume]:
+    if check_if_remote_test():
+        return None
+
     mlflow_volume_id = 'test-autotm-mlflow-runs-data'
     client = docker.from_env()
     vs = [v for v in client.volumes.list() if v.id == mlflow_volume_id]
@@ -52,11 +58,11 @@ def shared_mlflow_runs_volume(pytestconfig, docker_setup) -> Volume:
     else:
         mlflow_volume = vs[0]
 
-    yield mlflow_volume
+    return mlflow_volume
 
 
 @pytest.fixture(scope="session")
-def fitness_worker_image(pytestconfig, wms_installation, k8s_testing_config) -> str:
+def fitness_worker_image(pytestconfig) -> str:
     image_name = "fitness-worker:test-autotm"
     dockerfile_path = os.path.join(pytestconfig.rootpath, 'cluster', 'docker', 'worker.dockerfile')
 
@@ -75,12 +81,25 @@ def fitness_worker_image(pytestconfig, wms_installation, k8s_testing_config) -> 
 
     logger.info(f"Image {image_name} has been built")
 
+    if check_if_remote_test():
+        # todo: image pushing
+        # todo: update image name
+        pass
+
     return image_name
 
 
 @pytest.fixture(scope='function')
-def distributed_worker_setup(pytestconfig, shared_mlflow_runs_volume: Volume, fitness_worker_image: str) \
+def distributed_worker_setup(pytestconfig, shared_mlflow_runs_volume: Optional[Volume], fitness_worker_image: str) \
         -> Dict[str, str]:
+    if check_if_remote_test():
+        fitness_computing_settings = {
+            k: os.environ[k]
+            for k in ['AUTOTM_COMPONENT', 'AUTOTM_EXEC_MODE', 'CELERY_BROKER_URL', 'CELERY_RESULT_BACKEND']
+        }
+        yield fitness_computing_settings
+        return
+
     labels = {'autotm': 'fitness_worker'}
     filter_label = ','.join([f'{k}={v}' for k, v in labels.items()])
     distributed_dataset_cache_path = os.path.join(pytestconfig.rootpath, 'tmp', 'distributed_dataset_cache')
@@ -106,7 +125,7 @@ def distributed_worker_setup(pytestconfig, shared_mlflow_runs_volume: Volume, fi
     clean_env()
 
     # create fitness worker
-    fitness_worker_container = client.containers.run(
+    client.containers.run(
         detach=True,
         network="deploy_test_autotm_net",
         ports={"5000": "5000"},
