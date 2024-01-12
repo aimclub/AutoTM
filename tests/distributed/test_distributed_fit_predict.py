@@ -1,5 +1,7 @@
 import os
 import tempfile
+from typing import Dict
+
 import pandas as pd
 
 from docker.models.containers import Container
@@ -9,7 +11,7 @@ from autotm.base import AutoTM
 from ..utils import check_predictions
 
 
-def test_distributed_fit_predict(pytestconfig, distributed_worker_setup: Container):
+def test_distributed_fit_predict(pytestconfig, fitness_computing_settings: Dict[str, str]):
     # todo: may be not applied correctly due to too late creating
     # settings for distributed run
     os.environ['AUTOTM_COMPONENT'] = 'head'

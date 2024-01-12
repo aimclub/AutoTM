@@ -1,7 +1,7 @@
 import logging
 import shutil
 import subprocess
-from typing import cast
+from typing import cast, Dict
 
 import docker
 import pytest
@@ -79,7 +79,8 @@ def fitness_worker_image(pytestconfig, wms_installation, k8s_testing_config) -> 
 
 
 @pytest.fixture(scope='function')
-def distributed_worker_setup(pytestconfig, shared_mlflow_runs_volume: Volume, fitness_worker_image: str) -> Container:
+def distributed_worker_setup(pytestconfig, shared_mlflow_runs_volume: Volume, fitness_worker_image: str) \
+        -> Dict[str, str]:
     labels = {'autotm': 'fitness_worker'}
     filter_label = ','.join([f'{k}={v}' for k, v in labels.items()])
     distributed_dataset_cache_path = os.path.join(pytestconfig.rootpath, 'tmp', 'distributed_dataset_cache')
@@ -129,7 +130,17 @@ def distributed_worker_setup(pytestconfig, shared_mlflow_runs_volume: Volume, fi
         labels=labels
     )
 
-    yield fitness_worker_container
+    fitness_computing_settings = {
+        'AUTOTM_COMPONENT': 'head',
+        'AUTOTM_EXEC_MODE': 'cluster',
+        'CELERY_BROKER_URL': 'amqp://guest:guest@localhost:5672',
+        'CELERY_RESULT_BACKEND': 'redis://localhost:6379/1'
+    }
+
+    for env_var, value in fitness_computing_settings:
+        os.environ[env_var] = value
+
+    yield fitness_computing_settings
 
     # remove containers if exist
     clean_env()
