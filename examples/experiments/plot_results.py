@@ -90,6 +90,8 @@ def plot_all():
     datasets = defaultdict(list)
     for log_file in log_files:
         load_file(log_file, datasets)
+
+    final_results = []
     for dataset in datasets:
         use_pipeline = []
         invocations = []
@@ -99,6 +101,7 @@ def plot_all():
             invocations += i
             fitness += f
             use_pipeline += [p] * len(i)
+            final_results.append((dataset, p, f[-1]))
 
         df = pd.DataFrame(data={'invocations': invocations, 'fitness': fitness,
                                 'use_pipeline': use_pipeline})
@@ -106,6 +109,20 @@ def plot_all():
         plt.title(dataset)
         plt.savefig(f"{datetime.now().strftime('%y%m%d-%H%M%S')}_{dataset}.png")
         plt.show()
+
+    ds = []
+    ps = []
+    fs = []
+    for dataset, use_pipeline, final_fitness in final_results:
+        ds.append(dataset.replace("_sample", ""))
+        ps.append(use_pipeline)
+        fs.append(final_fitness)
+    df_final = pd.DataFrame(data={'dataset': ds, 'use_pipeline': ps, 'fitness': fs})
+    print(df_final.groupby(["dataset", "use_pipeline"])["fitness"].mean())
+    print(df_final.groupby(["dataset", "use_pipeline"])["fitness"].std())
+    sns.boxplot(data=df_final, x='dataset', y='fitness', hue='use_pipeline')
+    plt.savefig(f"{datetime.now().strftime('%y%m%d-%H%M%S')}_final_results.png")
+    plt.show()
 
 
 if __name__ == "__main__":
