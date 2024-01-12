@@ -35,7 +35,8 @@ def docker_cleanup():
     return None
 #########################################
 def check_if_remote_test() -> bool:
-    return os.environ.get('AUTOTM_PYTEST_REMOTE', 'no').lower() == 'yes'
+    # return os.environ.get('AUTOTM_PYTEST_REMOTE', 'no').lower() == 'yes'
+    return True
 
 
 @pytest.fixture(scope="session")
@@ -97,7 +98,31 @@ def distributed_worker_setup(pytestconfig, shared_mlflow_runs_volume: Optional[V
         #     k: os.environ[k]
         #     for k in ['AUTOTM_COMPONENT', 'AUTOTM_EXEC_MODE', 'CELERY_BROKER_URL', 'CELERY_RESULT_BACKEND']
         # }
-        fitness_computing_settings = dict()
+        fitness_computing_settings = {
+            'AUTOTM_COMPONENT': 'head',
+            'AUTOTM_EXEC_MODE': 'cluster',
+            'CELERY_BROKER_URL': 'amqp://guest:guest@node2.bdcl:30531',
+            'CELERY_RESULT_BACKEND': 'redis://node2.bdcl:32737/1'
+        }
+
+        # fitness_computing_settings = {
+        #     'AUTOTM_COMPONENT': 'head',
+        #     'AUTOTM_EXEC_MODE': 'cluster',
+        #     'CELERY_BROKER_URL': 'amqp://guest:guest@localhost:5672',
+        #     'CELERY_RESULT_BACKEND': 'redis://localhost:6379/1'
+        # }
+
+        if 'localhost' in fitness_computing_settings['CELERY_BROKER_URL']:
+            logger.info(
+                "Using docker-compose fitness computing with settings: \n%s"
+                % ('\n'.join([f'{k}={v}' for k, v in fitness_computing_settings.items()]))
+            )
+        else:
+            logger.info(
+                "Using cluster fitness computing with settings: \n%s"
+                % ('\n'.join([f'{k}={v}' for k, v in fitness_computing_settings.items()]))
+            )
+
         yield fitness_computing_settings
         return
 
@@ -159,6 +184,11 @@ def distributed_worker_setup(pytestconfig, shared_mlflow_runs_volume: Optional[V
 
     for env_var, value in fitness_computing_settings:
         os.environ[env_var] = value
+
+    logger.info(
+        "Using docker-compose fitness computing with settings: \n%s"
+        % ('\n'.join([f'{k}={v}' for k, v in fitness_computing_settings.items()]))
+    )
 
     yield fitness_computing_settings
 
