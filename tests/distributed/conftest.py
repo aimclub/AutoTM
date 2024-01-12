@@ -42,6 +42,12 @@ def check_if_remote_test() -> bool:
 
 @pytest.fixture(scope="session")
 def shared_mlflow_runs_volume(pytestconfig, docker_setup) -> Optional[Volume]:
+    # How to create volume manually:
+    # docker volume create test-autotm-mlflow-runs-data \
+    # --opt type=none \
+    # --opt device=/home/nikolay/wspace/AutoTM/tests/deploy/test-autotm-mlflow-runs-data \
+    # --opt o=bind
+
     # if check_if_remote_test():
     #     return None
     # todo: temporarily

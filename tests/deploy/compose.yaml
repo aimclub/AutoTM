@@ -9,7 +9,7 @@ services:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
 
   rabbitmq:
-    image: rabbitmq:3.8-management-alpin
+    image: rabbitmq:3.8-management-alpine
     ports:
       - "5672:5672"
       - "15672:15672"
