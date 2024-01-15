@@ -1,3 +1,15 @@
+from transformers import AutoTokenizer, AutoModel, utils, DataCollatorForLanguageModeling
+# from bertviz import model_view, head_view
+from datasets import Dataset, DatasetDict
+import pandas as pd
+
+utils.logging.set_verbosity_error()
+
+
+def preprocess_function(examples):
+    return tokenizer(examples["processed_text"], truncation=True)
+
+
 def format_attention(attention, layers=None, heads=None):
     if layers:
         attention = [attention[layer_index] for layer_index in layers]
@@ -38,29 +50,29 @@ def format_special_chars(tokens):
 
 
 def calculate_attention_head_confidence(
-    attention,
-    tokens,
-    sentences,
-    encoder_attention=None,
-    decoder_attention=None,
-    cross_attention=None,
-    encoder_tokens=None,
-    decoder_tokens=None,
-    include_layers=None,
-    sentence_b_start=None,
-    layer=None,
-    heads=None,
+        attention,
+        tokens,
+        sentences,
+        encoder_attention=None,
+        decoder_attention=None,
+        cross_attention=None,
+        encoder_tokens=None,
+        decoder_tokens=None,
+        include_layers=None,
+        sentence_b_start=None,
+        layer=None,
+        heads=None,
 ):
     attn_data = []
     if attention is not None:
         if tokens is None:
             raise ValueError("'tokens' is required")
         if (
-            encoder_attention is not None
-            or decoder_attention is not None
-            or cross_attention is not None
-            or encoder_tokens is not None
-            or decoder_tokens is not None
+                encoder_attention is not None
+                or decoder_attention is not None
+                or cross_attention is not None
+                or encoder_tokens is not None
+                or decoder_tokens is not None
         ):
             raise ValueError(
                 "If you specify 'attention' you may not specify any encoder-decoder arguments. This"
@@ -90,3 +102,84 @@ def calculate_attention_head_confidence(
         attention = attention[1:-1, 1:-1]
         tokens = tokens[1:-1]
         return attention, tokens
+
+
+def get_model(model_name):
+    if model_name == 'rubert-base-cased':
+        tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/rubert-base-cased")
+        model = AutoModel.from_pretrained("DeepPavlov/rubert-base-cased", output_attentions=True)
+    if model_name == 'bert-base-cased-conversational':
+        tokenizer = AutoTokenizer.from_pretrained("DeepPavlov/bert-base-cased-conversational")
+        model = AutoModel.from_pretrained("DeepPavlov/bert-base-cased-conversational", output_attentions=True)
+    return tokenizer, model
+
+
+# Works long so better apply for small samples (< 1000 docs)
+def build_graph(processed_df: pd.DataFrame, autotm_model):
+    tds = Dataset.from_pandas(processed_df)
+    ds = DatasetDict()
+
+    ds['train'] = tds
+
+    tokenized_ds = ds.map(
+        preprocess_function,
+        batched=True,
+        num_proc=4,
+        remove_columns='processed_text'
+    )
+
+    phi_df = autotm_model._model.get_phi()
+    topics_info = autotm_model.topics
+
+    sentences = processed_df.processed_text.tolist()
+
+    phi = phi_df[[i for i in list(phi_df) if i.startswith('main')]]
+    data_dict = []
+
+    for sentence in sentences[:500]:
+
+        #     try:
+        inputs = tokenizer.encode(sentence, return_tensors='pt')
+        outputs = model(inputs)  # Run model
+        attention = outputs[-1]  # Retrieve attention from model outputs
+        tokens = tokenizer.convert_ids_to_tokens(inputs[0])  # Convert zinput ids to token strings
+        #     head_view(attention, tokens)  # Display model view
+        #     except:
+        #         continue
+
+        res, tokens_new = get_attention_vals(attention, tokens, head_num=2, layer_num=0)
+        print(res, tokens_new)
+
+        try:
+            v, i = torch.topk(res.flatten(), 5)
+        except:
+            continue
+        idx = np.array(np.unravel_index(i.numpy(), res.shape)).T
+
+        lemmatized_dict = {}
+        all_phi_tokens = phi.index.tolist()
+        # phi remove back
+        for idx_items in idx:
+            value = res[idx_items[0], idx_items[1]]
+            # main topic strategy
+            w1 = tokens_new[idx_items[0]]
+            w2 = tokens_new[idx_items[1]]
+            if w1 in lemmatized_dict:
+                token1 = lemmatized_dict[w1]
+            else:
+                token1 = w1  # lemmatize_text(w1)
+                lemmatized_dict[w1] = token1
+            if w2 in lemmatized_dict:
+                token2 = lemmatized_dict[w2]
+            else:
+                token2 = w2  # lemmatize_text(w2)
+                lemmatized_dict[w2] = token2
+            if token1 in all_phi_tokens and token2 in all_phi_tokens:
+                if phi.loc[token1].sum() > 0 and phi.loc[token2].sum() > 0:
+                    data_dict.append(
+                        {'topic1': phi.loc[token1].idxmax(), 'topic2': phi.loc[token2].idxmax(), 'value': float(value)})
+
+    connections_df = pd.DataFrame(data_dict)
+    connections_df['topic1'] = connections_df['topic1'].apply(lambda x: topic_labels[x])
+    connections_df['topic2'] = connections_df['topic2'].apply(lambda x: topic_labels[x])
+    return connections_df
