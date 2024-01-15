@@ -1,7 +1,8 @@
 from transformers import AutoTokenizer, AutoModel, utils, DataCollatorForLanguageModeling
-# from bertviz import model_view, head_view
 from datasets import Dataset, DatasetDict
+from autotm.preprocessing.text_preprocessing import process_dataset, PROCESSED_TEXT_COLUMN
 import pandas as pd
+import random
 
 utils.logging.set_verbosity_error()
 
@@ -115,37 +116,26 @@ def get_model(model_name):
 
 
 # Works long so better apply for small samples (< 1000 docs)
-def build_graph(processed_df: pd.DataFrame, autotm_model):
-    tds = Dataset.from_pandas(processed_df)
-    ds = DatasetDict()
-
-    ds['train'] = tds
-
-    tokenized_ds = ds.map(
-        preprocess_function,
-        batched=True,
-        num_proc=4,
-        remove_columns='processed_text'
-    )
+def build_graph(autotm_model, topic_labels,
+                sampling=True, conn_strength=0.11):
+    processed_df = pd.read_csv(os.path.join(autotm_model.working_dir_path, PROCESSED_TEXT_COLUMN))
 
     phi_df = autotm_model._model.get_phi()
-    topics_info = autotm_model.topics
-
     sentences = processed_df.processed_text.tolist()
-
     phi = phi_df[[i for i in list(phi_df) if i.startswith('main')]]
+
     data_dict = []
 
-    for sentence in sentences[:500]:
+    if sampling:
+        sentences = random.sample(sentences, 1000)
+
+    for sentence in sentences:
 
         #     try:
         inputs = tokenizer.encode(sentence, return_tensors='pt')
-        outputs = model(inputs)  # Run model
+        outputs = model(inputs)
         attention = outputs[-1]  # Retrieve attention from model outputs
-        tokens = tokenizer.convert_ids_to_tokens(inputs[0])  # Convert zinput ids to token strings
-        #     head_view(attention, tokens)  # Display model view
-        #     except:
-        #         continue
+        tokens = tokenizer.convert_ids_to_tokens(inputs[0])
 
         res, tokens_new = get_attention_vals(attention, tokens, head_num=2, layer_num=0)
         print(res, tokens_new)
@@ -182,4 +172,20 @@ def build_graph(processed_df: pd.DataFrame, autotm_model):
     connections_df = pd.DataFrame(data_dict)
     connections_df['topic1'] = connections_df['topic1'].apply(lambda x: topic_labels[x])
     connections_df['topic2'] = connections_df['topic2'].apply(lambda x: topic_labels[x])
-    return connections_df
+
+    connections_df_filtered = connections_df[connections_df['value'] > conn_strength]
+    connections_df_agg = connections_df_filtered.groupby(['topic1', 'topic2']).agg({'value': sum}).reset_index()
+    connections_df_agg = connections_df_agg[connections_df_agg['topic1'] != connections_df_agg['topic2']]
+
+    res_dict = {}
+    for ix, row in connections_df_agg.iterrows():
+        if (row['topic1'], row['topic2']) in res_dict:
+            res_dict[(row['topic1'], row['topic2'])] += row['value']
+        elif (row['topic2'], row['topic1']) in res_dict:
+            res_dict[(row['topic2'], row['topic1'])] += row['value']
+        else:
+            res_dict[(row['topic1'], row['topic2'])] = row['value']
+
+    nodes = set([i for res in list(res_dict.keys()) for i in res])
+
+    return res_dict, nodes
