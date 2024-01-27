@@ -99,7 +99,7 @@ def main():
                     elapsed_minutes, elapsed_seconds = divmod(int(elapsed_time), 60)
                     stats = ", ".join(f"({i}, {fi})" for i, fi in zip(used_fitness, best_fitness))
                     print(f"Time: {elapsed_minutes} min {elapsed_seconds} sec, use_pipeline: {use_pipeline}, dataset: {dataset_name}, (i, f(i)): {stats}")
-                    print(f'{git_hash},{dataset_name},{used_fitness},{best_fitness},{num_fitness_evaluations},{num_iterations},{num_individuals},{topic_count},{train_option}',
+                    print(f'{git_hash},{dataset_name},{use_pipeline},{used_fitness},{best_fitness},{num_fitness_evaluations},{num_iterations},{num_individuals},{topic_count},{train_option}',
                           file=logfile)
 
 
