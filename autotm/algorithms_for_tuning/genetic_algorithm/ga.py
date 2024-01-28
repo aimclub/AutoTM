@@ -148,6 +148,13 @@ class GA:
             {}
         )  # generation, parent_1_params, parent_2_params, ...
 
+    def estimate_fitness(self, population):
+        evaluations_limit = self.num_fitness_evaluations - self.evaluations_counter \
+            if self.num_fitness_evaluations else len(population)
+        population, evaluations = estimate_fitness(population, evaluations_limit)
+        self.evaluations_counter += evaluations
+        return population
+
     def init_population(self):
         list_of_individuals = []
         for i in range(self.num_individuals):
@@ -165,7 +172,7 @@ class GA:
             )
             # TODO: improve heuristic on search space
             list_of_individuals.append(make_individual(dto=dto))
-        population_with_fitness = estimate_fitness(list_of_individuals)
+        population_with_fitness = self.estimate_fitness(list_of_individuals)
 
         self.save_params(population_with_fitness)
         if self.surrogate is not None and self.calc_scheme == "type2":
@@ -204,7 +211,7 @@ class GA:
             )
             calculated.append(make_individual(dto=dto))
 
-        calculated = estimate_fitness(calculated)
+        calculated = self.estimate_fitness(calculated)
 
         self.all_params += [individ.dto.params for individ in calculated]
         self.all_fitness += [
@@ -327,7 +334,6 @@ class GA:
             ) for child in children]
 
             individuals = [make_individual(child) for child in children_dto]
-            self.evaluations_counter += len(individuals)
             new_generation += individuals
 
             crossover_changes["parent_1_params"].append(i.params)
@@ -336,24 +342,25 @@ class GA:
             crossover_changes["parent_2_fitness"].append(j.fitness_value)
             crossover_changes["child_id"].append(len(new_generation) - 1)
 
-        logger.info(f"CURRENT COUNTER: {self.evaluations_counter}")
-
         if len(new_generation) > 0:
-            logger.info(f"size of the new generation is {len(new_generation)}")
             new_generation = self.run_fitness(new_generation, surrogate_iteration, iteration_num)
+            logger.info(f"size of the new generation is {len(new_generation)}")
 
             for i in range(len(crossover_changes["parent_1_params"])):
+                child_index = crossover_changes["child_id"][i]
+                if child_index >= len(new_generation):
+                    continue
                 self.metric_collector.save_crossover(
                     generation=iteration_num,
                     parent_1=crossover_changes["parent_1_params"][i],
                     parent_2=crossover_changes["parent_2_params"][i],
                     parent_1_fitness=crossover_changes["parent_1_fitness"][i],
                     parent_2_fitness=crossover_changes["parent_2_fitness"][i],
-                    child_1=new_generation[crossover_changes["child_id"][i]].params,
-                    child_1_fitness=new_generation[crossover_changes["child_id"][i]].fitness_value,
+                    child_1=new_generation[child_index].params,
+                    child_1_fitness=new_generation[child_index].fitness_value,
                 )
 
-        return new_generation, crossover_changes
+        return new_generation
 
     def apply_nelder_mead(self, starting_points_set, num_gen, num_iterations=2):
         nelder_opt = NelderMeadOptimization(
@@ -406,11 +413,7 @@ class GA:
             f"crossover prob {self.elem_cross_prob}"
         )
 
-        # population initialization
         population = self.init_population()
-
-        self.evaluations_counter = self.num_individuals
-
         logger.info("POPULATION IS CREATED")
 
         x, y = [], []
@@ -442,7 +445,7 @@ class GA:
             logger.info("PAIRS ARE CREATED")
 
             # Crossover
-            new_generation, crossover_changes = self.run_crossover(
+            new_generation = self.run_crossover(
                 pairs_generator, surrogate_iteration, iteration_num=ii
             )
 
@@ -454,25 +457,6 @@ class GA:
             if self.use_nelder_mead_in_crossover:
                 # TODO: implement Nelder-Mead here
                 pass
-
-            if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
-                bparams = "".join([str(i) for i in population[0].params])
-                self.metric_collector.save_fitness(
-                    generation=ii,
-                    params=[i.params for i in population],
-                    fitness=[i.fitness_value for i in population],
-                )
-                logger.info(
-                    f"TERMINATION IS TRIGGERED: EVAL NUM."
-                    f"DATASET {self.dataset}."
-                    f"TOPICS NUM {self.topic_count}."
-                    f"RUN ID {run_id}."
-                    f"THE BEST FITNESS {population[0].fitness_value}."
-                    f"THE BEST PARAMS {bparams}."
-                    f"ITERATION TIME {time.time() - iteration_start_time}."
-                )
-                # return population[0].fitness_value
-                break
 
             del pairs_generator
             gc.collect()
@@ -492,17 +476,11 @@ class GA:
 
             try:
                 del new_generation
-            except:
-                pass
-
+            except Exception as e:
+                logger.warning(e)
             gc.collect()
 
             self._sort_population(population)
-
-            try:
-                del population[self.num_individuals]
-            except:
-                pass
 
             self.run_mutation(population)
 
@@ -641,7 +619,7 @@ class GA:
     def run_fitness(self, population, surrogate_iteration, ii):
         fitness_calc_time_start = time.time()
         if not SPEEDUP or not self.surrogate or not surrogate_iteration:
-            population = estimate_fitness(population)
+            population = self.estimate_fitness(population)
             self.save_params(population)
         if self.surrogate:
             if self.calc_scheme == "type1" and surrogate_iteration:
@@ -676,7 +654,6 @@ class GA:
                     train_option=self.train_option,
                 )
                 population[i] = make_individual(dto=dto)
-                self.evaluations_counter += 1
 
 
 # multistage bag of regularizers approach
