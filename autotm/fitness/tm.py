@@ -415,36 +415,35 @@ class TopicModel:
     def check_early_stop(self) -> bool:
         return self._total_iterations > 0 and self._early_stopping()
 
-    # TODO: refactor option
-    def train(self, option="online_v1"):
+    def train(self):
         if self.model is None:
             logging.error("Initialise the model first!")
             return
         self._total_iterations = 0
-        self.params.run_train(self, option)
+        self.params.run_train(self)
         logging.info("Training is complete")
 
-    def do_fit(self, n, option):
+    def do_fit(self, n):
         n = int(n)
         self._total_iterations += n
-        if option == "offline":
+        if self.train_option == "offline":
             self.model.fit_offline(
                 batch_vectorizer=self.dataset.batches,
                 num_collection_passes=n
             )
-        elif option == "online_v1":
+        elif self.train_option == "online_v1":
             self.model.fit_offline(
                 batch_vectorizer=self.dataset.sample_batches,
                 num_collection_passes=n,
             )
-        elif option == "online_v2":
+        elif self.train_option == "online_v2":
             self.model.num_document_passes = n
             self.model.fit_online(
                 batch_vectorizer=self.dataset.sample_batches,
                 update_every=self.num_processors,
             )
         else:
-            raise ValueError(f"Unknown option {option}")
+            raise ValueError(f"Unknown option {self.train_option}")
 
     def decor_train(self):
         if self.model is None:

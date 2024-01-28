@@ -19,7 +19,7 @@ class AbstractParams(ABC):
         ...
 
     @abstractmethod
-    def run_train(self, model: "TopicModel", option: str):
+    def run_train(self, model: "TopicModel"):
         ...
 
     @abstractmethod

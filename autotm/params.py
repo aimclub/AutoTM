@@ -83,8 +83,8 @@ class FixedListParams(BaseModel, AbstractParams):
 
         return {name: p_val for name, p_val in zip(param_names, self.params)}
 
-    def run_train(self, model: TopicModel, option: str):
-        self.to_pipeline_params().run_train(model, option)
+    def run_train(self, model: TopicModel):
+        self.to_pipeline_params().run_train(model)
 
     def crossover(self, parent2: "AbstractParams", **kwargs) -> List["AbstractParams"]:
         assert isinstance(parent2, FixedListParams)
@@ -194,7 +194,7 @@ class PipelineParams(BaseModel, AbstractParams):
 
         return True
 
-    def run_train(self, model: TopicModel, option: str):
+    def run_train(self, model: TopicModel):
         for stage in self.pipeline.stages:
             if stage.stage_type == DECORRELATION_STAGE_TYPE:
                 n, decorr, decorr_2 = stage.values
@@ -202,21 +202,21 @@ class PipelineParams(BaseModel, AbstractParams):
                     name="decorr", topic_names=model.specific, tau=decorr), overwrite=True)
                 model.model.regularizers.add(artm.DecorrelatorPhiRegularizer(
                     name="decorr_2", topic_names=model.back, tau=decorr_2), overwrite=True)
-                model.do_fit(n, option)
+                model.do_fit(n)
             elif stage.stage_type == SMOOTH_STAGE_TYPE:
                 n, phi, theta = stage.values
                 model.model.regularizers.add(artm.SmoothSparseThetaRegularizer(
                     name="SmoothPhi", topic_names=model.back, tau=phi), overwrite=True)
                 model.model.regularizers.add(artm.SmoothSparseThetaRegularizer(
                     name="SmoothTheta", topic_names=model.back, tau=theta), overwrite=True)
-                model.do_fit(n, option)
+                model.do_fit(n)
             elif stage.stage_type == SPARSE_STAGE_TYPE:
                 n, phi, theta = stage.values
                 model.model.regularizers.add(artm.SmoothSparseThetaRegularizer(
                     name="SparsePhi", topic_names=model.specific, tau=phi), overwrite=True)
                 model.model.regularizers.add(artm.SmoothSparseThetaRegularizer(
                     name="SparseTheta", topic_names=model.specific, tau=theta), overwrite=True)
-                model.do_fit(n, option)
+                model.do_fit(n)
             else:
                 raise ValueError(f"Unknown stage type {stage.stage_type.name}")
 
