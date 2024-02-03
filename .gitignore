@@ -170,7 +170,8 @@ model.artm
 docs/_build
 
 examples/experiments/*.txt
-examples/experiments/old/*.txt
+examples/experiments/*/*.txt
+examples/experiments/*/*.png
 examples/experiments/*.png
 examples/experiments/metrics
 examples/experiments/mlruns

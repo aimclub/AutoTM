@@ -56,22 +56,14 @@ def calculate_fitness(
     )
 
 
-def estimate_fitness(population: List[Individual], evaluations_limit: int) -> Tuple[List[Individual], int]:
+def estimate_fitness(population: List[Individual]) -> List[Individual]:
     logger.info("Calculating fitness...")
     population_with_fitness = []
-    evaluations = 0
     for individual in population:
-        if individual.dto.fitness_value is not None:
-            logger.info("Fitness value already calculated")
-            population_with_fitness.append(individual)
-            continue
-        if evaluations >= evaluations_limit:
-            continue
-        evaluations += 1
         individ_with_fitness = calculate_fitness(individual.dto)
         population_with_fitness.append(make_individual(individ_with_fitness))
     logger.info("The fitness results have been obtained")
-    return population_with_fitness, evaluations
+    return population_with_fitness
 
 
 def log_best_solution(

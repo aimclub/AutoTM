@@ -12,6 +12,7 @@ from typing import Optional, Tuple, Callable
 import numpy as np
 
 from autotm.abstract_params import AbstractParams
+from autotm.algorithms_for_tuning.genetic_algorithm.statistics_collector import StatisticsCollector
 from autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
 from autotm.algorithms_for_tuning.genetic_algorithm.surrogate import set_surrogate_fitness, Surrogate, \
     get_prediction_uncertanty
@@ -79,6 +80,7 @@ class GA:
             use_nelder_mead_in_crossover: bool = False,
             use_nelder_mead_in_selector: bool = False,
             train_option: str = "offline",
+            statistics_collector: Optional[StatisticsCollector] = None,
             **kwargs,
     ):
         """
@@ -135,6 +137,7 @@ class GA:
         self.topic_count = topic_count
         self.tag = tag
         self.use_pipeline = use_pipeline
+        self.statistics_collector = statistics_collector
         # hyperparams
         self.use_nelder_mead = use_nelder_mead
         self.use_nelder_mead_in_mutation = use_nelder_mead_in_mutation
@@ -149,11 +152,18 @@ class GA:
         )  # generation, parent_1_params, parent_2_params, ...
 
     def estimate_fitness(self, population):
-        evaluations_limit = self.num_fitness_evaluations - self.evaluations_counter \
-            if self.num_fitness_evaluations else len(population)
-        population, evaluations = estimate_fitness(population, evaluations_limit)
-        self.evaluations_counter += evaluations
-        return population
+        evaluated = [individual for individual in population if individual.dto.fitness_value is not None]
+        not_evaluated = [individual for individual in population if individual.dto.fitness_value is None]
+        evaluations_limit = max(0, self.num_fitness_evaluations - self.evaluations_counter) \
+            if self.num_fitness_evaluations else len(not_evaluated)
+        if len(not_evaluated) > evaluations_limit:
+            not_evaluated = not_evaluated[:evaluations_limit]
+        self.evaluations_counter += len(not_evaluated)
+        new_evaluated = estimate_fitness(not_evaluated)
+        if self.statistics_collector:
+            for individual in new_evaluated:
+                self.statistics_collector.log_individual(individual)
+        return evaluated + new_evaluated
 
     def init_population(self):
         list_of_individuals = []
@@ -396,7 +406,7 @@ class GA:
             new_population.append(make_individual(dto=solution_dto))
         return new_population
 
-    def run(self, verbose=False, visualize_results=False) -> Tuple[Individual, Tuple]:
+    def run(self, verbose=False, visualize_results=False) -> Individual:
         self.evaluations_counter = 0
         ftime = str(int(time.time()))
 
@@ -423,8 +433,6 @@ class GA:
         early_stopping_counter = 0
 
         run_id = str(uuid.uuid4())
-        used_fitness = []
-        best_fitness = []
         for ii in range(self.num_iterations):
             iteration_start_time = time.time()
 
@@ -434,8 +442,8 @@ class GA:
                 surrogate_iteration = ii % 2 != 0
 
             self._sort_population(population)
-            used_fitness.append(self.evaluations_counter)
-            best_fitness.append(population[0].fitness_value)
+            if self.statistics_collector is not None:
+                self.statistics_collector.log_iteration(self.evaluations_counter, population[0].fitness_value)
             pairs_generator = self.selection(
                 population=population,
                 best_proc=self.best_proc,
@@ -605,16 +613,14 @@ class GA:
         else:
             self.metric_collector.save_trace()
 
-        used_fitness.append(self.evaluations_counter)
-        best_fitness.append(population[0].fitness_value)
+        if self.statistics_collector is not None:
+            self.statistics_collector.log_iteration(self.evaluations_counter, population[0].fitness_value)
         logger.info(f"Y: {y}")
         best_individual = population[0]
         ind = log_best_solution(best_individual, alg_args=" ".join(sys.argv))
-        logger.info(
-            f"Logged the best solution. Obtained fitness is {ind.fitness_value}"
-        )
+        logger.info(f"Logged the best solution. Obtained fitness is {ind.fitness_value}")
 
-        return ind, (used_fitness, best_fitness)
+        return ind
 
     def run_fitness(self, population, surrogate_iteration, ii):
         fitness_calc_time_start = time.time()
