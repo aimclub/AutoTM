@@ -2,7 +2,6 @@
 import logging
 import sys
 import uuid
-import warnings
 from typing import Union
 
 from autotm.algorithms_for_tuning.genetic_algorithm.ga import GA
@@ -14,31 +13,33 @@ logger = logging.getLogger(__name__)
 NUM_FITNESS_EVALUATIONS = 150
 
 
-def run_algorithm(
-    dataset: str,
-    data_path: str,
-    exp_id: Union[int, str],
-    topic_count: int,
-    num_individuals: int = 11,
-    num_iterations: int = 400,
-    num_fitness_evaluations: int = None,
-    mutation_type: str = "psm",
-    crossover_type: str = "blend_crossover",
-    selection_type: str = "fitness_prop",
-    elem_cross_prob: float = None,
-    cross_alpha: float = 0.5046,
-    best_proc: float = 0.4439,
-    log_file: str = "/var/log/tm-alg.log",
-    tag: str = "v0",
-    surrogate_name: str = None,  # fix
-    gpr_kernel: str = None,
-    gpr_alpha: float = None,
-    gpr_normalize_y: float = None,
-    use_nelder_mead_in_mutation: bool = False,
-    use_nelder_mead_in_crossover: bool = False,
-    use_nelder_mead_in_selector: bool = False,
-    train_option: str = "offline",
-) -> TopicModel:
+def get_best_individual(
+        dataset: str,
+        data_path: str,
+        exp_id: Union[int, str],
+        topic_count: int,
+        num_individuals: int = 11,
+        num_iterations: int = 400,
+        num_fitness_evaluations: int = None,
+        mutation_type: str = "psm",
+        crossover_type: str = "blend_crossover",
+        selection_type: str = "fitness_prop",
+        elem_cross_prob: float = None,
+        cross_alpha: float = 0.5046,
+        best_proc: float = 0.4439,
+        log_file: str = "/var/log/tm-alg.log",
+        tag: str = "v0",
+        surrogate_name: str = None,  # fix
+        gpr_kernel: str = None,
+        gpr_alpha: float = None,
+        gpr_normalize_y: float = None,
+        use_pipeline: bool = False,
+        use_nelder_mead_in_mutation: bool = False,
+        use_nelder_mead_in_crossover: bool = False,
+        use_nelder_mead_in_selector: bool = False,
+        train_option: str = "offline",
+        quiet_log: bool = False,
+):
     """
 
     :param dataset: Dataset name that is being processed. The name will be used to store results
@@ -67,21 +68,21 @@ def run_algorithm(
     """
 
     assert (
-        sum(
-            [
-                use_nelder_mead_in_mutation,
-                use_nelder_mead_in_crossover,
-                use_nelder_mead_in_selector,
-            ]
-        )
-        <= 1
+            sum(
+                [
+                    use_nelder_mead_in_mutation,
+                    use_nelder_mead_in_crossover,
+                    use_nelder_mead_in_selector,
+                ]
+            )
+            <= 1
     )
 
     logger.debug(f"Command line: {sys.argv}")
 
     run_uid = str(uuid.uuid4())
     tag = tag if tag is not None else str(run_uid)
-    logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
+    logging_config = make_log_config_dict(filename=log_file, uid=run_uid, quiet=quiet_log)
     logging.config.dictConfig(logging_config)
 
     logger.info(f"Starting a new run of algorithm. Args: {sys.argv[1:]}")
@@ -111,13 +112,51 @@ def run_algorithm(
         gpr_kernel=gpr_kernel,
         gpr_alpha=gpr_alpha,
         normalize_y=gpr_normalize_y,
+        use_pipeline=use_pipeline,
         use_nelder_mead_in_mutation=use_nelder_mead_in_mutation,
         use_nelder_mead_in_crossover=use_nelder_mead_in_crossover,
         use_nelder_mead_in_selector=use_nelder_mead_in_selector,
         train_option=train_option,
     )
-    best_individual = g.run(verbose=True)
+    best_individual, stats = g.run(verbose=True)
     logger.info(f"Best individual fitness_value: {best_individual.fitness_value * (-1)}")
+
+    return best_individual, stats
+
+
+def run_algorithm(
+        dataset: str,
+        data_path: str,
+        exp_id: Union[int, str],
+        topic_count: int,
+        num_individuals: int = 11,
+        num_iterations: int = 400,
+        num_fitness_evaluations: int = None,
+        mutation_type: str = "psm",
+        crossover_type: str = "blend_crossover",
+        selection_type: str = "fitness_prop",
+        elem_cross_prob: float = None,
+        cross_alpha: float = 0.5046,
+        best_proc: float = 0.4439,
+        log_file: str = "/var/log/tm-alg.log",
+        tag: str = "v0",
+        surrogate_name: str = None,  # fix
+        gpr_kernel: str = None,
+        gpr_alpha: float = None,
+        gpr_normalize_y: float = None,
+        use_pipeline: bool = False,
+        use_nelder_mead_in_mutation: bool = False,
+        use_nelder_mead_in_crossover: bool = False,
+        use_nelder_mead_in_selector: bool = False,
+        train_option: str = "offline",
+        quiet_log: bool = False,
+) -> TopicModel:
+    best_individual, _ = get_best_individual(dataset, data_path, exp_id, topic_count, num_individuals, num_iterations,
+                                          num_fitness_evaluations, mutation_type, crossover_type, selection_type,
+                                          elem_cross_prob, cross_alpha, best_proc, log_file, tag, surrogate_name,
+                                          gpr_kernel, gpr_alpha, gpr_normalize_y, use_pipeline,
+                                          use_nelder_mead_in_mutation, use_nelder_mead_in_crossover,
+                                          use_nelder_mead_in_selector, train_option, quiet_log)
 
     best_topic_model = fit_tm(
         preproc_data_path=data_path,

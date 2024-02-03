@@ -84,11 +84,11 @@ def get_most_probable_topics_from_theta(
     :return: pd.Dataframe with 'top_topics' column
     """
     theta_df = _transform_matrix(theta_df)
-    print(theta_df)
+    logging.info(theta_df)
     assert (
         df.shape[0] == theta_df.shape[0]
     ), "Shapes of f and theta matrix are different"
-    print(theta_df.apply(lambda x: ", ".join(x.nlargest(top_n).index.tolist()), axis=1))
+    logging.info(theta_df.apply(lambda x: ", ".join(x.nlargest(top_n).index.tolist()), axis=1))
     df[TOP_TOPICS_COL] = theta_df.apply(
         lambda x: ", ".join(x.nlargest(top_n).index.tolist()), axis=1
     ).tolist()

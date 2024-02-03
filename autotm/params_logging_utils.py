@@ -111,7 +111,7 @@ def log_params_and_artifacts(
 
     # mlflow.delete_experiment
 
-    print(f"Experiment run name: {run_name}")
+    logging.info(f"Experiment run name: {run_name}")
     # try:
     with mlflow.start_run(run_name=run_name, experiment_id=experiment_id):
         params = {
@@ -138,13 +138,11 @@ def log_params_and_artifacts(
         full_repr_topics = make_readable_topics(tm)
 
         mlflow.log_params(params)
-        mlflow.log_dict(individual.dict(), artifact_file=individual_artifact_path)
+        mlflow.log_dict(individual.model_dump(), artifact_file=individual_artifact_path)
         mlflow.log_dict(individual.fitness_value, artifact_file=metrics_artifact_path)
         mlflow.log_dict(time_metrics, artifact_file=time_metrics_artifact_path)
         mlflow.log_artifact(local_path=tm_files.model_dir, artifact_path=artifact_path)
-        mlflow.log_artifact(
-            local_path=tm_files.theta, artifact_path=theta_artifact_path
-        )
+        mlflow.log_artifact(local_path=tm_files.theta, artifact_path=theta_artifact_path)
         mlflow.log_artifact(local_path=tm_files.phi, artifact_path=phi_artifact_path)
         mlflow.log_dict(topics, artifact_file=topics_artifact_path)
         mlflow.log_text(

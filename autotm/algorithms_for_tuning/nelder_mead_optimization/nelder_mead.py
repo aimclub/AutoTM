@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 from scipy.optimize import minimize
 
@@ -48,16 +50,11 @@ class NelderMeadOptimization:
         self.high_prob = high_prob
 
     def initialize_params(self):
-        val_decor = np.random.uniform(low=self.low_decor, high=self.high_decor, size=1)[
-            0
-        ]
+        val_decor, val_decor_2 = np.random.uniform(low=self.low_decor, high=self.high_decor, size=2)
         var_n = np.random.randint(low=self.low_n, high=self.high_n, size=4)
         var_back = np.random.randint(low=self.low_back, high=self.high_back, size=1)[0]
         var_sm = np.random.uniform(low=self.low_spb, high=self.high_spb, size=2)
         var_sp = np.random.uniform(low=self.low_sp_phi, high=self.high_sp_phi, size=4)
-        val_decor_2 = np.random.uniform(
-            low=self.low_decor, high=self.high_decor, size=1
-        )[0]
         params = [
             val_decor,
             var_n[0],
@@ -85,7 +82,7 @@ class NelderMeadOptimization:
             initial_point = self.initialize_params()
         else:
             assert len(ini_point) == 13
-            print(ini_point)  # TODO: remove this
+            logging.info(ini_point)  # TODO: remove this
             ini_point = [float(i) for i in ini_point]
             initial_point = ini_point
 

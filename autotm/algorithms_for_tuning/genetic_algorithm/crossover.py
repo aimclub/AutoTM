@@ -1,9 +1,9 @@
 import random
 import numpy as np
-from typing import List, Tuple, Callable
+from typing import List, Callable
 
 
-def crossover_pmx(parent_1: List[float], parent_2: List[float], **kwargs) -> Tuple[List[float], List[float]]:
+def crossover_pmx(parent_1: List[float], parent_2: List[float], **kwargs) -> List[List[float]]:
     """
     Pmx crossover
 
@@ -21,21 +21,20 @@ def crossover_pmx(parent_1: List[float], parent_2: List[float], **kwargs) -> Tup
     Updated individuals with exchanged chromosome parts
     """
     points_num = len(parent_1)
-    flag = False
-    while not flag:
+    while True:
         cut_ix = np.random.choice(points_num + 1, 2, replace=False)
         min_ix = np.min(cut_ix)
         max_ix = np.max(cut_ix)
         part = parent_1[min_ix:max_ix]
         if len(part) != len(parent_1):
-            flag = True
+            break
     parent_1[min_ix:max_ix] = parent_2[min_ix:max_ix]
     parent_2[min_ix:max_ix] = part
-    return parent_1, parent_2
+    return [parent_1, parent_2]
 
 
 # discrete crossover
-def crossover_one_point(parent_1: List[float], parent_2: List[float], **kwargs) -> Tuple[List[float], List[float]]:
+def crossover_one_point(parent_1: List[float], parent_2: List[float], **kwargs) -> List[List[float]]:
     """
     One-point crossover
 
@@ -56,13 +55,11 @@ def crossover_one_point(parent_1: List[float], parent_2: List[float], **kwargs) 
     for i in range(len(parent_1)):
         # removed mutation preservation
         if random.random() < elem_cross_prob:
-            dop = parent_1[i]
-            parent_1[i] = parent_2[i]
-            parent_2[i] = dop
-    return parent_1, parent_2
+            parent_1[i], parent_2[i] = parent_2[i], parent_1[i]
+    return [parent_1, parent_2]
 
 
-def crossover_blend_new(parent_1: List[float], parent_2: List[float], **kwargs) -> Tuple[List[float], List[float]]:
+def crossover_blend_new(parent_1: List[float], parent_2: List[float], **kwargs) -> List[List[float]]:
     """
     Blend crossover
 
@@ -93,10 +90,10 @@ def crossover_blend_new(parent_1: List[float], parent_2: List[float], **kwargs) 
     # TODO: reconsider this
     child_1[12:15] = parent_1[12:15]
     child_2[12:15] = parent_2[12:15]
-    return child_1, child_2
+    return [child_1, child_2]
 
 
-def crossover_blend(parent_1: List[float], parent_2: List[float], **kwargs) -> Tuple[List[float], List[float]]:
+def crossover_blend(parent_1: List[float], parent_2: List[float], **kwargs) -> List[List[float]]:
     """
     Blend crossover
 
@@ -125,12 +122,10 @@ def crossover_blend(parent_1: List[float], parent_2: List[float], **kwargs) -> T
         child[12:15] = parent_1[12:15]
     else:
         child[12:15] = parent_2[12:15]
-    return child
-
+    return [child]
 
 
 def crossover(crossover_type: str = "crossover_one_point") -> Callable:
-
     """
     Crossover function
 
