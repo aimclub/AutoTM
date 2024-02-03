@@ -57,19 +57,13 @@ def selection_fitness_prop(population, best_proc, children_num):
     # adjust probabilities with sigma scaling
     c = 2
     for individ in population:
-        updated_individ_fitness = np.max(
-            [(individ.fitness_value - (fitness_mean - c * fitness_std)), 0]
-        )
+        updated_individ_fitness = max(individ.fitness_value - (fitness_mean - c * fitness_std), 0)
         cumsum_fitness += updated_individ_fitness
         individ._prob = updated_individ_fitness / cumsum_fitness
+    pairs_count = len(population) * (1 - best_proc)
     if children_num == 2:
-        return yield_matching_pairs(
-            round((len(population) * (1 - best_proc)) // 2), population
-        )
-    else:
-        return yield_matching_pairs(
-            round((len(population) * (1 - best_proc))), population
-        )
+        pairs_count //= 2
+    return yield_matching_pairs(round(pairs_count), population)
 
 
 def selection_rank_based(population, best_proc, children_num):

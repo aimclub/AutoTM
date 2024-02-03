@@ -1,17 +1,16 @@
-import os
 import io
 import logging
+import multiprocessing as mp
+import os
+from collections import Counter
 from datetime import datetime
+from functools import partial
+from multiprocessing import Pool
+from typing import Dict, Any
 from typing import Optional
+
 import numpy as np
 import pandas as pd
-from multiprocessing import Pool
-import multiprocessing as mp
-from functools import partial
-
-from typing import Dict, Any
-
-from collections import Counter
 
 MetricsScores = Dict[str, Any]
 TimeMeasurements = Dict[str, float]
@@ -105,13 +104,14 @@ def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type="df", **k
 
 
 def make_log_config_dict(
-    filename: str = "/var/log/tm-alg.txt", uid: Optional[str] = None
+        filename: str = "/var/log/tm-alg.txt", uid: Optional[str] = None,
+        quiet: bool = False
 ) -> Dict[str, Any]:
     if filename is not None:
         if uid:
             dirname = os.path.dirname(filename)
             file, ext = os.path.splitext(os.path.basename(filename))
-            log_filename = os.path.join(dirname, f"{file}-{uid}.{ext}")
+            log_filename = os.path.join(dirname, f"{file}-{uid}{ext}")
         else:
             log_filename = filename
 
@@ -123,7 +123,9 @@ def make_log_config_dict(
                 "filename": log_filename,
             }
         }
-        handlers = ["default", "logfile"]
+        handlers = ["logfile"]
+        if not quiet:
+            handlers.append("default")
     else:
         logfile_handler = dict()
         handlers = ["default"]
