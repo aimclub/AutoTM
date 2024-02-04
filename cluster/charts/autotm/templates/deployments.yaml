@@ -88,6 +88,7 @@ spec:
         image: {{ .Values.mlflow_image }}
         imagePullPolicy: {{ .Values.worker_image_pull_policy }}
         args: [
+            "--port", "5000",
             "--backend-store-uri", {{ quote (include "autotm.mlflow_db_url" .) }},
             "--default-artifact-root", "/var/lib/mlruns",
             "--host", "0.0.0.0"
