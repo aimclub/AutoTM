@@ -107,7 +107,8 @@ def run_single_experiment(base_dir, dataset_name, use_pipeline: bool):
         use_nelder_mead_in_selector=use_nelder_mead_in_selector,
         train_option=train_option,
         quiet_log=True,
-        statistics_collector=collector
+        statistics_collector=collector,
+        surrogate_name="random-forest-regressor",
     )
     collector.finalize()
     return collector

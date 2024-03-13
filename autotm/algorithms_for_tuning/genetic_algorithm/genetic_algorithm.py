@@ -31,9 +31,6 @@ def get_best_individual(
         log_file: str = "/var/log/tm-alg.log",
         tag: str = "v0",
         surrogate_name: str = None,  # fix
-        gpr_kernel: str = None,
-        gpr_alpha: float = None,
-        gpr_normalize_y: float = None,
         use_pipeline: bool = False,
         use_nelder_mead_in_mutation: bool = False,
         use_nelder_mead_in_crossover: bool = False,
@@ -41,6 +38,7 @@ def get_best_individual(
         train_option: str = "offline",
         quiet_log: bool = False,
         statistics_collector: Optional[StatisticsCollector] = None,
+        **kwargs
 ):
     """
 
@@ -111,15 +109,13 @@ def get_best_individual(
         topic_count=topic_count,
         tag=tag,
         surrogate_name=surrogate_name,
-        gpr_kernel=gpr_kernel,
-        gpr_alpha=gpr_alpha,
-        normalize_y=gpr_normalize_y,
         use_pipeline=use_pipeline,
         use_nelder_mead_in_mutation=use_nelder_mead_in_mutation,
         use_nelder_mead_in_crossover=use_nelder_mead_in_crossover,
         use_nelder_mead_in_selector=use_nelder_mead_in_selector,
         train_option=train_option,
         statistics_collector=statistics_collector,
+        **kwargs
     )
     best_individual = g.run(verbose=True)
     logger.info(f"Best individual fitness_value: {best_individual.fitness_value * (-1)}")
@@ -144,9 +140,6 @@ def run_algorithm(
         log_file: str = "/var/log/tm-alg.log",
         tag: str = "v0",
         surrogate_name: str = None,  # fix
-        gpr_kernel: str = None,
-        gpr_alpha: float = None,
-        gpr_normalize_y: float = None,
         use_nelder_mead_in_mutation: bool = False,
         use_nelder_mead_in_crossover: bool = False,
         use_nelder_mead_in_selector: bool = False,

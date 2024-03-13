@@ -106,6 +106,9 @@ class FixedListParams(BaseModel, AbstractParams):
                 params[ix] = META_PROBABILITY_DISTRIBUTION.create_value()
         return FixedListParams(params=params)
 
+    def to_vector(self) -> List[float]:
+        return self.params
+
 
 # ext_mutation_prob, ext_elem_mutation_prob, ext_mutation_selector
 BASIC_TOPICS_PARAM = Param(name="basic_topics_count", distribution=IntRangeDistribution(low=0, high=5))
@@ -243,6 +246,21 @@ class PipelineParams(BaseModel, AbstractParams):
         pipeline = mutate_pipeline(pipeline, STAGE_TYPES, stage_mutation_probability)
         return PipelineParams(pipeline=pipeline)
 
+    def to_vector(self) -> List[float]:
+        pipeline = self.pipeline
+        max_stages_of_type = 10
+        result = []
+        for type_index, stage_type in enumerate(STAGE_TYPES):
+            stages = iterations_of_type(pipeline.stages, stage_type.name)
+            for i in range(max_stages_of_type):
+                if i < len(stages):
+                    result += stages[i].values
+                else:
+                    result += [0.] * len(stage_type.params)
+        result.append(self.basic_topics)
+        result.append(len(pipeline.stages))
+        return result
+
 
 def create_individual(base_model: bool, use_pipeline: bool) -> AbstractParams:
     while True:
@@ -262,3 +280,7 @@ def create_individual(base_model: bool, use_pipeline: bool) -> AbstractParams:
             params = FixedListParams(params=values)
         if params.validate_params():
             return params
+
+
+def iterations_of_type(stages, stage_type):
+    return [stage for stage in stages if stage.stage_type.name == stage_type]

@@ -195,7 +195,7 @@ class GA:
         population.sort(key=operator.attrgetter("fitness_value"), reverse=True)
 
     def _calculate_uncertain_res(self, generation, iteration_num: int, proc=0.3):
-        X = np.array([individ.dto.params for individ in generation])
+        X = np.array([individ.dto.params.to_vector() for individ in generation])
         certanty = get_prediction_uncertanty(
             self.surrogate.surrogate, X, self.surrogate.name
         )
@@ -206,34 +206,26 @@ class GA:
             list(t) for t in zip(*sorted(zip(certanty, X.tolist()), reverse=True))
         )  # check
         calculated = []
-        for params in X[:recalculate_num]:
-            dto = IndividualDTO(
-                id=str(uuid.uuid4()),
-                data_path=self.data_path,
-                params=[float(i) for i in params],
-                dataset=self.dataset,
-                exp_id=self.exp_id,
-                alg_id=ALG_ID,
-                iteration_id=iteration_num,
-                topic_count=self.topic_count,
-                tag=self.tag,
-                train_option=self.train_option,
-            )
-            calculated.append(make_individual(dto=dto))
+        for individual in generation[:recalculate_num]:
+            # copy
+            individual_json = individual.dto.model_dump_json()
+            individual = make_individual(dto=IndividualDTO.model_validate_json(individual_json))
+            individual.dto.fitness_value = None
+            calculated.append(individual)
 
         calculated = self.estimate_fitness(calculated)
 
-        self.all_params += [individ.dto.params for individ in calculated]
+        self.all_params += [individ.dto.params.to_vector() for individ in calculated]
         self.all_fitness += [
             individ.dto.fitness_value["avg_coherence_score"] for individ in calculated
         ]
 
         pred_y = self.surrogate.predict(X[recalculate_num:])
-        for ix, params in enumerate(X[recalculate_num:]):
+        for ix, individual in enumerate(generation[recalculate_num:]):
             dto = IndividualDTO(
                 id=str(uuid.uuid4()),
                 data_path=self.data_path,
-                params=params,
+                params=individual.dto.params,
                 dataset=self.dataset,
                 fitness_value=set_surrogate_fitness(pred_y[ix]),
                 exp_id=self.exp_id,
@@ -246,11 +238,8 @@ class GA:
         return calculated
 
     def save_params(self, population):
-        if any(not isinstance(ind.dto.params, FixedListParams) for ind in population):
-            # TODO embeddings
-            return
         params_and_f = [
-            (copy.deepcopy(individ.params.params), individ.fitness_value)
+            (copy.deepcopy(individ.params.to_vector()), individ.fitness_value)
             for individ in population
             if individ.fitness_value not in self.all_fitness
         ]
@@ -275,7 +264,7 @@ class GA:
         self.all_fitness += fs
 
     def surrogate_calculation(self, population):
-        X_val = np.array([copy.deepcopy(individ.params) for individ in population])
+        X_val = np.array([copy.deepcopy(individ.params.to_vector()) for individ in population])
         y_pred = self.surrogate.predict(X_val)
         if not SPEEDUP:
             y_val = np.array([individ.fitness_value for individ in population])

@@ -34,3 +34,7 @@ class AbstractParams(ABC):
     def mutate(self, **kwargs) -> "AbstractParams":
         ...
 
+    @abstractmethod
+    def to_vector(self) -> List[float]:
+        ...
+
