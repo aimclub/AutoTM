@@ -5,6 +5,7 @@ import subprocess
 import sys
 import time
 import warnings
+from typing import Optional
 
 import numpy as np
 from autotm.algorithms_for_tuning.genetic_algorithm.statistics_collector import StatisticsCollector
@@ -56,12 +57,13 @@ def transform_to_invocations(iterations, fitness):
 
 
 class FileStatisticsCollector(StatisticsCollector):
-    def __init__(self, base_dir, dataset: str, use_pipeline: bool):
+    def __init__(self, base_dir, dataset: str, use_pipeline: bool, surrogate: Optional[str]):
         self.dataset = dataset
         self.use_pipeline = use_pipeline
         date = datetime.datetime.now().strftime('%y%m%d-%H%M%S')
         mode = "pipeline" if use_pipeline else "fixed"
-        experiment_name = f"{date}_{dataset}_{mode}"
+        s = "surrogate_" if surrogate is not None else ""
+        experiment_name = f"{date}_{s}{dataset}_{mode}"
         self.logs_path = os.path.join(base_dir, f"logs/{experiment_name}_autotm.log")
         os.makedirs(os.path.join(base_dir, "logs"), exist_ok=True)
         self.progress_path = os.path.join(base_dir, f"statistics/{experiment_name}_progress.txt")
@@ -90,8 +92,8 @@ class FileStatisticsCollector(StatisticsCollector):
                 print(f"{self.dataset},{self.use_pipeline},{i},{f}", file=file)
 
 
-def run_single_experiment(base_dir, dataset_name, use_pipeline: bool):
-    collector = FileStatisticsCollector(base_dir, dataset_name, use_pipeline)
+def run_single_experiment(base_dir, dataset_name, use_pipeline: bool, surrogate: Optional[str]):
+    collector = FileStatisticsCollector(base_dir, dataset_name, use_pipeline, surrogate)
     get_best_individual(
         data_path=f"{SAVE_PATH}/{dataset_name}",
         dataset=dataset_name,
@@ -108,7 +110,7 @@ def run_single_experiment(base_dir, dataset_name, use_pipeline: bool):
         train_option=train_option,
         quiet_log=True,
         statistics_collector=collector,
-        surrogate_name="random-forest-regressor",
+        surrogate_name=surrogate,
     )
     collector.finalize()
     return collector
@@ -152,11 +154,13 @@ def main():
     git_hash = get_git_hash()
     print(f'Git hash: {git_hash}')
 
+    surrogate = None # "random-forest-regressor"
     for dataset_name in datasets:
         for use_pipeline in [False, True]:
             for _ in range(10):
                 start_time = time.time()
-                collector = suppress_stdout(lambda: run_single_experiment(os.path.curdir, dataset_name, use_pipeline))
+                collector = suppress_stdout(lambda: run_single_experiment(os.path.curdir, dataset_name, use_pipeline,
+                                                                          surrogate))
                 elapsed_time = time.time() - start_time
                 minutes, seconds = divmod(int(elapsed_time), 60)
                 best_fitness = collector.best_fitness
