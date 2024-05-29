@@ -10,23 +10,9 @@ import uuid
 from typing import Optional, Tuple, Callable
 
 import numpy as np
-from sklearn.ensemble import BaggingRegressor
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import (
-    RBF,
-    Matern,
-    WhiteKernel,
-    ConstantKernel,
-    ExpSineSquared,
-    RationalQuadratic,
-)
-from sklearn.metrics import mean_squared_error
-from sklearn.neural_network import MLPRegressor
-from sklearn.svm import SVR
-from sklearn.tree import DecisionTreeRegressor
 
 from autotm.abstract_params import AbstractParams
+from autotm.algorithms_for_tuning.genetic_algorithm.statistics_collector import StatisticsCollector
 from autotm.algorithms_for_tuning.genetic_algorithm.selection import selection
 from autotm.algorithms_for_tuning.genetic_algorithm.surrogate import set_surrogate_fitness, Surrogate, \
     get_prediction_uncertanty
@@ -94,6 +80,7 @@ class GA:
             use_nelder_mead_in_crossover: bool = False,
             use_nelder_mead_in_selector: bool = False,
             train_option: str = "offline",
+            statistics_collector: Optional[StatisticsCollector] = None,
             **kwargs,
     ):
         """
@@ -150,6 +137,7 @@ class GA:
         self.topic_count = topic_count
         self.tag = tag
         self.use_pipeline = use_pipeline
+        self.statistics_collector = statistics_collector
         # hyperparams
         self.use_nelder_mead = use_nelder_mead
         self.use_nelder_mead_in_mutation = use_nelder_mead_in_mutation
@@ -162,6 +150,20 @@ class GA:
         self.crossover_changes_dict = (
             {}
         )  # generation, parent_1_params, parent_2_params, ...
+
+    def estimate_fitness(self, population):
+        evaluated = [individual for individual in population if individual.dto.fitness_value is not None]
+        not_evaluated = [individual for individual in population if individual.dto.fitness_value is None]
+        evaluations_limit = max(0, self.num_fitness_evaluations - self.evaluations_counter) \
+            if self.num_fitness_evaluations else len(not_evaluated)
+        if len(not_evaluated) > evaluations_limit:
+            not_evaluated = not_evaluated[:evaluations_limit]
+        self.evaluations_counter += len(not_evaluated)
+        new_evaluated = estimate_fitness(not_evaluated)
+        if self.statistics_collector:
+            for individual in new_evaluated:
+                self.statistics_collector.log_individual(individual)
+        return evaluated + new_evaluated
 
     def init_population(self):
         list_of_individuals = []
@@ -180,7 +182,7 @@ class GA:
             )
             # TODO: improve heuristic on search space
             list_of_individuals.append(make_individual(dto=dto))
-        population_with_fitness = estimate_fitness(list_of_individuals)
+        population_with_fitness = self.estimate_fitness(list_of_individuals)
 
         self.save_params(population_with_fitness)
         if self.surrogate is not None and self.calc_scheme == "type2":
@@ -193,7 +195,7 @@ class GA:
         population.sort(key=operator.attrgetter("fitness_value"), reverse=True)
 
     def _calculate_uncertain_res(self, generation, iteration_num: int, proc=0.3):
-        X = np.array([individ.dto.params for individ in generation])
+        X = np.array([individ.dto.params.to_vector() for individ in generation])
         certanty = get_prediction_uncertanty(
             self.surrogate.surrogate, X, self.surrogate.name
         )
@@ -204,34 +206,26 @@ class GA:
             list(t) for t in zip(*sorted(zip(certanty, X.tolist()), reverse=True))
         )  # check
         calculated = []
-        for params in X[:recalculate_num]:
-            dto = IndividualDTO(
-                id=str(uuid.uuid4()),
-                data_path=self.data_path,
-                params=[float(i) for i in params],
-                dataset=self.dataset,
-                exp_id=self.exp_id,
-                alg_id=ALG_ID,
-                iteration_id=iteration_num,
-                topic_count=self.topic_count,
-                tag=self.tag,
-                train_option=self.train_option,
-            )
-            calculated.append(make_individual(dto=dto))
+        for individual in generation[:recalculate_num]:
+            # copy
+            individual_json = individual.dto.model_dump_json()
+            individual = make_individual(dto=IndividualDTO.model_validate_json(individual_json))
+            individual.dto.fitness_value = None
+            calculated.append(individual)
 
-        calculated = estimate_fitness(calculated)
+        calculated = self.estimate_fitness(calculated)
 
-        self.all_params += [individ.dto.params for individ in calculated]
+        self.all_params += [individ.dto.params.to_vector() for individ in calculated]
         self.all_fitness += [
             individ.dto.fitness_value["avg_coherence_score"] for individ in calculated
         ]
 
         pred_y = self.surrogate.predict(X[recalculate_num:])
-        for ix, params in enumerate(X[recalculate_num:]):
+        for ix, individual in enumerate(generation[recalculate_num:]):
             dto = IndividualDTO(
                 id=str(uuid.uuid4()),
                 data_path=self.data_path,
-                params=params,
+                params=individual.dto.params,
                 dataset=self.dataset,
                 fitness_value=set_surrogate_fitness(pred_y[ix]),
                 exp_id=self.exp_id,
@@ -244,11 +238,8 @@ class GA:
         return calculated
 
     def save_params(self, population):
-        if any(not isinstance(ind.dto.params, FixedListParams) for ind in population):
-            # TODO embeddings
-            return
         params_and_f = [
-            (copy.deepcopy(individ.params.params), individ.fitness_value)
+            (copy.deepcopy(individ.params.to_vector()), individ.fitness_value)
             for individ in population
             if individ.fitness_value not in self.all_fitness
         ]
@@ -273,7 +264,7 @@ class GA:
         self.all_fitness += fs
 
     def surrogate_calculation(self, population):
-        X_val = np.array([copy.deepcopy(individ.params) for individ in population])
+        X_val = np.array([copy.deepcopy(individ.params.to_vector()) for individ in population])
         y_pred = self.surrogate.predict(X_val)
         if not SPEEDUP:
             y_val = np.array([individ.fitness_value for individ in population])
@@ -317,8 +308,6 @@ class GA:
         for i, j in pairs_generator:
             if i is None:
                 break
-            assert isinstance(i.params, AbstractParams)
-            assert isinstance(j.params, AbstractParams)
 
             children = run_with_retry(
                 action=lambda: i.params.crossover(j.params, crossover_type=self.crossover_type,
@@ -326,7 +315,6 @@ class GA:
                 condition=lambda candidates: all(child.validate_params() for child in candidates),
                 default_value=[]
             )
-            assert isinstance(children, list)
 
             children_dto = [IndividualDTO(
                 id=str(uuid.uuid4()),
@@ -342,7 +330,6 @@ class GA:
             ) for child in children]
 
             individuals = [make_individual(child) for child in children_dto]
-            self.evaluations_counter += len(individuals)
             new_generation += individuals
 
             crossover_changes["parent_1_params"].append(i.params)
@@ -351,24 +338,25 @@ class GA:
             crossover_changes["parent_2_fitness"].append(j.fitness_value)
             crossover_changes["child_id"].append(len(new_generation) - 1)
 
-        logger.info(f"CURRENT COUNTER: {self.evaluations_counter}")
-
         if len(new_generation) > 0:
-            logger.info(f"size of the new generation is {len(new_generation)}")
             new_generation = self.run_fitness(new_generation, surrogate_iteration, iteration_num)
+            logger.info(f"size of the new generation is {len(new_generation)}")
 
             for i in range(len(crossover_changes["parent_1_params"])):
+                child_index = crossover_changes["child_id"][i]
+                if child_index >= len(new_generation):
+                    continue
                 self.metric_collector.save_crossover(
                     generation=iteration_num,
                     parent_1=crossover_changes["parent_1_params"][i],
                     parent_2=crossover_changes["parent_2_params"][i],
                     parent_1_fitness=crossover_changes["parent_1_fitness"][i],
                     parent_2_fitness=crossover_changes["parent_2_fitness"][i],
-                    child_1=new_generation[crossover_changes["child_id"][i]].params,
-                    child_1_fitness=new_generation[crossover_changes["child_id"][i]].fitness_value,
+                    child_1=new_generation[child_index].params,
+                    child_1_fitness=new_generation[child_index].fitness_value,
                 )
 
-        return new_generation, crossover_changes
+        return new_generation
 
     def apply_nelder_mead(self, starting_points_set, num_gen, num_iterations=2):
         nelder_opt = NelderMeadOptimization(
@@ -404,7 +392,7 @@ class GA:
             new_population.append(make_individual(dto=solution_dto))
         return new_population
 
-    def run(self, verbose=False, visualize_results=False) -> Tuple[Individual, Tuple]:
+    def run(self, verbose=False, visualize_results=False) -> Individual:
         self.evaluations_counter = 0
         ftime = str(int(time.time()))
 
@@ -421,11 +409,7 @@ class GA:
             f"crossover prob {self.elem_cross_prob}"
         )
 
-        # population initialization
         population = self.init_population()
-
-        self.evaluations_counter = self.num_individuals
-
         logger.info("POPULATION IS CREATED")
 
         x, y = [], []
@@ -435,8 +419,6 @@ class GA:
         early_stopping_counter = 0
 
         run_id = str(uuid.uuid4())
-        used_fitness = []
-        best_fitness = []
         for ii in range(self.num_iterations):
             iteration_start_time = time.time()
 
@@ -446,8 +428,8 @@ class GA:
                 surrogate_iteration = ii % 2 != 0
 
             self._sort_population(population)
-            used_fitness.append(self.evaluations_counter)
-            best_fitness.append(population[0].fitness_value)
+            if self.statistics_collector is not None:
+                self.statistics_collector.log_iteration(self.evaluations_counter, population[0].fitness_value)
             pairs_generator = self.selection(
                 population=population,
                 best_proc=self.best_proc,
@@ -457,7 +439,7 @@ class GA:
             logger.info("PAIRS ARE CREATED")
 
             # Crossover
-            new_generation, crossover_changes = self.run_crossover(
+            new_generation = self.run_crossover(
                 pairs_generator, surrogate_iteration, iteration_num=ii
             )
 
@@ -469,25 +451,6 @@ class GA:
             if self.use_nelder_mead_in_crossover:
                 # TODO: implement Nelder-Mead here
                 pass
-
-            if self.num_fitness_evaluations and self.evaluations_counter >= self.num_fitness_evaluations:
-                bparams = "".join([str(i) for i in population[0].params])
-                self.metric_collector.save_fitness(
-                    generation=ii,
-                    params=[i.params for i in population],
-                    fitness=[i.fitness_value for i in population],
-                )
-                logger.info(
-                    f"TERMINATION IS TRIGGERED: EVAL NUM."
-                    f"DATASET {self.dataset}."
-                    f"TOPICS NUM {self.topic_count}."
-                    f"RUN ID {run_id}."
-                    f"THE BEST FITNESS {population[0].fitness_value}."
-                    f"THE BEST PARAMS {bparams}."
-                    f"ITERATION TIME {time.time() - iteration_start_time}."
-                )
-                # return population[0].fitness_value
-                break
 
             del pairs_generator
             gc.collect()
@@ -507,17 +470,11 @@ class GA:
 
             try:
                 del new_generation
-            except:
-                pass
-
+            except Exception as e:
+                logger.warning(e)
             gc.collect()
 
             self._sort_population(population)
-
-            try:
-                del population[self.num_individuals]
-            except:
-                pass
 
             self.run_mutation(population)
 
@@ -642,21 +599,19 @@ class GA:
         else:
             self.metric_collector.save_trace()
 
-        used_fitness.append(self.evaluations_counter)
-        best_fitness.append(population[0].fitness_value)
+        if self.statistics_collector is not None:
+            self.statistics_collector.log_iteration(self.evaluations_counter, population[0].fitness_value)
         logger.info(f"Y: {y}")
         best_individual = population[0]
         ind = log_best_solution(best_individual, alg_args=" ".join(sys.argv))
-        logger.info(
-            f"Logged the best solution. Obtained fitness is {ind.fitness_value}"
-        )
+        logger.info(f"Logged the best solution. Obtained fitness is {ind.fitness_value}")
 
-        return ind, (used_fitness, best_fitness)
+        return ind
 
     def run_fitness(self, population, surrogate_iteration, ii):
         fitness_calc_time_start = time.time()
         if not SPEEDUP or not self.surrogate or not surrogate_iteration:
-            population = estimate_fitness(population)
+            population = self.estimate_fitness(population)
             self.save_params(population)
         if self.surrogate:
             if self.calc_scheme == "type1" and surrogate_iteration:
@@ -691,7 +646,6 @@ class GA:
                     train_option=self.train_option,
                 )
                 population[i] = make_individual(dto=dto)
-                self.evaluations_counter += 1
 
 
 # multistage bag of regularizers approach

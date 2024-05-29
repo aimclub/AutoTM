@@ -19,7 +19,7 @@ class AbstractParams(ABC):
         ...
 
     @abstractmethod
-    def run_train(self, model: "TopicModel", option: str):
+    def run_train(self, model: "TopicModel"):
         ...
 
     @abstractmethod
@@ -32,5 +32,9 @@ class AbstractParams(ABC):
 
     @abstractmethod
     def mutate(self, **kwargs) -> "AbstractParams":
+        ...
+
+    @abstractmethod
+    def to_vector(self) -> List[float]:
         ...
 

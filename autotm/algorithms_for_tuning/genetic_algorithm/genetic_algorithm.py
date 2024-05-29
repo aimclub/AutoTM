@@ -2,8 +2,9 @@
 import logging
 import sys
 import uuid
-from typing import Union
+from typing import Union, Optional
 
+from autotm.algorithms_for_tuning.genetic_algorithm.statistics_collector import StatisticsCollector
 from autotm.algorithms_for_tuning.genetic_algorithm.ga import GA
 from autotm.fitness.tm import fit_tm, TopicModel
 from autotm.utils import make_log_config_dict
@@ -39,6 +40,8 @@ def get_best_individual(
         use_nelder_mead_in_selector: bool = False,
         train_option: str = "offline",
         quiet_log: bool = False,
+        statistics_collector: Optional[StatisticsCollector] = None,
+        **kwargs
 ):
     """
 
@@ -117,11 +120,13 @@ def get_best_individual(
         use_nelder_mead_in_crossover=use_nelder_mead_in_crossover,
         use_nelder_mead_in_selector=use_nelder_mead_in_selector,
         train_option=train_option,
+        statistics_collector=statistics_collector,
+        **kwargs
     )
-    best_individual, stats = g.run(verbose=True)
+    best_individual = g.run(verbose=True)
     logger.info(f"Best individual fitness_value: {best_individual.fitness_value * (-1)}")
 
-    return best_individual, stats
+    return best_individual
 
 
 def run_algorithm(
@@ -151,7 +156,7 @@ def run_algorithm(
         train_option: str = "offline",
         quiet_log: bool = False,
 ) -> TopicModel:
-    best_individual, _ = get_best_individual(dataset, data_path, exp_id, topic_count, num_individuals, num_iterations,
+    best_individual = get_best_individual(dataset, data_path, exp_id, topic_count, num_individuals, num_iterations,
                                           num_fitness_evaluations, mutation_type, crossover_type, selection_type,
                                           elem_cross_prob, cross_alpha, best_proc, log_file, tag, surrogate_name,
                                           gpr_kernel, gpr_alpha, gpr_normalize_y, use_pipeline,

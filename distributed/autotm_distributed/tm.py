@@ -338,7 +338,6 @@ def fit_tm_of_individual(dataset: str,
             raise ex
         except Exception as e:
             logger.error("Fitness calculation problem")
-            logger.exception(e)
             fitness = {AVG_COHERENCE_SCORE: 0.0}
             time_metrics = {
                 "train": -1,
