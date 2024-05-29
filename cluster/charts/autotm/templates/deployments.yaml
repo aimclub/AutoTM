@@ -1,0 +1,455 @@
+{{ if .Values.jupyter_enabled }}
+##################
+#### Jupyter
+##################
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "autotm.prefix" . }}jupyter
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "autotm.prefix" . }}jupyter
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        {{- range $key, $val := .Values.required_labels }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+        app: {{ include "autotm.prefix" . }}jupyter
+    spec:
+      containers:
+      - name: jupyter
+        image: {{ .Values.jupyter_image }}
+        imagePullPolicy: {{ .Values.worker_image_pull_policy }}
+        ports:
+        - containerPort: 8888
+        resources:
+          requests:
+            memory: {{ quote .Values.jupyter_mem_limits }}
+            cpu: {{ quote .Values.jupyter_cpu_limits }}
+          limits:
+            memory: {{ quote .Values.jupyter_mem_limits }}
+            cpu: {{ quote .Values.jupyter_cpu_limits }}
+        env:
+          - name: CELERY_BROKER_URL
+            value: {{ include "autotm.celery_broker_url" . }}
+          - name: CELERY_RESULT_BACKEND
+            value: {{ include "autotm.celery_result_backend" . }}
+          - name: AUTOTM_COMPONENT
+            value: "head"
+          - name: AUTOTM_EXEC_MODE
+            value: "cluster"
+          - name: NUM_PROCESSORS
+            value: {{ quote .Values.jupyter_cpu_limits }}
+{{ end }}
+##################
+#### MLFlow
+##################
+{{ if .Values.mlflow_enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "autotm.prefix" . }}mlflow
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "autotm.prefix" . }}mlflow
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        {{- range $key, $val := .Values.required_labels }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+        app: {{ include "autotm.prefix" . }}mlflow
+    spec:
+      volumes:
+      - name: mlflow-vol
+        persistentVolumeClaim:
+          claimName: {{ include "autotm.prefix" . }}mlflow-artifact-store-pvc
+      containers:
+      - name: mlflow
+        image: {{ .Values.mlflow_image }}
+        imagePullPolicy: {{ .Values.worker_image_pull_policy }}
+        args: [
+            "--port", "5000",
+            "--backend-store-uri", {{ quote (include "autotm.mlflow_db_url" .) }},
+            "--default-artifact-root", "/var/lib/mlruns",
+            "--host", "0.0.0.0"
+        ]
+        volumeMounts:
+          - mountPath: "/var/lib/mlruns"
+            name: mlflow-vol
+        ports:
+        - containerPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "autotm.prefix" . }}mlflow-db
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "autotm.prefix" . }}mlflow-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        {{- range $key, $val := .Values.required_labels }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+        app: {{ include "autotm.prefix" . }}mlflow-db
+    spec:
+      volumes:
+        - name: mlflow-db-vol
+          persistentVolumeClaim:
+            claimName: {{ include "autotm.prefix" . }}mlflow-db-pvc
+        - name: mysql-cnf
+          configMap:
+            name: {{ include "autotm.prefix" . }}mlflow-mysql-cnf
+            items:
+              - key: my.cnf
+                path: my.cnf
+      containers:
+      - name: mlflow-db
+        image: {{ .Values.mysql_image }}
+        imagePullPolicy: {{ .Values.pull_policy }}
+        env:
+          - name: MYSQL_DATABASE
+            value: {{ .Values.mlflow_mysql_database }}
+          - name: MYSQL_USER
+            value: {{ .Values.mlflow_mysql_user }}
+          - name: MYSQL_PASSWORD
+            value: {{ .Values.mlflow_mysql_password }}
+          - name: MYSQL_ROOT_PASSWORD
+            value: {{ .Values.mlflow_mysql_root_password }}
+        volumeMounts:
+          - mountPath: "/var/lib/mysql"
+            name: mlflow-db-vol
+          - mountPath: /etc/mysql/my.cnf
+            name: mysql-cnf
+            subPath: my.cnf
+        ports:
+        - containerPort: 3306
+{{ end }}
+{{ if .Values.mongo_enabled }}
+###################
+##### Mongo
+###################
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        {{- range $key, $val := .Values.required_labels }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+        app: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
+    spec:
+      tolerations:
+        - key: "node.kubernetes.io/disk-pressure"
+          operator: "Exists"
+          effect: "NoSchedule"
+      volumes:
+        - name: mongo-vol
+          persistentVolumeClaim:
+            claimName: {{ include "autotm.prefix" . }}mongo-tm-experiments-pvc
+      containers:
+      - name: mongo
+        image: {{ .Values.mongo_image }}
+        imagePullPolicy: {{ .Values.pull_policy }}
+        args: [
+            "--dbpath", "/var/lib/mongodb",
+            "--bind_ip_all"
+        ]
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: {{ .Values.mongo_user }}
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            value: {{ .Values.mongo_password }}
+        volumeMounts:
+          - mountPath: "/var/lib/mongodb"
+            name: mongo-vol
+        ports:
+        - containerPort: 27017
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "autotm.prefix" . }}mongo-express-tm-experiments
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "autotm.prefix" . }}mongo-express-tm-experiments
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        {{- range $key, $val := .Values.required_labels }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+        app: {{ include "autotm.prefix" . }}mongo-express-tm-experiments
+    spec:
+#      volumes:
+#        - name: wait-for-vol
+#          configMap:
+#            name: wait-for-script
+#            defaultMode: 0777
+      containers:
+      - name: mongo-express
+        image: {{ .Values.mongoexpress_image }}
+        imagePullPolicy: {{ .Values.pull_policy }}
+#        command: [ "/bin/sh" ]
+#        args: [ "/wait-for.sh", "$ME_CONFIG_MONGODB_SERVER:$ME_CONFIG_MONGODB_PORT", "--", "tini", "--", "/docker-entrypoint.sh" ]
+        env:
+          - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+            value: {{ .Values.mongo_user }}
+          - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+            value: {{ .Values.mongo_password }}
+          - name: ME_CONFIG_MONGODB_SERVER
+            value: {{ include "autotm.prefix" . }}mongo-tm-experiments-db
+          - name: ME_CONFIG_MONGODB_PORT
+            value: "27017"
+        ports:
+        - containerPort: 8081
+#        volumeMounts:
+#          - mountPath: "/wait-for.sh"
+#            name: wait-for-vol
+#            subPath: wait-for.sh
+{{ end }}
+###################
+##### Celery & Fitness Workers
+###################
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "autotm.prefix" . }}rabbitmq
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "autotm.prefix" . }}rabbitmq
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        {{- range $key, $val := .Values.required_labels }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+        app: {{ include "autotm.prefix" . }}rabbitmq
+    spec:
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "autotm.prefix" . }}rabbitmq-config
+      containers:
+      - name: rabbitmq
+        image: {{ .Values.rabbitmq_image }}
+        imagePullPolicy: {{ .Values.pull_policy }}
+        ports:
+        - containerPort: 5672
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/rabbitmq/conf.d/consumer-settings.conf
+            subPath: consumer-settings.conf
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "autotm.prefix" . }}redis
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "autotm.prefix" . }}redis
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        {{- range $key, $val := .Values.required_labels }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+        app: {{ include "autotm.prefix" . }}redis
+    spec:
+      containers:
+      - name: redis
+        image: {{ .Values.redis_image }}
+        imagePullPolicy: {{ .Values.pull_policy }}
+        resources:
+          requests:
+            cpu: 1
+            memory: 500Mi
+        ports:
+        - containerPort: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "autotm.prefix" . }}celery-flower
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "autotm.prefix" . }}celery-flower
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        {{- range $key, $val := .Values.required_labels }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+        app: {{ include "autotm.prefix" . }}celery-flower
+    spec:
+      containers:
+      - name: flower
+        image: {{ .Values.flower_image }}
+        imagePullPolicy: {{ .Values.worker_image_pull_policy }}
+        ports:
+        - containerPort: 5555
+        env:
+          - name: CELERY_BROKER_URL
+            value: {{ include "autotm.celery_broker_url" . }}
+          - name: CELERY_RESULT_BACKEND
+            value: {{ include "autotm.celery_result_backend" . }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "autotm.prefix" . }}fitness-worker
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+    app: fitness-worker
+spec:
+  replicas: {{ .Values.worker_count }}
+  selector:
+    matchLabels:
+      app: {{ include "autotm.prefix" . }}fitness-worker
+  template:
+    metadata:
+      annotations:
+        "sidecar.istio.io/inject": "false"
+      labels:
+        {{- range $key, $val := .Values.required_labels }}
+        {{ $key }}: {{ $val | quote }}
+        {{- end }}
+        app: {{ include "autotm.prefix" . }}fitness-worker
+    spec:
+      volumes:
+        - name: dataset
+          persistentVolumeClaim:
+            claimName: {{ include "autotm.prefix" . }}datasets
+        - name: config-volume
+          configMap:
+            name: {{ include "autotm.prefix" . }}worker-config
+        {{- if .Values.mlflow_enabled }}
+        - name: mlflow-vol
+          persistentVolumeClaim:
+            claimName: {{ include "autotm.prefix" . }}mlflow-artifact-store-pvc
+        {{- end }}
+      containers:
+      - name: worker
+        image: {{ .Values.worker_image }}
+        imagePullPolicy: {{ .Values.worker_image_pull_policy }}
+        volumeMounts:
+          - name: dataset
+            mountPath: {{ .Values.worker_datasets_dir_path }}
+          - name: config-volume
+            mountPath: /etc/fitness/datasets-config.yaml
+            subPath: datasets-config.yaml
+          {{- if .Values.mlflow_enabled }}
+          - mountPath: "/var/lib/mlruns"
+            name: mlflow-vol
+          {{- end }}
+        env:
+          - name: CELERY_BROKER_URL
+            value: {{ include "autotm.celery_broker_url" . }}
+          - name: CELERY_RESULT_BACKEND
+            value: {{ include "autotm.celery_result_backend" . }}
+          - name: NUM_PROCESSORS
+            value: {{ quote .Values.worker_cpu }}
+          - name: AUTOTM_EXEC_MODE
+            value: cluster
+          - name: AUTOTM_COMPONENT
+            value: worker
+          - name: DATASETS_CONFIG
+            value: /etc/fitness/datasets-config.yaml
+          {{- if .Values.mlflow_enabled }}
+          - name: MLFLOW_TRACKING_URI
+            value: {{ include "autotm.mlflow_db_url" . }}
+          {{- end }}
+          # see: https://github.com/mongodb/mongo-python-driver/blob/c8d920a46bfb7b054326b3e983943bfc794cb676/pymongo/mongo_client.py
+          {{- if .Values.mongo_enabled }}
+          - name: MONGO_URI
+            value: {{ include "autotm.mongo_url" . }}
+          - name: MONGO_COLLECTION
+            value: {{ .Values.worker_mongo_collection }}
+          {{- end }}
+        resources:
+          requests:
+            memory: {{ quote .Values.worker_mem }}
+            cpu: {{ quote .Values.worker_cpu }}
+          limits:
+            memory: {{ quote .Values.worker_mem }}
+            cpu: {{ quote .Values.worker_cpu }}

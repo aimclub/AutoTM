@@ -31,6 +31,9 @@ def get_best_individual(
         log_file: str = "/var/log/tm-alg.log",
         tag: str = "v0",
         surrogate_name: str = None,  # fix
+        gpr_kernel: str = None,
+        gpr_alpha: float = None,
+        gpr_normalize_y: float = None,
         use_pipeline: bool = False,
         use_nelder_mead_in_mutation: bool = False,
         use_nelder_mead_in_crossover: bool = False,
@@ -109,6 +112,9 @@ def get_best_individual(
         topic_count=topic_count,
         tag=tag,
         surrogate_name=surrogate_name,
+        gpr_kernel=gpr_kernel,
+        gpr_alpha=gpr_alpha,
+        normalize_y=gpr_normalize_y,
         use_pipeline=use_pipeline,
         use_nelder_mead_in_mutation=use_nelder_mead_in_mutation,
         use_nelder_mead_in_crossover=use_nelder_mead_in_crossover,
@@ -140,6 +146,10 @@ def run_algorithm(
         log_file: str = "/var/log/tm-alg.log",
         tag: str = "v0",
         surrogate_name: str = None,  # fix
+        gpr_kernel: str = None,
+        gpr_alpha: float = None,
+        gpr_normalize_y: float = None,
+        use_pipeline: bool = False,
         use_nelder_mead_in_mutation: bool = False,
         use_nelder_mead_in_crossover: bool = False,
         use_nelder_mead_in_selector: bool = False,
@@ -149,9 +159,9 @@ def run_algorithm(
     best_individual = get_best_individual(dataset, data_path, exp_id, topic_count, num_individuals, num_iterations,
                                           num_fitness_evaluations, mutation_type, crossover_type, selection_type,
                                           elem_cross_prob, cross_alpha, best_proc, log_file, tag, surrogate_name,
-                                          gpr_kernel, gpr_alpha, gpr_normalize_y, False, use_nelder_mead_in_mutation,
-                                          use_nelder_mead_in_crossover, use_nelder_mead_in_selector, train_option,
-                                          quiet_log)
+                                          gpr_kernel, gpr_alpha, gpr_normalize_y, use_pipeline,
+                                          use_nelder_mead_in_mutation, use_nelder_mead_in_crossover,
+                                          use_nelder_mead_in_selector, train_option, quiet_log)
 
     best_topic_model = fit_tm(
         preproc_data_path=data_path,

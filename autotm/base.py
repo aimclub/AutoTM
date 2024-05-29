@@ -12,6 +12,8 @@ from sklearn.base import BaseEstimator
 
 import warnings
 
+from autotm.preprocessing import PREPOCESSED_DATASET_FILENAME
+
 # TODO: Suppressing of DeprecationWarnings that are raise if we are running with __main__, need to research further
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
@@ -204,7 +206,7 @@ class AutoTM(BaseEstimator):
                     extractor_working_dir,
                     **self.preprocessing_params
                 )
-                preprocessed_dataset = pd.read_csv(os.path.join(extractor_working_dir, "prep_df.csv"))
+                preprocessed_dataset = pd.read_csv(os.path.join(extractor_working_dir, PREPOCESSED_DATASET_FILENAME))
             else:
                 preprocessed_dataset = dataset
             topics_extractor = TopicsExtractor(self._model)
@@ -237,7 +239,7 @@ class AutoTM(BaseEstimator):
         processed_dataset_path = os.path.join(self.working_dir_path, f"{uuid.uuid4()}")
         self.fit(dataset, processed_dataset_path=processed_dataset_path)
 
-        preprocessed_dataset = pd.read_csv(os.path.join(processed_dataset_path, "prep_df.csv"))
+        preprocessed_dataset = pd.read_csv(os.path.join(processed_dataset_path, PREPOCESSED_DATASET_FILENAME))
         return self.predict(preprocessed_dataset)
 
     def save(self, path: str, overwrite: bool = False):

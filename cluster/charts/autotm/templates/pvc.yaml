@@ -1,0 +1,83 @@
+{{ if .Values.pvc_create_enabled }}
+{{ if .Values.mlflow_enabled }}
+##################
+#### MLFlow
+##################
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "autotm.prefix" . }}mlflow-db-pvc
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  storageClassName: {{ .Values.storage_class }}
+  volumeName: {{ include "autotm.find_pv" (list . "pv_mlflow_db") }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 25Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "autotm.prefix" . }}mlflow-artifact-store-pvc
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  storageClassName: {{ .Values.storage_class }}
+  volumeName: {{ include "autotm.find_pv" (list . "pv_mlflow_artifact_store") }}
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 25Gi
+{{ end }}
+{{ if .Values.mongo_enabled }}
+##################
+#### Mongo
+##################
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "autotm.prefix" . }}mongo-tm-experiments-pvc
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  storageClassName: {{ .Values.storage_class }}
+  volumeName: {{ include "autotm.find_pv" (list . "pv_mongo_db") }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+{{ end }}
+###################
+##### Celery & Fitness Workers
+###################
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "autotm.prefix" . }}datasets
+  labels:
+    {{- range $key, $val := .Values.required_labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  storageClassName: {{ .Values.storage_class }}
+  volumeName: {{ include "autotm.find_pv" (list . "pv_dataset_store") }}
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 50Gi
+{{ end }}

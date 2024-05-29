@@ -158,10 +158,11 @@ bigartm.*
 coverage_re/
 tests/integration/mlruns/*
 tests/integration/metrics
-*mlruns/*
-*metrics/*
+**/mlruns/*
+**/metrics/*
 autotm_workdir_*
 requirements.txt
+*.patch
 
 mixtures.csv
 model.artm
@@ -171,7 +172,12 @@ docs/_build
 
 examples/experiments/*.txt
 examples/experiments/*/*.txt
-examples/experiments/*/*.png
 examples/experiments/*.png
+examples/experiments/*/*.png
 examples/experiments/metrics
 examples/experiments/mlruns
+
+rsync-repo.sh
+
+tmp
+
