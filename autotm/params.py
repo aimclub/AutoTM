@@ -83,8 +83,8 @@ class FixedListParams(BaseModel, AbstractParams):
 
         return {name: p_val for name, p_val in zip(param_names, self.params)}
 
-    def run_train(self, model: TopicModel, option: str):
-        self.to_pipeline_params().run_train(model, option)
+    def run_train(self, model: TopicModel):
+        self.to_pipeline_params().run_train(model)
 
     def crossover(self, parent2: "AbstractParams", **kwargs) -> List["AbstractParams"]:
         assert isinstance(parent2, FixedListParams)
@@ -105,6 +105,9 @@ class FixedListParams(BaseModel, AbstractParams):
             if random.random() < elem_mutation_prob:
                 params[ix] = META_PROBABILITY_DISTRIBUTION.create_value()
         return FixedListParams(params=params)
+
+    def to_vector(self) -> List[float]:
+        return self.params
 
 
 # ext_mutation_prob, ext_elem_mutation_prob, ext_mutation_selector
@@ -194,7 +197,7 @@ class PipelineParams(BaseModel, AbstractParams):
 
         return True
 
-    def run_train(self, model: TopicModel, option: str):
+    def run_train(self, model: TopicModel):
         for stage in self.pipeline.stages:
             if stage.stage_type == DECORRELATION_STAGE_TYPE:
                 n, decorr, decorr_2 = stage.values
@@ -202,21 +205,21 @@ class PipelineParams(BaseModel, AbstractParams):
                     name="decorr", topic_names=model.specific, tau=decorr), overwrite=True)
                 model.model.regularizers.add(artm.DecorrelatorPhiRegularizer(
                     name="decorr_2", topic_names=model.back, tau=decorr_2), overwrite=True)
-                model.do_fit(n, option)
+                model.do_fit(n)
             elif stage.stage_type == SMOOTH_STAGE_TYPE:
                 n, phi, theta = stage.values
                 model.model.regularizers.add(artm.SmoothSparseThetaRegularizer(
                     name="SmoothPhi", topic_names=model.back, tau=phi), overwrite=True)
                 model.model.regularizers.add(artm.SmoothSparseThetaRegularizer(
                     name="SmoothTheta", topic_names=model.back, tau=theta), overwrite=True)
-                model.do_fit(n, option)
+                model.do_fit(n)
             elif stage.stage_type == SPARSE_STAGE_TYPE:
                 n, phi, theta = stage.values
                 model.model.regularizers.add(artm.SmoothSparseThetaRegularizer(
                     name="SparsePhi", topic_names=model.specific, tau=phi), overwrite=True)
                 model.model.regularizers.add(artm.SmoothSparseThetaRegularizer(
                     name="SparseTheta", topic_names=model.specific, tau=theta), overwrite=True)
-                model.do_fit(n, option)
+                model.do_fit(n)
             else:
                 raise ValueError(f"Unknown stage type {stage.stage_type.name}")
 
@@ -243,6 +246,21 @@ class PipelineParams(BaseModel, AbstractParams):
         pipeline = mutate_pipeline(pipeline, STAGE_TYPES, stage_mutation_probability)
         return PipelineParams(pipeline=pipeline)
 
+    def to_vector(self) -> List[float]:
+        pipeline = self.pipeline
+        max_stages_of_type = 10
+        result = []
+        for type_index, stage_type in enumerate(STAGE_TYPES):
+            stages = iterations_of_type(pipeline.stages, stage_type.name)
+            for i in range(max_stages_of_type):
+                if i < len(stages):
+                    result += stages[i].values
+                else:
+                    result += [0.] * len(stage_type.params)
+        result.append(self.basic_topics)
+        result.append(len(pipeline.stages))
+        return result
+
 
 def create_individual(base_model: bool, use_pipeline: bool) -> AbstractParams:
     while True:
@@ -262,3 +280,7 @@ def create_individual(base_model: bool, use_pipeline: bool) -> AbstractParams:
             params = FixedListParams(params=values)
         if params.validate_params():
             return params
+
+
+def iterations_of_type(stages, stage_type):
+    return [stage for stage in stages if stage.stage_type.name == stage_type]
