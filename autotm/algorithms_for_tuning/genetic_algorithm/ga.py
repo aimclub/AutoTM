@@ -308,8 +308,6 @@ class GA:
         for i, j in pairs_generator:
             if i is None:
                 break
-            assert isinstance(i.params, AbstractParams)
-            assert isinstance(j.params, AbstractParams)
 
             children = run_with_retry(
                 action=lambda: i.params.crossover(j.params, crossover_type=self.crossover_type,
@@ -317,7 +315,6 @@ class GA:
                 condition=lambda candidates: all(child.validate_params() for child in candidates),
                 default_value=[]
             )
-            assert isinstance(children, list)
 
             children_dto = [IndividualDTO(
                 id=str(uuid.uuid4()),
