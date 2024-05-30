@@ -212,7 +212,11 @@ class MetricsCollector:
                 cur_df = pd.DataFrame(cur_df_dict)
                 cur_df[GENERATION_COL] = gen
                 dfs.append(cur_df)
-            self.crossover_df = pd.concat(dfs)
+            if len(dfs) > 0:
+                self.crossover_df = pd.concat(dfs)
+            else:
+                warnings.warn("No crossover changes have been found to save", RuntimeWarning)
+                self.crossover_df = pd.DataFrame([])
 
     def write_metrics_to_file(self):
         os.makedirs(self.save_path, exist_ok=True)

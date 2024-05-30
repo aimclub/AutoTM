@@ -195,6 +195,8 @@ class GA:
         population.sort(key=operator.attrgetter("fitness_value"), reverse=True)
 
     def _calculate_uncertain_res(self, generation, iteration_num: int, proc=0.3):
+        if len(generation) == 0:
+            return []
         X = np.array([individ.dto.params.to_vector() for individ in generation])
         certanty = get_prediction_uncertanty(
             self.surrogate.surrogate, X, self.surrogate.name

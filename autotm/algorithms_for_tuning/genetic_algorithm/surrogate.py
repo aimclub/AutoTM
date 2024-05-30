@@ -53,6 +53,13 @@ class Surrogate:
         self.gpr_kernel = None
 
     def create(self):
+        kernel = self.kwargs["gpr_kernel"]
+        del self.kwargs["gpr_kernel"]
+        gpr_alpha = self.kwargs["gpr_alpha"]
+        del self.kwargs["gpr_alpha"]
+        normalize_y = self.kwargs["normalize_y"]
+        del self.kwargs["normalize_y"]
+
         if self.name == "random-forest-regressor":
             self.surrogate = RandomForestRegressor(**self.kwargs)
         elif self.name == "mlp-regressor":
@@ -70,8 +77,6 @@ class Surrogate:
             )
         elif self.name == "GPR":  # tune ??
             if not self.gpr_kernel:
-                kernel = self.kwargs["gpr_kernel"]
-                del self.kwargs["gpr_kernel"]
                 if kernel == "RBF":
                     self.gpr_kernel = 1.0 * RBF(1.0)
                 elif kernel == "RBFwithConstant":
@@ -85,8 +90,8 @@ class Surrogate:
                 elif kernel == "RationalQuadratic":
                     self.gpr_kernel = RationalQuadratic(1.0)
                 self.kwargs["kernel"] = self.gpr_kernel
-                self.kwargs["alpha"] = self.kwargs["gpr_alpha"]
-                del self.kwargs["gpr_alpha"]
+                self.kwargs["alpha"] = gpr_alpha
+                self.kwargs["normalize_y"] = normalize_y
             self.surrogate = GaussianProcessRegressor(**self.kwargs)
         elif self.name == "decision-tree-regressor":
             try:
