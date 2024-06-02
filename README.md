@@ -75,9 +75,6 @@ To fit a model:
 To predict with a fitted model:
 ```autotmctl predict --in data/sample_corpora/sample_dataset_lenta.csv --model model.artm```
 
-## Backlog:
-- [ ] Add tests
-- [ ] Add new multi-stage 
  
 ## Citation
 
