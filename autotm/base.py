@@ -167,7 +167,9 @@ class AutoTM(BaseEstimator):
         else:
             # TODO: refactor this function
             best_topic_model = bayes_opt.run_algorithm(
-                dataset=processed_dataset_path,
+                dataset=self.exp_dataset_name or "__noname__",
+                data_path=processed_dataset_path,
+                topic_count=self.topic_count,
                 log_file=self.log_file_path,
                 exp_id=self.exp_id or "0",
                 **self.alg_params

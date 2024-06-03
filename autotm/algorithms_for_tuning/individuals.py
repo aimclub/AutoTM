@@ -142,7 +142,17 @@ class SparsityScalerBasedFitnessIndividual(BaseIndividual):
         return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE]
 
 
-def make_individual(dto: IndividualDTO) -> Individual:
-    # TODO: choose fitness by ENV var
-    return RegularFitnessIndividual(dto=dto)
-    # return SparsityScalerBasedFitnessIndividual(dto=dto)
+class IndividualBuilder:
+    SUPPORTED_IND_TYPES = ["regular", "sparse"]
+
+    def __init__(self, ind_type: str = "regular"):
+        self.ind_type = ind_type
+
+        if self.ind_type not in self.SUPPORTED_IND_TYPES:
+            raise ValueError(f"Unsupported ind type: {self.ind_type}")
+
+    def make_individual(self, dto: IndividualDTO) -> Individual:
+        if self.ind_type == "regular":
+            return RegularFitnessIndividual(dto=dto)
+        else:
+            return SparsityScalerBasedFitnessIndividual(dto=dto)

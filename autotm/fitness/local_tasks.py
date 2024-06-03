@@ -1,7 +1,7 @@
 import logging
 from typing import List, Optional
 
-from autotm.algorithms_for_tuning.individuals import make_individual, Individual
+from autotm.algorithms_for_tuning.individuals import Individual, IndividualBuilder
 from autotm.fitness.tm import fit_tm_of_individual
 from autotm.params_logging_utils import log_params_and_artifacts, log_stats, model_files
 from autotm.schemas import IndividualDTO
@@ -56,7 +56,7 @@ def calculate_fitness(
     )
 
 
-def estimate_fitness(population: List[Individual]) -> List[Individual]:
+def estimate_fitness(ibuilder: IndividualBuilder, population: List[Individual]) -> List[Individual]:
     logger.info("Calculating fitness...")
     population_with_fitness = []
     for individual in population:
@@ -65,19 +65,20 @@ def estimate_fitness(population: List[Individual]) -> List[Individual]:
             population_with_fitness.append(individual)
             continue
         individ_with_fitness = calculate_fitness(individual.dto)
-        population_with_fitness.append(make_individual(individ_with_fitness))
+        population_with_fitness.append(ibuilder.make_individual(individ_with_fitness))
     logger.info("The fitness results have been obtained")
     return population_with_fitness
 
 
 def log_best_solution(
-        individual: IndividualDTO,
+        ibuilder: IndividualBuilder,
+        individual: Individual,
         wait_for_result_timeout: Optional[float] = None,
         alg_args: Optional[str] = None,
         is_tmp: bool = False,
 ):
     logger.info("Sending a best individual to be logged")
-    res = make_individual(calculate_fitness(individual.dto,
+    res = ibuilder.make_individual(calculate_fitness(individual.dto,
                                             log_artifact_and_parameters=True,
                                             is_tmp=is_tmp))
 
