@@ -17,18 +17,24 @@ from autotm.algorithms_for_tuning.individuals import Individual
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=PydanticDeprecatedSince20)
 
-SAVE_PATH = "/Users/Maksim.Zuev/PycharmProjects/AutoTMResources/datasets"
+# SAVE_PATH = "/Users/Maksim.Zuev/PycharmProjects/AutoTMResources/datasets"
+SAVE_PATH = "/home/nikolay/wspace/AutoTMDatasets"
 
 datasets = [
     "hotel-reviews_sample",
-    "lenta_ru_sample"
-    "amazon_food_sample",
-    "20newsgroups_sample",
-    "banners_sample",
+    # "lenta_ru_sample"
+    # "amazon_food_sample",
+    # "20newsgroups_sample",
+    # "banners_sample",
 ]
-num_iterations = 500
-num_fitness_evaluations = 150
-num_individuals = 11
+# num_iterations = 500
+# num_fitness_evaluations = 150
+# num_individuals = 11
+
+num_iterations = 2
+num_fitness_evaluations = 10
+num_individuals = 4
+
 topic_count = 10
 use_nelder_mead_in_mutation = False
 use_nelder_mead_in_crossover = False
@@ -157,7 +163,7 @@ def main():
     surrogate = None # "random-forest-regressor"
     for dataset_name in datasets:
         for use_pipeline in [False, True]:
-            for _ in range(10):
+            for _ in range(1):
                 start_time = time.time()
                 collector = suppress_stdout(lambda: run_single_experiment(os.path.curdir, dataset_name, use_pipeline,
                                                                           surrogate))

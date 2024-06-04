@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import copy
 import logging
+import logging.config
 import os
 import random
 import sys
@@ -8,13 +9,15 @@ import uuid
 from multiprocessing.pool import AsyncResult
 from typing import List, Optional, Union
 
-import click
 import yaml
 from hyperopt import STATUS_OK, fmin, hp, tpe
 from tqdm import tqdm
 from yaml import Loader
 
-from autotm.algorithms_for_tuning.individuals import IndividualDTO
+from autotm.algorithms_for_tuning.individuals import IndividualDTO, IndividualBuilder
+from autotm.fitness.estimator import FitnessEstimator, ComputableFitnessEstimator
+from autotm.fitness.tm import fit_tm, TopicModel
+from autotm.params import FixedListParams
 from autotm.utils import TqdmToLogger, make_log_config_dict
 
 ALG_ID = "bo"
@@ -80,10 +83,19 @@ NUM_FITNESS_EVALUATIONS = config["boAlgoParams"]["numEvals"]
 
 
 class BigartmFitness:
-    def __init__(self, dataset: str, exp_id: Optional[int] = None):
+    def __init__(self,
+                 data_path: str,
+                 topic_count: int,
+                 ibuilder: IndividualBuilder,
+                 fitness_estimator: FitnessEstimator,
+                 dataset: str,
+                 exp_id: Optional[int] = None):
+        self.data_path = data_path
+        self.topic_count = topic_count
+        self.ibuilder = ibuilder
+        self.fitness_estimator = fitness_estimator
         self.dataset = dataset
         self.exp_id = exp_id
-        # self.best_solution: Optional[IndividualDTO] = None
 
     def parse_kwargs(self, **kwargs):
         params = []
@@ -102,54 +114,56 @@ class BigartmFitness:
         params.append(kwargs.get("decor_2", 1))
         return params
 
-    def make_individ(self, **kwargs):
+    def make_ind_dto(self, **kwargs):
         # TODO: adapt this function to work with baesyian optimization
         params = [float(i) for i in self.parse_kwargs(**kwargs)]
         params = params[:-1] + [0.0, 0.0, 0.0] + [params[-1]]
         return IndividualDTO(
             id=str(uuid.uuid4()),
+            data_path=self.data_path,
             dataset=self.dataset,
-            params=params,
+            topic_count=self.topic_count,
+            params=FixedListParams(params=params),
             exp_id=self.exp_id,
             alg_id=ALG_ID,
         )
 
     def __call__(self, kwargs):
-        population = [self.make_individ(**kwargs)]
-
-        population = estimate_fitness(population)
+        population = [self.ibuilder.make_individual(self.make_ind_dto(**kwargs))]
+        population = self.fitness_estimator.estimate(-1, population)
         individ = population[0]
-
-        # if self.best_solution is None or individ.fitness_value > self.best_solution.fitness_value:
-        #     self.best_solution = copy.deepcopy(individ)
-
         return {"loss": -1 * individ.fitness_value, "status": STATUS_OK}
 
 
-@click.command(context_settings=dict(allow_extra_args=True))
-@click.option("--dataset", required=True, type=str, help="dataset name in the config")
-@click.option(
-    "--log-file",
-    type=str,
-    default="/var/log/tm-alg-bo.log",
-    help="a log file to write logs of the algorithm execution to",
-)
-@click.option("--exp-id", required=True, type=int, help="mlflow experiment id")
-def run_algorithm(dataset, log_file, exp_id):
+def run_algorithm(dataset,
+                  data_path,
+                  topic_count,
+                  log_file,
+                  exp_id,
+                  num_evaluations,
+                  individual_type: str = "regular",
+                  train_option: str = "offline") -> TopicModel:
     run_uid = uuid.uuid4() if not config["testMode"] else None
     logging_config = make_log_config_dict(filename=log_file, uid=run_uid)
     logging.config.dictConfig(logging_config)
 
-    fitness = BigartmFitness(dataset, exp_id)
+    ibuilder = IndividualBuilder(individual_type)
+    fitness_estimator = ComputableFitnessEstimator(ibuilder, num_evaluations)
+
+    fitness = BigartmFitness(data_path, topic_count, ibuilder, fitness_estimator, dataset, exp_id)
     best_params = fmin(
-        fitness, SPACE, algo=tpe.suggest, max_evals=NUM_FITNESS_EVALUATIONS
+        fitness, SPACE, algo=tpe.suggest, max_evals=num_evaluations
     )
-    best_solution = fitness.make_individ(**best_params)
-    best_solution = log_best_solution(
-        best_solution, wait_for_result_timeout=-1, alg_args=" ".join(sys.argv)
+    best_solution_dto = fitness.make_ind_dto(**best_params)
+    best_solution_dto = log_best_solution(
+        best_solution_dto, wait_for_result_timeout=-1, alg_args=" ".join(sys.argv)
     )
-    print(best_solution.fitness_value * -1)
 
+    best_topic_model = fit_tm(
+        preproc_data_path=data_path,
+        topic_count=topic_count,
+        params=best_solution_dto.params,
+        train_option=train_option
+    )
 
-if __name__ == "__main__":
-    run_algorithm()
+    return best_topic_model

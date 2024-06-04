@@ -42,6 +42,7 @@ def test_fit_predict(pytestconfig):
             alg_params={
                 "num_iterations": 2,
                 "num_individuals": 4,
+                "use_pipeline": False,
                 "use_nelder_mead_in_mutation": False,
                 "use_nelder_mead_in_crossover": False,
                 "use_nelder_mead_in_selector": False,

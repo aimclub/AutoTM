@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 import logging
+import logging.config
 import sys
 import uuid
 from typing import Union, Optional
 
 from autotm.algorithms_for_tuning.genetic_algorithm.statistics_collector import StatisticsCollector
 from autotm.algorithms_for_tuning.genetic_algorithm.ga import GA
+from autotm.algorithms_for_tuning.genetic_algorithm.surrogate import Surrogate
+from autotm.algorithms_for_tuning.individuals import IndividualBuilder
+from autotm.fitness.estimator import ComputableFitnessEstimator, SurrogateEnabledComputableFitnessEstimator, \
+    DistributedSurrogateEnabledComputableFitnessEstimator
 from autotm.fitness.tm import fit_tm, TopicModel
 from autotm.utils import make_log_config_dict
 
 logger = logging.getLogger(__name__)
 
 NUM_FITNESS_EVALUATIONS = 150
+SPEEDUP = True
 
 
 def get_best_individual(
@@ -41,6 +47,8 @@ def get_best_individual(
         train_option: str = "offline",
         quiet_log: bool = False,
         statistics_collector: Optional[StatisticsCollector] = None,
+        individual_type: str = "regular",
+        fitness_estimator_type: str = "local", # distributed
         **kwargs
 ):
     """
@@ -96,11 +104,40 @@ def get_best_individual(
     if cross_alpha is not None:
         cross_alpha = float(cross_alpha)
 
+    ibuilder = IndividualBuilder(individual_type)
+
+    if fitness_estimator_type == "local" and surrogate_name:
+        fitness_estimator = SurrogateEnabledComputableFitnessEstimator(
+            ibuilder,
+            Surrogate(surrogate_name),
+            "type1",
+            SPEEDUP,
+            num_fitness_evaluations,
+            statistics_collector
+        )
+    elif fitness_estimator_type == "local":
+        fitness_estimator = ComputableFitnessEstimator(ibuilder, num_fitness_evaluations, statistics_collector)
+    elif fitness_estimator_type == "distributed" and surrogate_name:
+        fitness_estimator = DistributedSurrogateEnabledComputableFitnessEstimator(
+            ibuilder,
+            Surrogate(surrogate_name),
+            "type1",
+            SPEEDUP,
+            num_fitness_evaluations,
+            statistics_collector
+        )
+    elif fitness_estimator_type == "distributed":
+        fitness_estimator = ComputableFitnessEstimator(ibuilder, num_fitness_evaluations, statistics_collector)
+    else:
+        raise ValueError("Incorrect settings")
+
     g = GA(
         dataset=dataset,
         data_path=data_path,
         num_individuals=num_individuals,
         num_iterations=num_iterations,
+        ibuilder=ibuilder,
+        fitness_estimator=fitness_estimator,
         mutation_type=mutation_type,
         crossover_type=crossover_type,
         selection_type=selection_type,
@@ -149,19 +186,23 @@ def run_algorithm(
         gpr_kernel: str = None,
         gpr_alpha: float = None,
         gpr_normalize_y: float = None,
-        use_pipeline: bool = False,
+        use_pipeline: bool = True,
         use_nelder_mead_in_mutation: bool = False,
         use_nelder_mead_in_crossover: bool = False,
         use_nelder_mead_in_selector: bool = False,
         train_option: str = "offline",
         quiet_log: bool = False,
+        individual_type: str = "regular",
+        fitness_estimator_type: str = "local"
 ) -> TopicModel:
     best_individual = get_best_individual(dataset, data_path, exp_id, topic_count, num_individuals, num_iterations,
                                           num_fitness_evaluations, mutation_type, crossover_type, selection_type,
                                           elem_cross_prob, cross_alpha, best_proc, log_file, tag, surrogate_name,
                                           gpr_kernel, gpr_alpha, gpr_normalize_y, use_pipeline,
                                           use_nelder_mead_in_mutation, use_nelder_mead_in_crossover,
-                                          use_nelder_mead_in_selector, train_option, quiet_log)
+                                          use_nelder_mead_in_selector, train_option, quiet_log,
+                                          individual_type=individual_type,
+                                          fitness_estimator_type=fitness_estimator_type)
 
     best_topic_model = fit_tm(
         preproc_data_path=data_path,

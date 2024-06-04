@@ -1,9 +1,8 @@
 import logging
 import os
 import time
-import uuid
 from multiprocessing.process import current_process
-from typing import List, Optional, Union, cast
+from typing import List, Optional, cast
 
 import celery
 from billiard.exceptions import SoftTimeLimitExceeded
@@ -13,11 +12,11 @@ from celery.result import GroupResult, AsyncResult
 from celery.utils.log import get_task_logger
 from tqdm import tqdm
 
-from autotm.algorithms_for_tuning.individuals import Individual, make_individual
+from autotm.algorithms_for_tuning.individuals import Individual, IndividualBuilder
 from autotm.fitness.tm import fit_tm_of_individual
 from autotm.params_logging_utils import model_files, log_params_and_artifacts, log_stats
 from autotm.schemas import IndividualDTO
-from autotm.utils import TqdmToLogger, AVG_COHERENCE_SCORE
+from autotm.utils import TqdmToLogger
 
 logger = logging.getLogger("root")
 task_logger = get_task_logger(__name__)
@@ -109,7 +108,8 @@ def calculate_fitness(self: Task,
         self.retry(max_retries=1, countdown=5)
 
 
-def parallel_fitness(population: List[Individual],
+def parallel_fitness(ibuilder: IndividualBuilder,
+                     population: List[Individual],
                      use_tqdm: bool = False,
                      tqdm_check_period: int = 2,
                      app: Optional[celery.Celery] = None) -> List[Individual]:
@@ -170,17 +170,18 @@ def parallel_fitness(population: List[Individual],
     # restoring the order in the resulting population according to the initial population
     # results_by_id = {ind.id: ind for ind in (fitness_from_json(r) for r in results)}
     results_by_id = {ind.id: ind for ind in (IndividualDTO.parse_raw(r) for r in results)}
-    return [make_individual(results_by_id[ind.dto.id]) for ind in population]
+    return [ibuilder.make_individual(results_by_id[ind.dto.id]) for ind in population]
 
 
-def log_best_solution(individual: Individual,
+def log_best_solution(ibuilder: IndividualBuilder,
+                      individual: Individual,
                       wait_for_result_timeout: Optional[float] = None,
                       alg_args: Optional[str] = None,
                       is_tmp: bool = False,
                       app: Optional[celery.Celery] = None) \
         -> Individual:
     if is_tmp:
-        return make_individual(individual.dto)
+        return ibuilder.make_individual(individual.dto)
     # ind = fitness_to_json(individual)
     ind = individual.dto.json()
     logger.info(f"Sending a best individual to be logged: {ind}")
@@ -207,28 +208,6 @@ def log_best_solution(individual: Individual,
 
     r = result.get(timeout=wait_for_result_timeout)
     r = IndividualDTO.parse_raw(r)
-    ind = make_individual(r)
+    ind = ibuilder.make_individual(r)
 
     return ind
-
-
-class FitnessCalculatorWrapper:
-    def __init__(self, dataset, data_path, topic_count, train_option):
-        self.dataset = dataset
-        self.data_path = data_path
-        self.topic_count = topic_count
-        self.train_option = train_option
-
-    def run(self, params):
-        params = list(params)
-        params = params[:-1] + [0, 0, 0] + [params[-1]]
-
-        solution_dto = IndividualDTO(id=str(uuid.uuid4()),
-                                     dataset=self.dataset,
-                                     params=params,
-                                     alg_id="ga",
-                                     topic_count=self.topic_count, train_option=self.train_option)
-
-        dto = parallel_fitness([solution_dto])[0]
-        result = dto.fitness_value[AVG_COHERENCE_SCORE]
-        return -result
