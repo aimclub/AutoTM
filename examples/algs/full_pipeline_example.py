@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
-PATH_TO_DATASET = "../data/sample_corpora/sample_dataset_lenta.csv"  # dataset with corpora to be processed
+PATH_TO_DATASET = "../../data/sample_corpora/sample_dataset_lenta.csv"  # dataset with corpora to be processed
 SAVE_PATH = (
     "../data/processed_sample_corpora"  # place where all the artifacts will be stored
 )

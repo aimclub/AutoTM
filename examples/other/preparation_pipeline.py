@@ -9,8 +9,8 @@ logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logg
 logger = logging.getLogger(__name__)
 
 
-PATH_TO_DATASET = "../data/sample_corpora/sample_dataset_lenta.csv"  # dataset with corpora to be processed
-SAVE_PATH = "../data/processed_sample_corpora"  # place where all the artifacts will be stored
+PATH_TO_DATASET = "../../data/sample_corpora/sample_dataset_lenta.csv"  # dataset with corpora to be processed
+SAVE_PATH = "../../data/processed_sample_corpora"  # place where all the artifacts will be stored
 
 col_to_process = "text"
 dataset_name = "lenta_sample"
