@@ -11,6 +11,7 @@ from autotm.fitness.tm import TopicModel
 from autotm.graph_ga import create_pipeline, crossover_pipelines, mutate_pipeline
 from autotm.pipeline import Pipeline, Stage, StageType, Param, create_stage, IntRangeDistribution, \
     FloatRangeDistribution
+from autotm.utils import do_suppress_stdout
 
 PARAM_NAMES = [
     "val_decor",
@@ -223,9 +224,9 @@ class PipelineParams(BaseModel, AbstractParams):
             else:
                 raise ValueError(f"Unknown stage type {stage.stage_type.name}")
 
-            if model.check_early_stop():
-                logging.info("Early stopping is triggered")
-                return
+            # if model.check_early_stop():
+            #     logging.info("Early stopping is triggered")
+            #     return
 
     def make_params_dict(self):
         return ({f"0_{self.pipeline.required_params.stage_type.name}_{param.name}": value
