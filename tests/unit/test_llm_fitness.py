@@ -26,4 +26,6 @@ def test_llm_fitness_estimation(openai_api_key: str):
         estimations_per_topic=3
     )
 
+    print(f"Fitness: {fitness}")
+
     assert fitness > 0
