@@ -47,18 +47,18 @@ To overcome the tuning problems AutoTM presents an easy way to represent a learn
 
 <img src="docs/img/strategy.png" alt="Learning strategy representation" height=""/>
 
-* graph-based variant with more flexibility (**new in AutoTM 2.0**)
+* graph-based variant with more flexibility (**New in AutoTM 2.0**)
 
-Optimization procedure is done by genetic algorithm which operators are specifically tuned for 
-the each of the strategy creation variants. 
+Optimization procedure is done by genetic algorithm (GA) which operators are specifically tuned for the each of the strategy creation variants (GA for graph-based is **New in AutoTM 2.0**). Bayesian Optimization is available only for fixed-size strategy. 
 
-To speed up the procedure AutoTM also contain surrogate modeling implementation for fixed-size and graph-based (**New in AutoTM 2.0) learning strategies that, for some iterations, 
+To speed up the procedure AutoTM also contain surrogate modeling implementation for fixed-size and graph-based (**New in AutoTM 2.0**) learning strategies that, for some iterations, 
 approximate fitness function to reduce computation costs on training topic models.
 
 <p align="center">
     <img src="docs/img/autotm_arch_v3 (1).png" alt="Library scheme" height="700"/>
 </p>
 
+AutoTM also propose a range of metrics that can be used as fitness function, like classical ones as coherence to LLM-based (**New in AutoTM 2.0**).
 
 ## Installation
 
