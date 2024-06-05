@@ -145,6 +145,7 @@ class GA:
                 id=str(uuid.uuid4()),
                 data_path=self.data_path,
                 dataset=self.dataset,
+                fitness_name=self.ibuilder.individual_type,
                 params=create_individual(base_model=i == 0, use_pipeline=self.use_pipeline),
                 exp_id=self.exp_id,
                 alg_id=ALG_ID,

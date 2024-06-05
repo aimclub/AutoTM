@@ -7,7 +7,7 @@ import pandas as pd
 
 from autotm.abstract_params import AbstractParams
 from autotm.schemas import IndividualDTO
-from autotm.utils import AVG_COHERENCE_SCORE
+from autotm.utils import AVG_COHERENCE_SCORE, LLM_SCORE
 
 SPARSITY_PHI = "sparsity_phi"
 SPARSITY_THETA = "sparsity_theta"
@@ -142,17 +142,29 @@ class SparsityScalerBasedFitnessIndividual(BaseIndividual):
         return alpha * self.dto.fitness_value[AVG_COHERENCE_SCORE]
 
 
+class LLMBasedFitnessIndividual(BaseIndividual):
+    @property
+    def fitness_value(self) -> float:
+        return self.dto.fitness_value.get(LLM_SCORE, 0.0)
+
+
 class IndividualBuilder:
-    SUPPORTED_IND_TYPES = ["regular", "sparse"]
+    SUPPORTED_IND_TYPES = ["regular", "sparse", "llm"]
 
     def __init__(self, ind_type: str = "regular"):
-        self.ind_type = ind_type
+        self._ind_type = ind_type
 
-        if self.ind_type not in self.SUPPORTED_IND_TYPES:
-            raise ValueError(f"Unsupported ind type: {self.ind_type}")
+        if self._ind_type not in self.SUPPORTED_IND_TYPES:
+            raise ValueError(f"Unsupported ind type: {self._ind_type}")
+
+    @property
+    def individual_type(self) -> str:
+        return self._ind_type
 
     def make_individual(self, dto: IndividualDTO) -> Individual:
-        if self.ind_type == "regular":
+        if self._ind_type == "regular":
             return RegularFitnessIndividual(dto=dto)
-        else:
+        elif self._ind_type == "sparse":
             return SparsityScalerBasedFitnessIndividual(dto=dto)
+        else:
+            return LLMBasedFitnessIndividual(dto=dto)

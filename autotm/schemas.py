@@ -13,7 +13,7 @@ class IndividualDTO(BaseModel):
     id: str
     data_path: str
     params: AnyParams
-    fitness_name: str = "default"
+    fitness_name: str = "regular"
     dataset: str = "default"
     force_dataset_settings_checkout: bool = False
     fitness_value: Optional[MetricsScores] = None
