@@ -3,10 +3,12 @@ import multiprocessing
 import multiprocessing as mp
 import os
 import pickle
+import random
 import time
 import uuid
 from collections import OrderedDict
 from contextlib import contextmanager
+from statistics import mean
 from typing import Dict, Optional, Tuple, ContextManager, List
 
 import artm
@@ -14,6 +16,7 @@ import gensim.corpora as corpora
 import numpy as np
 import pandas as pd
 from billiard.exceptions import SoftTimeLimitExceeded
+from openai import OpenAI
 from tqdm import tqdm
 
 from autotm.batch_vect_utils import SampleBatchVectorizer
@@ -24,11 +27,68 @@ from autotm.utils import (
     MetricsScores,
     AVG_COHERENCE_SCORE,
     TimeMeasurements,
-    log_exec_timer,
+    log_exec_timer, LLM_SCORE,
 )
+from distributed.autotm_distributed.tm import TopicModel
+
+ENV_AUTOTM_LLM_API_KEY = "AUTOTM_LLM_API_KEY"
 
 logger = logging.getLogger()
 logging.basicConfig(level="INFO")
+
+SYSTEM_PROMT_GPT4O_TOPICS_EVAL = """
+You are a helpful assistant evaluating the top words of a topic model output for a given topic. 
+Please rate how related the following words are to each other on a scale from 1 to 4 ("1" = poorly related, "2" = rather poorly related, "3" = rather related, "4" = very related). 
+Reply with a single number, indicating the overall appropriateness of the topic.
+"""
+
+
+def estimate_topics_with_llm(tm: TopicModel,
+                             api_key: Optional[str] = None,
+                             max_estimated_topics: Optional[int] = None,
+                             estimations_per_topic: int = 5,
+                             seed: int = 42) -> float:
+    main_topics = {topic: words[:10] for topic, words in tm.get_topics() if topic.startswith("main")}
+
+    if max_estimated_topics and len(main_topics) > max_estimated_topics:
+        keys = sorted(main_topics.keys())
+        keys = random.Random(x=seed).sample(keys, k=max_estimated_topics)
+        main_topics = {k: main_topics[k] for k in keys}
+
+    api_key = api_key or os.environ.get(ENV_AUTOTM_LLM_API_KEY, None)
+
+    if not api_key:
+        raise ValueError(f"Api Key for ChatGPT is not provided. Probably, env var {ENV_AUTOTM_LLM_API_KEY} is not set.")
+
+    client = OpenAI(api_key=api_key)
+
+    topics_scores = []
+    for topic, words in main_topics:
+        user_prompt = ", ".join(words)
+
+        individual_topic_scores = []
+        for i in range(estimations_per_topic):
+            chat_completion = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMT_GPT4O_TOPICS_EVAL},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=1.0,
+                max_tokens=1
+            )
+            score = chat_completion.choices[0].message.content.strip()
+            try:
+                score = int(score)
+            except ValueError:
+                logger.warning(f"Bad number: {score}")
+
+            individual_topic_scores.append(score)
+
+        topic_score = mean(individual_topic_scores) if len(individual_topic_scores) > 0 else 0.0
+        topics_scores.append(topic_score)
+
+    return mean(topics_scores) if len(topics_scores) > 0 else 0.0
 
 
 def extract_topics(model: artm.ARTM):
@@ -253,23 +313,18 @@ class TopicModelFactory:
 
         uid = uuid.uuid4()
 
-        if self.fitness_name == "default":
-            logging.info(
-                f"Using TM model: {TopicModel} according "
-                f"to fitness name: {self.fitness_name}, topics count: {self.topic_count}"
-            )
-            self.tm = TopicModel(
-                uid,
-                self.topic_count,
-                self.num_processors,
-                dataset,
-                self.params,
-                train_option=self.train_option,
-            )
-        else:
-            raise Exception(
-                f"Unknown fitness name: {self.fitness_name}. Only the following ones are known: {['default']}"
-            )
+        logging.info(
+            f"Using TM model: {TopicModel} according "
+            f"to fitness name: {self.fitness_name}, topics count: {self.topic_count}"
+        )
+        self.tm = TopicModel(
+            uid,
+            self.topic_count,
+            self.num_processors,
+            dataset,
+            self.params,
+            train_option=self.train_option,
+        )
 
         self.tm.init_model()
 
@@ -303,10 +358,19 @@ def fit_tm_of_individual(
         try:
             with log_exec_timer("TM Training") as train_timer:
                 tm.train()
-            with log_exec_timer("Metrics calculation") as metrics_timer:
-                fitness = tm.metrics_get_last_avg_vals(
-                    texts=tm.dataset.texts, total_tokens=tm.dataset.total_tokens
-                )
+
+            if fitness_name == "default":
+                with log_exec_timer("Metrics calculation") as metrics_timer:
+                    fitness = tm.metrics_get_last_avg_vals(
+                        texts=tm.dataset.texts, total_tokens=tm.dataset.total_tokens
+                    )
+            elif fitness_name == "llm":
+                with log_exec_timer("Metrics calculation") as metrics_timer:
+                    fitness = estimate_topics_with_llm(tm.get_topics())
+                fitness = {LLM_SCORE: fitness}
+            else:
+                raise ValueError(f"Unsupported fitness: {fitness_name}. "
+                                 f"Only the following is supported: ['default', 'llm']")
 
             time_metrics = {
                 "train": train_timer.duration,
