@@ -28,12 +28,17 @@ AutoTM
 
 :sparkles:**News**:sparkles: We have fully updated our framework to AutoTM 2.0 version enriched with new functionality! Stay tuned!
 
-Automatic parameters selection for topic models (ARTM approach) using evolutionary algorithms. 
-AutoTM provides necessary tools to preprocess english and russian text datasets and tune topic models.
+Automatic parameters selection for topic models (ARTM approach) using evolutionary and bayesian algorithms. 
+AutoTM provides necessary tools to preprocess english and russian text datasets and tune additively regularized topic models.
 
 ## What is AutoTM?
-Topic modeling is one of the basic methods for EDA of unlabelled text data. While ARTM (additive regularization 
-for topic models) approach provides the significant flexibility and quality comparative or better that neural 
+Topic modeling is one of the basic methods for a whole range of tasks:
+
+* Exploratory data analysis of unlabelled text data
+* Extracting interpretable features (topics and their combinations) from text data 
+* Searching for hidden insights in the data
+
+While ARTM (additive regularization for topic models) approach provides the significant flexibility and quality comparative or better that neural 
 approaches it is hard to tune such models due to amount of hyperparameters and their combinations.
 
 To overcome the tuning problems AutoTM presents an easy way to represent a learning strategy to train specific models for input corporas.
