@@ -5,7 +5,6 @@ from autotm.preprocessing import PREPOCESSED_DATASET_FILENAME
 from autotm.preprocessing.dictionaries_preparation import prepare_all_artifacts, prepearing_cooc_dict
 from autotm.preprocessing.text_preprocessing import process_dataset
 
-logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=logging.DEBUG, datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger(__name__)
 
 

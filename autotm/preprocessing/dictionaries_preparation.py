@@ -16,8 +16,6 @@ from collections import Counter
 
 logger = logging.getLogger(__name__)
 
-# TODO: add inter-text coherence metrics (SemantiC, TopLen and FoCon)
-
 
 def get_words_dict(text, stop_list):
     all_words = text
@@ -90,8 +88,6 @@ def _calculate_cooc_tf_dict(data: list, vocab: List[str], window: int = 10) -> d
         counter.update(cooc_tf_dict)
         cooc_tf_dict = dict(counter)
     return cooc_tf_dict, term_freq_dict
-    # local_num_of_pairs += 2
-    # pass
 
 
 def read_vocab(vocab_path: str) -> List[str]:
