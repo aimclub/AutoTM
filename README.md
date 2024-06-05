@@ -53,7 +53,7 @@ Optimization procedure is done by genetic algorithm which operators are specific
 the each of the strategy creation variants. To speed up the procedure we also implemented surrogate modeling that, for some iterations, 
 approximate fitness function to reduce computation costs on training topic models.
 
-<img src="docs/img/autotm_arch_v3 (1).png" alt="Library scheme" height="100"/>
+<img src="docs/img/autotm_arch_v3 (1).png" alt="Library scheme" height="700"/>
 
 
 ## Installation
