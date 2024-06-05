@@ -108,7 +108,7 @@ def read_vocab(vocab_path: str) -> List[str]:
 
 
 def calculate_ppmi(cooc_dict_path, n, term_freq_dict):
-    print("Calculating pPMI...")
+    logger.info("Calculating pPMI...")
     ppmi_dict = {}
     with open(cooc_dict_path) as fopen:
         for line in fopen:
@@ -158,7 +158,7 @@ def write_vw_dict(res_dict, vocab_words, fpath):
             except:
                 # print(f'The word {word} is not found')
                 pass
-    print(f"{fpath} is ready!")
+    logger.info(f"{fpath} is ready!")
 
 
 def convert_to_vw_format_and_save(cooc_dict, vocab_words, vw_path):
@@ -259,14 +259,13 @@ def return_string_part(name_type, text):
 
 
 def prepare_voc(batches_dir, vw_path, dataset: Union[pd.DataFrame, str], column_name="processed_text.txt"):
-    print("Starting...")
     with open(vw_path, "w", encoding="utf8") as ofile:
         if isinstance(dataset, str):
             num_parts = 0
             try:
                 for file in os.listdir(dataset):
                     if file.startswith("part"):
-                        print("part_{}".format(num_parts), end="\r")
+                        logger.debug("Dataset part_{}".format(num_parts))
                         if file.split(".")[-1] == "csv":
                             part = pd.read_csv(os.path.join(dataset, file))
                         else:
@@ -278,7 +277,7 @@ def prepare_voc(batches_dir, vw_path, dataset: Union[pd.DataFrame, str], column_
                         num_parts += 1
 
             except NotADirectoryError:
-                print("part 1/1")
+                logger.debug("Dataset part 1/1")
                 part = pd.read_csv(dataset)
                 part_processed = part[column_name].tolist()
                 for text in part_processed:

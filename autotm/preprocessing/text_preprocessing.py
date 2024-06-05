@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Union, cast
 
@@ -17,6 +18,8 @@ from spacy_langdetect import LanguageDetector
 from nltk.stem import WordNetLemmatizer
 
 PROCESSED_TEXT_COLUMN = "processed_text"
+
+logger = logging.getLogger(__name__)
 
 # TODO: make transformer class and prep function to download all files
 nltk_components = ['corpora/stopwords.zip', 'corpora/wordnet.zip']
@@ -178,4 +181,4 @@ def process_dataset(
     data["tokens_len"] = data[PROCESSED_TEXT_COLUMN].apply(tokens_num)
     data = data[data["tokens_len"] > min_tokens_count]
     data.to_csv(save_path, index=None)
-    print("Saved to {}".format(save_path))
+    logger.info("Saved to %s" % save_path)

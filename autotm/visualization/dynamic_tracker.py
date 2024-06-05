@@ -193,7 +193,7 @@ class MetricsCollector:
             if len(dfs) > 0:
                 self.mutation_df = pd.concat(dfs)
             else:
-                warnings.warn("No mutations changes have been found to save", RuntimeWarning)
+                # warnings.warn("No mutations changes have been found to save", RuntimeWarning)
                 self.mutation_df = pd.DataFrame([])
         if self.crossover_df is not None:
             print("Crossover df already exists")

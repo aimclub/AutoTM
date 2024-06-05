@@ -1,5 +1,6 @@
 import functools
 import html
+import logging
 # Batches preparation
 import os
 import pickle
@@ -18,6 +19,9 @@ from pandas import DataFrame
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import CountVectorizer
 from tqdm import tqdm
+
+
+logger = logging.getLogger(__name__)
 
 r_vk_ids = re.compile(r'(id{1}[0-9]*)')
 r_num = re.compile(r'([0-9]+)')
@@ -144,7 +148,6 @@ def return_string_part(name_type, text):
 
 
 def prepare_voc(batches_dir, vw_path, data_path, column_name='processed_text'):
-    print('Starting...')
     with open(vw_path, 'w', encoding='utf8') as ofile:
         num_parts = 0
         try:
@@ -260,7 +263,7 @@ def dataset_preprocessing(dataset: Union[str, DataFrame], col_to_process, save_p
     data['tokens_len'] = data['processed_text'].apply(tokens_num)
     data = data[data['tokens_len'] > 3]
     data.to_csv(save_path, index=None)
-    print('Saved to {}'.format(save_path))
+    logger.info('Saved to %s' % save_path)
 
 
 def do_preprocessing(dataset: Union[str, DataFrame], dataset_path: str, language: str = 'ru'):
