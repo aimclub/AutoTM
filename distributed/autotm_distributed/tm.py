@@ -22,7 +22,6 @@ from autotm_distributed import MetricsScores, AVG_COHERENCE_SCORE, TimeMeasureme
 from autotm_distributed import log_exec_timer
 
 logger = logging.getLogger()
-logging.basicConfig(level="INFO")
 
 
 class SampleBatchVectorizer(BatchVectorizer):

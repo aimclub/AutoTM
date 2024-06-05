@@ -6,9 +6,6 @@ import shutil
 import sys
 from glob import glob
 
-logging.basicConfig(
-    level=logging.DEBUG, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
 logger = logging.getLogger()
 
 

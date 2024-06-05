@@ -4,7 +4,6 @@ import multiprocessing as mp
 import os
 import pickle
 import random
-import sys
 import time
 import uuid
 from collections import OrderedDict
@@ -20,16 +19,15 @@ from billiard.exceptions import SoftTimeLimitExceeded
 from openai import OpenAI
 from tqdm import tqdm
 
+from autotm.abstract_params import AbstractParams
 from autotm.batch_vect_utils import SampleBatchVectorizer
 from autotm.fitness import AUTOTM_COMPONENT
 from autotm.fitness.external_scores import ts_bground, ts_uniform, ts_vacuous, switchp
-from autotm.abstract_params import AbstractParams
 from autotm.utils import (
     MetricsScores,
     AVG_COHERENCE_SCORE,
     TimeMeasurements,
-    log_exec_timer, LLM_SCORE, do_suppress_stdout,
-)
+    log_exec_timer, LLM_SCORE, )
 
 ENV_AUTOTM_LLM_API_KEY = "AUTOTM_LLM_API_KEY"
 ENV_AUTOTM_LLM_MAX_ESTIMATED_TOPICS = "AUTOTM_LLM_MAX_ESTIMATED_TOPICS"
@@ -37,7 +35,6 @@ ENV_AUTOTM_LLM_ESTIMATIONS_PER_TOPIC = "AUTOTM_LLM_ESTIMATIONS_PER_TOPIC"
 
 
 logger = logging.getLogger()
-logging.basicConfig(level="INFO")
 
 SYSTEM_PROMT_GPT4O_TOPICS_EVAL = """
 You are a helpful assistant evaluating the top words of a topic model output for a given topic. 
