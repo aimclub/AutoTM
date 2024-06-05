@@ -45,9 +45,11 @@ To overcome the tuning problems AutoTM presents an easy way to represent a learn
 
 * fixed-size variant, that provides a learning strategy that follow the best practices collected from the manual tuning history
 
-<img src="docs/img/strategy.png" alt="Learning strategy representation" height=""/>
+<img src="docs/img/strategy.png" alt="Learning strategy representation (fixed-size)" height=""/>
 
-* graph-based variant with more flexibility (**New in AutoTM 2.0**)
+* graph-based variant with more flexibility and unfixed ordering and amount of stages (**New in AutoTM 2.0**). Example of pipeline is provided below:
+
+<img src="docs/img/pipeling.png" alt="Learning strategy representation (graph-based)" height=""/>
 
 Optimization procedure is done by genetic algorithm (GA) which operators are specifically tuned for the each of the strategy creation variants (GA for graph-based is **New in AutoTM 2.0**). Bayesian Optimization is available only for fixed-size strategy. 
 
