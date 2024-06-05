@@ -19,9 +19,13 @@ from nltk.stem import WordNetLemmatizer
 PROCESSED_TEXT_COLUMN = "processed_text"
 
 # TODO: make transformer class and prep function to download all files
+nltk_components = ['corpora/stopwords.zip', 'corpora/wordnet.zip']
 
-nltk.download("stopwords")
-nltk.download("wordnet")
+for nltk_component in nltk_components:
+    try:
+        nltk.data.find(nltk_component)
+    except LookupError:
+        nltk.download(nltk_component.split('/')[-1])
 
 stop = stopwords.words("russian") + [" "] + stopwords.words("english")
 
@@ -45,7 +49,6 @@ en_lemmatizer = WordNetLemmatizer()
 @Language.factory("language_detector")
 def language_detector(nlp, name):
     return LanguageDetector()
-
 
 nlp_model = spacy.load("en_core_web_sm")
 nlp_model.add_pipe("language_detector", last=True)
