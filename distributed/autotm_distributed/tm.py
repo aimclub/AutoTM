@@ -431,7 +431,7 @@ class TopicModel:
 
         if self.n1 > 0:
             if self._early_stopping():
-                print('Early stopping is triggered')
+                logger.info('Early stopping is triggered')
                 return
 
         #         if ((self.n2 != 0) and (self.B != 0)):
@@ -470,7 +470,7 @@ class TopicModel:
 
         if self.n1 + self.n2 + self.n3 > 0:
             if self._early_stopping():
-                print('Early stopping is triggered')
+                logger.info('Early stopping is triggered')
                 return
 
         if self.n4 != 0:
@@ -524,7 +524,6 @@ class TopicModel:
     def _get_avg_coherence_score(self, for_individ_fitness=False):
         coherences_main, coherences_back = self.__return_all_tokens_coherence(self.model, s=self.S, b=self.B)
         if for_individ_fitness:
-            # print('COMPONENTS: ', np.mean(list(coherences_main.values())), np.min(list(coherences_main.values())))
             return np.mean(list(coherences_main.values())) + np.min(list(coherences_main.values()))
         return np.mean(list(coherences_main.values()))
 
@@ -680,7 +679,7 @@ class TopicModel:
         # coeff = self._calculate_labels_coeff()
         coeff = 1.0
         if for_individ_fitness:
-            print('COMPONENTS: ', np.mean(list(coherences_main.values())), np.min(list(coherences_main.values())))
+            logger.info('COMPONENTS: ', np.mean(list(coherences_main.values())), np.min(list(coherences_main.values())))
             avg_coherence_score = \
                 np.mean(list(coherences_main.values())) + np.min(list(coherences_main.values())) * coeff
         else:
@@ -709,9 +708,9 @@ class TopicModel:
             topic_significance_uni = np.mean(ts_uniform(topic_word_dist))
             topic_significance_vacuous = np.mean(ts_vacuous(doc_topic_dist, topic_word_dist, total_tokens))
             topic_significance_back = np.mean(ts_bground(doc_topic_dist))
-            print(f'Topic Significance - Uniform Distribution Over Words: {topic_significance_uni}')
-            print(f'Topic Significance - Vacuous Semantic Distribution: {topic_significance_vacuous}')
-            print(f'Topic Significance - Background Distribution: {topic_significance_back}')
+            logger.info(f'Topic Significance - Uniform Distribution Over Words: {topic_significance_uni}')
+            logger.info(f'Topic Significance - Vacuous Semantic Distribution: {topic_significance_vacuous}')
+            logger.info(f'Topic Significance - Background Distribution: {topic_significance_back}')
         else:
             topic_significance_uni = None
             topic_significance_vacuous = None

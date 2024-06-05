@@ -141,7 +141,6 @@ def lemmatize_text_en(text):
 
 
 def lemmatize_text(df, **kwargs):
-    # print(kwargs)
     lang = kwargs["lang"]
     col_to_process = kwargs["col_to_process"]
     if lang == "ru":

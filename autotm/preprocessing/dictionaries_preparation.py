@@ -156,7 +156,6 @@ def write_vw_dict(res_dict, vocab_words, fpath):
             try:
                 fopen.write(f"{word}" + " " + " ".join(res_dict[word]) + "\n")
             except:
-                # print(f'The word {word} is not found')
                 pass
     logger.info(f"{fpath} is ready!")
 

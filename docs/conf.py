@@ -11,7 +11,6 @@ import sys
 
 CURR_PATH = os.path.abspath(os.path.dirname(__file__))
 LIB_PATH = os.path.join(CURR_PATH, os.path.pardir)
-print(LIB_PATH)
 sys.path.insert(0, LIB_PATH)
 
 project = "AutoTM"

@@ -153,7 +153,7 @@ def prepare_voc(batches_dir, vw_path, data_path, column_name='processed_text'):
         try:
             for file in os.listdir(data_path):
                 if file.startswith('part'):
-                    print('part_{}'.format(num_parts), end='\r')
+                    logger.info('Preparing vocabulary: part_{}'.format(num_parts))
                     if file.split('.')[-1] == 'csv':
                         part = pd.read_csv(os.path.join(data_path, file))
                     else:
@@ -165,14 +165,14 @@ def prepare_voc(batches_dir, vw_path, data_path, column_name='processed_text'):
                     num_parts += 1
 
         except NotADirectoryError:
-            print('part 1/1')
+            logger.info('Preparing vocabulary: part 1/1')
             part = pd.read_csv(data_path)
             part_processed = part[column_name].tolist()
             for text in part_processed:
                 result = return_string_part('@default_class', text)
                 ofile.write(result + '\n')
 
-    print(' batches {} \n vocabulary {} \n are ready'.format(batches_dir, vw_path))
+    logger.info('Preparing vocabulary: batches {} \n vocabulary {} \n are ready'.format(batches_dir, vw_path))
 
 
 def prepare_batch_vectorizer(batches_dir, vw_path, data_path, column_name='processed_text'):
