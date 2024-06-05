@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Union, cast
 
@@ -18,10 +19,16 @@ from nltk.stem import WordNetLemmatizer
 
 PROCESSED_TEXT_COLUMN = "processed_text"
 
-# TODO: make transformer class and prep function to download all files
+logger = logging.getLogger(__name__)
 
-nltk.download("stopwords")
-nltk.download("wordnet")
+# TODO: make transformer class and prep function to download all files
+nltk_components = ['corpora/stopwords.zip', 'corpora/wordnet.zip']
+
+for nltk_component in nltk_components:
+    try:
+        nltk.data.find(nltk_component)
+    except LookupError:
+        nltk.download(nltk_component.split('/')[-1])
 
 stop = stopwords.words("russian") + [" "] + stopwords.words("english")
 
@@ -45,7 +52,6 @@ en_lemmatizer = WordNetLemmatizer()
 @Language.factory("language_detector")
 def language_detector(nlp, name):
     return LanguageDetector()
-
 
 nlp_model = spacy.load("en_core_web_sm")
 nlp_model.add_pipe("language_detector", last=True)
@@ -135,7 +141,6 @@ def lemmatize_text_en(text):
 
 
 def lemmatize_text(df, **kwargs):
-    # print(kwargs)
     lang = kwargs["lang"]
     col_to_process = kwargs["col_to_process"]
     if lang == "ru":
@@ -143,7 +148,7 @@ def lemmatize_text(df, **kwargs):
     elif lang == "en":
         df["processed_text"] = df[col_to_process].apply(lemmatize_text_en)
     else:
-        print(f"The language {lang} is not known")
+        logger.error(f"The language {lang} is not known")
         raise NameError
     return df
 
@@ -175,4 +180,4 @@ def process_dataset(
     data["tokens_len"] = data[PROCESSED_TEXT_COLUMN].apply(tokens_num)
     data = data[data["tokens_len"] > min_tokens_count]
     data.to_csv(save_path, index=None)
-    print("Saved to {}".format(save_path))
+    logger.info("Saved to %s" % save_path)

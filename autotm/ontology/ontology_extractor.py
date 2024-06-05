@@ -25,7 +25,6 @@ def format_attention(attention, layers=None, heads=None):
         layer_attention = layer_attention.squeeze(0)
         if heads:
             layer_attention = layer_attention[heads]
-        #             print(layer_attention[0])
         squeezed.append(layer_attention)
     # num_layers x num_heads x seq_len x seq_len
     return torch.stack(squeezed)
@@ -138,7 +137,6 @@ def build_graph(autotm_model, topic_labels,
         tokens = tokenizer.convert_ids_to_tokens(inputs[0])
 
         res, tokens_new = get_attention_vals(attention, tokens, head_num=2, layer_num=0)
-        print(res, tokens_new)
 
         try:
             v, i = torch.topk(res.flatten(), 5)

@@ -19,16 +19,15 @@ from billiard.exceptions import SoftTimeLimitExceeded
 from openai import OpenAI
 from tqdm import tqdm
 
+from autotm.abstract_params import AbstractParams
 from autotm.batch_vect_utils import SampleBatchVectorizer
 from autotm.fitness import AUTOTM_COMPONENT
 from autotm.fitness.external_scores import ts_bground, ts_uniform, ts_vacuous, switchp
-from autotm.abstract_params import AbstractParams
 from autotm.utils import (
     MetricsScores,
     AVG_COHERENCE_SCORE,
     TimeMeasurements,
-    log_exec_timer, LLM_SCORE,
-)
+    log_exec_timer, LLM_SCORE, )
 
 ENV_AUTOTM_LLM_API_KEY = "AUTOTM_LLM_API_KEY"
 ENV_AUTOTM_LLM_MAX_ESTIMATED_TOPICS = "AUTOTM_LLM_MAX_ESTIMATED_TOPICS"
@@ -36,7 +35,6 @@ ENV_AUTOTM_LLM_ESTIMATIONS_PER_TOPIC = "AUTOTM_LLM_ESTIMATIONS_PER_TOPIC"
 
 
 logger = logging.getLogger()
-logging.basicConfig(level="INFO")
 
 SYSTEM_PROMT_GPT4O_TOPICS_EVAL = """
 You are a helpful assistant evaluating the top words of a topic model output for a given topic. 
@@ -589,7 +587,6 @@ class TopicModel:
             self.model, s=self.S, b=self.params.basic_topics
         )
         if for_individ_fitness:
-            # print('COMPONENTS: ', np.mean(list(coherences_main.values())), np.min(list(coherences_main.values())))
             return np.mean(list(coherences_main.values())) + np.min(
                 list(coherences_main.values())
             )
@@ -716,20 +713,20 @@ class TopicModel:
 
         coh_vals_main = {}
         # coherence for main topics
-        for i, topic in tqdm(enumerate(topics_main)):
+        for i, topic in tqdm(enumerate(topics_main), disable=True):
             coh_vals_main[topic] = self.__calculate_topic_coherence(
                 res[topic][:50], top=top
             )
-        for i, topic in tqdm(enumerate(inexisting_topics_main)):
+        for i, topic in tqdm(enumerate(inexisting_topics_main), disable=True):
             coh_vals_main["main{}".format(i)] = 0
 
         coh_vals_back = {}
         # coherence for back topics
-        for i, topic in tqdm(enumerate(topics_back)):
+        for i, topic in tqdm(enumerate(topics_back), disable=True):
             coh_vals_back[topic] = self.__calculate_topic_coherence(
                 res[topic][:50], top=top
             )
-        for i, topic in tqdm(enumerate(inexisting_topics_back)):
+        for i, topic in tqdm(enumerate(inexisting_topics_back), disable=True):
             coh_vals_back["back{}".format(i)] = 10  # penalty for not creating backs
 
         if return_backs:
@@ -754,11 +751,11 @@ class TopicModel:
 
         for num_tokens in top:
             coh_vals["coherence_{}".format(num_tokens)] = {}
-            for i, topic in tqdm(enumerate(topics)):
+            for i, topic in tqdm(enumerate(topics), disable=True):
                 coh_vals["coherence_{}".format(num_tokens)][
                     topic
                 ] = self.__calculate_topic_coherence(res[topic][:100], top=num_tokens)
-            for i, topic in tqdm(enumerate(inexisting_topics)):
+            for i, topic in tqdm(enumerate(inexisting_topics), disable=True):
                 coh_vals["coherence_{}".format(num_tokens)][topic] = 0
         return coh_vals
 
