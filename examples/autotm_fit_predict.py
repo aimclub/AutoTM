@@ -94,4 +94,4 @@ def main(conf_name: str = "base"):
 
 
 if __name__ == "__main__":
-    main()
+    main(conf_name="llm")
