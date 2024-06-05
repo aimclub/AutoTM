@@ -72,13 +72,13 @@ Via pip:
 
 ```pip install autotm```
 
-From source:
-
-```pip install -r requirements.txt```  
-
 ```python -m spacy download en_core_web_sm```
 
-```export PYTHONPATH="${PYTHONPATH}:/path/to/src"```
+From source:
+
+```poetry install```  
+
+```python -m spacy download en_core_web_sm```
 
 [//]: # (## Dataset and )
 
