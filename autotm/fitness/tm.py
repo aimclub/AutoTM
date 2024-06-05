@@ -69,7 +69,7 @@ def estimate_topics_with_llm(model_id: str,
     :param agg_func: a function name or function to be used for final scores aggregation. If it is a name, only the following values are allowed: 'mean', 'min', 'max'
     :return: fitness score (float)
     """
-    main_topics = {topic: words[:num_top_words] for topic, words in topics if topic.startswith("main")}
+    main_topics = {topic: words[:num_top_words] for topic, words in topics.items() if topic.startswith("main")}
     all_main_topics_count = len(main_topics)
 
     if max_estimated_topics and len(main_topics) > max_estimated_topics:
@@ -81,9 +81,9 @@ def estimate_topics_with_llm(model_id: str,
         raise ValueError(f"Api Key for ChatGPT is not provided. Probably, env var {ENV_AUTOTM_LLM_API_KEY} is not set.")
 
     agg_funcs = {
-        'mean': lambda x: mean(x) if len(x) > 0 else 0.0,
-        'min': lambda x: min(x) if len(x) > 0 else 0.0,
-        'max': lambda x: max(x) if len(x) > 0 else 0.0
+        'mean': lambda x: mean(x.values()) if len(x) > 0 else 0.0,
+        'min': lambda x: min(x.values()) if len(x) > 0 else 0.0,
+        'max': lambda x: max(x.values()) if len(x) > 0 else 0.0
     }
     if isinstance(agg_func, str) and agg_func not in agg_funcs:
         raise ValueError(
@@ -101,7 +101,7 @@ def estimate_topics_with_llm(model_id: str,
 
     topics_scores = dict()
     estimations_counter = 0
-    for topic, words in main_topics:
+    for topic, words in main_topics.items():
         user_prompt = ", ".join(words)
 
         individual_topic_scores = []
