@@ -26,6 +26,8 @@ AutoTM
     </a>
 </p>
 
+**News** We have fully updated our framework to AutoTM 2.0 version enriched with new functionality! Stay tuned!
+
 Automatic parameters selection for topic models (ARTM approach) using evolutionary algorithms. 
 AutoTM provides necessary tools to preprocess english and russian text datasets and tune topic models.
 
