@@ -32,6 +32,9 @@ from autotm.utils import (
 from distributed.autotm_distributed.tm import TopicModel
 
 ENV_AUTOTM_LLM_API_KEY = "AUTOTM_LLM_API_KEY"
+ENV_AUTOTM_LLM_MAX_ESTIMATED_TOPICS = "AUTOTM_LLM_MAX_ESTIMATED_TOPICS"
+ENV_AUTOTM_LLM_ESTIMATIONS_PER_TOPIC = "AUTOTM_LLM_ESTIMATIONS_PER_TOPIC"
+
 
 logger = logging.getLogger()
 logging.basicConfig(level="INFO")
@@ -44,7 +47,7 @@ Reply with a single number, indicating the overall appropriateness of the topic.
 
 
 def estimate_topics_with_llm(tm: TopicModel,
-                             api_key: Optional[str] = None,
+                             api_key: str,
                              max_estimated_topics: Optional[int] = None,
                              estimations_per_topic: int = 5,
                              seed: int = 42) -> float:
@@ -366,7 +369,12 @@ def fit_tm_of_individual(
                     )
             elif fitness_name == "llm":
                 with log_exec_timer("Metrics calculation") as metrics_timer:
-                    fitness = estimate_topics_with_llm(tm.get_topics())
+                    fitness = estimate_topics_with_llm(
+                        tm.get_topics(),
+                        api_key=os.environ.get(ENV_AUTOTM_LLM_API_KEY, None),
+                        max_estimated_topics=os.environ.get(ENV_AUTOTM_LLM_MAX_ESTIMATED_TOPICS, None),
+                        estimations_per_topic=int(os.environ.get(ENV_AUTOTM_LLM_ESTIMATIONS_PER_TOPIC, "5"))
+                    )
                 fitness = {LLM_SCORE: fitness}
             else:
                 raise ValueError(f"Unsupported fitness: {fitness_name}. "
