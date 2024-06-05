@@ -16,7 +16,7 @@ def test_llm_fitness_estimation(openai_api_key: str):
         "back0": 'garbage garbage garbage',
         "back1": 'trash trash trash'
     }
-    topics = {k: v.split(' ') for k, v in topics}
+    topics = {k: v.split(' ') for k, v in topics.items()}
 
     fitness = estimate_topics_with_llm(
         model_id="test_model",

@@ -29,7 +29,6 @@ from autotm.utils import (
     TimeMeasurements,
     log_exec_timer, LLM_SCORE,
 )
-from distributed.autotm_distributed.tm import TopicModel
 
 ENV_AUTOTM_LLM_API_KEY = "AUTOTM_LLM_API_KEY"
 ENV_AUTOTM_LLM_MAX_ESTIMATED_TOPICS = "AUTOTM_LLM_MAX_ESTIMATED_TOPICS"
@@ -49,6 +48,7 @@ Reply with a single number, indicating the overall appropriateness of the topic.
 def estimate_topics_with_llm(model_id: str,
                              topics: Dict[str, List[str]],
                              api_key: str,
+                             model_name: str = "gpt-4o",
                              num_top_words: int = 10,
                              max_estimated_topics: Optional[int] = None,
                              estimations_per_topic: int = 5,
@@ -58,6 +58,7 @@ def estimate_topics_with_llm(model_id: str,
     Estimates quality of the topics by calling ChatGPT and asking it to set the score for a topic.
     For every topic being estimated a separate call to the API is issued,
     because OpenAI doesn't support batch calls for chat completioncs
+    :param model_name: Name of OpenAI model to use for scoring
     :param model_id: unique identifier of the model beingh evaluated
     :param topics: dictionary of topics (topic_name -> top words). Names of topics should follow 'main*' pattern or 'back*' pattern
     :param api_key: OpenAI key to execute queries.
@@ -92,13 +93,14 @@ def estimate_topics_with_llm(model_id: str,
         agg_func = agg_funcs[agg_func]
 
     logger.info(
-        "Estimating fitness (model: %s) for %s main topics (of %s all main topics) "
+        "Estimating fitness (model %s) for %s main topics (of %s all main topics) "
         "with %s repetiton(s)" % (model_id, len(main_topics), all_main_topics_count, estimations_per_topic)
     )
 
     client = OpenAI(api_key=api_key)
 
     topics_scores = dict()
+    estimations_counter = 0
     for topic, words in main_topics:
         user_prompt = ", ".join(words)
 
@@ -114,6 +116,7 @@ def estimate_topics_with_llm(model_id: str,
                 max_tokens=1
             )
             score = chat_completion.choices[0].message.content.strip()
+            estimations_counter += 1
             try:
                 score = int(score)
             except ValueError:
@@ -129,7 +132,10 @@ def estimate_topics_with_llm(model_id: str,
 
     fitness = agg_func(topics_scores)
 
-    logger.debug("Estimated fitness (model %s): %s" % (model_id, fitness))
+    logger.debug(
+        "Estimated fitness (model %s): %s. "
+        "Number of estimations with ChatGPT: %s" % (model_id, fitness, estimations_counter)
+    )
 
     return fitness
 
