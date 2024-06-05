@@ -54,6 +54,20 @@ def estimate_topics_with_llm(model_id: str,
                              estimations_per_topic: int = 5,
                              seed: int = 42,
                              agg_func: Union[str, Callable[[Dict[str, float]], float]] = 'mean') -> float:
+    """
+    Estimates quality of the topics by calling ChatGPT and asking it to set the score for a topic.
+    For every topic being estimated a separate call to the API is issued,
+    because OpenAI doesn't support batch calls for chat completioncs
+    :param model_id: unique identifier of the model beingh evaluated
+    :param topics: dictionary of topics (topic_name -> top words). Names of topics should follow 'main*' pattern or 'back*' pattern
+    :param api_key: OpenAI key to execute queries.
+    :param num_top_words: Number of first words in wordsets to be used for scoring.
+    :param max_estimated_topics: Number of topics to be used for scoring. If this number is less that number of main topics than a random subset of topics will be sent for scoring.
+    :param estimations_per_topic: Number of scoring repeatitions by ChatGPT to be conducted for every topic (the topic score is an average of all repeaatitions)
+    :param seed: a random seed to use for sampling main topics
+    :param agg_func: a function name or function to be used for final scores aggregation. If it is a name, only the following values are allowed: 'mean', 'min', 'max'
+    :return: fitness score (float)
+    """
     main_topics = {topic: words[:num_top_words] for topic, words in topics if topic.startswith("main")}
     all_main_topics_count = len(main_topics)
 
