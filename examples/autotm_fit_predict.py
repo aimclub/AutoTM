@@ -32,6 +32,13 @@ CONFIGURATIONS = {
         "use_pipeline": True,
         "surrogate_name": "random-forest-regressor"
     },
+    "llm": {
+        "alg_name": "ga",
+        "num_iterations": 2,
+        "num_individuals": 2,
+        "use_pipeline": True,
+        "individual_type": "llm"
+    },
     "bayes": {
         "alg_name": "bayes",
         "num_evaluations": 5,

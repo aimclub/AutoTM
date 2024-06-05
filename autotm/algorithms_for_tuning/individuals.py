@@ -152,15 +152,19 @@ class IndividualBuilder:
     SUPPORTED_IND_TYPES = ["regular", "sparse", "llm"]
 
     def __init__(self, ind_type: str = "regular"):
-        self.ind_type = ind_type
+        self._ind_type = ind_type
 
-        if self.ind_type not in self.SUPPORTED_IND_TYPES:
-            raise ValueError(f"Unsupported ind type: {self.ind_type}")
+        if self._ind_type not in self.SUPPORTED_IND_TYPES:
+            raise ValueError(f"Unsupported ind type: {self._ind_type}")
+
+    @property
+    def individual_type(self) -> str:
+        return self._ind_type
 
     def make_individual(self, dto: IndividualDTO) -> Individual:
-        if self.ind_type == "regular":
+        if self._ind_type == "regular":
             return RegularFitnessIndividual(dto=dto)
-        elif self.ind_type == "sparse":
+        elif self._ind_type == "sparse":
             return SparsityScalerBasedFitnessIndividual(dto=dto)
         else:
             return LLMBasedFitnessIndividual(dto=dto)

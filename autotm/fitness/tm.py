@@ -408,7 +408,7 @@ def fit_tm_of_individual(
             with log_exec_timer("TM Training") as train_timer:
                 tm.train()
 
-            if fitness_name == "default":
+            if fitness_name in ["regular", "sparse"]:
                 with log_exec_timer("Metrics calculation") as metrics_timer:
                     fitness = tm.metrics_get_last_avg_vals(
                         texts=tm.dataset.texts, total_tokens=tm.dataset.total_tokens
