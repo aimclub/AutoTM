@@ -50,10 +50,14 @@ To overcome the tuning problems AutoTM presents an easy way to represent a learn
 * graph-based variant with more flexibility (**new in AutoTM 2.0**)
 
 Optimization procedure is done by genetic algorithm which operators are specifically tuned for 
-the each of the strategy creation variants. To speed up the procedure we also implemented surrogate modeling that, for some iterations, 
+the each of the strategy creation variants. 
+
+To speed up the procedure AutoTM also contain surrogate modeling implementation for fixed-size and graph-based (**New in AutoTM 2.0) learning strategies that, for some iterations, 
 approximate fitness function to reduce computation costs on training topic models.
 
-<img src="docs/img/autotm_arch_v3 (1).png" alt="Library scheme" height="700"/>
+<p align="center">
+    <img src="docs/img/autotm_arch_v3 (1).png" alt="Library scheme" height="700"/>
+</p>
 
 
 ## Installation
