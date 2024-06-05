@@ -4,6 +4,8 @@ from typing import List, Dict, Tuple
 
 import pytest
 
+from autotm.fitness.tm import ENV_AUTOTM_LLM_API_KEY
+
 
 def parse_vw(path: str) -> Dict[str, Dict[str, float]]:
     result = dict()
@@ -26,3 +28,9 @@ def parse_vw(path: str) -> Dict[str, Dict[str, float]]:
 @pytest.fixture(scope="session")
 def test_corpora_path(pytestconfig: pytest.Config) -> str:
     return os.path.join(pytestconfig.rootpath, "data", "processed_lenta_ru_sample_corpora")
+
+@pytest.fixture(scope="session")
+def openai_api_key() -> str:
+    if ENV_AUTOTM_LLM_API_KEY not in os.environ:
+        raise ValueError(f"Env var {ENV_AUTOTM_LLM_API_KEY} with openai API key is not set")
+    return os.environ[ENV_AUTOTM_LLM_API_KEY]

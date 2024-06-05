@@ -9,7 +9,7 @@ import uuid
 from collections import OrderedDict
 from contextlib import contextmanager
 from statistics import mean
-from typing import Dict, Optional, Tuple, ContextManager, List
+from typing import Dict, Optional, Tuple, ContextManager, List, Callable, Union
 
 import artm
 import gensim.corpora as corpora
@@ -46,26 +46,45 @@ Reply with a single number, indicating the overall appropriateness of the topic.
 """
 
 
-def estimate_topics_with_llm(tm: TopicModel,
+def estimate_topics_with_llm(model_id: str,
+                             topics: Dict[str, List[str]],
                              api_key: str,
+                             num_top_words: int = 10,
                              max_estimated_topics: Optional[int] = None,
                              estimations_per_topic: int = 5,
-                             seed: int = 42) -> float:
-    main_topics = {topic: words[:10] for topic, words in tm.get_topics() if topic.startswith("main")}
+                             seed: int = 42,
+                             agg_func: Union[str, Callable[[Dict[str, float]], float]] = 'mean') -> float:
+    main_topics = {topic: words[:num_top_words] for topic, words in topics if topic.startswith("main")}
+    all_main_topics_count = len(main_topics)
 
     if max_estimated_topics and len(main_topics) > max_estimated_topics:
         keys = sorted(main_topics.keys())
         keys = random.Random(x=seed).sample(keys, k=max_estimated_topics)
         main_topics = {k: main_topics[k] for k in keys}
 
-    api_key = api_key or os.environ.get(ENV_AUTOTM_LLM_API_KEY, None)
-
     if not api_key:
         raise ValueError(f"Api Key for ChatGPT is not provided. Probably, env var {ENV_AUTOTM_LLM_API_KEY} is not set.")
 
+    agg_funcs = {
+        'mean': lambda x: mean(x) if len(x) > 0 else 0.0,
+        'min': lambda x: min(x) if len(x) > 0 else 0.0,
+        'max': lambda x: max(x) if len(x) > 0 else 0.0
+    }
+    if isinstance(agg_func, str) and agg_func not in agg_funcs:
+        raise ValueError(
+            f"Only the following aggregating functions available by name: {agg_funcs.keys()}. Received: {agg_func}"
+        )
+    elif isinstance(agg_func, str):
+        agg_func = agg_funcs[agg_func]
+
+    logger.info(
+        "Estimating fitness (model: %s) for %s main topics (of %s all main topics) "
+        "with %s repetiton(s)" % (model_id, len(main_topics), all_main_topics_count, estimations_per_topic)
+    )
+
     client = OpenAI(api_key=api_key)
 
-    topics_scores = []
+    topics_scores = dict()
     for topic, words in main_topics:
         user_prompt = ", ".join(words)
 
@@ -84,14 +103,21 @@ def estimate_topics_with_llm(tm: TopicModel,
             try:
                 score = int(score)
             except ValueError:
-                logger.warning(f"Bad number: {score}")
+                logger.warning(
+                    f"Not numeric score estimation happened (model %s, topic %s): '%s'. "
+                    f"Words: %s" % (model_id, topic, score, words)
+                )
 
             individual_topic_scores.append(score)
 
         topic_score = mean(individual_topic_scores) if len(individual_topic_scores) > 0 else 0.0
-        topics_scores.append(topic_score)
+        topics_scores[topic] = topic_score
 
-    return mean(topics_scores) if len(topics_scores) > 0 else 0.0
+    fitness = agg_func(topics_scores)
+
+    logger.debug("Estimated fitness (model %s): %s" % (model_id, fitness))
+
+    return fitness
 
 
 def extract_topics(model: artm.ARTM):
@@ -370,7 +396,8 @@ def fit_tm_of_individual(
             elif fitness_name == "llm":
                 with log_exec_timer("Metrics calculation") as metrics_timer:
                     fitness = estimate_topics_with_llm(
-                        tm.get_topics(),
+                        model_id=str(tm.uid),
+                        topics=tm.get_topics(),
                         api_key=os.environ.get(ENV_AUTOTM_LLM_API_KEY, None),
                         max_estimated_topics=os.environ.get(ENV_AUTOTM_LLM_MAX_ESTIMATED_TOPICS, None),
                         estimations_per_topic=int(os.environ.get(ENV_AUTOTM_LLM_ESTIMATIONS_PER_TOPIC, "5"))
