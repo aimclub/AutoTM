@@ -2,7 +2,10 @@ import io
 import logging
 import multiprocessing as mp
 import os
+import re
+import sys
 from collections import Counter
+from contextlib import contextmanager
 from datetime import datetime
 from functools import partial
 from multiprocessing import Pool
@@ -171,3 +174,29 @@ def make_log_config_dict(
             },
         },
     }
+
+
+@contextmanager
+def do_suppress_stdout():
+    save_stdout = sys.stdout
+    save_stderr = sys.stderr
+    stdout_file_name = "stdout.txt"
+    stderr_file_name = "stderr.txt"
+    try:
+        with open(stdout_file_name, 'a') as out:
+            with open(stderr_file_name, 'a') as err:
+                sys.stdout = out
+                sys.stderr = err
+                yield
+                out.flush()
+                err.flush()
+    finally:
+        sys.stdout = save_stdout
+        # sys.stderr = save_stderr
+        if os.path.exists(stdout_file_name) and os.path.getsize(stdout_file_name) == 0:
+            os.remove(stdout_file_name)
+        if os.path.exists(stderr_file_name):
+            with open(stderr_file_name, 'r') as file:
+                content = file.read()
+                if re.match(r'((^\d+it \[\d+:\d+, \?(\d+(\.\d+)?)?it/s\])?\n$)*', content):
+                    os.remove(stderr_file_name)

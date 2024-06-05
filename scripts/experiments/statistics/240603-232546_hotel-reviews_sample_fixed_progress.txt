@@ -1,0 +1,7 @@
+hotel-reviews_sample,False,4,0.7727277367346939
+hotel-reviews_sample,False,5,0.7727277367346939
+hotel-reviews_sample,False,6,0.7727277367346939
+hotel-reviews_sample,False,7,0.7727277367346939
+hotel-reviews_sample,False,8,0.7727277367346939
+hotel-reviews_sample,False,9,0.7727277367346939
+hotel-reviews_sample,False,10,0.7727277367346939

@@ -1,3 +1,4 @@
+import logging
 import os
 import time
 import warnings
@@ -11,6 +12,8 @@ GENERATION_COL = "generation"
 FITNESS_COL = "fitness"
 FITNESS_DIFF_COL = "fitness_diff"
 PARAMS_DIST_COL = "params_dist"
+
+logger = logging.getLogger(__name__)
 
 
 class MetricsCollector:
@@ -163,7 +166,7 @@ class MetricsCollector:
 
     def get_metric_df(self):
         if self.metric_df is not None:
-            print("Metric df already exists")
+            logger("Metric df already exists")
         else:
             population_max = []
             for i in range(self.num_generations + 1):
@@ -177,7 +180,7 @@ class MetricsCollector:
                 columns=[GENERATION_COL, FITNESS_COL],
             )
         if self.mutation_df is not None:
-            print("Mutation df already exists")
+            logger.info("Mutation df already exists")
         else:
             dfs = []
             for gen in self.mutation_changes:
@@ -193,10 +196,10 @@ class MetricsCollector:
             if len(dfs) > 0:
                 self.mutation_df = pd.concat(dfs)
             else:
-                warnings.warn("No mutations changes have been found to save", RuntimeWarning)
+                # warnings.warn("No mutations changes have been found to save", RuntimeWarning)
                 self.mutation_df = pd.DataFrame([])
         if self.crossover_df is not None:
-            print("Crossover df already exists")
+            logger.info("Crossover df already exists")
         else:
             dfs = []
             for gen in self.crossover_changes:

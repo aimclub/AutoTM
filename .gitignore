@@ -174,8 +174,8 @@ examples/experiments/*.txt
 examples/experiments/*/*.txt
 examples/experiments/*.png
 examples/experiments/*/*.png
-examples/experiments/metrics
-examples/experiments/mlruns
+scripts/experiments/metrics
+scripts/experiments/mlruns
 
 rsync-repo.sh
 

@@ -5,6 +5,7 @@ import subprocess
 import sys
 import time
 import warnings
+from contextlib import contextmanager
 from typing import Optional
 
 import numpy as np

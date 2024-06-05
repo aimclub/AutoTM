@@ -612,9 +612,4 @@ class GAmultistage(GA):
         return dict_of_stages
 
     def init_population(self):
-        # if random.random() < self.initial_element_stage_probability:
-        #
-        # for i in range(self.max_stages):
-        #     print()
-
         raise NotImplementedError
