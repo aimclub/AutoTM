@@ -82,7 +82,9 @@ From source:
 
 ## Quickstart
 
-The notebook with an example is available in ```examples``` folder.
+Start with the notebook:
+
+- - [Easy topic modeling with AutoTM](https://github.com/aimclub/AutoTM/blob/main/examples/autotm_fit_predict.py)
 
 ## Running from the command line
 
