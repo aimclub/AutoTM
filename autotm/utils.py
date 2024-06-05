@@ -15,6 +15,7 @@ import pandas as pd
 MetricsScores = Dict[str, Any]
 TimeMeasurements = Dict[str, float]
 AVG_COHERENCE_SCORE = "avg_coherence_score"
+LLM_SCORE = "llm_score"
 
 logger = logging.getLogger(__name__)
 

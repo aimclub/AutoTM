@@ -46,6 +46,7 @@ pymongo = "3.11.3"
 scikit-learn = "1.1.1"
 #pydantic = "1.10.8"
 pydantic = "2.6.0"
+openai = "^1.31.0"
 
 [tool.poetry.dev-dependencies]
 black = "*"
