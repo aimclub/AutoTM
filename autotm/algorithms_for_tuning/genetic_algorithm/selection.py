@@ -7,7 +7,6 @@ import random
 
 
 def yield_matching_pairs(pairs, population):
-    # print('Number of pairs: {}'.format(pairs))
     population.sort(key=operator.attrgetter("fitness_value"))
     population_pairs_pool = []
 

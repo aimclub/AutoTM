@@ -149,7 +149,7 @@ def lemmatize_text(df, **kwargs):
     elif lang == "en":
         df["processed_text"] = df[col_to_process].apply(lemmatize_text_en)
     else:
-        print(f"The language {lang} is not known")
+        logger.error(f"The language {lang} is not known")
         raise NameError
     return df
 

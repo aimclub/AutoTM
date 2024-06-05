@@ -590,7 +590,6 @@ class TopicModel:
             self.model, s=self.S, b=self.params.basic_topics
         )
         if for_individ_fitness:
-            # print('COMPONENTS: ', np.mean(list(coherences_main.values())), np.min(list(coherences_main.values())))
             return np.mean(list(coherences_main.values())) + np.min(
                 list(coherences_main.values())
             )
