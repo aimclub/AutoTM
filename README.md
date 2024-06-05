@@ -39,14 +39,18 @@ Topic modeling is one of the basic methods for a whole range of tasks:
 * Searching for hidden insights in the data
 
 While ARTM (additive regularization for topic models) approach provides the significant flexibility and quality comparative or better that neural 
-approaches it is hard to tune such models due to amount of hyperparameters and their combinations.
+approaches it is hard to tune such models due to amount of hyperparameters and their combinations. That is why we provide optimization pipelines to efortlessly process custom datasets.
 
-To overcome the tuning problems AutoTM presents an easy way to represent a learning strategy to train specific models for input corporas.
+To overcome the tuning problems AutoTM presents an easy way to represent a learning strategy to train specific models for input corporas. We implement two strategy variants:
+
+* fixed-size variant, that provides a learning strategy that follow the best practices collected from the manual tuning history
 
 <img src="docs/img/strategy.png" alt="Learning strategy representation" height=""/>
 
+* graph-based variant with more flexibility (**new in AutoTM 2.0**)
+
 Optimization procedure is done by genetic algorithm which operators are specifically tuned for 
-the task. To speed up the procedure we also implemented surrogate modeling that, for some iterations, 
+the each of the strategy creation variants. To speed up the procedure we also implemented surrogate modeling that, for some iterations, 
 approximate fitness function to reduce computation costs on training topic models.
 
 <img src="docs/img/img_library_eng.png" alt="Library scheme" height=""/>
