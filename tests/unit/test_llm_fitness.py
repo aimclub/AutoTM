@@ -1,6 +1,11 @@
-from autotm.fitness.tm import estimate_topics_with_llm
+import os
+
+import pytest
+
+from autotm.fitness.tm import estimate_topics_with_llm, ENV_AUTOTM_LLM_API_KEY
 
 
+@pytest.mark.skipif(ENV_AUTOTM_LLM_API_KEY not in os.environ, reason=F"ChatGPT API key is not available. {ENV_AUTOTM_LLM_API_KEY} is not set.")
 def test_llm_fitness_estimation(openai_api_key: str):
     topics = {
         "main0": 'entry launch remark rule satellite european build contest player test francis given author canadian cipher',

@@ -7,7 +7,7 @@ def main():
     os.environ['AUTOTM_COMPONENT'] = 'worker'
     os.environ['AUTOTM_EXEC_MODE'] = 'cluster'
 
-    from autotm.fitness.tasks import make_celery_app
+    from autotm.fitness.cluster_tasks import make_celery_app
     from autotm.fitness.tm import TopicModelFactory
 
     if "DATASETS_CONFIG" in os.environ:
