@@ -28,7 +28,8 @@ for nltk_component in nltk_components:
     try:
         nltk.data.find(nltk_component)
     except LookupError:
-        nltk.download(nltk_component.split('/')[-1])
+        nltk_component_name = os.path.splitext(os.path.basename(nltk_component))[0]
+        nltk.download(nltk_component_name)
 
 stop = stopwords.words("russian") + [" "] + stopwords.words("english")
 
