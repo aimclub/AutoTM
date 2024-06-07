@@ -22,7 +22,7 @@ PROCESSED_TEXT_COLUMN = "processed_text"
 logger = logging.getLogger(__name__)
 
 # TODO: make transformer class and prep function to download all files
-nltk_components = ['corpora/stopwords.zip', 'corpora/wordnet.zip']
+nltk_components = ['corpora/stopwords', 'corpora/wordnet.zip']
 
 for nltk_component in nltk_components:
     try:
