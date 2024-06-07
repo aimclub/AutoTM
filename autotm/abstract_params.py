@@ -19,7 +19,12 @@ class AbstractParams(ABC):
         ...
 
     @abstractmethod
-    def run_train(self, model: "TopicModel"):
+    def run_train(self, model):
+        """
+        Trains the topic model
+        :param model: an instance of TopicModel
+        :return:
+        """
         ...
 
     @abstractmethod

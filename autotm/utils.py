@@ -102,6 +102,8 @@ def parallelize_dataframe(df: pd.DataFrame, func, n_cores, return_type="df", **k
         elif isinstance(map_res[0], tuple):
             zipped_elems = list(zip(*map_res))
             res = (merge_dicts(zipped_elems[0]), merge_dicts(zipped_elems[1]))
+    else:
+        raise ValueError(f"Unsupported return_type: {return_type}")
     pool.close()
     pool.join()
     return res

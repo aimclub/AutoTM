@@ -22,13 +22,14 @@ PROCESSED_TEXT_COLUMN = "processed_text"
 logger = logging.getLogger(__name__)
 
 # TODO: make transformer class and prep function to download all files
-nltk_components = ['corpora/stopwords.zip', 'corpora/wordnet.zip']
+nltk_components = ['corpora/stopwords', 'corpora/wordnet.zip']
 
 for nltk_component in nltk_components:
     try:
         nltk.data.find(nltk_component)
     except LookupError:
-        nltk.download(nltk_component.split('/')[-1])
+        nltk_component_name = os.path.splitext(os.path.basename(nltk_component))[0]
+        nltk.download(nltk_component_name)
 
 stop = stopwords.words("russian") + [" "] + stopwords.words("english")
 

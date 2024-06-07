@@ -1,5 +1,4 @@
 import copy
-import logging
 import random
 from typing import List
 
@@ -11,7 +10,6 @@ from autotm.fitness.tm import TopicModel
 from autotm.graph_ga import create_pipeline, crossover_pipelines, mutate_pipeline
 from autotm.pipeline import Pipeline, Stage, StageType, Param, create_stage, IntRangeDistribution, \
     FloatRangeDistribution
-from autotm.utils import do_suppress_stdout
 
 PARAM_NAMES = [
     "val_decor",
