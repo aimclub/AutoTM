@@ -1,21 +1,18 @@
-from matplotlib import offsetbox
 import matplotlib.pyplot as plt
-import matplotlib.patheffects as PathEffects
-import seaborn as sns
-import pandas as pd
-import numpy as np
-import plotly.graph_objects as go
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
-from sklearn.manifold import TSNE
-import warnings
 import copy
+import warnings
 
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.manifold import TSNE
+from sklearn.preprocessing import StandardScaler
 
 warnings.filterwarnings('ignore')
 
 
-def cluster_phi(phi_df: pd.dataFrame, n_clusters=10, plot_img=True):
+def cluster_phi(phi_df: pd.DataFrame, n_clusters=10, plot_img=True):
     _phi_df = copy.deepcopy(phi_df)
     y = _phi_df.index.values
     x = _phi_df.values
