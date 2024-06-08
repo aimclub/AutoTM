@@ -172,7 +172,7 @@ def run_algorithm(
         exp_id: Union[int, str],
         topic_count: int,
         num_individuals: int = 11,
-        num_iterations: int = 400,
+        num_iterations: int = 50,
         num_fitness_evaluations: int = None,
         mutation_type: str = "psm",
         crossover_type: str = "blend_crossover",
