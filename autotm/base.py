@@ -162,7 +162,7 @@ class AutoTM(BaseEstimator):
                 exp_id=self.exp_id or "0",
                 topic_count=self.topic_count,
                 log_file=self.log_file_path,
-                **self.alg_params
+                **(self.alg_params or dict())
             )
         else:
             # TODO: refactor this function
@@ -172,7 +172,7 @@ class AutoTM(BaseEstimator):
                 topic_count=self.topic_count,
                 log_file=self.log_file_path,
                 exp_id=self.exp_id or "0",
-                **self.alg_params
+                **(self.alg_params or dict())
             )
 
         self._model = best_topic_model.model

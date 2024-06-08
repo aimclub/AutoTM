@@ -3,6 +3,7 @@ import os
 import tempfile
 
 import pandas as pd
+import pytest
 from numpy.typing import ArrayLike
 from sklearn.model_selection import train_test_split
 
@@ -22,9 +23,13 @@ def check_predictions(autotm: AutoTM, df: pd.DataFrame, mixtures: ArrayLike):
     assert (~mixtures.isnull()).all().all()
 
 
-def test_fit_predict(pytestconfig):
+@pytest.mark.parametrize('lang,dataset_path', [
+    ('ru', 'data/sample_corpora/sample_dataset_lenta.csv'),
+    ('en', 'data/sample_corpora/imdb_1000.csv')
+], ids=['lenta_ru', 'imdb_1000'])
+def test_fit_predict(pytestconfig, lang, dataset_path):
     # dataset with corpora to be processed
-    path_to_dataset = os.path.join(pytestconfig.rootpath, "data/sample_corpora/sample_dataset_lenta.csv")
+    path_to_dataset = os.path.join(pytestconfig.rootpath, dataset_path)
     alg_name = "ga"
 
     df = pd.read_csv(path_to_dataset)
@@ -35,18 +40,18 @@ def test_fit_predict(pytestconfig):
 
         autotm = AutoTM(
             preprocessing_params={
-                "lang": "ru",
+                "lang": lang,
                 "min_tokens_count": 3
             },
             alg_name=alg_name,
             alg_params={
                 "num_iterations": 2,
                 "num_individuals": 4,
-                "use_pipeline": False,
-                "use_nelder_mead_in_mutation": False,
-                "use_nelder_mead_in_crossover": False,
-                "use_nelder_mead_in_selector": False,
-                "train_option": "offline"
+                # "use_pipeline": True,
+                # "use_nelder_mead_in_mutation": False,
+                # "use_nelder_mead_in_crossover": False,
+                # "use_nelder_mead_in_selector": False,
+                # "train_option": "offline"
             },
             working_dir_path=tmp_working_dir
         )
