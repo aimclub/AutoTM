@@ -26,8 +26,8 @@ CONFIGURATIONS = {
         "alg_name": "ga",
         "dataset": {
             "lang": "en",
-            "dataset_path": "data/sample_corpora/imdb_1000.csv",
-            "dataset_name": "imdb_1000"
+            "dataset_path": "data/sample_corpora/imdb_100.csv",
+            "dataset_name": "imdb_100"
         },
         "num_iterations": 2,
         "num_individuals": 2,
