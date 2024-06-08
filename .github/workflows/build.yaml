@@ -30,7 +30,7 @@ jobs:
             python -m pip install --upgrade pip
             python -m pip install flake8 pytest poetry
             poetry export -f requirements.txt --without-hashes --with dev > requirements.txt
-            pip install --ignore-installed -r requirements.txt
+            pip install -r requirements.txt
       - name: Download english corpus
         run: python -m spacy download en_core_web_sm
       - name: set pythonpath
