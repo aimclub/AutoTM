@@ -2,7 +2,7 @@ import logging
 
 import os
 import uuid
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -18,6 +18,17 @@ logger = logging.getLogger()
 CONFIGURATIONS = {
     "base": {
         "alg_name": "ga",
+        "num_iterations": 2,
+        "num_individuals": 2,
+        "use_pipeline": True
+    },
+    "base_en": {
+        "alg_name": "ga",
+        "dataset": {
+            "lang": "en",
+            "dataset_path": "data/sample_corpora/imdb_100.csv",
+            "dataset_name": "imdb_100"
+        },
         "num_iterations": 2,
         "num_individuals": 2,
         "use_pipeline": True
@@ -49,10 +60,15 @@ CONFIGURATIONS = {
 }
 
 
-def run(alg_name: str, alg_params: Dict[str, Any]):
-    path_to_dataset = "data/sample_corpora/sample_dataset_lenta.csv"
+def run(alg_name: str, alg_params: Dict[str, Any], dataset: Optional[Dict[str, Any]] = None):
+    if not dataset:
+        dataset = {
+            "lang": "ru",
+            "dataset_path": "data/sample_corpora/sample_dataset_lenta.csv",
+            "dataset_name": "lenta_ru"
+        }
 
-    df = pd.read_csv(path_to_dataset)
+    df = pd.read_csv(dataset['dataset_path'])
     train_df, test_df = train_test_split(df, test_size=0.1)
 
     working_dir_path = f"./autotm_workdir_{uuid.uuid4()}"
@@ -61,13 +77,13 @@ def run(alg_name: str, alg_params: Dict[str, Any]):
     autotm = AutoTM(
         topic_count=20,
         preprocessing_params={
-            "lang": "ru",
+            "lang": dataset['lang'],
             "min_tokens_count": 3
         },
         alg_name=alg_name,
         alg_params=alg_params,
         working_dir_path=working_dir_path,
-        exp_dataset_name="lenta_ru"
+        exp_dataset_name=dataset["dataset_name"]
     )
     mixtures = autotm.fit_predict(train_df)
 
@@ -93,8 +109,13 @@ def main(conf_name: str = "base"):
     alg_name = conf['alg_name']
     del conf['alg_name']
 
-    run(alg_name=alg_name, alg_params=conf)
+    dataset = None
+    if 'dataset' in conf:
+        dataset = conf['dataset']
+        del conf['dataset']
+
+    run(alg_name=alg_name, alg_params=conf, dataset=dataset)
 
 
 if __name__ == "__main__":
-    main()
+    main(conf_name="base_en")

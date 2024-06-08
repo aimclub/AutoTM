@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "autotm"
-version = "0.2.3.3"
+version = "0.2.3.4"
 description = "Automatic hyperparameters tuning for topic models (ARTM approach) using evolutionary algorithms"
 authors = [
     "Khodorchenko Maria <mariyaxod@yandex.ru>",
@@ -16,7 +16,7 @@ packages = [
 
 
 [tool.poetry.dependencies]
-python = ">=3.8, <3.12"
+python = ">=3.9, <3.12"
 bigartm = "0.9.2"
 protobuf = "<=3.20.0"
 tqdm = "4.50.2"
@@ -25,7 +25,7 @@ PyYAML = "5.3.1"
 dataclasses-json = "*"
 mlflow = "*"
 click = "8.0.1"
-scipy = "*"
+scipy = "<=1.10.1"
 hyperopt = "*"
 pymystem3 = "*"
 nltk = "*"

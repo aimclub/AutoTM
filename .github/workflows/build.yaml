@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11"]
 
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
@@ -30,7 +30,7 @@ jobs:
             python -m pip install --upgrade pip
             python -m pip install flake8 pytest poetry
             poetry export -f requirements.txt --without-hashes --with dev > requirements.txt
-            pip install --ignore-installed -r requirements.txt
+            pip install -r requirements.txt
       - name: Download english corpus
         run: python -m spacy download en_core_web_sm
       - name: set pythonpath
