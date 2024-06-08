@@ -68,13 +68,13 @@ AutoTM also propose a range of metrics that can be used as fitness function, lik
 
 ! Note: The functionality of topic models training is available only for linux distributions.
 
-Via pip:
+**Via pip:**
 
 ```pip install autotm```
 
 ```python -m spacy download en_core_web_sm```
 
-From source:
+**From source:**
 
 ```poetry install```  
 
