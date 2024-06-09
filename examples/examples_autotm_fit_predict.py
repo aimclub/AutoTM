@@ -15,11 +15,16 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 
+# "base" configuration is an example of default configuration of the algorithm
+# "base_en" is showing how to specify dataset parameters and pass it directly to the algorithm
+# "static_chromosome" is a previous version of optimization algorithm, may work faster comparing to the "pipeline" version, but results are slightly worse
+# "surrogate" is showing how to start training with surrogates option (increase optimization speed)
+# "llm" is an example of how to run optimization with gpt-base quality function
+# "bayes" is an option with Bayesian Optimization
 CONFIGURATIONS = {
     "base": {
         "alg_name": "ga",
-        "num_iterations": 2,
-        "num_individuals": 2,
+        "num_iterations": 50,
         "use_pipeline": True
     },
     "base_en": {
@@ -29,33 +34,29 @@ CONFIGURATIONS = {
             "dataset_path": "data/sample_corpora/imdb_100.csv",
             "dataset_name": "imdb_100"
         },
-        "num_iterations": 2,
-        "num_individuals": 2,
+        "num_iterations": 20,
         "use_pipeline": True
     },
     "static_chromosome": {
         "alg_name": "ga",
-        "num_iterations": 2,
-        "num_individuals": 2,
+        "num_iterations": 20,
         "use_pipeline": False
     },
     "surrogate": {
         "alg_name": "ga",
-        "num_iterations": 2,
-        "num_individuals": 2,
+        "num_iterations": 20,
         "use_pipeline": True,
         "surrogate_name": "random-forest-regressor"
     },
     "llm": {
         "alg_name": "ga",
-        "num_iterations": 2,
-        "num_individuals": 2,
+        "num_iterations": 20,
         "use_pipeline": True,
         "individual_type": "llm"
     },
     "bayes": {
         "alg_name": "bayes",
-        "num_evaluations": 5,
+        "num_evaluations": 150,
     }
 }
 
@@ -78,7 +79,6 @@ def run(alg_name: str, alg_params: Dict[str, Any], dataset: Optional[Dict[str, A
         topic_count=20,
         preprocessing_params={
             "lang": dataset['lang'],
-            "min_tokens_count": 3
         },
         alg_name=alg_name,
         alg_params=alg_params,
