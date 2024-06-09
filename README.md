@@ -84,9 +84,7 @@ AutoTM also propose a range of metrics that can be used as fitness function, lik
 
 ## Quickstart
 
-Start with the notebook:
-
-- [Easy topic modeling with AutoTM](https://github.com/aimclub/AutoTM/blob/main/examples/examples_autotm_fit_predict.py)
+Start with the notebook [Easy topic modeling with AutoTM](https://github.com/aimclub/AutoTM/blob/main/examples/demo_autotm.ipynb) or with the following script [AutoTM configurations](https://github.com/aimclub/AutoTM/blob/main/examples/examples_autotm_fit_predict.py)
 
 ## Running from the command line
 
