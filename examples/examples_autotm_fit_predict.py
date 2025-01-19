@@ -42,6 +42,19 @@ CONFIGURATIONS = {
         "num_iterations": 20,
         "use_pipeline": False
     },
+    "gost_example": {
+        "topic_count": 50,
+        "alg_name": "ga",
+        "num_iterations": 10,
+        "use_pipeline": True,
+        "dataset": {
+            "lang": "ru",
+            "col_to_process": 'paragraph',
+            "dataset_path": "data/sample_corpora/clean_docs_v17_gost_only.csv",
+            "dataset_name": "gost"
+        },
+        # "individual_type": "llm"
+    },
     "surrogate": {
         "alg_name": "ga",
         "num_iterations": 20,
@@ -61,7 +74,11 @@ CONFIGURATIONS = {
 }
 
 
-def run(alg_name: str, alg_params: Dict[str, Any], dataset: Optional[Dict[str, Any]] = None):
+def run(alg_name: str,
+        alg_params: Dict[str, Any],
+        dataset: Optional[Dict[str, Any]] = None,
+        col_to_process: Optional[str] = None,
+        topic_count: int = 20):
     if not dataset:
         dataset = {
             "lang": "ru",
@@ -76,10 +93,11 @@ def run(alg_name: str, alg_params: Dict[str, Any], dataset: Optional[Dict[str, A
     model_path = os.path.join(working_dir_path, "autotm_model")
 
     autotm = AutoTM(
-        topic_count=20,
+        topic_count=topic_count,
         preprocessing_params={
-            "lang": dataset['lang'],
+            "lang": dataset['lang']
         },
+        texts_column_name=col_to_process,
         alg_name=alg_name,
         alg_params=alg_params,
         working_dir_path=working_dir_path,
@@ -110,12 +128,25 @@ def main(conf_name: str = "base"):
     del conf['alg_name']
 
     dataset = None
+    col_to_process = None
     if 'dataset' in conf:
         dataset = conf['dataset']
+        col_to_process = conf['dataset'].get('col_to_process', None)
         del conf['dataset']
 
-    run(alg_name=alg_name, alg_params=conf, dataset=dataset)
+    topic_count = 20
+    if 'topic_count' in conf:
+        topic_count = conf['topic_count']
+        del conf['topic_count']
+
+    run(
+        alg_name=alg_name,
+        alg_params=conf,
+        dataset=dataset,
+        col_to_process=col_to_process,
+        topic_count=topic_count
+    )
 
 
 if __name__ == "__main__":
-    main(conf_name="base_en")
+    main(conf_name="gost_example")
