@@ -34,8 +34,9 @@ jobs:
         run: poetry run python -m spacy download en_core_web_sm
       - name: set pythonpath
         run: |
-          export LC_ALL=C.UTF-8
-          export LANG=C.UTF-8
+          export LC_ALL="C.UTF-8"
+          export LANG="C.UTF-8"
+          export LC_ALL="en_US.UTF-8"
           echo "PYTHONPATH=." >> $GITHUB_ENV
       - name: Lint with flake8
         run: |
