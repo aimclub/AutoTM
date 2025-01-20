@@ -40,5 +40,5 @@ jobs:
           flake8 autotm --count --select=E9,F63,F7,F82 --show-source --statistics
       - name: Run test code
         run: |
-          poetry runpytest tests
+          poetry run pytest tests
       - run: echo "🍏 This job's status is ${{ job.status }}."
