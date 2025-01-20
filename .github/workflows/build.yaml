@@ -29,6 +29,7 @@ jobs:
         run: |
             python -m pip install --upgrade pip
             python -m pip install flake8 pytest poetry
+            python -m pip install spacy
             poetry install
       - name: Download english corpus
         run: python -m spacy download en_core_web_sm
