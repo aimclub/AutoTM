@@ -32,11 +32,17 @@ jobs:
             poetry install
       - name: Download english corpus
         run: poetry run python -m spacy download en_core_web_sm
+      - name: Setting language and locale
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y locales
+          sudo locale-gen ru_RU.UTF-8
+          sudo update-locale
+          export LC_ALL="ru_RU.UTF-8"
+          export LANG="ru_RU.UTF-8"
+          export LANGUAGE="ru_RU.UTF-8"
       - name: set pythonpath
         run: |
-          export LC_ALL="C.UTF-8"
-          export LANG="C.UTF-8"
-          export LC_ALL="en_US.UTF-8"
           echo "PYTHONPATH=." >> $GITHUB_ENV
       - name: Lint with flake8
         run: |
