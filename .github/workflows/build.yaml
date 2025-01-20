@@ -31,7 +31,7 @@ jobs:
             python -m pip install flake8 pytest poetry spacy pandas
             poetry install
       - name: Download english corpus
-        run: python -m spacy download en_core_web_sm
+        run: poetry runpython -m spacy download en_core_web_sm
       - name: set pythonpath
         run: |
           echo "PYTHONPATH=." >> $GITHUB_ENV
