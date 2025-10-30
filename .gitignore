@@ -182,6 +182,8 @@ tmp
 
 data/amazon_food/
 data/lenta_ru/
+data/autotm_data_info/
 notebooks/*.jsonl
 notebooks/*.json
 notebooks/*.md
+notebooks/results/
