@@ -142,7 +142,6 @@ resources
 surrogate_logs/*
 *.orig
 *.pickle
-Notebooks/
 logs/
 examples/mlruns/
 data/experiment_datasets/
