@@ -182,3 +182,7 @@ rsync-repo.sh
 tmp
 
 data/amazon_food/
+data/lenta_ru/
+notebooks/*.jsonl
+notebooks/*.json
+notebooks/*.md
