@@ -67,7 +67,8 @@ except ImportError:
 
 # Try to import OpenAI client
 try:
-    from openai import OpenAI
+    from openai import OpenAI, AsyncOpenAI
+    import asyncio
     OPENAI_AVAILABLE = True
 except ImportError:
     OPENAI_AVAILABLE = False
@@ -248,51 +249,77 @@ def compute_coherence(
     return float(cm.get_coherence())
 
 
-def estimate_topics_with_llm(
+def _parse_llm_score(score_text: str) -> int:
+    """Parse LLM response to extract score (1-4)."""
+    # Handle chain-of-thought responses (e.g., Qwen with <think> tags)
+    if '</think>' in score_text:
+        clean_text = score_text.split('</think>')[-1].strip()
+    else:
+        clean_text = re.sub(r'<think>.*', '', score_text, flags=re.DOTALL).strip()
+    
+    if not clean_text:
+        clean_text = score_text
+    
+    # Parse score - look for standalone digits 1-4
+    score_match = re.search(r'\b([1-4])\b\s*$', clean_text)
+    if not score_match:
+        score_match = re.search(r'\b([1-4])\b', clean_text)
+    if not score_match:
+        score_match = re.search(r'[1-4]', clean_text)
+    
+    if score_match:
+        return int(score_match.group(1) if score_match.lastindex else score_match.group())
+    
+    return 2  # Default neutral score
+
+
+async def _evaluate_single_topic_async(
+    topic_id: str,
+    words: List[str],
+    client: "AsyncOpenAI",
+    model_name: str,
+    estimations_per_topic: int,
+    semaphore: asyncio.Semaphore,
+) -> Tuple[str, float]:
+    """Evaluate a single topic asynchronously."""
+    user_prompt = ", ".join(words)
+    scores = []
+    
+    async with semaphore:
+        for _ in range(estimations_per_topic):
+            try:
+                response = await client.chat.completions.create(
+                    model=model_name,
+                    messages=[
+                        {"role": "system", "content": SYSTEM_PROMPT_TOPICS_EVAL},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    temperature=0.7,
+                    max_tokens=1024,
+                )
+                score_text = response.choices[0].message.content.strip()
+                scores.append(_parse_llm_score(score_text))
+            except Exception as e:
+                logger.warning(f"LLM API error for topic {topic_id}: {e}")
+                continue
+    
+    return topic_id, mean(scores) if scores else 2.0
+
+
+async def _estimate_topics_with_llm_async(
     topics: Dict[str, List[str]],
-    api_key: Optional[str] = None,
-    base_url: Optional[str] = None,
-    model_name: str = "gpt-4o",
-    num_top_words: int = 10,
-    max_estimated_topics: Optional[int] = None,
-    estimations_per_topic: int = 3,
-    seed: int = 42,
-    agg_func: Union[str, Callable[[Dict[str, float]], float]] = 'mean',
+    api_key: str,
+    base_url: Optional[str],
+    model_name: str,
+    num_top_words: int,
+    max_estimated_topics: Optional[int],
+    estimations_per_topic: int,
+    max_concurrent: int,
+    seed: int,
+    agg_func: Callable[[Dict[str, float]], float],
 ) -> float:
-    """
-    Estimates quality of topics by calling an LLM (OpenAI-compatible API) to rate topic coherence.
-    
-    Args:
-        topics: Dictionary of topic_id -> list of top words
-        api_key: API key for the LLM service
-        base_url: Base URL for OpenAI-compatible API (e.g., vLLM server)
-        model_name: Model name to use
-        num_top_words: Number of top words to include in evaluation
-        max_estimated_topics: Limit number of topics to evaluate (for speed/cost)
-        estimations_per_topic: Number of repeated evaluations per topic
-        seed: Random seed for topic sampling
-        agg_func: Aggregation function ('mean', 'min', 'max') or callable
-        
-    Returns:
-        Aggregated LLM score (1-4 scale)
-    """
-    if not OPENAI_AVAILABLE:
-        logger.warning("OpenAI package not available. Skipping LLM evaluation.")
-        return float("nan")
-    
-    # Get credentials from environment if not provided
-    if api_key is None:
-        api_key = os.environ.get(ENV_LLM_API_KEY)
-    if base_url is None:
-        base_url = os.environ.get(ENV_LLM_BASE_URL)
-    if model_name == "gpt-4o":  # Default, check env
-        model_name = os.environ.get(ENV_LLM_MODEL_NAME, model_name)
-    
-    if not api_key:
-        logger.warning(f"LLM API key not provided. Set {ENV_LLM_API_KEY} env var or pass api_key.")
-        return float("nan")
-    
-    # Filter to main topics only (exclude background topics if present)
+    """Async implementation of LLM topic evaluation with parallelization."""
+    # Filter topics
     main_topics = {
         tid: words[:num_top_words] 
         for tid, words in topics.items() 
@@ -311,6 +338,91 @@ def estimate_topics_with_llm(
         keys = random.Random(x=seed).sample(keys, k=max_estimated_topics)
         main_topics = {k: main_topics[k] for k in keys}
     
+    logger.info(
+        f"Evaluating {len(main_topics)}/{all_main_topics_count} topics with LLM "
+        f"({estimations_per_topic} estimations each, {max_concurrent} concurrent)"
+    )
+    
+    # Initialize async client
+    client_kwargs = {"api_key": api_key}
+    if base_url:
+        client_kwargs["base_url"] = base_url
+    client = AsyncOpenAI(**client_kwargs)
+    
+    # Create semaphore for concurrency control
+    semaphore = asyncio.Semaphore(max_concurrent)
+    
+    # Create tasks for all topics
+    tasks = [
+        _evaluate_single_topic_async(
+            str(topic_id), words, client, model_name, estimations_per_topic, semaphore
+        )
+        for topic_id, words in main_topics.items()
+    ]
+    
+    # Run all tasks concurrently
+    results = await asyncio.gather(*tasks)
+    
+    # Collect scores
+    topics_scores = {tid: score for tid, score in results}
+    
+    if not topics_scores:
+        logger.warning("No topics were successfully evaluated by LLM.")
+        return float("nan")
+    
+    fitness = agg_func(topics_scores)
+    total_calls = len(main_topics) * estimations_per_topic
+    logger.info(f"LLM evaluation complete: {fitness:.3f} (from {total_calls} API calls)")
+    
+    return fitness
+
+
+def estimate_topics_with_llm(
+    topics: Dict[str, List[str]],
+    api_key: Optional[str] = None,
+    base_url: Optional[str] = None,
+    model_name: str = "gpt-4o",
+    num_top_words: int = 10,
+    max_estimated_topics: Optional[int] = None,
+    estimations_per_topic: int = 3,
+    max_concurrent: int = 10,
+    seed: int = 42,
+    agg_func: Union[str, Callable[[Dict[str, float]], float]] = 'mean',
+) -> float:
+    """
+    Evaluate topic coherence using LLM (parallelized).
+    
+    Args:
+        topics: Dict mapping topic_id -> list of top words
+        api_key: OpenAI API key (or from env AUTOTM_LLM_API_KEY)
+        base_url: OpenAI API base URL (or from env AUTOTM_LLM_BASE_URL)
+        model_name: Model to use (default: gpt-4o, or from env AUTOTM_LLM_MODEL_NAME)
+        num_top_words: Number of words to evaluate per topic
+        max_estimated_topics: Max topics to evaluate (None = all)
+        estimations_per_topic: Number of LLM calls per topic (averaged)
+        max_concurrent: Maximum concurrent API requests (default: 10)
+        seed: Random seed for topic sampling
+        agg_func: Aggregation function ('mean', 'min', 'max') or callable
+        
+    Returns:
+        Average score across topics (1-4 scale)
+    """
+    if not OPENAI_AVAILABLE:
+        logger.warning("OpenAI package not installed. Skipping LLM evaluation.")
+        return float("nan")
+    
+    # Get credentials from environment if not provided
+    if api_key is None:
+        api_key = os.environ.get(ENV_LLM_API_KEY)
+    if base_url is None:
+        base_url = os.environ.get(ENV_LLM_BASE_URL)
+    if model_name == "gpt-4o":  # Default, check env
+        model_name = os.environ.get(ENV_LLM_MODEL_NAME, model_name)
+    
+    if not api_key:
+        logger.warning(f"No API key provided and {ENV_LLM_API_KEY} not set. Skipping LLM evaluation.")
+        return float("nan")
+    
     # Setup aggregation function
     agg_funcs = {
         'mean': lambda x: mean(x.values()) if len(x) > 0 else 0.0,
@@ -322,85 +434,19 @@ def estimate_topics_with_llm(
             raise ValueError(f"Unknown agg_func: {agg_func}. Use: {list(agg_funcs.keys())}")
         agg_func = agg_funcs[agg_func]
     
-    logger.info(
-        f"Evaluating {len(main_topics)}/{all_main_topics_count} topics with LLM "
-        f"({estimations_per_topic} estimations each)"
-    )
-    
-    # Initialize OpenAI client
-    client_kwargs = {"api_key": api_key}
-    if base_url:
-        client_kwargs["base_url"] = base_url
-    client = OpenAI(**client_kwargs)
-    
-    topics_scores = {}
-    estimations_counter = 0
-    
-    for topic_id, words in main_topics.items():
-        user_prompt = ", ".join(words)
-        individual_scores = []
-        
-        for _ in range(estimations_per_topic):
-            try:
-                chat_completion = client.chat.completions.create(
-                    model=model_name,
-                    messages=[
-                        {"role": "system", "content": SYSTEM_PROMPT_TOPICS_EVAL},
-                        {"role": "user", "content": user_prompt}
-                    ],
-                    temperature=0.7,
-                    max_tokens=1024,  # Allow enough tokens for CoT reasoning + answer
-                )
-                score_text = chat_completion.choices[0].message.content.strip()
-                estimations_counter += 1
-                
-                # Handle chain-of-thought responses (e.g., Qwen with <think> tags)
-                # Extract content after </think> tag if present
-                if '</think>' in score_text:
-                    # Get everything after </think>
-                    clean_text = score_text.split('</think>')[-1].strip()
-                else:
-                    # Remove incomplete <think> tags (no closing tag)
-                    clean_text = re.sub(r'<think>.*', '', score_text, flags=re.DOTALL).strip()
-                
-                # If empty after removing think tags, try to find number anywhere in response
-                if not clean_text:
-                    clean_text = score_text
-                
-                # Parse score - look for standalone digits 1-4
-                # First try to find at the end of response (most likely answer location)
-                score_match = re.search(r'\b([1-4])\b\s*$', clean_text)
-                if not score_match:
-                    # Try to find any standalone 1-4
-                    score_match = re.search(r'\b([1-4])\b', clean_text)
-                if not score_match:
-                    # Fall back to any digit 1-4
-                    score_match = re.search(r'[1-4]', clean_text)
-                
-                if score_match:
-                    score = int(score_match.group(1) if score_match.lastindex else score_match.group())
-                else:
-                    # Log only first 50 chars to avoid spam
-                    logger.warning(f"Could not parse LLM score: '{score_text[:50]}...' for topic {topic_id}")
-                    score = 2  # Default neutral score
-                
-                individual_scores.append(score)
-                
-            except Exception as e:
-                logger.warning(f"LLM API error for topic {topic_id}: {e}")
-                continue
-        
-        if individual_scores:
-            topics_scores[topic_id] = mean(individual_scores)
-    
-    if not topics_scores:
-        logger.warning("No topics were successfully evaluated by LLM.")
-        return float("nan")
-    
-    fitness = agg_func(topics_scores)
-    logger.info(f"LLM evaluation complete: {fitness:.3f} (from {estimations_counter} API calls)")
-    
-    return fitness
+    # Run async evaluation
+    return asyncio.run(_estimate_topics_with_llm_async(
+        topics=topics,
+        api_key=api_key,
+        base_url=base_url,
+        model_name=model_name,
+        num_top_words=num_top_words,
+        max_estimated_topics=max_estimated_topics,
+        estimations_per_topic=estimations_per_topic,
+        max_concurrent=max_concurrent,
+        seed=seed,
+        agg_func=agg_func,
+    ))
 
 
 # -----------------------------

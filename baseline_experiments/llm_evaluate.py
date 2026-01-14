@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-LLM-based Topic Evaluation Script
+LLM-based Topic Evaluation Script (Parallelized)
 
 Evaluates topic quality using an LLM (OpenAI-compatible API).
 Can be run as a post-processing step after topic modeling experiments.
@@ -13,11 +13,12 @@ Usage:
     # Evaluate Gensim LDA results
     python llm_evaluate.py --results_dir results/gensim_hotel --framework gensim
     
-    # Custom settings
+    # Custom settings with parallelization
     python llm_evaluate.py --results_dir results/bertopic_hotel_full \
         --framework bertopic \
         --max_topics 10 \
         --estimations 3 \
+        --max_concurrent 10 \
         --output results/bertopic_hotel_full/llm_scores.csv
 
 Environment variables (or use .env file):
@@ -29,6 +30,7 @@ Environment variables (or use .env file):
 from __future__ import annotations
 
 import argparse
+import asyncio
 import json
 import logging
 import os
@@ -38,7 +40,7 @@ import sys
 import time
 from pathlib import Path
 from statistics import mean
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import pandas as pd
 from tqdm import tqdm
@@ -52,7 +54,7 @@ except ImportError:
 
 # Try to import OpenAI client
 try:
-    from openai import OpenAI
+    from openai import OpenAI, AsyncOpenAI
     OPENAI_AVAILABLE = True
 except ImportError:
     OPENAI_AVAILABLE = False
@@ -76,86 +78,88 @@ SYSTEM_PROMPT = """You rate topic coherence. Given a list of words from a topic 
 IMPORTANT: Reply with ONLY a single digit (1, 2, 3, or 4). No explanation needed."""
 
 
-def evaluate_topic_with_llm(
-    words: List[str],
-    client: OpenAI,
-    model_name: str,
-    num_estimations: int = 3,
-) -> float:
-    """
-    Evaluate a single topic using LLM.
+def parse_llm_score(score_text: str) -> int:
+    """Parse LLM response to extract score (1-4)."""
+    # Handle chain-of-thought responses (e.g., Qwen with <think> tags)
+    if '</think>' in score_text:
+        clean_text = score_text.split('</think>')[-1].strip()
+    else:
+        clean_text = re.sub(r'<think>.*', '', score_text, flags=re.DOTALL).strip()
     
-    Args:
-        words: List of top words for the topic
-        client: OpenAI client
-        model_name: Model name
-        num_estimations: Number of repeated evaluations
-        
-    Returns:
-        Average score (1-4)
+    if not clean_text:
+        clean_text = score_text
+    
+    # Parse score
+    score_match = re.search(r'\b([1-4])\b', clean_text)
+    if not score_match:
+        score_match = re.search(r'[1-4]', clean_text)
+    
+    if score_match:
+        return int(score_match.group(1) if score_match.lastindex else score_match.group())
+    
+    logger.debug(f"Could not parse score from: {score_text[:50]}...")
+    return 2  # Default neutral
+
+
+async def evaluate_single_topic_async(
+    topic_id: str,
+    words: List[str],
+    client: AsyncOpenAI,
+    model_name: str,
+    num_estimations: int,
+    semaphore: asyncio.Semaphore,
+) -> Tuple[str, float]:
     """
-    user_prompt = ", ".join(words)
+    Evaluate a single topic asynchronously.
+    
+    Returns:
+        Tuple of (topic_id, average_score)
+    """
+    user_prompt = ", ".join(words[:10])
     scores = []
     
-    for _ in range(num_estimations):
-        try:
-            response = client.chat.completions.create(
-                model=model_name,
-                messages=[
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": user_prompt}
-                ],
-                temperature=0.7,
-                max_tokens=1024,
-            )
-            
-            score_text = response.choices[0].message.content.strip()
-            
-            # Handle chain-of-thought responses (e.g., Qwen with <think> tags)
-            if '</think>' in score_text:
-                clean_text = score_text.split('</think>')[-1].strip()
-            else:
-                clean_text = re.sub(r'<think>.*', '', score_text, flags=re.DOTALL).strip()
-            
-            if not clean_text:
-                clean_text = score_text
-            
-            # Parse score
-            score_match = re.search(r'\b([1-4])\b', clean_text)
-            if not score_match:
-                score_match = re.search(r'[1-4]', clean_text)
-            
-            if score_match:
-                score = int(score_match.group(1) if score_match.lastindex else score_match.group())
-                scores.append(score)
-            else:
-                logger.debug(f"Could not parse score from: {score_text[:50]}...")
-                scores.append(2)  # Default neutral
+    async with semaphore:
+        for _ in range(num_estimations):
+            try:
+                response = await client.chat.completions.create(
+                    model=model_name,
+                    messages=[
+                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    temperature=0.7,
+                    max_tokens=1024,
+                )
                 
-        except Exception as e:
-            logger.warning(f"LLM API error: {e}")
-            continue
+                score_text = response.choices[0].message.content.strip()
+                scores.append(parse_llm_score(score_text))
+                
+            except Exception as e:
+                logger.warning(f"LLM API error for topic {topic_id}: {e}")
+                continue
     
-    return mean(scores) if scores else 2.0
+    return topic_id, mean(scores) if scores else 2.0
 
 
-def evaluate_topics(
+async def evaluate_topics_async(
     topics: Dict[str, List[str]],
-    client: OpenAI,
+    client: AsyncOpenAI,
     model_name: str,
     max_topics: Optional[int] = None,
     num_estimations: int = 3,
+    max_concurrent: int = 10,
     seed: int = 42,
 ) -> Dict[str, Any]:
     """
-    Evaluate multiple topics using LLM.
+    Evaluate multiple topics using LLM with parallelization.
     
     Args:
         topics: Dict of topic_id -> list of words
-        client: OpenAI client
+        client: AsyncOpenAI client
         model_name: Model name
         max_topics: Maximum topics to evaluate
         num_estimations: Estimations per topic
+        max_concurrent: Maximum concurrent API calls
         seed: Random seed for sampling
         
     Returns:
@@ -176,12 +180,22 @@ def evaluate_topics(
         random.seed(seed)
         topic_ids = random.sample(topic_ids, max_topics)
     
-    # Evaluate
-    topic_scores = {}
-    for tid in tqdm(topic_ids, desc="Evaluating topics", leave=False):
-        words = main_topics[tid][:10]  # Top 10 words
-        score = evaluate_topic_with_llm(words, client, model_name, num_estimations)
-        topic_scores[tid] = score
+    # Create semaphore for concurrency control
+    semaphore = asyncio.Semaphore(max_concurrent)
+    
+    # Create tasks for all topics
+    tasks = [
+        evaluate_single_topic_async(
+            tid, main_topics[tid], client, model_name, num_estimations, semaphore
+        )
+        for tid in topic_ids
+    ]
+    
+    # Run all tasks concurrently
+    results = await asyncio.gather(*tasks)
+    
+    # Collect scores
+    topic_scores = {tid: score for tid, score in results}
     
     return {
         "llm_score": mean(topic_scores.values()) if topic_scores else float("nan"),
@@ -193,11 +207,25 @@ def evaluate_topics(
     }
 
 
-def load_bertopic_topics(run_dir: Path, run_id: str) -> Optional[Dict[str, List[str]]]:
-    """Load topics from BERTopic results."""
-    topics_file = run_dir / f"{run_id}.topics.json"
+async def evaluate_run_async(
+    run_info: Dict[str, Any],
+    client: AsyncOpenAI,
+    model_name: str,
+    max_topics: int,
+    num_estimations: int,
+    max_concurrent: int,
+    runs_dir: Path,
+) -> Dict[str, Any]:
+    """Evaluate a single run asynchronously."""
+    run_id = run_info.get("run_id", "unknown")
+    config = run_info.copy()
+    
+    # Load topics
+    topics_file = runs_dir / f"{run_id}.topics.json"
     if not topics_file.exists():
-        return None
+        logger.warning(f"No topics found for {run_id}")
+        config["llm_score"] = float("nan")
+        return config
     
     with open(topics_file, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -209,39 +237,40 @@ def load_bertopic_topics(run_dir: Path, run_id: str) -> Optional[Dict[str, List[
             if tid != "-1":
                 topics[tid] = [w for w, _ in words_scores]
     
-    return topics if topics else None
-
-
-def load_gensim_topics(results_file: Path) -> Optional[Dict[str, Dict[str, List[str]]]]:
-    """Load topics from Gensim LDA results (JSONL format)."""
-    if not results_file.exists():
-        return None
+    if not topics:
+        config["llm_score"] = float("nan")
+        return config
     
-    runs = {}
-    with open(results_file, "r", encoding="utf-8") as f:
-        for line in f:
-            try:
-                data = json.loads(line)
-                run_id = f"seed{data.get('seed', 0)}"
-                if "topics" in data:
-                    topics = {}
-                    for tid, words in enumerate(data["topics"]):
-                        topics[str(tid)] = words if isinstance(words, list) else words.split()
-                    runs[run_id] = topics
-            except json.JSONDecodeError:
-                continue
+    # Evaluate
+    seed = config.get("seed", 42)
+    eval_result = await evaluate_topics_async(
+        topics, client, model_name, max_topics, num_estimations, max_concurrent, seed
+    )
     
-    return runs if runs else None
+    config.update({
+        "llm_score": eval_result["llm_score"],
+        "llm_score_min": eval_result["llm_score_min"],
+        "llm_score_max": eval_result["llm_score_max"],
+        "llm_topics_evaluated": eval_result["topics_evaluated"],
+    })
+    
+    # Save updated config
+    config_file = runs_dir / f"{run_id}.config.json"
+    with open(config_file, "w", encoding="utf-8") as f:
+        json.dump(config, f, indent=2, ensure_ascii=False)
+    
+    return config
 
 
-def evaluate_bertopic_results(
+async def evaluate_bertopic_results_async(
     results_dir: Path,
-    client: OpenAI,
+    client: AsyncOpenAI,
     model_name: str,
     max_topics: int,
     num_estimations: int,
+    max_concurrent: int,
 ) -> pd.DataFrame:
-    """Evaluate all BERTopic results in a directory."""
+    """Evaluate all BERTopic results in a directory with parallelization."""
     runs_dir = results_dir / "runs"
     if not runs_dir.exists():
         raise FileNotFoundError(f"Runs directory not found: {runs_dir}")
@@ -253,62 +282,55 @@ def evaluate_bertopic_results(
     
     logger.info(f"Found {len(config_files)} runs to evaluate")
     
-    results = []
-    for config_file in tqdm(config_files, desc="Evaluating runs"):
-        run_id = config_file.stem.replace(".config", "")
-        
-        # Load existing config
+    # Load all configs
+    run_infos = []
+    for config_file in config_files:
         with open(config_file, "r", encoding="utf-8") as f:
             config = json.load(f)
-        
-        # Load topics
-        topics = load_bertopic_topics(runs_dir, run_id)
-        if not topics:
-            logger.warning(f"No topics found for {run_id}")
-            config["llm_score"] = float("nan")
-            results.append(config)
-            continue
-        
-        # Evaluate
-        seed = config.get("seed", 42)
-        eval_result = evaluate_topics(
-            topics, client, model_name, max_topics, num_estimations, seed
+            config["run_id"] = config_file.stem.replace(".config", "")
+            run_infos.append(config)
+    
+    # Process runs with progress bar (runs are sequential, but topics within run are parallel)
+    results = []
+    for run_info in tqdm(run_infos, desc="Evaluating runs"):
+        result = await evaluate_run_async(
+            run_info, client, model_name, max_topics, num_estimations, max_concurrent, runs_dir
         )
-        
-        config.update({
-            "llm_score": eval_result["llm_score"],
-            "llm_score_min": eval_result["llm_score_min"],
-            "llm_score_max": eval_result["llm_score_max"],
-            "llm_topics_evaluated": eval_result["topics_evaluated"],
-        })
-        results.append(config)
-        
-        # Save updated config
-        with open(config_file, "w", encoding="utf-8") as f:
-            json.dump(config, f, indent=2, ensure_ascii=False)
+        results.append(result)
     
     return pd.DataFrame(results)
 
 
-def evaluate_gensim_results(
+def load_gensim_topics(results_file: Path) -> Optional[List[Dict[str, Any]]]:
+    """Load topics from Gensim LDA results (JSONL format)."""
+    if not results_file.exists():
+        return None
+    
+    runs = []
+    with open(results_file, "r", encoding="utf-8") as f:
+        for line in f:
+            try:
+                runs.append(json.loads(line))
+            except json.JSONDecodeError:
+                continue
+    
+    return runs if runs else None
+
+
+async def evaluate_gensim_results_async(
     results_file: Path,
-    client: OpenAI,
+    client: AsyncOpenAI,
     model_name: str,
     max_topics: int,
     num_estimations: int,
+    max_concurrent: int,
 ) -> pd.DataFrame:
-    """Evaluate Gensim LDA results from JSONL file."""
+    """Evaluate Gensim LDA results from JSONL file with parallelization."""
     if not results_file.exists():
         raise FileNotFoundError(f"Results file not found: {results_file}")
     
     # Load all results
-    results = []
-    with open(results_file, "r", encoding="utf-8") as f:
-        for line in f:
-            try:
-                results.append(json.loads(line))
-            except json.JSONDecodeError:
-                continue
+    results = load_gensim_topics(results_file)
     
     if not results:
         raise ValueError(f"No results found in {results_file}")
@@ -327,10 +349,10 @@ def evaluate_gensim_results(
         for tid, words in enumerate(run["topics"]):
             topics[str(tid)] = words if isinstance(words, list) else words.split()
         
-        # Evaluate
+        # Evaluate with parallelization
         seed = run.get("seed", 42)
-        eval_result = evaluate_topics(
-            topics, client, model_name, max_topics, num_estimations, seed
+        eval_result = await evaluate_topics_async(
+            topics, client, model_name, max_topics, num_estimations, max_concurrent, seed
         )
         
         run.update({
@@ -351,29 +373,8 @@ def evaluate_gensim_results(
     return pd.DataFrame(evaluated)
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Evaluate topic model results using LLM",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=__doc__
-    )
-    
-    parser.add_argument("--results_dir", type=str, required=True,
-                        help="Directory containing experiment results")
-    parser.add_argument("--framework", type=str, required=True,
-                        choices=["bertopic", "gensim"],
-                        help="Topic modeling framework used")
-    parser.add_argument("--max_topics", type=int, default=10,
-                        help="Maximum topics to evaluate per run (default: 10)")
-    parser.add_argument("--estimations", type=int, default=3,
-                        help="LLM estimations per topic (default: 3)")
-    parser.add_argument("--output", type=str, default=None,
-                        help="Output CSV file (default: {results_dir}/llm_scores.csv)")
-    parser.add_argument("--results_file", type=str, default=None,
-                        help="For gensim: specific results JSONL file")
-    
-    args = parser.parse_args()
-    
+async def main_async(args):
+    """Async main function."""
     if not OPENAI_AVAILABLE:
         print("Error: OpenAI package not installed. Install with: pip install openai")
         sys.exit(1)
@@ -388,29 +389,30 @@ def main():
         print("Set it in .env file or export it in your shell")
         sys.exit(1)
     
-    # Initialize client
+    # Initialize async client
     client_kwargs = {"api_key": api_key}
     if base_url:
         client_kwargs["base_url"] = base_url
-    client = OpenAI(**client_kwargs)
+    client = AsyncOpenAI(**client_kwargs)
     
     results_dir = Path(args.results_dir)
     
     print(f"\n{'='*60}")
-    print("LLM Topic Evaluation")
+    print("LLM Topic Evaluation (Parallelized)")
     print(f"{'='*60}")
     print(f"Results directory: {results_dir}")
     print(f"Framework: {args.framework}")
     print(f"Max topics per run: {args.max_topics}")
     print(f"Estimations per topic: {args.estimations}")
+    print(f"Max concurrent requests: {args.max_concurrent}")
     print(f"Model: {model_name}")
     print(f"{'='*60}\n")
     
     try:
         if args.framework == "bertopic":
-            df = evaluate_bertopic_results(
+            df = await evaluate_bertopic_results_async(
                 results_dir, client, model_name,
-                args.max_topics, args.estimations
+                args.max_topics, args.estimations, args.max_concurrent
             )
         else:  # gensim
             results_file = Path(args.results_file) if args.results_file else None
@@ -423,9 +425,9 @@ def main():
                     print(f"Error: No results file found. Specify with --results_file")
                     sys.exit(1)
             
-            df = evaluate_gensim_results(
+            df = await evaluate_gensim_results_async(
                 results_file, client, model_name,
-                args.max_topics, args.estimations
+                args.max_topics, args.estimations, args.max_concurrent
             )
         
         # Save combined results
@@ -451,19 +453,49 @@ def main():
             main_df = pd.read_csv(main_results)
             if "llm_score" not in main_df.columns or main_df["llm_score"].isna().all():
                 # Merge LLM scores
-                llm_df = df[["run_id", "llm_score", "llm_score_min", "llm_score_max"]].copy()
-                main_df = main_df.merge(llm_df, on="run_id", how="left", suffixes=("", "_new"))
-                # Update columns
-                for col in ["llm_score", "llm_score_min", "llm_score_max"]:
-                    if f"{col}_new" in main_df.columns:
-                        main_df[col] = main_df[f"{col}_new"]
-                        main_df.drop(f"{col}_new", axis=1, inplace=True)
-                main_df.to_csv(main_results, index=False)
-                print(f"Updated: {main_results}")
+                if "run_id" in df.columns:
+                    llm_df = df[["run_id", "llm_score", "llm_score_min", "llm_score_max"]].copy()
+                    main_df = main_df.merge(llm_df, on="run_id", how="left", suffixes=("", "_new"))
+                    # Update columns
+                    for col in ["llm_score", "llm_score_min", "llm_score_max"]:
+                        if f"{col}_new" in main_df.columns:
+                            main_df[col] = main_df[f"{col}_new"]
+                            main_df.drop(f"{col}_new", axis=1, inplace=True)
+                    main_df.to_csv(main_results, index=False)
+                    print(f"Updated: {main_results}")
         
     except Exception as e:
         logger.error(f"Evaluation failed: {e}")
         raise
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Evaluate topic model results using LLM (parallelized)",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__
+    )
+    
+    parser.add_argument("--results_dir", type=str, required=True,
+                        help="Directory containing experiment results")
+    parser.add_argument("--framework", type=str, required=True,
+                        choices=["bertopic", "gensim"],
+                        help="Topic modeling framework used")
+    parser.add_argument("--max_topics", type=int, default=10,
+                        help="Maximum topics to evaluate per run (default: 10)")
+    parser.add_argument("--estimations", type=int, default=3,
+                        help="LLM estimations per topic (default: 3)")
+    parser.add_argument("--max_concurrent", type=int, default=10,
+                        help="Maximum concurrent LLM requests (default: 10)")
+    parser.add_argument("--output", type=str, default=None,
+                        help="Output CSV file (default: {results_dir}/llm_scores.csv)")
+    parser.add_argument("--results_file", type=str, default=None,
+                        help="For gensim: specific results JSONL file")
+    
+    args = parser.parse_args()
+    
+    # Run async main
+    asyncio.run(main_async(args))
 
 
 if __name__ == "__main__":

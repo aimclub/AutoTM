@@ -184,6 +184,7 @@ data/amazon_food/
 data/lenta_ru/
 data/autotm_data_info/
 data/hotel_reviews/
+data/banners/
 notebooks/*.jsonl
 notebooks/*.json
 notebooks/*.md
