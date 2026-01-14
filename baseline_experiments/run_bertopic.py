@@ -32,12 +32,15 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
 import os
+import random
 import re
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+from statistics import mean
+from typing import Any, Callable, Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -54,6 +57,40 @@ from sentence_transformers import SentenceTransformer
 
 from gensim.corpora.dictionary import Dictionary
 from gensim.models.coherencemodel import CoherenceModel
+
+# Try to load dotenv for .env file support
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+# Try to import OpenAI client
+try:
+    from openai import OpenAI
+    OPENAI_AVAILABLE = True
+except ImportError:
+    OPENAI_AVAILABLE = False
+
+logger = logging.getLogger(__name__)
+
+# -----------------------------
+# Environment variables for LLM evaluation
+# -----------------------------
+ENV_LLM_API_KEY = "AUTOTM_LLM_API_KEY"
+ENV_LLM_BASE_URL = "AUTOTM_LLM_BASE_URL"
+ENV_LLM_MODEL_NAME = "AUTOTM_LLM_MODEL_NAME"
+ENV_LLM_MAX_ESTIMATED_TOPICS = "AUTOTM_LLM_MAX_ESTIMATED_TOPICS"
+ENV_LLM_ESTIMATIONS_PER_TOPIC = "AUTOTM_LLM_ESTIMATIONS_PER_TOPIC"
+
+# System prompt for LLM topic evaluation
+SYSTEM_PROMPT_TOPICS_EVAL = """You rate topic coherence. Given a list of words from a topic model, rate how semantically related they are on a scale of 1-4:
+1 = unrelated words
+2 = weakly related  
+3 = related
+4 = strongly related
+
+IMPORTANT: Reply with ONLY a single digit (1, 2, 3, or 4). No explanation needed."""
 
 
 # -----------------------------
@@ -206,8 +243,164 @@ def compute_coherence(
         corpus=corpus,
         dictionary=dictionary,
         coherence=coherence,
+        processes=1,  # Avoid multiprocessing deadlocks
     )
     return float(cm.get_coherence())
+
+
+def estimate_topics_with_llm(
+    topics: Dict[str, List[str]],
+    api_key: Optional[str] = None,
+    base_url: Optional[str] = None,
+    model_name: str = "gpt-4o",
+    num_top_words: int = 10,
+    max_estimated_topics: Optional[int] = None,
+    estimations_per_topic: int = 3,
+    seed: int = 42,
+    agg_func: Union[str, Callable[[Dict[str, float]], float]] = 'mean',
+) -> float:
+    """
+    Estimates quality of topics by calling an LLM (OpenAI-compatible API) to rate topic coherence.
+    
+    Args:
+        topics: Dictionary of topic_id -> list of top words
+        api_key: API key for the LLM service
+        base_url: Base URL for OpenAI-compatible API (e.g., vLLM server)
+        model_name: Model name to use
+        num_top_words: Number of top words to include in evaluation
+        max_estimated_topics: Limit number of topics to evaluate (for speed/cost)
+        estimations_per_topic: Number of repeated evaluations per topic
+        seed: Random seed for topic sampling
+        agg_func: Aggregation function ('mean', 'min', 'max') or callable
+        
+    Returns:
+        Aggregated LLM score (1-4 scale)
+    """
+    if not OPENAI_AVAILABLE:
+        logger.warning("OpenAI package not available. Skipping LLM evaluation.")
+        return float("nan")
+    
+    # Get credentials from environment if not provided
+    if api_key is None:
+        api_key = os.environ.get(ENV_LLM_API_KEY)
+    if base_url is None:
+        base_url = os.environ.get(ENV_LLM_BASE_URL)
+    if model_name == "gpt-4o":  # Default, check env
+        model_name = os.environ.get(ENV_LLM_MODEL_NAME, model_name)
+    
+    if not api_key:
+        logger.warning(f"LLM API key not provided. Set {ENV_LLM_API_KEY} env var or pass api_key.")
+        return float("nan")
+    
+    # Filter to main topics only (exclude background topics if present)
+    main_topics = {
+        tid: words[:num_top_words] 
+        for tid, words in topics.items() 
+        if not str(tid).startswith("back") and tid != -1
+    }
+    
+    if not main_topics:
+        logger.warning("No main topics found for LLM evaluation.")
+        return float("nan")
+    
+    all_main_topics_count = len(main_topics)
+    
+    # Sample topics if needed
+    if max_estimated_topics and len(main_topics) > max_estimated_topics:
+        keys = sorted(main_topics.keys(), key=str)
+        keys = random.Random(x=seed).sample(keys, k=max_estimated_topics)
+        main_topics = {k: main_topics[k] for k in keys}
+    
+    # Setup aggregation function
+    agg_funcs = {
+        'mean': lambda x: mean(x.values()) if len(x) > 0 else 0.0,
+        'min': lambda x: min(x.values()) if len(x) > 0 else 0.0,
+        'max': lambda x: max(x.values()) if len(x) > 0 else 0.0
+    }
+    if isinstance(agg_func, str):
+        if agg_func not in agg_funcs:
+            raise ValueError(f"Unknown agg_func: {agg_func}. Use: {list(agg_funcs.keys())}")
+        agg_func = agg_funcs[agg_func]
+    
+    logger.info(
+        f"Evaluating {len(main_topics)}/{all_main_topics_count} topics with LLM "
+        f"({estimations_per_topic} estimations each)"
+    )
+    
+    # Initialize OpenAI client
+    client_kwargs = {"api_key": api_key}
+    if base_url:
+        client_kwargs["base_url"] = base_url
+    client = OpenAI(**client_kwargs)
+    
+    topics_scores = {}
+    estimations_counter = 0
+    
+    for topic_id, words in main_topics.items():
+        user_prompt = ", ".join(words)
+        individual_scores = []
+        
+        for _ in range(estimations_per_topic):
+            try:
+                chat_completion = client.chat.completions.create(
+                    model=model_name,
+                    messages=[
+                        {"role": "system", "content": SYSTEM_PROMPT_TOPICS_EVAL},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    temperature=0.7,
+                    max_tokens=1024,  # Allow enough tokens for CoT reasoning + answer
+                )
+                score_text = chat_completion.choices[0].message.content.strip()
+                estimations_counter += 1
+                
+                # Handle chain-of-thought responses (e.g., Qwen with <think> tags)
+                # Extract content after </think> tag if present
+                if '</think>' in score_text:
+                    # Get everything after </think>
+                    clean_text = score_text.split('</think>')[-1].strip()
+                else:
+                    # Remove incomplete <think> tags (no closing tag)
+                    clean_text = re.sub(r'<think>.*', '', score_text, flags=re.DOTALL).strip()
+                
+                # If empty after removing think tags, try to find number anywhere in response
+                if not clean_text:
+                    clean_text = score_text
+                
+                # Parse score - look for standalone digits 1-4
+                # First try to find at the end of response (most likely answer location)
+                score_match = re.search(r'\b([1-4])\b\s*$', clean_text)
+                if not score_match:
+                    # Try to find any standalone 1-4
+                    score_match = re.search(r'\b([1-4])\b', clean_text)
+                if not score_match:
+                    # Fall back to any digit 1-4
+                    score_match = re.search(r'[1-4]', clean_text)
+                
+                if score_match:
+                    score = int(score_match.group(1) if score_match.lastindex else score_match.group())
+                else:
+                    # Log only first 50 chars to avoid spam
+                    logger.warning(f"Could not parse LLM score: '{score_text[:50]}...' for topic {topic_id}")
+                    score = 2  # Default neutral score
+                
+                individual_scores.append(score)
+                
+            except Exception as e:
+                logger.warning(f"LLM API error for topic {topic_id}: {e}")
+                continue
+        
+        if individual_scores:
+            topics_scores[topic_id] = mean(individual_scores)
+    
+    if not topics_scores:
+        logger.warning("No topics were successfully evaluated by LLM.")
+        return float("nan")
+    
+    fitness = agg_func(topics_scores)
+    logger.info(f"LLM evaluation complete: {fitness:.3f} (from {estimations_counter} API calls)")
+    
+    return fitness
 
 
 # -----------------------------
@@ -240,20 +433,40 @@ class BERTopicConfig:
 
 def preset_grid(name: str) -> List[BERTopicConfig]:
     """
-    Small, pragmatic grids that finish in a couple of days on typical lab hardware.
+    Grids for BERTopic experiments.
+    
+    Note: nr_topics=None (automatic) is MUCH faster than nr_topics=50/100.
+    Topic reduction with specific nr_topics can take 10-100x longer!
+    
+    Presets:
+    - preset_fast: Only automatic topic discovery (fastest, ~13s/run)
+    - preset_tiny: 2 configs for quick tests
+    - preset_small: 12 configs with topic reduction (slow!)
+    - preset_medium: 27 configs (very slow!)
     """
+    if name == "preset_fast":
+        # FASTEST: Only nr_topics=None (automatic), varies clustering params
+        cfgs = []
+        for mcs in [10, 15, 20, 30]:
+            for nn in [10, 15, 30]:
+                cfgs.append(BERTopicConfig(nr_topics=None, hdbscan_min_cluster_size=mcs, umap_n_neighbors=nn))
+        return cfgs  # 12 configs, ~13s each = ~3 min per dataset
+    
     if name == "preset_tiny":
         return [
             BERTopicConfig(nr_topics=None, hdbscan_min_cluster_size=15, umap_n_neighbors=15),
-            BERTopicConfig(nr_topics=50,   hdbscan_min_cluster_size=15, umap_n_neighbors=15),
+            BERTopicConfig(nr_topics=None, hdbscan_min_cluster_size=10, umap_n_neighbors=10),
         ]
+    
     if name == "preset_small":
+        # WARNING: nr_topics=50/100 triggers slow topic reduction!
         cfgs = []
         for nr_topics in [None, 50, 100]:
             for mcs in [10, 20]:
                 for nn in [10, 15]:
                     cfgs.append(BERTopicConfig(nr_topics=nr_topics, hdbscan_min_cluster_size=mcs, umap_n_neighbors=nn))
         return cfgs
+    
     if name == "preset_medium":
         cfgs = []
         for nr_topics in [None, 50, 100]:
@@ -261,7 +474,8 @@ def preset_grid(name: str) -> List[BERTopicConfig]:
                 for nn in [10, 15, 30]:
                     cfgs.append(BERTopicConfig(nr_topics=nr_topics, hdbscan_min_cluster_size=mcs, umap_n_neighbors=nn))
         return cfgs
-    raise ValueError(f"Unknown grid preset: {name}")
+    
+    raise ValueError(f"Unknown grid preset: {name}. Use: preset_fast, preset_tiny, preset_small, preset_medium")
 
 
 # -----------------------------
@@ -379,6 +593,9 @@ def run_one(
     stopwords: set,
     n_jobs: int,
     topn_for_metrics: int,
+    use_llm: bool = False,
+    llm_max_topics: Optional[int] = None,
+    llm_estimations_per_topic: int = 3,
 ) -> Dict[str, Any]:
     set_global_seed(seed)
 
@@ -392,7 +609,7 @@ def run_one(
     outlier_pct = float(np.mean(topics_arr == -1)) * 100.0
     n_topics = int(len(set(topics_arr.tolist())) - (1 if -1 in topics_arr else 0))
 
-    # Topic words
+    # Topic words (list of lists for coherence calc)
     topic_words = extract_topic_words(model)
     div = topic_diversity(topic_words, top_n=topn_for_metrics)
 
@@ -400,6 +617,26 @@ def run_one(
     tokenized = [simple_tokenize(t, stopwords=stopwords) for t in texts]
     coh_cv = compute_coherence(tokenized, topic_words, coherence="c_v")
     coh_npmi = compute_coherence(tokenized, topic_words, coherence="c_npmi")
+
+    # LLM-based evaluation (optional)
+    llm_score = float("nan")
+    if use_llm:
+        # Build topics dict for LLM evaluation: topic_id -> list of words
+        topics_for_llm = {}
+        for tid in model.get_topic_info()["Topic"].tolist():
+            if tid == -1:
+                continue
+            t = model.get_topic(tid) or []
+            topics_for_llm[tid] = [w for (w, _score) in t]
+        
+        if topics_for_llm:
+            llm_score = estimate_topics_with_llm(
+                topics=topics_for_llm,
+                num_top_words=topn_for_metrics,
+                max_estimated_topics=llm_max_topics,
+                estimations_per_topic=llm_estimations_per_topic,
+                seed=seed,
+            )
 
     res = {
         "dataset": dataset_name,
@@ -414,6 +651,7 @@ def run_one(
         "topic_diversity": div,
         "coherence_c_v": coh_cv,
         "coherence_c_npmi": coh_npmi,
+        "llm_score": llm_score,
         **{f"cfg_{k}": v for k, v in asdict(cfg).items()},
     }
 
@@ -440,8 +678,9 @@ def main():
     ap.add_argument("--embedding_model", type=str, required=True,
                     help='SentenceTransformer model name, e.g. "sentence-transformers/all-MiniLM-L6-v2"')
     ap.add_argument("--seeds", type=int, nargs="+", default=[0,1,2,3,4,5,6,7,8,9])
-    ap.add_argument("--grid", type=str, default="preset_small",
-                    choices=["preset_tiny", "preset_small", "preset_medium"])
+    ap.add_argument("--grid", type=str, default="preset_fast",
+                    choices=["preset_fast", "preset_tiny", "preset_small", "preset_medium"],
+                    help="Grid preset. preset_fast (~13s/run) recommended. preset_small/medium include topic reduction which is VERY slow.")
     ap.add_argument("--out_dir", type=str, required=True)
     ap.add_argument("--cache_dir", type=str, default="cache_bertopic")
     ap.add_argument("--stopwords_file", type=str, default=None,
@@ -451,6 +690,14 @@ def main():
     ap.add_argument("--n_jobs", type=int, default=1,
                     help="Set 1 for better determinism; >1 for speed.")
     ap.add_argument("--topn_for_metrics", type=int, default=10)
+    
+    # LLM evaluation arguments
+    ap.add_argument("--use_llm", action="store_true",
+                    help="Enable LLM-based topic evaluation (requires AUTOTM_LLM_API_KEY env var)")
+    ap.add_argument("--llm_max_topics", type=int, default=None,
+                    help="Max topics to evaluate with LLM (for cost/speed). Default: all topics.")
+    ap.add_argument("--llm_estimations", type=int, default=3,
+                    help="Number of LLM estimations per topic (default: 3)")
 
     args = ap.parse_args()
 
@@ -463,13 +710,38 @@ def main():
     cache_dir.mkdir(parents=True, exist_ok=True)
 
     cfgs = preset_grid(args.grid)
+    
+    # Print experiment summary
+    total_experiments = len(datasets) * len(cfgs) * len(args.seeds)
+    print(f"\n{'='*80}", flush=True)
+    print(f"BERTopic Baseline Experiments", flush=True)
+    print(f"{'='*80}", flush=True)
+    print(f"Datasets: {list(datasets.keys())}", flush=True)
+    print(f"Grid: {args.grid} ({len(cfgs)} configurations)", flush=True)
+    print(f"Seeds: {args.seeds} ({len(args.seeds)} seeds)", flush=True)
+    print(f"Total experiments: {total_experiments}", flush=True)
+    print(f"Output: {out_dir}", flush=True)
+    if args.use_llm:
+        print(f"LLM Evaluation: ENABLED", flush=True)
+        print(f"  - Max topics: {args.llm_max_topics or 'all'}", flush=True)
+        print(f"  - Estimations per topic: {args.llm_estimations}", flush=True)
+    else:
+        print(f"LLM Evaluation: disabled (use --use_llm to enable)", flush=True)
+    print(f"{'='*80}\n", flush=True)
 
     # Run
     all_rows: List[Dict[str, Any]] = []
     runs_dir = out_dir / "runs"
     runs_dir.mkdir(parents=True, exist_ok=True)
-
+    
+    dataset_idx = 0
     for dname, (dpath, dcol) in datasets.items():
+        dataset_idx += 1
+        print(f"\n{'='*80}", flush=True)
+        print(f"[DATASET {dataset_idx}/{len(datasets)}] Processing: {dname}", flush=True)
+        print(f"  Path: {dpath}", flush=True)
+        print(f"  Column: {dcol}", flush=True)
+        print(f"{'='*80}\n", flush=True)
         language = lang_map.get(dname, "en")
         stopwords = load_stopwords(language=language, stopwords_file=args.stopwords_file)
 
@@ -485,10 +757,28 @@ def main():
             batch_size=64,
         )
 
+        total_runs = len(cfgs) * len(args.seeds)
+        completed_in_dataset = 0
+        skipped_in_dataset = 0
+        
         for cfg_i, cfg in enumerate(cfgs):
             for seed in args.seeds:
                 run_id = f"{dname}__cfg{cfg_i:03d}__seed{seed}"
-                print(f"[RUN] {run_id}")
+                config_file = runs_dir / f"{run_id}.config.json"
+                
+                # Skip if already completed (for resume capability)
+                if config_file.exists():
+                    skipped_in_dataset += 1
+                    print(f"[SKIP] {run_id} (already completed)", flush=True)
+                    # Load existing result for summary
+                    with open(config_file, "r", encoding="utf-8") as f:
+                        res = json.load(f)
+                    all_rows.append(res)
+                    continue
+                
+                completed_in_dataset += 1
+                progress = f"[{completed_in_dataset + skipped_in_dataset}/{total_runs}]"
+                print(f"{progress} [RUN] {run_id}", flush=True)
 
                 res, topics_export = run_one(
                     dataset_name=dname,
@@ -501,9 +791,17 @@ def main():
                     stopwords=stopwords,
                     n_jobs=args.n_jobs,
                     topn_for_metrics=args.topn_for_metrics,
+                    use_llm=args.use_llm,
+                    llm_max_topics=args.llm_max_topics,
+                    llm_estimations_per_topic=args.llm_estimations,
                 )
                 res["run_id"] = run_id
                 all_rows.append(res)
+
+                # Print metrics immediately
+                llm_str = f", llm={res['llm_score']:.2f}" if args.use_llm and not np.isnan(res['llm_score']) else ""
+                print(f"        -> coherence={res['coherence_c_v']:.4f}, diversity={res['topic_diversity']:.4f}, "
+                      f"topics={res['n_topics']}, time={res['runtime_sec']:.1f}s{llm_str}", flush=True)
 
                 # Save per-run artifacts
                 with open(runs_dir / f"{run_id}.topics.json", "w", encoding="utf-8") as f:
@@ -516,6 +814,8 @@ def main():
                     runs_dir / f"{run_id}.assignments.csv",
                     index=False,
                 )
+        
+        print(f"\n[DATASET {dname}] Completed: {completed_in_dataset}, Skipped: {skipped_in_dataset}\n", flush=True)
 
         # Save intermediate results per dataset (safe checkpoints)
         pd.DataFrame(all_rows).to_csv(out_dir / "results_partial.csv", index=False)
@@ -526,23 +826,28 @@ def main():
 
     # Summary table (mean±std across seeds per dataset+cfg)
     group_cols = ["dataset"] + [c for c in df.columns if c.startswith("cfg_")]
-    summary = (
-        df.groupby(group_cols)
-          .agg(
-              coherence_c_v_mean=("coherence_c_v", "mean"),
-              coherence_c_v_std=("coherence_c_v", "std"),
-              coherence_c_npmi_mean=("coherence_c_npmi", "mean"),
-              coherence_c_npmi_std=("coherence_c_npmi", "std"),
-              topic_diversity_mean=("topic_diversity", "mean"),
-              topic_diversity_std=("topic_diversity", "std"),
-              runtime_sec_mean=("runtime_sec", "mean"),
-              runtime_sec_std=("runtime_sec", "std"),
-              n_topics_mean=("n_topics", "mean"),
-              outlier_pct_mean=("outlier_pct", "mean"),
-              runs=("run_id", "count"),
-          )
-          .reset_index()
-    )
+    
+    # Base aggregations
+    agg_dict = {
+        "coherence_c_v_mean": ("coherence_c_v", "mean"),
+        "coherence_c_v_std": ("coherence_c_v", "std"),
+        "coherence_c_npmi_mean": ("coherence_c_npmi", "mean"),
+        "coherence_c_npmi_std": ("coherence_c_npmi", "std"),
+        "topic_diversity_mean": ("topic_diversity", "mean"),
+        "topic_diversity_std": ("topic_diversity", "std"),
+        "runtime_sec_mean": ("runtime_sec", "mean"),
+        "runtime_sec_std": ("runtime_sec", "std"),
+        "n_topics_mean": ("n_topics", "mean"),
+        "outlier_pct_mean": ("outlier_pct", "mean"),
+        "runs": ("run_id", "count"),
+    }
+    
+    # Add LLM score if present and not all NaN
+    if "llm_score" in df.columns and not df["llm_score"].isna().all():
+        agg_dict["llm_score_mean"] = ("llm_score", "mean")
+        agg_dict["llm_score_std"] = ("llm_score", "std")
+    
+    summary = df.groupby(group_cols).agg(**agg_dict).reset_index()
     summary.to_csv(out_dir / "summary.csv", index=False)
 
     print(f"\nDone. Wrote:\n  {out_dir / 'results.csv'}\n  {out_dir / 'summary.csv'}\n  {runs_dir}\n")

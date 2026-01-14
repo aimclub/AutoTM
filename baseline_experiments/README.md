@@ -9,7 +9,12 @@ This folder contains baseline topic modeling experiments with various frameworks
 - **`run_experiments.py`** - Unified experiment runner that supports multiple topic modeling frameworks
   - Supports Gensim LDA and BERTopic baselines
   - Handles multiple seeds, result aggregation, and summary statistics
+  - Optional LLM-based topic evaluation
   - See usage examples below
+
+- **`llm_evaluate.py`** - Standalone LLM topic evaluation script
+  - Can evaluate saved topic model results using OpenAI-compatible API
+  - Works with vLLM, Qwen, GPT-4, and other compatible models
 
 ### Framework-Specific Scripts
 
@@ -144,6 +149,69 @@ Both frameworks compute:
 - **Runtime** - execution time
 - **Number of Topics** - discovered/specified topics
 - **Outlier Rate** (BERTopic) - percentage of documents not assigned to any topic
+- **LLM Score** (optional) - LLM-based topic quality rating (1-4 scale)
+
+## LLM Evaluation
+
+Evaluate topic quality using an LLM (OpenAI-compatible API, including vLLM with Qwen).
+
+### Setup
+
+Create a `.env` file with your API credentials:
+
+```bash
+# For vLLM with Qwen
+AUTOTM_LLM_API_KEY=your-api-key-here
+AUTOTM_LLM_BASE_URL=http://your-server:8041/v1
+AUTOTM_LLM_MODEL_NAME=/model
+
+# For OpenAI
+AUTOTM_LLM_API_KEY=sk-your-openai-key
+# AUTOTM_LLM_BASE_URL=  # Not needed for OpenAI
+AUTOTM_LLM_MODEL_NAME=gpt-4o
+```
+
+### Run with Experiments
+
+```bash
+# BERTopic with LLM evaluation
+python baseline_experiments/run_experiments.py \
+  --model bertopic \
+  --datasets "hotel:data/hotel.csv:text" \
+  --language-map "hotel:en" \
+  --seeds 0-4 \
+  --grid preset_fast \
+  --output-dir results/bertopic_hotel \
+  --llm-evaluate \
+  --llm-max-topics 10 \
+  --llm-estimations 3
+```
+
+### Post-Processing Evaluation
+
+Evaluate already completed experiments:
+
+```bash
+# BERTopic results
+python baseline_experiments/llm_evaluate.py \
+  --results_dir results/bertopic_hotel_full \
+  --framework bertopic \
+  --max_topics 10 \
+  --estimations 3
+
+# Gensim LDA results
+python baseline_experiments/llm_evaluate.py \
+  --results_dir results/gensim_hotel \
+  --framework gensim \
+  --results_file results/gensim_hotel/hotel_all_results.jsonl
+```
+
+### LLM Score Interpretation
+
+- **1** = Unrelated words (poor topic)
+- **2** = Weakly related (marginal topic)
+- **3** = Related (good topic)
+- **4** = Strongly related (excellent topic)
 
 ## Dependencies
 

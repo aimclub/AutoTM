@@ -2,6 +2,7 @@
 """
 Enhanced experiment runner that saves all iterations, not just the summary.
 Supports both Gensim LDA and BERTopic baselines.
+Includes optional LLM-based topic evaluation.
 """
 import json
 import subprocess
@@ -10,7 +11,7 @@ import statistics
 import time
 import os
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import argparse
 
 
@@ -36,7 +37,7 @@ def run_single_experiment(
     """Run a single experiment and return results"""
     if model_type == "gensim_lda":
         cmd = [
-            'python', 'baseline_experiments/gensim_lda.py',
+            sys.executable, 'baseline_experiments/gensim_lda.py',
             '--dataset', dataset,
             '--topics', str(topics),
             '--budget', str(budget),
@@ -88,7 +89,7 @@ def run_bertopic_experiments(
         experiment_name: Optional experiment name
     """
     cmd = [
-        'python', 'baseline_experiments/run_bertopic.py',
+        sys.executable, 'baseline_experiments/run_bertopic.py',
         '--datasets', datasets,
         '--language_map', language_map,
         '--embedding_model', embedding_model,
@@ -137,6 +138,62 @@ def run_bertopic_experiments(
     print(f"{'='*80}\n")
     
     return summary
+
+
+def run_llm_evaluation(
+    results_dir: str,
+    framework: str,
+    max_topics: int = 10,
+    estimations: int = 3,
+    results_file: Optional[str] = None,
+) -> Dict[str, Any]:
+    """
+    Run LLM evaluation on experiment results.
+    
+    Args:
+        results_dir: Directory containing experiment results
+        framework: 'bertopic' or 'gensim'
+        max_topics: Max topics to evaluate per run
+        estimations: LLM estimations per topic
+        results_file: For gensim, specific JSONL file
+        
+    Returns:
+        Summary dict with LLM scores
+    """
+    cmd = [
+        sys.executable, 'baseline_experiments/llm_evaluate.py',
+        '--results_dir', results_dir,
+        '--framework', framework,
+        '--max_topics', str(max_topics),
+        '--estimations', str(estimations),
+    ]
+    
+    if results_file:
+        cmd.extend(['--results_file', results_file])
+    
+    print(f"\n{'='*80}")
+    print(f"Running LLM Evaluation")
+    print(f"{'='*80}")
+    print(f"Results directory: {results_dir}")
+    print(f"Framework: {framework}")
+    print(f"Max topics: {max_topics}")
+    print(f"Estimations per topic: {estimations}")
+    print(f"{'='*80}\n")
+    print(f"Running: {' '.join(cmd)}", file=sys.stderr)
+    
+    start_time = time.time()
+    result = subprocess.run(cmd, capture_output=False, text=True)
+    elapsed = time.time() - start_time
+    
+    if result.returncode != 0:
+        print(f"Warning: LLM evaluation failed with exit code {result.returncode}", file=sys.stderr)
+        return {'llm_evaluation': 'failed', 'elapsed_s': elapsed}
+    
+    return {
+        'llm_evaluation': 'success',
+        'elapsed_s': elapsed,
+        'output_file': os.path.join(results_dir, 'llm_scores.csv'),
+    }
 
 
 def run_multiple_experiments(
@@ -342,13 +399,21 @@ def main():
                         help='Language map "name:en,name2:ru,..." (for bertopic)')
     parser.add_argument('--embedding-model', type=str, default='sentence-transformers/all-MiniLM-L6-v2',
                         help='SentenceTransformer model name (for bertopic)')
-    parser.add_argument('--grid', type=str, default='preset_small',
-                        choices=['preset_tiny', 'preset_small', 'preset_medium'],
-                        help='Grid preset (for bertopic)')
+    parser.add_argument('--grid', type=str, default='preset_fast',
+                        choices=['preset_fast', 'preset_tiny', 'preset_small', 'preset_medium'],
+                        help='Grid preset (for bertopic). preset_fast recommended (~13s/run). preset_small/medium are SLOW.')
     parser.add_argument('--cache-dir', type=str, default='cache/bertopic',
                         help='Cache directory for embeddings (for bertopic)')
     parser.add_argument('--n-jobs', type=int, default=1,
                         help='Number of parallel jobs (for bertopic)')
+    
+    # LLM evaluation arguments
+    parser.add_argument('--llm-evaluate', action='store_true',
+                        help='Run LLM evaluation after experiments complete')
+    parser.add_argument('--llm-max-topics', type=int, default=10,
+                        help='Max topics to evaluate with LLM per run (default: 10)')
+    parser.add_argument('--llm-estimations', type=int, default=3,
+                        help='LLM estimations per topic (default: 3)')
     
     args = parser.parse_args()
     
@@ -392,6 +457,16 @@ def main():
             n_jobs=args.n_jobs,
             experiment_name=args.name
         )
+    
+    # Run LLM evaluation if requested
+    if args.llm_evaluate:
+        llm_result = run_llm_evaluation(
+            results_dir=args.output_dir,
+            framework=args.model.replace('_lda', ''),  # gensim_lda -> gensim
+            max_topics=args.llm_max_topics,
+            estimations=args.llm_estimations,
+        )
+        summary['llm_evaluation'] = llm_result
     
     # Print summary as JSON to stdout
     print(json.dumps(summary, indent=2, ensure_ascii=False))
