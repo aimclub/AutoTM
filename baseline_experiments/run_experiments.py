@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 Enhanced experiment runner that saves all iterations, not just the summary.
+Supports both Gensim LDA and BERTopic baselines.
 """
 import json
 import subprocess
@@ -29,22 +30,26 @@ def run_single_experiment(
     topics: int = 10,
     budget: int = 180,
     seed: int = 42,
-    preproc: str = "auto"
+    preproc: str = "auto",
+    model_type: str = "gensim_lda"
 ) -> Dict[str, Any]:
     """Run a single experiment and return results"""
-    cmd = [
-        'python', 'notebooks/gensim_lda.py',
-        '--dataset', dataset,
-        '--topics', str(topics),
-        '--budget', str(budget),
-        '--seed', str(seed),
-        '--preproc', preproc
-    ]
-    
-    if data_path:
-        cmd.extend(['--data-path', data_path])
-    if text_col:
-        cmd.extend(['--text-col', text_col])
+    if model_type == "gensim_lda":
+        cmd = [
+            'python', 'baseline_experiments/gensim_lda.py',
+            '--dataset', dataset,
+            '--topics', str(topics),
+            '--budget', str(budget),
+            '--seed', str(seed),
+            '--preproc', preproc
+        ]
+        
+        if data_path:
+            cmd.extend(['--data-path', data_path])
+        if text_col:
+            cmd.extend(['--text-col', text_col])
+    else:
+        raise ValueError(f"Unsupported model type: {model_type}")
     
     print(f"Running: {' '.join(cmd)}", file=sys.stderr)
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -57,6 +62,83 @@ def run_single_experiment(
     return extract_json(result.stdout)
 
 
+def run_bertopic_experiments(
+    datasets: str,
+    language_map: str,
+    embedding_model: str,
+    seeds: List[int],
+    grid: str = "preset_small",
+    output_dir: str = "results/bertopic_baseline",
+    cache_dir: str = "cache/bertopic",
+    n_jobs: int = 1,
+    experiment_name: str = None
+) -> Dict[str, Any]:
+    """
+    Run BERTopic experiments using run_bertopic.py
+    
+    Args:
+        datasets: Dataset specification "name:/path/file.csv:textcol,..."
+        language_map: Language map "name:en,name2:ru,..."
+        embedding_model: SentenceTransformer model name
+        seeds: List of random seeds
+        grid: Grid preset name
+        output_dir: Output directory for results
+        cache_dir: Cache directory for embeddings
+        n_jobs: Number of parallel jobs
+        experiment_name: Optional experiment name
+    """
+    cmd = [
+        'python', 'baseline_experiments/run_bertopic.py',
+        '--datasets', datasets,
+        '--language_map', language_map,
+        '--embedding_model', embedding_model,
+        '--seeds', *[str(s) for s in seeds],
+        '--grid', grid,
+        '--out_dir', output_dir,
+        '--cache_dir', cache_dir,
+        '--n_jobs', str(n_jobs),
+    ]
+    
+    print(f"\n{'='*80}")
+    print(f"Starting BERTopic experiment: {experiment_name or 'bertopic'}")
+    print(f"Datasets: {datasets}")
+    print(f"Seeds: {seeds}")
+    print(f"Output directory: {output_dir}")
+    print(f"{'='*80}\n")
+    print(f"Running: {' '.join(cmd)}", file=sys.stderr)
+    
+    start_time = time.time()
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    elapsed = time.time() - start_time
+    
+    if result.returncode != 0:
+        print(f"Error running BERTopic experiment:", file=sys.stderr)
+        print(result.stderr, file=sys.stderr)
+        raise RuntimeError(f"BERTopic experiment failed with exit code {result.returncode}")
+    
+    print(result.stdout)
+    
+    summary = {
+        'experiment_name': experiment_name or 'bertopic',
+        'model_type': 'bertopic',
+        'datasets': datasets,
+        'seeds': seeds,
+        'grid': grid,
+        'total_elapsed_s': elapsed,
+        'output_dir': output_dir,
+        'results_file': os.path.join(output_dir, 'results.csv'),
+        'summary_file': os.path.join(output_dir, 'summary.csv'),
+    }
+    
+    print(f"\n{'='*80}")
+    print(f"BERTopic experiment completed!")
+    print(f"Total time: {elapsed:.1f}s")
+    print(f"Results saved to: {output_dir}")
+    print(f"{'='*80}\n")
+    
+    return summary
+
+
 def run_multiple_experiments(
     dataset: str,
     seeds: List[int],
@@ -66,7 +148,8 @@ def run_multiple_experiments(
     topics: int = 10,
     budget: int = 180,
     preproc: str = "auto",
-    experiment_name: str = None
+    experiment_name: str = None,
+    model_type: str = "gensim_lda"
 ) -> Dict[str, Any]:
     """
     Run multiple experiments with different seeds and save all results.
@@ -108,7 +191,8 @@ def run_multiple_experiments(
                 topics=topics,
                 budget=budget,
                 seed=seed,
-                preproc=preproc
+                preproc=preproc,
+                model_type=model_type
             )
             
             # Add metadata
@@ -220,27 +304,51 @@ def run_multiple_experiments(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run multiple Gensim LDA experiments")
-    parser.add_argument('--dataset', type=str, required=True,
-                        choices=['20ng', '20newsgroups', 'amazon_food', 'hotel_reviews', 'lenta_ru'],
-                        help='Dataset to use')
-    parser.add_argument('--data-path', type=str, default=None,
-                        help='Path to CSV file (required for non-20ng datasets)')
-    parser.add_argument('--text-col', type=str, default='text',
-                        help='Text column name in CSV')
-    parser.add_argument('--topics', type=int, default=10,
-                        help='Number of topics')
-    parser.add_argument('--budget', type=int, default=180,
-                        help='Time budget in seconds')
+    parser = argparse.ArgumentParser(description="Run multiple topic modeling experiments (Gensim LDA or BERTopic)")
+    
+    # Model selection
+    parser.add_argument('--model', type=str, default='gensim_lda',
+                        choices=['gensim_lda', 'bertopic'],
+                        help='Model type to run')
+    
+    # Common arguments
     parser.add_argument('--seeds', type=str, default='42-51',
                         help='Seed range (e.g., "42-51") or comma-separated list (e.g., "42,43,44")')
     parser.add_argument('--output-dir', type=str, default='notebooks',
                         help='Output directory for results')
     parser.add_argument('--name', type=str, default=None,
-                        help='Experiment name (default: {dataset}_{budget}s)')
+                        help='Experiment name')
+    
+    # Gensim LDA arguments
+    parser.add_argument('--dataset', type=str, default=None,
+                        choices=['20ng', '20newsgroups', 'amazon_food', 'hotel_reviews', 'lenta_ru'],
+                        help='Dataset to use (for gensim_lda)')
+    parser.add_argument('--data-path', type=str, default=None,
+                        help='Path to CSV file (for gensim_lda, required for non-20ng datasets)')
+    parser.add_argument('--text-col', type=str, default='text',
+                        help='Text column name in CSV (for gensim_lda)')
+    parser.add_argument('--topics', type=int, default=10,
+                        help='Number of topics (for gensim_lda)')
+    parser.add_argument('--budget', type=int, default=180,
+                        help='Time budget in seconds (for gensim_lda)')
     parser.add_argument('--preproc', type=str, default='auto',
                         choices=['auto', 'gensim', 'autotm_en', 'autotm_ru'],
-                        help='Preprocessing pipeline')
+                        help='Preprocessing pipeline (for gensim_lda)')
+    
+    # BERTopic arguments
+    parser.add_argument('--datasets', type=str, default=None,
+                        help='Dataset specification "name:/path/file.csv:textcol,..." (for bertopic)')
+    parser.add_argument('--language-map', type=str, default="",
+                        help='Language map "name:en,name2:ru,..." (for bertopic)')
+    parser.add_argument('--embedding-model', type=str, default='sentence-transformers/all-MiniLM-L6-v2',
+                        help='SentenceTransformer model name (for bertopic)')
+    parser.add_argument('--grid', type=str, default='preset_small',
+                        choices=['preset_tiny', 'preset_small', 'preset_medium'],
+                        help='Grid preset (for bertopic)')
+    parser.add_argument('--cache-dir', type=str, default='cache/bertopic',
+                        help='Cache directory for embeddings (for bertopic)')
+    parser.add_argument('--n-jobs', type=int, default=1,
+                        help='Number of parallel jobs (for bertopic)')
     
     args = parser.parse_args()
     
@@ -251,18 +359,39 @@ def main():
     else:
         seeds = [int(s.strip()) for s in args.seeds.split(',')]
     
-    # Run experiments
-    summary = run_multiple_experiments(
-        dataset=args.dataset,
-        seeds=seeds,
-        output_dir=args.output_dir,
-        data_path=args.data_path,
-        text_col=args.text_col,
-        topics=args.topics,
-        budget=args.budget,
-        preproc=args.preproc,
-        experiment_name=args.name
-    )
+    # Run experiments based on model type
+    if args.model == 'gensim_lda':
+        if not args.dataset:
+            parser.error("--dataset is required for gensim_lda")
+        
+        summary = run_multiple_experiments(
+            dataset=args.dataset,
+            seeds=seeds,
+            output_dir=args.output_dir,
+            data_path=args.data_path,
+            text_col=args.text_col,
+            topics=args.topics,
+            budget=args.budget,
+            preproc=args.preproc,
+            experiment_name=args.name,
+            model_type='gensim_lda'
+        )
+    
+    elif args.model == 'bertopic':
+        if not args.datasets:
+            parser.error("--datasets is required for bertopic")
+        
+        summary = run_bertopic_experiments(
+            datasets=args.datasets,
+            language_map=args.language_map,
+            embedding_model=args.embedding_model,
+            seeds=seeds,
+            grid=args.grid,
+            output_dir=args.output_dir,
+            cache_dir=args.cache_dir,
+            n_jobs=args.n_jobs,
+            experiment_name=args.name
+        )
     
     # Print summary as JSON to stdout
     print(json.dumps(summary, indent=2, ensure_ascii=False))

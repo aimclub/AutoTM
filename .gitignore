@@ -183,7 +183,10 @@ tmp
 data/amazon_food/
 data/lenta_ru/
 data/autotm_data_info/
+data/hotel_reviews/
 notebooks/*.jsonl
 notebooks/*.json
 notebooks/*.md
 notebooks/results/
+.DS_Store
+data/.DS_Store
